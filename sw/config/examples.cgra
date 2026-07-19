@@ -1,0 +1,62 @@
+# examples.cgra — extra modes/pipelines shipped as reference material.
+#
+# `cgra init` writes the authoritative defaults (devices + core modes) to
+# ~/.config/cgra/config.cgra.  Drop files like this one alongside it to
+# extend the toolbox; every entity merges by name across all *.cgra files.
+
+# --- more element-wise modes -------------------------------------------------
+
+[mode band]            # bitwise AND
+doc     = out = a & b
+pattern = diagonal
+op      = and
+
+[mode bxor]            # bitwise XOR
+doc     = out = a ^ b
+pattern = diagonal
+op      = xor
+
+[mode absdiff]         # not directly expressible in one pass; see pipeline below
+doc     = placeholder, use the absdiff pipeline
+
+[mode shl]             # arithmetic shift left by imm
+doc     = out = a << imm
+pattern = diagonal
+op      = shl
+a       = north
+b       = const(1)
+
+# --- scale/offset knobs ------------------------------------------------------
+
+[mode scale]           # out = a * imm  (override imm at the CLI)
+doc     = out = a * imm  (default x2)
+pattern = diagonal
+op      = mul
+a       = north
+b       = const(2)
+
+[mode bias]            # out = a + imm
+doc     = out = a + imm  (default +1)
+pattern = diagonal
+op      = add
+a       = north
+b       = const(1)
+
+# --- pipelines ---------------------------------------------------------------
+
+[pipeline absdiff]     # out = |a - b|
+doc     = out = |a - b|
+stage   = sub
+stage   = abs_stage
+
+[mode abs_stage]
+doc     = out = |a|
+pattern = diagonal
+op      = abs
+a       = north
+b       = const(0)
+
+[pipeline normalize]   # out = (a - 128) * 2
+doc     = out = (a - 128) * 2
+stage   = bias imm=-128
+stage   = scale imm=2

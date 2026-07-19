@@ -1,0 +1,115 @@
+@node Commands
+@chapter Commands
+
+@cindex commands
+Commands group into configuration/inspection, device, compute and development.
+Vector @var{SRC} arguments and output options are described under
+@ref{Invocation}.
+
+@section Configuration and inspection
+
+@deffn Command modes
+@deffnx Command devices
+@deffnx Command pipelines
+@deffnx Command io
+@deffnx Command config
+List the loaded configuration: the modes (name, pattern, doc), device profiles
+(name, port), pipelines (with their stages), I/O profiles, or---for
+@command{config}---the resolved user directory, the files that were actually
+loaded, and the entity counts.
+@end deffn
+
+@deffn Command check
+Validate the loaded configuration: compile every mode and resolve every
+pipeline stage to a defined mode, reporting any errors.  Exit status is
+non-zero if anything fails.  Run it after editing a @file{.cgra} file.
+@end deffn
+
+@deffn Command init [--force]
+Install the built-in defaults to @file{~/.config/cgra/config.cgra} and copy the
+bundled standard library into @file{~/.config/cgra/stdlib/}.  Refuses to
+overwrite an existing config unless @option{--force} is given.
+@end deffn
+
+@deffn Command show mode [--imm @var{N}] [-v]
+Print the compiled 32-bit configuration words for @var{mode}.  With
+@option{-v}, each word is decoded into a readable per-PE line
+(@code{op a=@dots{} b=@dots{} imm=@dots{}}).  @option{--imm} overrides the
+immediate of any @code{const} operand before compiling.
+@end deffn
+
+@section Device
+
+@deffn Command ping
+Identify the device and print its protocol version and geometry; warns if the
+geometry differs from this build's 4x4x16 assumption.
+@end deffn
+
+@deffn Command probe
+With no device selected, scan @file{/dev/ttyUSB*} and @file{/dev/ttyACM*}, ping
+each, report any CGRA found, and record the first (usable later as
+@samp{-d auto}).  With a device selected, identify it and run the known-answer
+bring-up tests---the FPGA acceptance check.
+@end deffn
+
+@deffn Command reset
+Clear the PE registers; the loaded configuration is preserved.
+@end deffn
+
+@deffn Command dump
+Read back all sixteen PE registers and print them, one array row per line.
+@end deffn
+
+@section Compute
+
+@deffn Command run mode [@var{nums}@dots{}] [--a @var{SRC}] [--b @var{SRC}] [--imm @var{N}] [--steps @var{N}]
+Run an element-wise or reduction @var{mode} over the input vector(s).
+Element-wise modes read @var{a} from the north edge and (for binary ops)
+@var{b} from the west, producing one output per input.  Reduction modes
+(@code{pattern = reduce}) fold the stream into a single scalar.  @option{--imm}
+sets a @code{const} operand; @option{--steps} overrides the mode's step count.
+@end deffn
+
+@deffn Command pipe name [@var{nums}@dots{}] [--a @var{SRC}] [--b @var{SRC}]
+Run a pipeline: the first stage consumes @var{a} (and @var{b} if it is binary),
+and each stage's output becomes the next stage's input.  Per-stage immediates
+come from the pipeline definition (@code{stage = muli imm=3}).
+@end deffn
+
+@deffn Command matvec -m @var{SRC} --x @var{SRC} [--cols @var{N}]
+Systolic matrix--vector product @math{y = A x}.  @var{A} is row-major; its width
+defaults to the length of @var{x} (or @option{--cols}).  Uses the
+weight-stationary dataflow, tiled over 4x4 blocks for any @code{M x N}.
+@end deffn
+
+@deffn Command conv -m @var{KERNEL} --x @var{SIGNAL}
+Full 1-D convolution @code{out[i] = sum_k h[k]*x[i-k]} of length
+@code{n+k-1}, realised as a matrix--vector with a Toeplitz matrix.
+@end deffn
+
+@deffn Command scan [@var{nums}@dots{}] [--a @var{SRC}] [--op sum|max|min|prod]
+Inclusive prefix scan on row 0: @code{out[i] = a[0] op @dots{} op a[i]}, tiled
+over columns with the running fold carried between blocks.  Default op is
+@code{sum}.
+@end deffn
+
+@deffn Command bench [@var{mode}] [--size @var{N}] [--repeat @var{R}]
+Time @var{mode} (default @code{add}) over @var{N} elements repeated @var{R}
+times, and print the elapsed time plus the link statistics
+(transactions, retries, TX/RX bytes)---handy for seeing that serial round trips,
+not the ALU, dominate.
+@end deffn
+
+@section Development
+
+@deffn Command emulate
+Serve the in-process emulator on a freshly allocated pseudo-terminal and print
+its path; point any serial tool---or another @command{cgra} process via
+@code{-d /dev/pts/N}---at it.  Runs until interrupted.
+@end deffn
+
+@deffn Command selftest
+Run every kernel and pattern against the @samp{sim:} emulator, checking each
+against an independent host computation, and exercise the retry path with
+@samp{sim:flaky}.  Exit status reflects the failures.
+@end deffn

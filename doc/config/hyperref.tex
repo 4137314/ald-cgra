@@ -1,0 +1,26 @@
+% hyperref.tex — PDF hyperlinks, document metadata and the viewer-side
+% bookmark tree (the navigable "table of contents" pane a PDF reader shows
+% next to the page). Loaded LAST by config/preamble.tex, after cite and url,
+% as hyperref requires; the colours come from config/colors.tex.
+
+\usepackage[
+  bookmarks=true,
+  bookmarksopen=true,
+  bookmarksopenlevel=2,
+  bookmarksnumbered=true,
+  colorlinks=true,
+  linkcolor=cLink,
+  citecolor=cCite,
+  urlcolor=cLink,
+  pdfstartview=FitH,
+  pdfpagemode=UseOutlines,   % open with the bookmark pane visible
+  pdfdisplaydoctitle=true
+]{hyperref}
+\usepackage{bookmark}        % single-pass, reorderable bookmarks
+
+\hypersetup{
+  pdftitle    = {A UART-Attached Coarse-Grained Reconfigurable Array},
+  pdfauthor   = {Mattia Fait},
+  pdfsubject  = {Coarse-grained reconfigurable array; FPGA accelerator; dataflow mapping},
+  pdfkeywords = {CGRA, reconfigurable computing, systolic array, FPGA, UART protocol, dataflow}
+}

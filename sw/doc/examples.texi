@@ -1,0 +1,56 @@
+@node Examples
+@chapter Examples
+
+@cindex examples
+All of these run on the emulator, so no FPGA is required; drop @code{-d sim} (or
+use @code{-d auto}) to run on real hardware.
+
+@section Element-wise arithmetic
+@example
+cgra run add -d sim --a "1 2 3 4" --b "10 20 30 40"
+    @result{} 11 22 33 44
+cgra run muli -d sim --a "1 2 3 4" --imm 10 --io hex
+    @result{} 0x000A 0x0014 0x001E 0x0028
+@end example
+
+@section Composing with UNIX pipes
+Rectify a ramp and pull the JSON result through @command{jq}:
+
+@example
+seq -20 20 | cgra run relu -d sim --json | jq '.result'
+@end example
+
+@section Pipelines
+@example
+cgra pipe saxpy -d sim --a "1 2 3 4"     # out = a*3 + 7
+    @result{} 10 13 16 19
+@end example
+
+@section Reduction and linear algebra
+@example
+cgra run dot -d sim --a "1 2 3" --b "4 5 6"
+    @result{} 32
+cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+    @result{} 10 26 42 58
+cgra conv  -d sim -m "1 2 3" --x "4 5 6 7 8"
+cgra scan  -d sim --op max --a "3 1 4 1 5 9 2 6"
+@end example
+
+@section Discovering hardware
+@example
+cgra probe                       # scans ports, records the first CGRA found
+cgra -d auto run dot --a "1 2 3" --b "4 5 6"
+@end example
+
+@section Developing against a virtual device
+@example
+cgra emulate &                   # prints e.g. "serving on /dev/pts/7"
+cgra -d /dev/pts/7 probe         # identify + run every kernel, checked
+@end example
+
+@section Inspecting a configuration
+@example
+cgra show relu -v                # decoded per-PE configuration words
+cgra modes                       # every loaded mode
+cgra bench add --size 256 --repeat 100   # timing + link statistics
+@end example

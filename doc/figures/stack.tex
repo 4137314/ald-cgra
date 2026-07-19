@@ -1,0 +1,25 @@
+% figures/stack.tex — host/FPGA system overview (logical block diagram).
+\begin{tikzpicture}[node distance=4mm]
+  % ---- host side ----
+  \node[blk, minimum width=34mm] (cli) {\cmd{cgra} CLI\\{\scriptsize .cgra DSL $\cdot$ config discovery}};
+  \node[blk, minimum width=34mm, below=of cli] (lib) {\cmd{libcgra}\\{\scriptsize transport $\cdot$ kernels $\cdot$ emulator}};
+  \begin{scope}[on background layer]
+    \node[draw=cBlockE, dashed, rounded corners, fit=(cli)(lib),
+          inner sep=3mm, label=above:{\small Host PC}] (host) {};
+  \end{scope}
+
+  % ---- fpga side ----
+  \node[blk, minimum width=34mm, right=34mm of cli] (uart) {\cmd{uart\_rx} / \cmd{uart\_tx}\\{\scriptsize 8N1}};
+  \node[blk, minimum width=34mm, below=of uart] (ctrl) {\cmd{cgra\_ctrl}\\{\scriptsize protocol FSM $\cdot$ watchdog}};
+  \node[blk, minimum width=34mm, below=of ctrl] (arr) {$4\times4$ PE array};
+  \begin{scope}[on background layer]
+    \node[draw=cBlockE, dashed, rounded corners, fit=(uart)(ctrl)(arr),
+          inner sep=3mm, label=above:{\small FPGA}] (fpga) {};
+  \end{scope}
+
+  % ---- links ----
+  \draw[wireb] (lib.east) -- node[lbl, above]{UART}
+                                node[lbl, below]{115200} (uart.west);
+  \draw[wire] (uart) -- (ctrl);
+  \draw[wireb] (ctrl) -- node[lbl,right]{cfg / inputs / step / regs} (arr);
+\end{tikzpicture}

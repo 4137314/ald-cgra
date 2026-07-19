@@ -1,0 +1,18 @@
+hw/scr/ - Vivado batch scripts
+==============================
+
+Tcl driven headless (vivado -mode batch), so the whole FPGA flow is
+scriptable and diffable - no GUI, no project files checked in.
+
+    build.tcl     read rtl/*.vhd (VHDL-2008) + the BOARD's con/*.xdc, run
+                  synth + implementation + write_bitstream. Args: BOARD.
+                  Output: build/vivado/<top>_<board>.bit
+    program.tcl   open the hw_server, find the FPGA, download a .bit. Args:
+                  path to the bitstream.
+
+Invoked by hw.mk:
+    make -f hw.mk bit  BOARD=basys3     # build.tcl
+    make -f hw.mk prog                  # program.tcl
+
+Vivado is not packaged in flake.nix (proprietary). For flashing without it,
+use `make -f hw.mk prog-ofl` (openFPGALoader).

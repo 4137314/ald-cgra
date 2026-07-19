@@ -1,0 +1,37 @@
+% tikz.tex — TikZ libraries and the reusable node/edge styles shared by every
+% figure in figures/*.tex. Requires tikz and the colour palette (config/colors).
+
+\usetikzlibrary{
+  arrows.meta,
+  automata,
+  positioning,
+  calc,
+  fit,
+  backgrounds,
+  shapes.geometric,
+  shapes.misc,
+  matrix,
+  decorations.pathreplacing
+}
+
+\tikzset{
+  blk/.style   ={draw=cBlockE, fill=cBlock, rounded corners=2pt,
+                 minimum height=8mm, minimum width=16mm, align=center,
+                 font=\small},
+  alu/.style   ={draw=cAluE, fill=cAlu, trapezium, trapezium angle=68,
+                 shape border rotate=270, minimum width=12mm,
+                 minimum height=9mm, align=center, font=\small},
+  reg/.style   ={draw=cRegE, fill=cReg, rounded corners=1pt,
+                 minimum height=7mm, minimum width=10mm, align=center,
+                 font=\small},
+  mux/.style   ={draw=cBlockE, fill=cBlock, trapezium, trapezium angle=70,
+                 shape border rotate=90, minimum width=10mm,
+                 minimum height=7mm, align=center, font=\footnotesize},
+  pe/.style    ={draw=cBlockE, fill=cBlock, rounded corners=2pt,
+                 minimum size=11mm, align=center, font=\footnotesize},
+  st/.style    ={draw=cStateE, fill=cState, circle, minimum size=10mm,
+                 align=center, font=\scriptsize, inner sep=1pt},
+  wire/.style  ={-{Latex[length=2mm]}, color=cWire, thick},
+  wireb/.style ={{Latex[length=2mm]}-{Latex[length=2mm]}, color=cWire, thick},
+  lbl/.style   ={font=\scriptsize, color=cWire}
+}

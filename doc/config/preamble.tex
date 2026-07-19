@@ -1,0 +1,17 @@
+% preamble.tex — master preamble for the CGRA report.
+%
+% This file only *orchestrates* the modular configuration; each concern lives
+% in its own file so it can be read, reused or replaced in isolation. The load
+% order is significant:
+%
+%   1. package    — every \usepackage except hyperref
+%   2. colors     — palette (needs xcolor)
+%   3. tikz       — libraries + node/edge styles (needs tikz + colors)
+%   4. macros     — document-level helper commands
+%   5. hyperref   — links, metadata, PDF bookmarks (MUST be loaded last)
+
+\input{config/package}
+\input{config/colors}
+\input{config/tikz}
+\input{config/macros}
+\input{config/hyperref}

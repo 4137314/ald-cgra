@@ -1,0 +1,25 @@
+sw/config/stdlib/ - bundled .cgra standard library
+==================================================
+
+Small, composable modes/pipelines to pull into your own config with
+`include "<name>.cgra"`. `cgra init` copies these into ~/.config/cgra/stdlib/,
+where the include search finds them by name.
+
+    arithmetic.cgra   neg, inc, dec, double, square, absval, maxi, mini;
+                      pipeline clamp_0_100
+    linalg.cgra       scale, bias, axpy_step; pipeline affine (2*a+1).
+                      (Matrix ops are separate commands: cgra matvec / conv,
+                      cgra run dot - they take matrix-shaped input.)
+    dsp.cgra          gain, attenuate, rectify, bias_dsp, accumulate
+    crypto.cgra       xor_key, and_mask, or_bits, shl_key, add_key;
+                      pipeline feistel_toy  (illustrative, NOT secure)
+
+Use in place without installing:
+
+    CGRA_PATH=sw/config/stdlib cgra run square -d sim --a "2 3 4 5"
+
+Or after `cgra init`, from any config file:
+
+    include "dsp.cgra"
+
+Grammar and the operand/pattern vocabulary: cgra(5).

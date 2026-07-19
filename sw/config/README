@@ -1,0 +1,19 @@
+sw/config/ - reference .cgra configuration
+==========================================
+
+Sample configuration in the .cgra language (INI-flavoured named sections,
+merged by name across the discovery chain). Format reference: cgra(5).
+
+    examples.cgra   extra modes and pipelines shown as reference material;
+                    drop a file like this next to your config to extend the
+                    toolbox (band, bxor, scale, bias, absdiff, normalize...).
+    stdlib/         the bundled standard library (see stdlib/README)
+
+These are not loaded automatically from the tree. `cgra init` installs the
+built-in defaults plus stdlib/ into ~/.config/cgra/; point CGRA_PATH at this
+directory to load them in place, e.g.
+
+    CGRA_PATH=sw/config/stdlib cgra run square -d sim --a "2 3 4 5"
+
+Discovery order (low -> high precedence): built-in defaults, /etc/cgra, the
+user dir, $CGRA_PATH dirs, project-local, then -c FILE. See cgra(5).

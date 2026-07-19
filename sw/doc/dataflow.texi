@@ -1,0 +1,56 @@
+@node Dataflow
+@chapter Dataflow
+
+@cindex dataflow
+@cindex patterns
+A mode's @code{pattern} chooses how it is laid out on the 4x4 mesh.  The single
+register per PE and edge-only operand injection (north per column, west per row)
+are the constraints every pattern works within.
+
+@table @code
+@item diagonal
+@cindex diagonal pattern
+Element-wise binary ops.  @var{a} enters from the north edge, @var{b} from the
+west; PEs above the diagonal @code{pass} @var{a} southward, those below
+@code{pass} @var{b} eastward, and each diagonal PE computes one result.  Four
+lanes per transaction; @code{out = diag}.
+
+@item reduce
+@cindex reduce pattern
+Accumulation into PE(0,0) with @code{mac}/@code{acc}: one element pair per step,
+folded into the register, giving a scalar (e.g.@: @code{dot}).
+
+@item custom
+@cindex custom pattern
+You place each PE with @code{pe R,C = @dots{}}; unlisted PEs are @code{nop}.
+Output taps default to the diagonal, or a single @code{pe R,C} via @code{out}.
+
+@item systolic
+@cindex systolic pattern
+@cindex weight-stationary
+Weight-stationary matrix--vector @code{y = A*x}, driven by @command{cgra
+matvec}.  The vector @var{x} is held stationary in the PE immediates; the
+matrix streams in one row per step as a wavefront marching south (row 0
+multiplies, rows 1--3 form a delay line).  The array is tiled over 4x4 blocks
+for any @code{M x N}; the host sums the four skewed partials per output.
+
+@item conv
+@cindex convolution
+1-D convolution as a Toeplitz matrix--vector (@command{cgra conv}).
+
+@item scan
+@cindex prefix scan
+Inclusive prefix scan on row 0 (@command{cgra scan}): the element sits in the
+immediate and is re-added each step while the running prefix flows west to
+east, tiled over columns with the carry chained between blocks.
+@end table
+
+@cindex why weight-stationary
+@section Why weight-stationary, not a full TPU array
+A classical output-stationary systolic array fuses, in each PE, a multiply with
+the accumulation of a partial sum arriving from a neighbour, while activations
+flow orthogonally---two independent live values per PE.  This fabric gives each
+PE a single register and admits external data only at two edges, so that fusion
+is not realisable; the weight-stationary streaming dataflow above is the
+natural fit.  The consequence is visible in @command{cgra bench}: cost is set by
+serial round trips, not by the array.

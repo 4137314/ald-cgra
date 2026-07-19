@@ -1,0 +1,22 @@
+lib/src/ - implementation
+=========================
+
+    cgra.c    serial transport (termios), the v2 protocol, retry/resync
+              logic, and the accelerated kernels (diagonal element-wise,
+              MAC dot product). The public entry points from cgra.h.
+    emu.h     internal interface to the emulator (emu_push / emu_pop).
+    emu.c     the "sim:" device: a byte-accurate model of cgra_ctrl.vhd +
+              the PE mesh. GOLDEN REFERENCE for the RTL. "sim:flaky" NACKs
+              the first CFG and WR to exercise host retries.
+    serve.c   cgra_emulate_pty(): expose the emulator on a POSIX pseudo-
+              terminal so external serial tools can drive a virtual CGRA.
+
+Notes
+-----
+- No dependencies beyond libc + POSIX (termios, select, openpty).
+- Transport is strictly request/reply; a cgra_t handle is not locked, so
+  serialise calls per handle (see THREAD SAFETY in libcgra(3)).
+- RUN is never retried (it advances state); a failed RUN resyncs instead.
+
+Editing the protocol here means editing hw/rtl/cgra_pkg.vhd and
+include/cgra.h too. emu.c and the silicon must agree byte for byte.

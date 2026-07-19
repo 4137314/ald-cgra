@@ -1,0 +1,65 @@
+\input texinfo   @c -*-texinfo-*-
+@c cgra.texi - GNU info manual for the cgra CLI (modular; chapters @included)
+@setfilename cgra.info
+@settitle cgra manual
+@documentencoding UTF-8
+@syncodeindex fn cp
+@syncodeindex vr cp
+
+@copying
+This manual documents @command{cgra}, the command-line front end for the
+UART-attached CGRA accelerator, built on the @code{libcgra} library.
+
+Written for the Advanced Logic Design course, University of Trento.
+@end copying
+
+@titlepage
+@title cgra
+@subtitle Command-line control of a UART-attached CGRA accelerator
+@page
+@insertcopying
+@end titlepage
+
+@contents
+
+@ifnottex
+@node Top
+@top cgra
+
+@command{cgra} drives a Coarse-Grained Reconfigurable Array from the host over
+a serial link (or an in-process emulator). This manual is the reference for the
+tool, its @file{.cgra} configuration language, and how they map onto the fabric.
+
+@insertcopying
+@end ifnottex
+
+@menu
+* Overview::         What cgra is and how the pieces fit together.
+* Invocation::       Command line, device resolution, input and output.
+* Commands::         The complete command reference.
+* Configuration::    The @file{.cgra} language and how files are discovered.
+* Standard Library:: The bundled modes and pipelines.
+* Dataflow::         How modes map onto the array.
+* Protocol::         The UART wire protocol, in brief.
+* Environment::      Environment variables.
+* Examples::         Worked examples.
+* Files::            Where configuration and state live.
+* Index::            Concept and command index.
+@end menu
+
+@include overview.texi
+@include invocation.texi
+@include commands.texi
+@include configuration.texi
+@include stdlib.texi
+@include dataflow.texi
+@include protocol.texi
+@include environment.texi
+@include examples.texi
+@include files.texi
+
+@node Index
+@unnumbered Index
+@printindex cp
+
+@bye

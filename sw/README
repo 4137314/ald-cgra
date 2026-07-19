@@ -1,0 +1,38 @@
+sw/ - the cgra command-line tool
+================================
+
+A UNIX-style front end over libcgra: read the .cgra configuration language,
+resolve device profiles, compile named modes/pipelines into per-PE words, and
+move vectors in and out through stdin/stdout so kernels compose in pipes.
+
+Files
+-----
+    main.c        argument parsing + every subcommand + vector I/O
+    dsl.h dsl.c   the .cgra language: model, parser, config discovery
+    compile.h .c  mode -> config words -> execution; matvec/scan/conv engines
+
+Layout
+------
+    config/       reference .cgra files (config/stdlib/ = bundled library)
+    completions/  bash completion
+    doc/          man pages (cgra.1, cgra.5) + texinfo manual (cgra.texi)
+
+Build (make -f sw.mk <target>)
+------------------------------
+    all      build/cgra          (default; builds ../lib first)
+    test     run kernels + CLI smoke tests against the sim: emulator
+    doc      makeinfo the texi manual + lint/render the man pages
+    clean
+
+Try it (no FPGA)
+----------------
+    build/cgra selftest
+    build/cgra run add -d sim --a "1 2 3 4" --b "10 20 30 40"   # 11 22 33 44
+    seq -20 20 | build/cgra run relu -d sim --json | jq '.result'
+
+Docs
+----
+    man sw/doc/cgra.1      the command reference
+    man sw/doc/cgra.5      the .cgra file format
+    info sw/build/cgra     the full manual (make -f sw.mk info first)
+Library API: libcgra(3) in lib/doc/.

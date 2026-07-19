@@ -1,0 +1,17 @@
+doc/figures/ - TikZ diagrams
+============================
+
+Standalone TikZ pictures, one per file, \input inside a figure environment in
+the section that uses them. They share the node/edge styles and colour palette
+defined in ../config/tikz.tex and ../config/colors.tex, so they render as one
+visual system.
+
+    pe.tex         processing-element datapath (muxes, ALU, register, config)
+    array.tex      the 4x4 mesh + north/west edge operand injection
+    fsm.tex        the control finite-state machine (ID/CFG/WR/RUN/RD/RST)
+    systolic.tex   weight-stationary matrix-vector space-time skew
+    stack.tex      the layered host/device software stack
+
+Style keys (see ../config/tikz.tex): blk, alu, reg, mux, pe, st, wire, lbl.
+Reuse them instead of hard-coding colours so a palette change propagates
+everywhere at once.

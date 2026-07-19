@@ -1,0 +1,344 @@
+.\" cgra.5 - the .cgra configuration file format
+.TH CGRA 5 "2026" "cgra 0.1" "File Formats"
+.SH NAME
+cgra \- configuration file format for the CGRA accelerator front end
+.SH SYNOPSIS
+.nf
+~/.config/cgra/config.cgra
+~/.config/cgra/*.cgra , ~/.config/cgra/conf.d/*.cgra
+/etc/cgra/*.cgra
+./.cgra/*.cgra
+.fi
+.SH DESCRIPTION
+A
+.B .cgra
+file describes, declaratively, how
+.BR cgra (1)
+should drive the fabric: named connection
+.I devices,
+array
+.I modes,
+multi-stage
+.I pipelines,
+and output
+.I "io profiles."
+The syntax is INI-flavoured: a sequence of named sections, each holding
+.BI key " = " value
+directives.
+.PP
+A
+.B #
+begins a trailing comment; a line whose first non-blank character is
+.B ;
+is a whole-line comment. Blank lines are ignored. Every entity is merged
+.B by name
+across all loaded files (see
+.BR "FILE DISCOVERY" ),
+so a later file overrides individual fields of an entity defined earlier rather
+than replacing it wholesale.
+.SH SECTIONS
+A section header is
+.BI [ type " " name ].
+Four section types exist.
+.SS [device NAME]
+A connection profile.
+.TP
+.B port
+Serial device path (e.g.\&
+.IR /dev/ttyUSB1 )
+or
+.B sim:
+for the in-process emulator.
+.TP
+.B baud
+Baud rate (default 115200).
+.TP
+.B timeout
+Per-reply timeout in milliseconds.
+.TP
+.B board
+Informational board tag
+.RB ( basys3 ", " nexys_a7 ).
+.SS [mode NAME]
+An array configuration. A mode either selects a
+.I pattern
+that generates the sixteen PE words, or places PEs by hand.
+.TP
+.B doc
+One-line description, shown by
+.BR "cgra modes" .
+.TP
+.B pattern
+One of
+.BR diagonal " (default), " reduce ", " custom ", " systolic ", " conv ", " scan .
+See
+.BR PATTERNS .
+.TP
+.B op
+ALU opcode for
+.B diagonal
+and
+.B reduce
+modes. See
+.BR OPCODES .
+.TP
+.BR a ", " b
+Operand sources. See
+.BR "OPERAND SOURCES" .
+Defaults:
+.B a
+=
+.BR north ,
+.B b
+=
+.BR west .
+.TP
+.B steps
+.BR rows " (= 4), " auto ", or an integer."
+.TP
+.B out
+Output tap:
+.B diag
+(the four diagonal PEs) or
+.BI "pe " R , C
+(a single PE).
+.TP
+.B reset
+.BR each " or " once
+\(em whether to clear the PE registers between input chunks.
+.TP
+.BI "pe " R , C " = op=" \fIO\fB " a=" \fISA\fB " b=" \fISB
+For
+.BR "pattern = custom" ,
+place one PE (0 \(<= R,C \(<= 3). Unlisted PEs are
+.BR nop .
+.SS [pipeline NAME]
+A chain of modes; the host feeds each stage's output into the next.
+.TP
+.B doc
+Description.
+.TP
+.BI "stage = " MODE " [imm=" K ]
+One stage. Repeat for each. The first stage may be binary (consume the
+.I a
+and
+.I b
+inputs); later stages are unary.
+.B imm=K
+sets that stage's immediate.
+.SS [io NAME]
+An output data-binding profile.
+.TP
+.B format
+.BR dec ", " hex ", " bin " or " json .
+.TP
+.B width
+Datapath width (informational; 16).
+.TP
+.B sep
+.BR ws ", " comma " or " newline .
+.SH PATTERNS
+How a mode maps onto the 4x4 mesh. The single register per PE and edge-only
+operand injection (north per column, west per row) constrain every pattern.
+.TP
+.B diagonal
+Element-wise binary op:
+.I a
+enters from the north,
+.I b
+from the west, off-diagonal PEs are PASS chains, and each of the four diagonal
+PEs computes one result. Four lanes per transaction.
+.TP
+.B reduce
+MAC/ACC accumulation into PE(0,0); one element pair per step, giving a scalar
+(e.g.\& a dot product).
+.TP
+.B custom
+Hand-placed PEs via
+.BI "pe " R , C
+directives; unlisted PEs are NOP. Output taps default to the diagonal or a
+single
+.BI "pe " R , C
+via
+.BR out .
+.TP
+.B systolic
+Weight-stationary matrix-vector y = A*x, driven by
+.BR "cgra matvec" .
+The vector is held in the PE immediates; the matrix streams in one row per
+step; the array is tiled over 4x4 blocks. Not a plain vector
+.BR run .
+.TP
+.B conv
+1-D convolution as a Toeplitz matrix-vector, driven by
+.BR "cgra conv" .
+.TP
+.B scan
+Inclusive prefix scan on row 0, driven by
+.BR "cgra scan" .
+.SH OPERAND SOURCES
+Values for the
+.BR a / b
+directives and the
+.BR a= / b=
+fields of a
+.B pe
+line:
+.TP
+.BR north ", " west ", " self ", " zero
+The registered output of that neighbour; on the edges,
+.B north
+of row 0 and
+.B west
+of column 0 read the input ports.
+.B self
+is the PE's own register (feedback);
+.B zero
+is a constant 0.
+.TP
+.BI const( K )
+A 16-bit signed immediate
+.IR K .
+Bare
+.B const
+takes its value from
+.B --imm
+at the command line.
+.SH OPCODES
+.B nop pass add sub mul mac and or xor shl shr max min abs acc const
+.PP
+Arithmetic is 16-bit signed and wraps;
+.B mul
+and
+.B mac
+keep the low 16 bits of the product;
+.B shr
+is arithmetic.
+.SH DIRECTIVES
+Two directives may appear outside any section.
+.TP
+.BI "include \(dq" file .cgra \(dq
+Parse another file inline. Searched, in order: relative to the including file,
+each
+.B CGRA_PATH
+entry, the user config dir and its
+.IR stdlib/ ,
+then the system share and
+.IR /etc/cgra .
+.TP
+.BI "set " NAME " = " value
+Define a variable.
+.BI $ NAME
+and
+.BI ${ NAME }
+expand it in any later value.
+.SH FILE DISCOVERY
+Files are loaded from several roots, lowest to highest precedence:
+.IP 1. 4
+built-in defaults (compiled in);
+.IP 2. 4
+.IR /etc/cgra ;
+.IP 3. 4
+the user directory
+.RI ( $XDG_CONFIG_HOME/cgra
+or
+.IR ~/.config/cgra );
+.IP 4. 4
+each
+.B CGRA_PATH
+directory (colon-separated, like
+.BR PATH );
+.IP 5. 4
+project-local:
+.B CGRA_CONFIG
+if set, else
+.IR ./.cgra/ ;
+.IP 6. 4
+the
+.B "cgra -c"
+file (highest).
+.PP
+Within each directory,
+.I config.cgra
+loads first, then the remaining
+.I *.cgra
+alphabetically, then a
+.I conf.d/
+drop-in directory alphabetically \(em so
+.I conf.d/99_overrides.cgra
+beats
+.I conf.d/01_base.cgra
+by name (the Nginx/systemd convention).
+.B "cgra config"
+prints the resolved paths.
+.SH EXAMPLES
+A small, self-contained configuration:
+.PP
+.RS
+.EX
+[device lab]
+port    = /dev/ttyUSB1
+baud    = 115200
+board   = basys3
+
+# element-wise: out = max(a, 0)
+[mode relu]
+doc     = out = max(a, 0)
+pattern = diagonal
+op      = max
+a       = north
+b       = const(0)
+
+# hand-placed PEs
+[mode madd]
+pattern = custom
+out     = diag
+pe 0,0  = op=mac a=north b=west
+pe 1,1  = op=add a=self  b=const(1)
+
+# chain modes: out = a*3 + 7
+[pipeline saxpy]
+stage   = muli imm=3
+stage   = addi imm=7
+
+# reusable gain via a variable
+set GAIN = 7
+[mode amplify]
+pattern = diagonal
+op      = mul
+a       = north
+b       = const($GAIN)
+
+[io hex]
+format  = hex
+sep     = ws
+.EE
+.RE
+.PP
+Validate it with
+.BR "cgra check" ,
+list what loaded with
+.BR "cgra modes" ,
+and inspect a compilation with
+.BR "cgra show relu -v" .
+.SH FILES
+.TP
+.I ~/.config/cgra/config.cgra
+User configuration, written by
+.BR "cgra init" .
+.TP
+.I ~/.config/cgra/stdlib/
+Bundled standard library, pulled in with
+.BR include .
+.TP
+.I /etc/cgra/
+System-wide configuration.
+.SH SEE ALSO
+.BR cgra (1),
+.BR libcgra (3)
+.PP
+The GNU info manual
+.RB ( "info cgra" )
+has a tutorial treatment of the same material.
+.SH AUTHOR
+Written for the Advanced Logic Design course, University of Trento.

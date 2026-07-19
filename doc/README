@@ -1,0 +1,25 @@
+doc/ - LaTeX report
+===================
+
+An IEEE-conference write-up of the *logical* design: PE datapath, mesh, control
+FSM, dataflow mappings and a wire-level cost model - diagrams, no code dumps.
+
+Layout
+------
+    main.tex        document root: title, abstract, \input of each section
+    config/         modular preamble (packages, colours, tikz, macros, hyperref)
+    src/            one .tex per section (see src/README)
+    figures/        standalone TikZ pictures (see figures/README)
+    IEEEtran.cls    vendored, so it builds without a full TeX Live
+
+Build (make -f doc.mk)
+----------------------
+    make -f doc.mk          latexmk -> build/main.pdf
+    make -f doc.mk clean
+
+The PDF ships a hyperlinked outline: it opens with the bookmark pane (the side
+"table of contents") visible, one entry per section/subsection, plus PDF
+metadata. That is configured in config/hyperref.tex.
+
+nix: `nix develop` provides texliveSmall; the report uses only widely available
+packages (hyperref, bookmark, tikz, booktabs, microtype).

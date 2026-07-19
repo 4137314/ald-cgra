@@ -1,0 +1,38 @@
+lib/ - libcgra, the host C library
+==================================
+
+The host half of the CGRA. Owns the serial transport, the v2 protocol, the
+accelerated kernels, and an in-process emulator that speaks the identical wire
+protocol so the whole stack runs with no FPGA.
+
+Layout
+------
+    include/    public API - cgra.h (the only header you include)
+    src/        implementation: transport+kernels, emulator, pty server
+    doc/        man page (libcgra.3), hand-written, groff -man
+
+Build (make -f lib.mk <target>)
+-------------------------------
+    all      build/libcgra.a          (default)
+    man      lint + render doc/libcgra.3 -> build/libcgra.3.txt
+    clean
+
+Link against it with: cc ... -Iinclude -Llib/build -lcgra
+
+Quick taste
+-----------
+    cgra_t *d = cgra_open("sim:", 115200);      /* no hardware needed */
+    int16_t a[4]={1,2,3,4}, b[4]={10,20,30,40}, out[4];
+    cgra_vec_add(d, a, b, out, 4);              /* -> 11 22 33 44 */
+    cgra_close(d);
+
+Docs
+----
+The API is documented in include/cgra.h (Unix-style block comments, no
+doxygen) and in doc/libcgra.3. See also the CLI: cgra(1), cgra(5).
+
+Contract
+--------
+The protocol bytes and config-word layout are shared with hw/rtl/cgra_pkg.vhd.
+src/emu.c is the golden reference the RTL testbenches are checked against -
+keep header, emulator and VHDL package in lockstep.

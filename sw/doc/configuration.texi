@@ -1,0 +1,128 @@
+@node Configuration
+@chapter Configuration
+
+@cindex configuration language
+@cindex .cgra files
+The @file{.cgra} language is INI-flavoured: a sequence of named sections, each
+holding @code{key = value} directives.  A @samp{#} begins a trailing comment;
+a line whose first non-blank character is @samp{;} is a whole-line comment.
+Every entity is merged @emph{by name} across all loaded files, so a later file
+overrides individual fields of an entity defined earlier.  The terse reference
+is @command{man cgra 5}; this chapter is the tutorial.
+
+@section Section types
+@cindex sections
+A section header is @code{[TYPE NAME]}.  Four types exist.
+
+@subsection @code{[device NAME]}
+@cindex device profile
+A connection profile.
+
+@table @code
+@item port
+serial path (e.g.@: @file{/dev/ttyUSB1}) or @samp{sim:} for the emulator.
+@item baud
+baud rate (default 115200).
+@item timeout
+per-reply timeout in milliseconds.
+@item board
+informational board tag (@code{basys3}, @code{nexys_a7}).
+@end table
+
+@subsection @code{[mode NAME]}
+@cindex mode
+An array configuration.  A mode either selects a @dfn{pattern} that generates
+the sixteen PE words, or places PEs by hand.
+
+@table @code
+@item doc
+one-line description (shown by @command{cgra modes}).
+@item pattern
+@code{diagonal} (default), @code{reduce}, @code{custom}, @code{systolic},
+@code{conv}, or @code{scan}.  @xref{Dataflow}.
+@item op
+the ALU opcode for @code{diagonal}/@code{reduce}: @code{add sub mul mac and or
+xor shl shr max min abs acc const} (and @code{nop}, @code{pass}).
+@item a
+@itemx b
+operand sources: @code{north west self zero} or @code{const(K)} (a 16-bit
+immediate).  Defaults: @code{a = north}, @code{b = west}.
+@item steps
+@code{rows} (= 4), @code{auto}, or an integer.
+@item out
+output tap: @code{diag} (the four diagonal PEs) or @code{pe R,C} (a single PE).
+@item reset
+@code{each} or @code{once}---whether to clear PE registers between input chunks.
+@item pe R,C = op=@dots{} a=@dots{} b=@dots{}
+for @code{pattern = custom}, place one PE (@math{0 \le R,C \le 3}).  Unlisted
+PEs are @code{nop}.
+@end table
+
+@subsection @code{[pipeline NAME]}
+@cindex pipeline
+A chain of modes; the host feeds each stage's output into the next.
+
+@table @code
+@item doc
+description.
+@item stage = MODE [imm=K]
+one stage.  Repeat for each stage; @code{imm=K} sets that stage's immediate.
+The first stage may be binary (consume @var{a} and @var{b}); later stages are
+unary.
+@end table
+
+@subsection @code{[io NAME]}
+@cindex io profile
+A data-binding profile for output.
+
+@table @code
+@item format
+@code{dec}, @code{hex}, @code{bin} or @code{json}.
+@item width
+datapath width (informational; 16).
+@item sep
+@code{ws}, @code{comma} or @code{newline}.
+@end table
+
+@section Includes and variables
+@cindex include
+@cindex set
+@cindex variables
+A file may pull in another with @code{include "other.cgra"}.  The include is
+searched, in order: relative to the including file, each @env{CGRA_PATH} entry,
+the user config dir and its @file{stdlib/}, then the system share and
+@file{/etc/cgra}.
+
+@code{set NAME = value} defines a variable; @code{$NAME} and @code{$@{NAME@}}
+expand it in any later value.  For example:
+
+@example
+set GAIN = 7
+[mode amplify]
+pattern = diagonal
+op      = mul
+a       = north
+b       = const($GAIN)
+@end example
+
+@section Discovery and precedence
+@cindex discovery
+@cindex precedence
+Configuration is loaded from several roots, lowest to highest precedence:
+
+@enumerate
+@item the built-in defaults (compiled in);
+@item @file{/etc/cgra};
+@item the user directory (@env{XDG_CONFIG_HOME}@file{/cgra} or
+      @file{~/.config/cgra});
+@item each @env{CGRA_PATH} directory (colon-separated, like @env{PATH});
+@item project-local: @env{CGRA_CONFIG} if set, else @file{./.cgra/};
+@item the @option{-c} file (highest).
+@end enumerate
+
+@cindex conf.d
+Within each directory, @file{config.cgra} loads first, then the remaining
+@file{*.cgra} alphabetically, then a @file{conf.d/} drop-in directory
+alphabetically.  So @file{conf.d/99_overrides.cgra} beats
+@file{conf.d/01_base.cgra} by name---the Nginx/systemd convention.
+@command{cgra config} prints the resolved paths.

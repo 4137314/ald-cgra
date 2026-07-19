@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ghdl gcc make
+
+      - name: HDL simulation (GHDL)
+        run: make sim
+
+      - name: Build library and CLI
+        run: make lib sw
+
+      - name: Software tests (CLI + kernels on the emulator)
+        run: make test
+
+      - name: Probe the virtual device over a pty
+        run: |
+          ./sw/build/cgra emulate > /tmp/emu.log 2>&1 &
+          EMU=$!
+          for i in $(seq 1 100); do grep -q "serving on" /tmp/emu.log && break; sleep 0.05; done
+          PTS=$(grep "serving on" /tmp/emu.log | awk '{print $NF}')
+          ./sw/build/cgra -d "$PTS" probe
+          kill $EMU || true
+
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: "experimental-features = nix-command flakes"
+      - name: nix build
+        run: nix build .
+      - name: nix flake check
+        run: nix flake check || true

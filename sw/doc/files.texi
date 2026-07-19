@@ -1,0 +1,25 @@
+@node Files
+@chapter Files
+
+@cindex files
+@table @file
+@item ~/.config/cgra/config.cgra
+User configuration, written by @command{cgra init}.
+@item ~/.config/cgra/stdlib/
+Bundled standard library (@pxref{Standard Library}).
+@item ~/.config/cgra/conf.d/
+Optional drop-in directory; @file{*.cgra} here load last, alphabetically.
+@item ~/.config/cgra/.device
+Port recorded by @command{cgra probe}, resolved by @samp{-d auto}.
+@item /etc/cgra/
+System-wide configuration (and @file{/etc/cgra/conf.d/}).
+@item ./.cgra/
+Project-local configuration, loaded unless @env{CGRA_CONFIG} is set.
+@end table
+
+@cindex see also
+@section See also
+@command{cgra(1)} (command reference), @command{cgra(5)} (the @file{.cgra} file
+format), @command{libcgra(3)} (the C library).  The hardware report is in
+@file{doc/build/main.pdf}; the wire protocol lives in
+@file{hw/rtl/cgra_pkg.vhd}.

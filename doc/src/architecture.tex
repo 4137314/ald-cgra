@@ -1,0 +1,64 @@
+\section{Fabric Architecture}
+\label{sec:arch}
+
+The fabric is a $\text{ROWS}\times\text{COLS}=4\times4$ mesh of identical
+processing elements operating on 16-bit signed words. All PEs share a single
+clock domain and advance synchronously; a global \emph{step} enable, asserted
+by the controller, gates every PE register so that the host advances the whole
+array a deterministic number of cycles per command.
+
+\subsection{Processing element}
+
+Figure~\ref{fig:pe} shows the PE datapath. Each PE has two operand multiplexers
+that independently select one of seven sources: the registered output of a
+north, south, east or west neighbour; a 16-bit immediate carried in the
+configuration word; the PE's own register (a feedback path); or a constant
+zero. The selected operands drive an arithmetic-logic unit; its result is
+latched into the single output register when \emph{step} is asserted.
+
+\begin{figure}[t]
+  \centering
+  \resizebox{\columnwidth}{!}{\input{figures/pe}}
+  \caption{Processing-element datapath: two operand muxes select from the four
+  neighbours, the immediate, the self register or zero; the ALU result is
+  latched by a single step-gated register.}
+  \label{fig:pe}
+\end{figure}
+
+The ALU implements sixteen operations selected by a 4-bit opcode: a no-op that
+holds the register; a pass-through; addition, subtraction and multiplication
+(the low 16 bits of the product); a multiply-accumulate and a simple
+accumulate, both folding into the register; the bitwise \textsc{and}/\textsc{or}
+/\textsc{xor}; logical/arithmetic shifts; signed maximum, minimum and absolute
+value; and a constant load. Multiplication and multiply-accumulate keep the low
+half of the result, so arithmetic wraps modulo $2^{16}$, consistent with a
+16-bit datapath.
+
+A single 32-bit configuration word fully specifies a PE: the low sixteen bits
+are the immediate, followed by the 4-bit opcode and the two 3-bit operand
+selects. One such word per PE constitutes a complete array configuration.
+
+\subsection{Mesh interconnect and operand injection}
+
+Figure~\ref{fig:array} shows the interconnect. Internally, each PE reads the
+\emph{registered} outputs of its four neighbours, so data advances by at most
+one hop per step. External operands enter only at two edges: the north input
+port feeds row~0 (one value per column) and the west input port feeds column~0
+(one value per row). The south and east edges read a constant zero. All sixteen
+PE registers are exposed for read-back.
+
+\begin{figure*}[t]
+  \centering
+  \input{figures/array}
+  \caption{The $4\times4$ mesh. Solid arrows are nearest-neighbour register
+  connections; operands are injected only at the north edge (per column) and
+  the west edge (per row), while the south and east edges read zero. This
+  edge-only injection is the central constraint on dataflow mapping
+  (Section~\ref{sec:dataflow}).}
+  \label{fig:array}
+\end{figure*}
+
+This edge-only injection, combined with the single register per PE, is the
+defining architectural constraint of the fabric: interior PEs receive fresh
+host data only through their neighbours, so any computation that uses the whole
+array must route operands inward from the edges.

@@ -1,0 +1,43 @@
+# stdlib/crypto.cgra — bit-twiddling primitives (toy, educational).
+# include "crypto.cgra"
+
+[mode xor_key]
+doc     = out = a ^ key  (key via --imm; stream cipher step)
+pattern = diagonal
+op      = xor
+a       = north
+b       = const(0)
+
+[mode and_mask]
+doc     = out = a & mask  (mask via --imm)
+pattern = diagonal
+op      = and
+a       = north
+b       = const(255)
+
+[mode or_bits]
+doc     = out = a | imm
+pattern = diagonal
+op      = or
+a       = north
+b       = const(0)
+
+[mode shl_key]
+doc     = out = a << imm  (bit shift, imm in 0..15)
+pattern = diagonal
+op      = shl
+a       = north
+b       = const(1)
+
+[mode add_key]
+doc     = out = a + key  (additive cipher; wraps at 16 bits)
+pattern = diagonal
+op      = add
+a       = north
+b       = const(0)
+
+# a simple two-round toy: XOR then add (both keyed via --imm on each stage)
+[pipeline feistel_toy]
+doc     = out = (a ^ 42) + 7  (illustrative only, not secure)
+stage   = xor_key imm=42
+stage   = add_key imm=7

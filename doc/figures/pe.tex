@@ -1,0 +1,37 @@
+% figures/pe.tex — processing-element datapath (logical).
+\begin{tikzpicture}[node distance=6mm]
+  % operand source list
+  \node[align=right, font=\scriptsize, color=cWire] (srcs)
+        {N, S, E, W\\ const (imm)\\ self ($\reg{r}$)\\ zero};
+
+  % two operand muxes
+  \node[mux, right=14mm of srcs, yshift=6mm]  (ma) {mux};
+  \node[mux, right=14mm of srcs, yshift=-9mm] (mb) {mux};
+  \node[lbl, above=0.5mm of ma] {sel\_a};
+  \node[lbl, below=0.5mm of mb] {sel\_b};
+
+  % alu and register
+  \node[alu, right=12mm of $(ma)!0.5!(mb)$] (alu) {ALU};
+  \node[reg, right=12mm of alu] (reg) {$\reg{r}$};
+  \node[blk, below=10mm of alu, minimum width=30mm] (cfg)
+        {config word\\{\scriptsize [imm | op | sel\_a | sel\_b]}};
+
+  % wires: sources -> muxes
+  \draw[wire] (srcs.east) -- (ma.west);
+  \draw[wire] (srcs.east) -- (mb.west);
+  % muxes -> alu
+  \draw[wire] (ma.east) -- node[lbl,above]{a} ([yshift=3mm]alu.west);
+  \draw[wire] (mb.east) -- node[lbl,below]{b} ([yshift=-3mm]alu.west);
+  % alu -> reg -> out
+  \draw[wire] (alu.east) -- (reg.west);
+  \draw[wire] (reg.east) -- node[lbl,above]{dout} ++(12mm,0);
+  % feedback self
+  \draw[wire] (reg.south) |- ([yshift=-4mm]reg.south) -| (srcs.south)
+        node[lbl, pos=0.25, below]{self};
+  % config fan-out
+  \draw[wire] (cfg.north) -- node[lbl,right]{op} (alu.south);
+  \draw[wire] (cfg.west) -- ++(-6mm,0) |- (ma.south) node[lbl,pos=0.75,below]{};
+  \draw[wire] (cfg.west) -- ++(-6mm,0) |- (mb.south);
+  % step
+  \draw[wire] ([xshift=-6mm]reg.south) ++(0,-8mm) -- node[lbl,left]{step} (reg.south);
+\end{tikzpicture}

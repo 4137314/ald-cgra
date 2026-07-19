@@ -1,0 +1,39 @@
+@node Protocol
+@chapter Protocol
+
+@cindex protocol
+@cindex UART
+The tool and @code{libcgra} talk to the fabric with a byte-oriented UART
+protocol (version 2): 115200 baud, 8N1, little-endian payloads.  It is
+summarised here for the curious; the authority is @file{hw/rtl/cgra_pkg.vhd},
+mirrored in @file{lib/include/cgra.h} and the emulator @file{lib/src/emu.c}.
+
+@cindex commands, protocol
+@multitable @columnfractions .12 .12 .50
+@headitem Cmd @tab Byte @tab Payload @result{} reply
+@item @code{ID}  @tab @code{0x01} @tab --- @result{} @code{0xCA}, version, rows, cols, width
+@item @code{CFG} @tab @code{0x02} @tab 16 x 32-bit words + checksum @result{} ACK/NACK
+@item @code{WR}  @tab @code{0x03} @tab 8 x 16-bit (west 0--3, north 0--3) + checksum @result{} ACK/NACK
+@item @code{RUN} @tab @code{0x04} @tab 1 byte step count @result{} ACK
+@item @code{RD}  @tab @code{0x05} @tab --- @result{} 16 x 16-bit registers + checksum
+@item @code{RST} @tab @code{0x06} @tab --- @result{} ACK (clears registers)
+@end multitable
+
+@noindent
+@code{ACK} is @code{0x79}, @code{NACK} is @code{0x1F}.  Multi-byte payloads
+carry an 8-bit additive checksum (sum of the payload bytes, mod 256); the
+device NACKs a bad @code{CFG}/@code{WR} and appends a checksum to the @code{RD}
+reply.
+
+@cindex robustness
+@cindex retries
+@cindex watchdog
+@section Robustness
+@code{libcgra} retransmits @code{CFG}, @code{WR} and @code{RD} automatically on
+a NACK, timeout or bad checksum (@pxref{Environment}, and
+@code{cgra_set_retries} in @code{libcgra(3)}).  @code{RUN} is never retried,
+since it advances state; a failed @code{RUN} instead triggers a resync
+(flush + @code{RST}) so the device is never left hanging.  On the device side, a
+watchdog aborts a partially received command after about a second, so a
+desynchronised host always recovers.  @command{cgra selftest} exercises this
+path via the @samp{sim:flaky} device.

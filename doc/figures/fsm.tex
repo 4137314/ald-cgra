@@ -1,0 +1,40 @@
+% figures/fsm.tex — controller finite-state machine (protocol v2, logical).
+\begin{tikzpicture}[->, >={Latex[length=2mm]}, x=17mm, y=13mm,
+                    every state/.style={st}, font=\scriptsize,
+                    every edge/.style={draw, ->, >={Latex[length=2mm]}}]
+  % states (absolute placement for a clean left-to-right flow)
+  \node[st, fill=cStateE, text=white] (idle) at (0,0)    {IDLE};
+  \node[st] (cfg)   at (2, 2)    {CFG};
+  \node[st] (cfgck) at (4, 2)    {CFG\\CK};
+  \node[st] (wr)    at (2, 0.8)  {WR};
+  \node[st] (wrck)  at (4, 0.8)  {WR\\CK};
+  \node[st] (run)   at (2,-0.6)  {RUN};
+  \node[st] (rd)    at (2,-2)     {RD};
+  \node[st] (rdck)  at (4,-2)     {RD\\CK};
+  \node[st] (send)  at (6, 0)     {SEND};
+
+  % decode: idle -> command branches
+  \path (idle) edge node[above,sloped]{CFG} (cfg)
+        (idle) edge node[above,sloped]{WR}  (wr)
+        (idle) edge node[below,sloped]{RUN} (run)
+        (idle) edge node[below,sloped]{RD}  (rd);
+
+  % payload accumulate + checksum
+  \path (cfg) edge node[above]{16 words} (cfgck)
+        (wr)  edge node[above]{8 words}  (wrck)
+        (rd)  edge node[above]{16 regs}  (rdck);
+
+  % replies converge on the shared SEND collector
+  \path (cfgck) edge node[above,sloped]{ACK/NACK} (send)
+        (wrck)  edge node[above,sloped]{ACK/NACK} (send)
+        (rdck)  edge node[below,sloped]{$+$cksum}  (send)
+        (run)   edge node[above,sloped]{$N{=}0$: ACK} (send);
+  \path (run) edge[loop below] node{step, $N{-}1$} (run);
+
+  % short commands reply directly; SEND returns to IDLE
+  \path (idle) edge[bend right=55] node[below,sloped]{ID / RST / bad} (send);
+  \path (send) edge[bend right=40] node[above]{tx done} (idle);
+
+  % watchdog abort on stalled payload
+  \path[dashed] (cfg) edge[bend right=18] node[above,sloped]{\itshape timeout} (idle);
+\end{tikzpicture}

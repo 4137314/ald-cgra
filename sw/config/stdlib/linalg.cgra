@@ -1,0 +1,34 @@
+# stdlib/linalg.cgra — linear-algebra building blocks.
+# include "linalg.cgra"
+#
+# Note: full matrix-vector, dot product and convolution are driven by the
+# dedicated commands `cgra matvec`, `cgra run dot` and `cgra conv`, because
+# they take matrix-shaped input. The modes here are the element-wise pieces
+# used to compose affine maps.
+
+[mode scale]
+doc     = out = a * imm  (set with --imm, default x2)
+pattern = diagonal
+op      = mul
+a       = north
+b       = const(2)
+
+[mode bias]
+doc     = out = a + imm  (set with --imm, default +0)
+pattern = diagonal
+op      = add
+a       = north
+b       = const(0)
+
+[mode axpy_step]
+doc     = out = a + b (accumulate two vectors)
+pattern = diagonal
+op      = add
+a       = north
+b       = west
+
+# out = 2*a + 1
+[pipeline affine]
+doc     = out = 2*a + 1
+stage   = scale imm=2
+stage   = bias imm=1

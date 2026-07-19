@@ -1,0 +1,48 @@
+@node Overview
+@chapter Overview
+
+@cindex overview
+@cindex CGRA
+@command{cgra} drives a Coarse-Grained Reconfigurable Array---a 4x4 mesh of
+16-bit signed processing elements (PEs)---from the host over a serial link, on
+top of the @code{libcgra} library.  The host reconfigures the array by loading
+one 32-bit configuration word per PE, injects operands at the array edges,
+advances the datapath a chosen number of cycles, and reads the register file
+back.
+
+The tool sits at the top of a small stack:
+
+@example
+   cgra  (this tool)     .cgra language, modes, pipelines, vector I/O
+     |
+   libcgra              transport, v2 protocol, kernels, sim: emulator
+     |
+   UART  or  sim:       real FPGA, or the in-process model
+@end example
+
+@cindex declarative configuration
+Rather than hand-assembling configuration words, a user describes reusable
+@dfn{modes} (array configurations) and @dfn{pipelines} (chains of modes) in a
+declarative configuration language (@file{.cgra} files), and names them on the
+command line.  The tool resolves named @dfn{device} profiles, compiles the
+requested mode into per-PE words, streams the input vectors through it, and
+formats the results.  Vectors move via standard input and output, so kernels
+compose in ordinary UNIX pipelines.
+
+@cindex emulator
+@cindex sim:
+@anchor{The emulator}
+An in-process emulator is available as the pseudo-device @samp{sim:}, so every
+command works without an FPGA; it re-implements the PE ALU and the protocol
+byte for byte and is the golden reference the hardware is checked against.  It
+can also be served on a pseudo-terminal (@command{cgra emulate}) so external
+serial tools can talk to a virtual CGRA.
+
+@cindex design intent
+@section Why it looks the way it does
+Each PE owns a single register, and external operands enter only at two edges
+(north, per column; west, per row).  That one constraint shapes everything
+above it: it is why element-wise kernels use a @dfn{diagonal} routing, why the
+matrix--vector engine is @dfn{weight-stationary}, and why throughput on a real
+link is bounded by serial round trips rather than by the number of PEs.
+@xref{Dataflow}, for the details, and @ref{Protocol} for the wire format.

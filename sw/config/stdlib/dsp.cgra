@@ -1,0 +1,41 @@
+# stdlib/dsp.cgra — signal-processing helpers.
+# include "dsp.cgra"
+#
+# FIR filtering is a convolution: use `cgra conv -m "<taps>" --x "<signal>"`.
+# The modes below are the per-sample element-wise operators.
+
+[mode gain]
+doc     = out = a * imm  (set with --imm)
+pattern = diagonal
+op      = mul
+a       = north
+b       = const(1)
+
+[mode attenuate]
+doc     = out = a >> imm  (divide by 2^imm, arithmetic)
+pattern = diagonal
+op      = shr
+a       = north
+b       = const(1)
+
+[mode rectify]
+doc     = out = max(a, 0)  (half-wave rectifier)
+pattern = diagonal
+op      = max
+a       = north
+b       = const(0)
+
+[mode bias_dsp]
+doc     = out = a + imm  (DC offset)
+pattern = diagonal
+op      = add
+a       = north
+b       = const(0)
+
+# running sum of a stream (prefix sum); also available via `cgra scan`
+[mode accumulate]
+doc     = out = out + a (running accumulator on PE 0,0; use reduce semantics)
+pattern = reduce
+op      = acc
+a       = north
+b       = zero

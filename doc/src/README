@@ -1,0 +1,18 @@
+doc/src/ - report sections
+==========================
+
+One file per section, \input by main.tex in this order:
+
+    introduction.tex   problem, goals, the guiding constraint, contributions
+    background.tex      CGRA design space, systolic dataflow, related work
+    architecture.tex    PE datapath + the 4x4 mesh and edge injection
+    protocol.tex        UART command set, a byte-level example, the control FSM
+    dataflow.tex        element-wise / reduction / weight-stationary mappings
+    software.tex        the layered host stack (library, model, CLI, DSL)
+    analysis.tex        wire-level cost + latency model of the serial link
+    results.tex         two-level verification (RTL vs. model golden reference)
+    conclusion.tex      recap and future work
+
+Each begins with \section{...}\label{sec:...}; cross-reference by label so
+reordering never breaks \ref. Figures live in ../figures and are pulled in
+with \input.

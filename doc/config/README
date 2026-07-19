@@ -1,0 +1,22 @@
+doc/config/ - modular preamble
+==============================
+
+The report's preamble, split by concern so each piece is readable and
+reusable in isolation. main.tex pulls in only preamble.tex.
+
+    preamble.tex    orchestrator: \input the modules below, in order
+    package.tex     every \usepackage EXCEPT hyperref
+    colors.tex      figure palette + hyperlink colours (needs xcolor)
+    tikz.tex        TikZ libraries + the shared node/edge styles
+    macros.tex      document-level helper commands (\cmd, \reg, \byte, ...)
+    hyperref.tex    links, PDF metadata, and the viewer bookmark tree
+
+Load order matters
+------------------
+package -> colors -> tikz -> macros -> hyperref. hyperref MUST come last (it
+redefines cross-referencing internals) and after cite/url, which is why it is
+kept out of package.tex.
+
+The bookmark tree ("side TOC in the PDF viewer") comes from hyperref's
+bookmarks + pdfpagemode=UseOutlines in hyperref.tex; no in-document
+\tableofcontents is used.

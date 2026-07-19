@@ -1,0 +1,64 @@
+# stdlib/arithmetic.cgra — element-wise scalar arithmetic.
+# include "arithmetic.cgra"
+
+[mode neg]
+doc     = out = -a
+pattern = diagonal
+op      = sub
+a       = const(0)
+b       = north
+
+[mode inc]
+doc     = out = a + 1
+pattern = diagonal
+op      = add
+a       = north
+b       = const(1)
+
+[mode dec]
+doc     = out = a - 1
+pattern = diagonal
+op      = sub
+a       = north
+b       = const(1)
+
+[mode double]
+doc     = out = a * 2
+pattern = diagonal
+op      = mul
+a       = north
+b       = const(2)
+
+[mode square]
+doc     = out = a * a
+pattern = diagonal
+op      = mul
+a       = north
+b       = north
+
+[mode absval]
+doc     = out = |a|
+pattern = diagonal
+op      = abs
+a       = north
+b       = zero
+
+[mode maxi]
+doc     = out = max(a, imm)  (set with --imm)
+pattern = diagonal
+op      = max
+a       = north
+b       = const(0)
+
+[mode mini]
+doc     = out = min(a, imm)  (set with --imm)
+pattern = diagonal
+op      = min
+a       = north
+b       = const(0)
+
+# out = clamp(a, 0, 100)
+[pipeline clamp_0_100]
+doc     = clamp into [0, 100]
+stage   = maxi imm=0
+stage   = mini imm=100

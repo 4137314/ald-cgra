@@ -1,0 +1,16 @@
+sw/completions/ - shell completion
+==================================
+
+    cgra.bash    bash completion for the cgra CLI. Completes subcommands and
+                 options, and - by shelling out to `cgra modes`/`devices`/
+                 `io`/`pipelines` - the live names from your configuration.
+
+Use it
+------
+    source sw/completions/cgra.bash          # this shell only
+    # or install system-wide:
+    install -Dm644 sw/completions/cgra.bash \
+        /etc/bash_completion.d/cgra          # or .../share/bash-completion/completions/cgra
+
+Needs `cgra` on $PATH for the dynamic (mode/device) completions; the static
+subcommand/option lists work regardless.

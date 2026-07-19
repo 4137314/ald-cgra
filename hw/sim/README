@@ -1,0 +1,21 @@
+hw/sim/ - GHDL testbenches
+==========================
+
+Self-checking VHDL-2008 testbenches. Each asserts expected values and reports
+via std.env; a failed assertion fails `make -f hw.mk sim`.
+
+    tb_pe.vhd         drives one pe through every ALU opcode and operand
+                      select, checking the register after each step.
+    tb_cgra_top.vhd   full-chip: feeds real UART byte streams into cgra_top
+                      and checks CFG/WR/RUN/RD/RST, checksums and NACKs at
+                      the wire level. This is the protocol conformance test.
+    tb_matvec.vhd     exercises the weight-stationary systolic matrix-vector
+                      mapping end to end.
+
+Run
+---
+    make -f hw.mk sim     # analyse, elaborate and run all three
+    make -f hw.mk wave    # tb_cgra_top -> build/tb_cgra_top.ghw (gtkwave)
+
+The host-side emulator (lib/src/emu.c) is the golden reference for the same
+semantics: if a testbench and the emulator disagree, one of them is wrong.

@@ -1,0 +1,31 @@
+% package.tex — package declarations for the CGRA report.
+%
+% Loaded first by config/preamble.tex and kept deliberately free of any
+% configuration (colours, styles, macros and hyperref live in their own
+% modules) so the dependency list stays readable at a glance.
+%
+% Ordering note: hyperref must be the *last* package loaded, after cite and
+% url, so it is pulled in separately by config/hyperref.tex — do not add it
+% here.
+
+% ---- encoding & fonts ----------------------------------------------------
+\usepackage[T1]{fontenc}      % 8-bit output encoding, hyphenatable accents
+\usepackage[utf8]{inputenc}   % UTF-8 source
+\usepackage{microtype}        % character protrusion / font expansion
+
+% ---- mathematics ---------------------------------------------------------
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% ---- tables --------------------------------------------------------------
+\usepackage{booktabs}         % \toprule \midrule \bottomrule
+\usepackage{array}            % extended column types, \newcolumntype
+
+% ---- graphics & diagrams -------------------------------------------------
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+
+% ---- bibliography & URLs -------------------------------------------------
+\usepackage{cite}             % compressed, sorted numeric citations
+\usepackage{url}

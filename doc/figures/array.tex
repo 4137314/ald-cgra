@@ -1,0 +1,38 @@
+% figures/array.tex — 4x4 PE mesh with edge operand injection (logical).
+\begin{tikzpicture}[x=15mm, y=15mm]
+  % PE grid: (row r, col c), r=0 top
+  \foreach \r in {0,1,2,3} {
+    \foreach \c in {0,1,2,3} {
+      \node[pe] (p\r\c) at (\c, -\r) {\scriptsize$\r,\c$};
+    }
+  }
+  % horizontal neighbour links (west->east)
+  \foreach \r in {0,1,2,3} {
+    \foreach \c/\cn in {0/1,1/2,2/3} {
+      \draw[wire] (p\r\c) -- (p\r\cn);
+    }
+  }
+  % vertical neighbour links (north->south)
+  \foreach \c in {0,1,2,3} {
+    \foreach \r/\rn in {0/1,1/2,2/3} {
+      \draw[wire] (p\r\c) -- (p\rn\c);
+    }
+  }
+  % north injection into row 0 (per column)
+  \foreach \c in {0,1,2,3} {
+    \draw[wire] (\c, 0.9) node[lbl, above]{$\mathrm{north}_\c$} -- (p0\c);
+  }
+  % west injection into column 0 (per row)
+  \foreach \r in {0,1,2,3} {
+    \draw[wire] (-0.9, -\r) node[lbl, left]{$\mathrm{west}_\r$} -- (p\r0);
+  }
+  % south / east edges read zero
+  \foreach \c in {0,1,2,3} {
+    \node[lbl, below] at (\c, -3.6) {$0$};
+    \draw[wire, dashed] (p3\c) -- (\c, -3.55);
+  }
+  \foreach \r in {0,1,2,3} {
+    \node[lbl, right] at (3.55, -\r) {$0$};
+    \draw[wire, dashed] (p\r3) -- (3.5, -\r);
+  }
+\end{tikzpicture}

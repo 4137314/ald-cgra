@@ -1,0 +1,17 @@
+lib/doc/ - library manual page
+==============================
+
+    libcgra.3    section-3 man page for the whole libcgra API. Hand-written
+                 groff -man (no doxygen). Mirrors include/cgra.h.
+
+Build / read
+------------
+    make -f lib.mk man                 # lint + render to build/libcgra.3.txt
+    man ./libcgra.3                    # read it directly
+    groff -man -Tutf8 libcgra.3 | less
+
+Install
+-------
+    install -Dm644 libcgra.3 /usr/local/share/man/man3/libcgra.3
+
+See also: cgra(1) and cgra(5) in sw/doc/.

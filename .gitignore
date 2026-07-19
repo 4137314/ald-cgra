@@ -1,0 +1,37 @@
+# build outputs
+build/
+hw/build/
+lib/build/
+sw/build/
+
+# GHDL
+*.cf
+*.o
+*.ghw
+*.vcd
+e~*
+
+# Vivado
+*.jou
+*.log
+*.str
+.Xil/
+vivado_*.backup*
+*.dcp
+*.bit
+
+# LaTeX (doc/)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz
+*.toc
+doc/build/
+
+# editor / OS
+.vscode/
+*.swp
+.DS_Store

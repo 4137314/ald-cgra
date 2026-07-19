@@ -1,0 +1,38 @@
+sw/doc/ - cgra documentation
+============================
+
+Three hand-written sources, no generators beyond makeinfo/groff:
+
+    cgra.1        man(1) - the command-line tool reference
+    cgra.5        man(5) - the .cgra configuration file format
+    cgra.texi     GNU info manual (root file; @includes the chapters below)
+
+The texinfo manual is modular - one @include per chapter:
+
+    overview.texi       what cgra is, the stack, design intent
+    invocation.texi     command line, device resolution, input/output
+    commands.texi       the full command reference (@deffn per command)
+    configuration.texi  the .cgra language, tutorial style
+    stdlib.texi         the bundled standard library
+    dataflow.texi       how patterns map onto the array
+    protocol.texi       the UART wire protocol, in brief
+    environment.texi    environment variables
+    examples.texi       worked examples
+    files.texi          where config and state live
+
+Build / read (make -f ../sw.mk <target>)
+----------------------------------------
+    info     ../build/cgra.info      (makeinfo)
+    man      lint + render cgra.1 and cgra.5 -> ../build/*.txt
+    doc      both of the above
+
+    man ./cgra.1        # or:  man ./cgra.5
+    info ../build/cgra.info
+
+Install
+-------
+    install -Dm644 cgra.1 /usr/local/share/man/man1/cgra.1
+    install -Dm644 cgra.5 /usr/local/share/man/man5/cgra.5
+    install -Dm644 ../build/cgra.info /usr/local/share/info/cgra.info
+
+Library API is documented separately: libcgra(3) in lib/doc/.

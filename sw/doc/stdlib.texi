@@ -1,0 +1,37 @@
+@node Standard Library
+@chapter Standard Library
+
+@cindex standard library
+@cindex stdlib
+@command{cgra init} installs a small standard library of modes and pipelines
+into @file{~/.config/cgra/stdlib/}.  Pull pieces into your own configuration
+with @code{include "@var{name}.cgra"}, or load a file in place with
+@env{CGRA_PATH}.  Immediates marked ``@code{--imm}'' are overridden per run.
+
+@table @file
+@item arithmetic.cgra
+@code{neg} (@code{-a}), @code{inc}, @code{dec}, @code{double}, @code{square}
+(@code{a*a}), @code{absval}, @code{maxi}/@code{mini} (against
+@code{--imm}); pipeline @code{clamp_0_100}.
+@item linalg.cgra
+@code{scale} (@code{a*imm}), @code{bias} (@code{a+imm}),
+@code{axpy_step} (@code{a+b}); pipeline @code{affine} (@code{2*a+1}).
+Full matrix work is done by the dedicated commands @command{cgra matvec},
+@command{cgra conv} and @command{cgra run dot}, which take matrix-shaped input.
+@item dsp.cgra
+@code{gain} (@code{a*imm}), @code{attenuate} (@code{a >> imm}),
+@code{rectify} (@code{max(a,0)}), @code{bias_dsp} (DC offset),
+@code{accumulate} (running sum).
+@item crypto.cgra
+@code{xor_key}, @code{and_mask}, @code{or_bits}, @code{shl_key}, @code{add_key}
+(all keyed by @code{--imm}); pipeline @code{feistel_toy}
+(@code{(a ^ 42) + 7}, illustrative only---not secure).
+@end table
+
+@noindent
+Example, using @code{square} directly from the in-tree library:
+
+@example
+CGRA_PATH=sw/config/stdlib cgra run square -d sim --a "2 3 4 5"
+    @result{} 4 9 16 25
+@end example

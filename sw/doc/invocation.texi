@@ -1,0 +1,73 @@
+@node Invocation
+@chapter Invocation
+
+@cindex invocation
+@cindex command line
+The general form is:
+
+@example
+cgra [-d DEVICE] [-c FILE] COMMAND [ARGS...] [OUTPUT OPTIONS]
+@end example
+
+Global options (@option{-d}, @option{-c}) and output options may appear
+anywhere on the line; the first non-option word is the command.
+
+@section Device resolution
+@cindex device resolution
+@cindex -d
+The device is chosen, in order of precedence:
+
+@enumerate
+@item the @option{-d}/@option{--device} argument;
+@item the @env{CGRA_DEVICE} environment variable;
+@item the @code{default} device profile.
+@end enumerate
+
+@noindent
+The resolved name may be a @dfn{profile} defined in a @file{.cgra} file, or a
+literal: a serial path (anything containing @samp{/}, e.g.@:
+@file{/dev/ttyUSB1}), the emulator @samp{sim:} (or @samp{sim:flaky} to force
+the retry path), or @samp{auto}---the port saved by @command{cgra probe}.  A
+profile's port and baud can be overridden by @env{CGRA_PORT} and
+@env{CGRA_BAUD} (@pxref{Environment}).
+
+@section Input vectors
+@cindex input vectors
+@cindex SRC
+Commands that consume vectors accept a @dfn{source} (@var{SRC}) in three forms:
+
+@table @asis
+@item inline
+a quoted list, @code{"1 2 3 4"} (whitespace- or comma-separated; @code{0x}/@code{0}
+prefixes give hex/octal).
+@item @code{@@file}
+read the numbers from @file{file}.
+@item @code{-}
+read from standard input.
+@end table
+
+@noindent
+Sources are given with @option{--a} and @option{--b} (and @option{-m}/@option{--x}
+for matrix commands).  If @option{--a} is omitted, positional numbers are used;
+if there are none, the vector is read from standard input---so
+@code{seq 0 255 | cgra run relu -d sim} works.
+
+@section Output formatting
+@cindex output formatting
+@cindex --io
+@cindex --json
+Results are printed one line per vector, formatted by:
+
+@table @code
+@item --io PROFILE
+use a named @code{[io]} profile (format @code{dec}/@code{hex}/@code{bin}, and a
+separator).  The default profile is @code{dec}.
+@item --json
+emit @code{@{"count": N, "result": [@dots{}]@}}, so @code{... | jq '.result'}
+composes.
+@item --dtype u16|s16
+interpret results as unsigned or signed 16-bit (default signed).
+@item -o FILE
+@itemx --out FILE
+write to @file{FILE} instead of standard output.
+@end table

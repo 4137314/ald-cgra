@@ -1,0 +1,272 @@
+.\" libcgra.3 - manual page for the host CGRA library
+.TH LIBCGRA 3 "2026" "libcgra 0.1" "Library Functions"
+.SH NAME
+libcgra \- host library for the UART-attached CGRA accelerator
+.SH SYNOPSIS
+.nf
+.B #include <cgra.h>
+.PP
+.B cc ... \-lcgra
+.PP
+.B "cgra_t *cgra_open(const char *" device ", unsigned " baud );
+.B "void    cgra_close(cgra_t *" dev );
+.B "int     cgra_identify(cgra_t *" dev ", cgra_info_t *" info );
+.B "int     cgra_configure(cgra_t *" dev ", const uint32_t " cfg "[16]);"
+.B "int     cgra_write_inputs(cgra_t *" dev ", const int16_t " west "[4], const int16_t " north "[4]);"
+.B "int     cgra_run(cgra_t *" dev ", uint8_t " steps );
+.B "int     cgra_read_regs(cgra_t *" dev ", int16_t " regs "[16]);"
+.B "int     cgra_apply(cgra_t *" dev ", ... );"
+.B "int     cgra_dot(cgra_t *" dev ", const int16_t *" a ", const int16_t *" b ", size_t " n ", int16_t *" res );
+.fi
+.SH DESCRIPTION
+.B libcgra
+is the host side of a Coarse-Grained Reconfigurable Array: a 4x4 mesh of
+16-bit signed processing elements (PEs) on an FPGA, driven over a serial link.
+The usage model is always the same four moves:
+.IP 1. 4
+.B configure
+\(em load one 32-bit word per PE that sets its ALU op and two operand sources;
+.IP 2. 4
+.B write inputs
+\(em push operands into the west (per-row) and north (per-column) edge
+registers;
+.IP 3. 4
+.B run
+\(em clock the whole array a chosen number of steps;
+.IP 4. 4
+.B read back
+\(em read all sixteen PE registers.
+.PP
+The higher-level entry points (\fBcgra_apply\fR, the \fBcgra_vec_*\fR kernels,
+\fBcgra_dot\fR) are compositions of those four.
+.SS The sim: emulator
+Passing the device string
+.B "sim:"
+(or any string beginning
+.BR "sim:" )
+to
+.B cgra_open
+selects an in-process emulator that speaks the identical byte protocol and
+re-implements the PE ALU, so the whole stack builds and runs with no FPGA. The
+variant
+.B "sim:flaky"
+deterministically NACKs the first CFG and the first WR to exercise the retry
+path.
+.SH CONNECTION
+.TP
+.BI "cgra_t *cgra_open(const char *" device ", unsigned " baud )
+Open a serial path (e.g.\&
+.IR /dev/ttyUSB1 )
+at
+.I baud
+(must match the bitstream, typically 115200), or the emulator
+.RB ( "sim:" ,
+.I baud
+ignored). Returns a handle or
+.BR NULL .
+.TP
+.BI "void cgra_close(cgra_t *" dev )
+Close the device and free the handle.
+.TP
+.BI "void cgra_set_timeout(cgra_t *" dev ", unsigned " ms )
+Per-reply read timeout in milliseconds (default 2000).
+.TP
+.BI "void cgra_set_retries(cgra_t *" dev ", unsigned " retries )
+Automatic retransmissions on a NACK, timeout or bad checksum for the CFG, WR
+and RD transactions (default 3, 0 disables).
+.B RUN
+is never retried because it advances the datapath; a failed RUN triggers a
+resync (flush + reset) instead.
+.TP
+.BI "int cgra_ping(cgra_t *" dev ", uint8_t *" version )
+.TQ
+.BI "int cgra_identify(cgra_t *" dev ", cgra_info_t *" info )
+ID handshake; verifies the device signature.
+.B cgra_identify
+also returns the geometry (version, rows, cols, datapath width) in
+.IR *info ,
+so a host can adapt at run time.
+.TP
+.BI "int cgra_emulate_pty(void (*" on_ready ")(const char *, void *), void *" user )
+Serve the emulator on a fresh pseudo-terminal (POSIX only); external serial
+tools can then talk to a virtual CGRA.
+.I on_ready
+is called once with the slave path before the blocking serve loop.
+.SH PRIMITIVES
+.TP
+.BI "int cgra_configure(cgra_t *" dev ", const uint32_t " cfg "[16])"
+Load a full configuration, one word per PE, row-major.
+.TP
+.BI "int cgra_write_inputs(cgra_t *" dev ", const int16_t " west "[4], const int16_t " north "[4])"
+Write the edge inputs:
+.I west[r]
+feeds row
+.I r
+on column 0,
+.I north[c]
+feeds column
+.I c
+on row 0.
+.TP
+.BI "int cgra_run(cgra_t *" dev ", uint8_t " steps )
+Clock the array for
+.I steps
+cycles (0..255).
+.TP
+.BI "int cgra_read_regs(cgra_t *" dev ", int16_t " regs "[16])"
+Read all PE registers, row-major
+.RI ( regs[r*4 + c] ).
+.TP
+.BI "int cgra_reset_datapath(cgra_t *" dev )
+Clear all PE registers; the loaded configuration is kept.
+.TP
+.BI "int cgra_apply(cgra_t *" dev ", const uint32_t " cfg "[16], const int16_t " west "[4], const int16_t " north "[4], uint8_t " steps ", int16_t " regs "[16])"
+One-shot configure + write + run + read back. Any pointer except
+.I dev
+may be
+.B NULL
+to skip that phase
+.RI ( cfg " = " NULL
+reuses the loaded configuration).
+.SH KERNELS
+Element-wise kernels use the
+.I diagonal
+configuration:
+.I a[]
+enters from the north edge,
+.I b[]
+from the west, PASS chains route them to the diagonal PEs, and up to four
+results are produced per transaction.
+.TP
+.BI "int cgra_vec_binop(cgra_t *" dev ", enum cgra_op " op ", const int16_t *" a ", const int16_t *" b ", int16_t *" out ", size_t " n )
+.TQ
+.BI "int cgra_vec_binop_imm(cgra_t *" dev ", enum cgra_op " op ", const int16_t *" a ", int16_t " imm ", int16_t *" out ", size_t " n )
+Generic binary map, with operand
+.I b
+either a vector or the immediate.
+.TP
+.B cgra_vec_add, cgra_vec_sub, cgra_vec_mul, cgra_vec_min, cgra_vec_max
+.TQ
+.B cgra_vec_relu, cgra_vec_addi, cgra_vec_muli
+Named shortcuts: sum, difference, product, minimum, maximum,
+.IR max(a,0) ,
+.IR a+imm ,
+.IR a*imm .
+.TP
+.BI "int cgra_dot(cgra_t *" dev ", const int16_t *" a ", const int16_t *" b ", size_t " n ", int16_t *" result )
+Dot product accumulated on the MAC PE (16-bit wrap-around).
+.SH CONFIG WORD
+One 32-bit word fully specifies a PE:
+.PP
+.RS
+.nf
+ 31      26 25   23 22   20 19   16 15            0
++----------+-------+-------+-------+----------------+
+| reserved | sel_b | sel_a |  op   |      imm       |
++----------+-------+-------+-------+----------------+
+.fi
+.RE
+.PP
+Assemble one with the macro
+.BI "CGRA_CFG(" op ", " sel_a ", " sel_b ", " imm ).
+.B op
+is an
+.B enum cgra_op
+value
+.RB ( CGRA_OP_NOP ,
+.BR CGRA_OP_ADD ,
+.BR CGRA_OP_MAC ,
+\&... ,
+.BR CGRA_OP_CONST );
+the selects are
+.B enum cgra_sel
+.RB ( CGRA_SEL_N ,
+.BR CGRA_SEL_S ,
+.BR CGRA_SEL_E ,
+.BR CGRA_SEL_W ,
+.BR CGRA_SEL_CONST ,
+.BR CGRA_SEL_SELF ,
+.BR CGRA_SEL_ZERO ).
+On the edges,
+.B CGRA_SEL_N
+on row 0 and
+.B CGRA_SEL_W
+on column 0 read the north/west input ports; the S and E edges read zero.
+Arithmetic is 16-bit signed and wraps;
+.B MUL
+and
+.B MAC
+keep the low half of the product.
+.SH RETURN VALUES
+Every
+.B int
+entry point returns
+.B CGRA_OK
+(0) on success or a negative code:
+.B CGRA_ERR_IO
+(\-1),
+.B CGRA_ERR_TIMEOUT
+(\-2),
+.B CGRA_ERR_NACK
+(\-3),
+.B CGRA_ERR_PROTO
+(\-4),
+.B CGRA_ERR_ARG
+(\-5).
+.B cgra_strerror()
+maps a code to a string.
+.B cgra_open
+returns
+.B NULL
+on failure.
+.SH INSTRUMENTATION
+.B cgra_get_stats()
+copies a
+.B cgra_stats_t
+(transactions, retries, tx/rx byte counts);
+.B cgra_reset_stats()
+zeroes them. Useful for measuring the serial round trips that dominate wall
+time.
+.SH EXAMPLE
+.nf
+.EX
+#include <cgra.h>
+#include <stdio.h>
+
+int main(void)
+{
+    cgra_t *dev = cgra_open("sim:", 115200);
+    if (!dev) return 1;
+
+    int16_t a[4] = {1, 2, 3, 4}, b[4] = {10, 20, 30, 40}, out[4];
+    if (cgra_vec_add(dev, a, b, out, 4) == CGRA_OK)
+        for (int i = 0; i < 4; i++) printf("%d ", out[i]);   /* 11 22 33 44 */
+    putchar('\\n');
+
+    cgra_close(dev);
+    return 0;
+}
+.EE
+.fi
+.SH THREAD SAFETY
+A
+.B cgra_t
+handle is not internally locked: serialise calls on one handle, or use one
+handle per thread. The protocol is strictly request/reply, so interleaving
+transactions on a shared handle corrupts the stream.
+.SH PROTOCOL SYNC
+The protocol bytes and the config-word layout are mirrored in
+.I hw/rtl/cgra_pkg.vhd
+(device) and
+.I lib/src/emu.c
+(emulator). Keep the three in sync.
+.SH SEE ALSO
+.BR cgra (1),
+.BR cgra (5)
+.PP
+Header:
+.IR lib/include/cgra.h .
+Hardware report:
+.IR doc/build/main.pdf .
+.SH AUTHOR
+Written for the Advanced Logic Design course, University of Trento.

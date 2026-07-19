@@ -1,0 +1,28 @@
+hw/rtl/ - synthesisable RTL
+===========================
+
+VHDL-2008, one entity per file, elaborated in this order (see hw.mk SRCS):
+
+    cgra_pkg.vhd    constants + types. THE protocol/config-word contract:
+                    opcodes, operand selects, command bytes, checksum rules.
+                    Mirror of lib/include/cgra.h and lib/src/emu.c.
+    uart_rx.vhd     8N1 receiver, two-flop input sync, mid-bit sampling.
+                    rx_valid pulses one clock per received byte.
+    uart_tx.vhd     8N1 transmitter. Pulse tx_start while tx_busy = '0'.
+    pe.vhd          the processing element: two operand muxes -> 16-bit ALU
+                    -> one step-gated register. dout is the registered value.
+    cgra_array.vhd  ROWS x COLS mesh of pe. Interior PEs read the registered
+                    outputs of their N/S/E/W neighbours; north/west edges take
+                    the input ports, south/east edges read zero.
+    cgra_ctrl.vhd   protocol FSM: ID / CFG / WR / RUN / RD / RST, checksum
+                    verify, and a watchdog that aborts a stalled payload.
+    cgra_top.vhd    top level: clk + reset sync + UART + ctrl + array + LEDs.
+
+Conventions
+-----------
+- Active-high synchronous reset, everything on rising_edge(clk).
+- Signals lower_snake, constants UPPER, generics G_*, states S_*.
+- No vendor primitives: portable across Xilinx parts and GHDL.
+
+Editing cgra_pkg.vhd? It is a three-way contract - update the C header and
+the emulator to match, or `make test` on the host will diverge from silicon.

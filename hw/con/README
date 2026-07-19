@@ -1,0 +1,15 @@
+hw/con/ - board constraint files
+================================
+
+Xilinx XDC pin/clock constraints, one per supported board. scr/build.tcl
+picks the file matching BOARD.
+
+    basys3.xdc      Digilent Basys 3   (Artix-7 XC7A35T,  100 MHz)
+    nexys_a7.xdc    Digilent Nexys A7  (Artix-7 XC7A100T, 100 MHz)
+
+Each maps: clk, the reset push button (btn_rst), the USB-UART pins
+(uart_rx_i / uart_tx_o) and four status LEDs. The 100 MHz system clock is
+constrained; the async UART and button inputs are false-pathed so they do not
+create bogus timing failures.
+
+Default board is basys3 (make bit BOARD=nexys_a7 for the other).

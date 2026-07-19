@@ -1,0 +1,35 @@
+hw/ - FPGA hardware for the UART-attached CGRA
+==============================================
+
+Synthesisable VHDL-2008 for a 4x4 mesh of 16-bit processing elements, a
+UART, and the protocol controller that stitches them together. Simulate with
+GHDL; build/flash a bitstream with Vivado in batch mode (no GUI).
+
+Layout
+------
+    rtl/    synthesisable sources (package, UART, PE, array, controller, top)
+    sim/    GHDL testbenches
+    con/    board constraint files (.xdc)
+    scr/    Vivado batch scripts (build + program)
+
+Build (make -f hw.mk <target>)
+------------------------------
+    sim              analyse + elaborate + run every testbench (GHDL)
+    wave             run tb_cgra_top, dump build/tb_cgra_top.ghw (gtkwave)
+    bit  BOARD=b     synthesise a bitstream        (b = basys3 | nexys_a7)
+    prog             flash via the Vivado hw_server
+    prog-ofl         flash via openFPGALoader (no Vivado)
+    clean
+
+Design in one breath
+--------------------
+uart_rx/tx move bytes; cgra_ctrl is the protocol FSM (v2, checksum-protected)
+that loads per-PE config words, injects edge operands, pulses 'step' and reads
+the register file back; cgra_array wires ROWS*COLS instances of pe into a
+nearest-neighbour mesh. Everything runs in one 100 MHz clock domain.
+
+Protocol note
+-------------
+The command bytes and config-word layout in rtl/cgra_pkg.vhd are the contract.
+They are mirrored by the host in lib/include/cgra.h and lib/src/emu.c. Change
+one, change all three, or the emulator and the silicon drift apart.

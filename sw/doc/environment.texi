@@ -1,0 +1,23 @@
+@node Environment
+@chapter Environment
+
+@cindex environment variables
+@vtable @env
+@item CGRA_DEVICE
+Default device when @option{-d} is absent.
+@item CGRA_PORT
+Override the resolved profile's serial port.
+@item CGRA_BAUD
+Override the resolved profile's baud rate.
+@item CGRA_PATH
+Colon-separated list of extra configuration roots, searched like @env{PATH}
+(also used for @code{include} resolution).
+@item CGRA_CONFIG
+Project-local configuration file, loaded instead of @file{./.cgra/}.
+@item CGRA_STDLIB
+Source directory @command{cgra init} copies the standard library from (before
+the installed share dir and the in-tree @file{sw/config/stdlib}).
+@item XDG_CONFIG_HOME
+Base for the user config directory (@file{$XDG_CONFIG_HOME/cgra}); falls back to
+@file{~/.config/cgra}.
+@end vtable

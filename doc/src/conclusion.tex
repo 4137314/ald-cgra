@@ -1,0 +1,23 @@
+\section{Conclusion}
+\label{sec:concl}
+
+We have described the logical design of a UART-attached CGRA: a $4\times4$ mesh
+of 16-bit processing elements, a checksum-protected control protocol with a
+compact finite-state machine, and a layered host stack that reconfigures the
+fabric declaratively and verifies it end to end without hardware. The recurring
+theme is a single architectural constraint---one register per PE with edge-only
+operand injection---which rules out fused spatial accumulation and thereby
+selects weight-stationary streaming as the natural systolic dataflow for the
+fabric.
+
+The clearest avenue for future work follows from that same constraint. Adding a
+second per-PE register (a dedicated partial-sum path) or widening the operand
+injection would unlock output-stationary systolic mappings and, with them,
+in-fabric matrix--matrix products and spatial finite-impulse-response filters.
+On the host side, the wire-level model of Section~\ref{sec:cost} shows the true
+bottleneck of the real link to be serial round trips rather than the number of
+processing elements; batching the write, run and read-back of many chunks into
+fewer, larger transactions is therefore the highest-leverage optimisation, and
+one that needs no change to the fabric. Together these directions preserve the
+report's guiding principle---that a single, explicit architectural constraint
+should account for the system's behaviour at every layer.

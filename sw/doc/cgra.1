@@ -1,0 +1,229 @@
+.\" cgra.1 - manual page for the cgra CLI
+.TH CGRA 1 "2026" "cgra 0.1" "User Commands"
+.SH NAME
+cgra \- command-line front end for the UART-attached CGRA accelerator
+.SH SYNOPSIS
+.B cgra
+.RB [ \-d
+.IR DEVICE ]
+.RB [ \-c
+.IR FILE ]
+.I command
+.RI [ args ...]
+.SH DESCRIPTION
+.B cgra
+drives a Coarse-Grained Reconfigurable Array (a 4x4 mesh of 16-bit processing
+elements) from the host over a serial link, on top of the
+.B libcgra
+library. It reads a declarative configuration language
+.RB ( .cgra
+files), resolves named device profiles and compiles named
+.I modes
+and
+.I pipelines
+into per-PE configuration words, moving vectors in and out in UNIX-pipe style.
+.PP
+An in-process emulator is available as the pseudo-device
+.BR sim: ,
+so every command works without an FPGA.
+.SH COMMANDS
+.SS Configuration and inspection
+.TP
+.B modes ", " devices ", " pipelines ", " io ", " config
+List the loaded modes, device profiles, pipelines, I/O profiles, or the
+resolved configuration search paths.
+.TP
+.B check
+Validate the loaded configuration (compile every mode, resolve every pipeline
+stage) and report errors.
+.TP
+.B init " [\-\-force]"
+Install the built-in defaults and the bundled standard library into the user
+configuration directory.
+.TP
+.B show " " \fIMODE\fR " [\-\-imm " \fIN\fR "] [\-v]"
+Print the compiled configuration words for
+.IR MODE ;
+with
+.B \-v
+each word is decoded into a readable per-PE description.
+.SS Device
+.TP
+.B ping
+Identify the device and print its protocol version and geometry.
+.TP
+.B probe
+With no device, scan
+.I /dev/ttyUSB*
+and
+.I /dev/ttyACM*
+for a CGRA and record the first found (usable later as
+.BR "\-d auto" );
+with a device, run the known-answer bring-up tests.
+.TP
+.B reset
+Clear the PE registers (configuration is preserved).
+.TP
+.B dump
+Read back and print all 16 PE registers.
+.TP
+.B emulate
+Serve the in-process emulator on a pseudo-terminal for external tools.
+.SS Compute
+.TP
+.B run " " \fIMODE\fR " [" \fInums\fR "...] [\-\-a " \fISRC\fR "] [\-\-b " \fISRC\fR "] [\-\-imm " \fIN\fR "] [\-\-steps " \fIN\fR "]"
+Run an element-wise or reduction mode over the input vector(s).
+.TP
+.B pipe " " \fINAME\fR " [" \fInums\fR "...]"
+Run a pipeline, feeding each stage's output into the next.
+.TP
+.B matvec " \-m " \fISRC\fR " \-\-x " \fISRC\fR " [\-\-cols " \fIN\fR "]"
+Systolic matrix\-vector product y = A*x (A row-major, tiled over 4x4 blocks).
+.TP
+.B conv " \-m " \fIKERNEL\fR " \-\-x " \fISIGNAL\fR
+1-D convolution (Toeplitz systolic).
+.TP
+.B scan " [" \fInums\fR "...] [\-\-op " \fIsum|max|min|prod\fR "]"
+Inclusive prefix scan on row 0.
+.TP
+.B bench " [" \fIMODE\fR "] [\-\-size " \fIN\fR "] [\-\-repeat " \fIR\fR "]"
+Time a mode and report link statistics (transactions, retries, bytes).
+.TP
+.B selftest
+Run every kernel against the emulator and check the results.
+.SH OPTIONS
+.TP
+.BR \-d ", " \-\-device " " \fINAME\fR
+Device profile name, a serial path, the emulator
+.RB ( sim: "), or " auto
+(the port saved by
+.BR "cgra probe" ).
+.TP
+.BR \-c ", " \-\-config " " \fIFILE\fR
+Parse an extra configuration file last (highest precedence).
+.TP
+.B \-\-a \fISRC\fR ", " \-\-b \fISRC\fR
+Input vectors. A
+.I SRC
+is an inline list
+.RB \(dq "1 2 3" \(dq,
+a file
+.BI @ path\fR,
+or
+.B \-
+for standard input.
+.TP
+.BR \-m ", " \-\-matrix " " \fISRC\fR ", " \-\-x " " \fISRC\fR
+Matrix and vector inputs for
+.B matvec
+and
+.BR conv .
+.TP
+.B \-\-imm \fIN\fR
+Immediate value for modes with a constant operand.
+.TP
+.BR \-\-io " " \fIPROFILE\fR ", " \-\-json ", " \-\-dtype " " \fIu16|s16\fR ", " \-o ", " \-\-out " " \fIFILE\fR
+Output formatting: named profile, JSON object, unsigned/signed decoding, or
+write to a file.
+.SH CONFIGURATION
+The
+.B .cgra
+language uses INI-flavoured named sections:
+.BR [device\~ NAME ],
+.BR [mode\~ NAME ],
+.BR [pipeline\~ NAME ]
+and
+.BR [io\~ NAME ].
+Files are discovered from the built-in defaults,
+.IR /etc/cgra ,
+the user directory
+.RI ( $XDG_CONFIG_HOME/cgra
+or
+.IR ~/.config/cgra ),
+the
+.B CGRA_PATH
+entries, and a project-local file, and are merged by name so later files
+override earlier ones. Within a directory,
+.I config.cgra
+loads first, then other
+.I *.cgra
+files, then a
+.I conf.d/
+drop-in directory. A file may pull in another with
+.BR "include \(dqfile.cgra\(dq" ;
+.B "set NAME = value"
+defines a variable usable as
+.BI $ NAME \fR.
+.SH ENVIRONMENT
+.TP
+.B CGRA_DEVICE
+Default device when
+.B \-d
+is not given.
+.TP
+.B CGRA_PORT ", " CGRA_BAUD
+Override the resolved profile's port and baud rate.
+.TP
+.B CGRA_PATH
+Colon-separated list of extra configuration directories (like
+.BR PATH ).
+.TP
+.B CGRA_CONFIG
+Project-local configuration file, loaded instead of
+.IR ./.cgra/ .
+.SH FILES
+.TP
+.I ~/.config/cgra/config.cgra
+User configuration written by
+.BR "cgra init" .
+.TP
+.I ~/.config/cgra/stdlib/
+Bundled standard library (\fBarithmetic\fR, \fBlinalg\fR, \fBdsp\fR, \fBcrypto\fR).
+.TP
+.I ~/.config/cgra/.device
+Port recorded by
+.BR "cgra probe" .
+.SH EXAMPLES
+.PP
+Run a vector addition on the emulator:
+.PP
+.RS
+.EX
+cgra run add -d sim --a "1 2 3 4" --b "10 20 30 40"
+.EE
+.RE
+.PP
+Rectify a stream and pipe the JSON result through jq:
+.PP
+.RS
+.EX
+seq -20 20 | cgra run relu -d sim --json | jq '.result'
+.EE
+.RE
+.PP
+Systolic matrix\-vector product:
+.PP
+.RS
+.EX
+cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+.EE
+.RE
+.SH EXIT STATUS
+.B cgra
+returns 0 on success and non-zero on a usage error, a configuration error, or
+a device/communication failure.
+.SH SEE ALSO
+.BR cgra (5),
+.BR libcgra (3),
+.BR jq (1).
+.PP
+.BR cgra (5)
+is the full reference for the
+.B .cgra
+configuration language;
+.BR libcgra (3)
+documents the C library the tool is built on. A GNU info manual
+.RB ( "info cgra" )
+covers everything at length.
+.SH AUTHOR
+Written for the Advanced Logic Design course, University of Trento.

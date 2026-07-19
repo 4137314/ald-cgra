@@ -1,0 +1,24 @@
+lib/include/ - public API
+=========================
+
+    cgra.h    the entire public interface. Include this and nothing else.
+
+What lives here
+---------------
+- geometry macros            CGRA_ROWS/COLS/NUM_PE/DATA_W, CGRA_PROTO_VER
+- enum cgra_op / cgra_sel    ALU opcodes and operand-mux selects
+- CGRA_CFG(op,a,b,imm)       pack one 32-bit PE config word
+- CGRA_OK / CGRA_ERR_*       return codes (0 ok, negative errors)
+- cgra_t, cgra_info_t, cgra_stats_t
+- functions: connection, primitives (configure/write/run/read/reset/apply),
+  and the vector kernels (cgra_vec_*, cgra_dot)
+
+Style
+-----
+Plain Unix block comments, no doxygen tags. The header is meant to be read
+top to bottom as the reference; the man page libcgra(3) mirrors it.
+
+Sync
+----
+The opcode/select values and protocol constants must equal those in
+hw/rtl/cgra_pkg.vhd and lib/src/emu.c.
