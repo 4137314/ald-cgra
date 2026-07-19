@@ -1,0 +1,21 @@
+sw/test/ - cgra CLI unit tests
+==============================
+
+    test_sw.c   assert.h unit tests for the DSL parser (dsl.c) and the mode
+                compiler + engines (compile.c). Covers section/directive
+                parsing, $variable expansion, parse-error rejection, the
+                built-in defaults, diagonal mode_compile + cfg_decode, and the
+                matvec/scan/conv engines vs. a host reference (run against the
+                sim: emulator, so no FPGA).
+
+TAP-style output; non-zero exit on failure.
+
+Run (make -f ../sw.mk <target>)
+-------------------------------
+    unit                 build + run the unit tests
+    smoke                CLI smoke tests against the emulator
+    test                 unit + smoke
+    PROFILE=asan test    same, under AddressSanitizer + UBSan
+    valgrind             unit tests under valgrind
+
+Compiled -UNDEBUG so assert() fires in any PROFILE.

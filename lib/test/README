@@ -1,0 +1,21 @@
+lib/test/ - libcgra unit tests
+==============================
+
+    test_cgra.c   assert.h unit tests driven against the sim: emulator (no
+                  FPGA). Covers config-word packing, the ID handshake, the
+                  configure/write/run/read primitives, every vector kernel vs.
+                  a host reference, the fixed SHL-of-negative path, the dot
+                  product, NULL-argument error codes, and the NACK retry path
+                  with its stats counters.
+
+Output is TAP-style ("ok N - ...", a "1..N" plan, a pass/fail summary); the
+binary exits non-zero if any check fails.
+
+Run (make -f ../lib.mk <target>)
+--------------------------------
+    test                 build + run (assertions forced on)
+    PROFILE=asan test    same, under AddressSanitizer + UBSan
+    valgrind             run the tests under valgrind (needs valgrind)
+
+Assertions stay live even in a release build: the test binary is compiled
+-UNDEBUG so assert() fires regardless of PROFILE.

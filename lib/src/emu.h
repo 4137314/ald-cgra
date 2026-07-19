@@ -13,6 +13,7 @@
 #ifndef CGRA_EMU_H
 #define CGRA_EMU_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 typedef struct cgra_emu cgra_emu_t;
@@ -29,5 +30,12 @@ void emu_push(cgra_emu_t *e, uint8_t byte);
 
 /* Pop one device->host byte. Returns 1 on success, 0 if the queue is empty. */
 int  emu_pop(cgra_emu_t *e, uint8_t *byte);
+
+/* Bulk variants for the hot transport path: identical byte semantics to a
+ * loop of emu_push/emu_pop, but one call per buffer so the per-byte FSM stays
+ * inlined inside emu.c instead of crossing the library boundary each byte.
+ * emu_drain returns the number of bytes actually copied (<= n). */
+void   emu_feed(cgra_emu_t *e, const uint8_t *buf, size_t n);
+size_t emu_drain(cgra_emu_t *e, uint8_t *buf, size_t n);
 
 #endif /* CGRA_EMU_H */

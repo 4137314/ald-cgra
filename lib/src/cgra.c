@@ -174,8 +174,7 @@ static int write_exact(cgra_t *dev, const uint8_t *buf, size_t n)
 {
     dev->stats.tx_bytes += n;
     if (dev->emu != NULL) {
-        for (size_t i = 0; i < n; i++)
-            emu_push(dev->emu, buf[i]);
+        emu_feed(dev->emu, buf, n);   /* one call: FSM stays inlined in emu.c */
         return CGRA_OK;
     }
 
@@ -198,9 +197,8 @@ static int read_exact(cgra_t *dev, uint8_t *buf, size_t n)
 
     dev->stats.rx_bytes += n;
     if (dev->emu != NULL) {
-        for (size_t i = 0; i < n; i++)
-            if (!emu_pop(dev->emu, &buf[i]))
-                return CGRA_ERR_TIMEOUT;   /* replies are synchronous: means a bug */
+        if (emu_drain(dev->emu, buf, n) != n)
+            return CGRA_ERR_TIMEOUT;       /* replies are synchronous: means a bug */
         return CGRA_OK;
     }
 

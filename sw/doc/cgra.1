@@ -89,6 +89,15 @@ Inclusive prefix scan on row 0.
 .B bench " [" \fIMODE\fR "] [\-\-size " \fIN\fR "] [\-\-repeat " \fIR\fR "]"
 Time a mode and report link statistics (transactions, retries, bytes).
 .TP
+.B benchall " [\-\-size " \fIN\fR "] [\-\-repeat " \fIR\fR "] [\-\-json]"
+Stress-benchmark every benchable mode currently loaded (e.g. the whole standard
+library) and print a structured report: an aligned table of throughput and link
+cost per mode, or a JSON object with
+.BR \-\-json .
+The bring-up pipeline
+.RB ( "make bench" )
+wraps this to sweep several vector sizes on a device.
+.TP
 .B selftest
 Run every kernel against the emulator and check the results.
 .SH OPTIONS

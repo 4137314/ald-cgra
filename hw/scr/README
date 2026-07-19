@@ -6,12 +6,19 @@ scriptable and diffable - no GUI, no project files checked in.
 
     build.tcl     read rtl/*.vhd (VHDL-2008) + the BOARD's con/*.xdc, run
                   synth + implementation + write_bitstream. Args: BOARD.
+                  Refuses to write a bitstream unless setup AND hold timing are
+                  met, so a .bit that exists is one that runs on the board.
                   Output: build/vivado/<top>_<board>.bit
+    timing.tcl    static timing analysis GATE: synth + impl + report, then exit
+                  non-zero unless WNS >= 0 and WHS >= 0. Passing means the
+                  design meets timing at the constrained 100 MHz clock, so you
+                  know it works before programming -- no waveform needed.
     program.tcl   open the hw_server, find the FPGA, download a .bit. Args:
                   path to the bitstream.
 
 Invoked by hw.mk:
-    make -f hw.mk bit  BOARD=basys3     # build.tcl
+    make -f hw.mk bit  BOARD=basys3     # build.tcl (timing-gated)
+    make -f hw.mk sta  BOARD=nexys_a7   # timing.tcl (STA gate)
     make -f hw.mk prog                  # program.tcl
 
 Vivado is not packaged in flake.nix (proprietary). For flashing without it,

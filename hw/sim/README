@@ -6,15 +6,21 @@ via std.env; a failed assertion fails `make -f hw.mk sim`.
 
     tb_pe.vhd         drives one pe through every ALU opcode and operand
                       select, checking the register after each step.
+    tb_uart.vhd       loops uart_tx.tx_serial back into uart_rx and checks that
+                      adversarial byte patterns survive framing + mid-bit
+                      sampling bit-exact. Has a watchdog that fails on a stall.
     tb_cgra_top.vhd   full-chip: feeds real UART byte streams into cgra_top
                       and checks CFG/WR/RUN/RD/RST, checksums and NACKs at
                       the wire level. This is the protocol conformance test.
     tb_matvec.vhd     exercises the weight-stationary systolic matrix-vector
                       mapping end to end.
 
+All are self-checking (assert ... severity failure + std.env.finish), so a
+failure fails `make sim`; there is nothing to eyeball in a waveform.
+
 Run
 ---
-    make -f hw.mk sim     # analyse, elaborate and run all three
+    make -f hw.mk sim     # analyse, elaborate and run all four (assert-level=error)
     make -f hw.mk wave    # tb_cgra_top -> build/tb_cgra_top.ghw (gtkwave)
 
 The host-side emulator (lib/src/emu.c) is the golden reference for the same

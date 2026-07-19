@@ -7,7 +7,7 @@ move vectors in and out through stdin/stdout so kernels compose in pipes.
 
 Files
 -----
-    main.c        argument parsing + every subcommand + vector I/O
+    main.c        getopt_long parsing + every subcommand + vector I/O + shell
     dsl.h dsl.c   the .cgra language: model, parser, config discovery
     compile.h .c  mode -> config words -> execution; matvec/scan/conv engines
 
@@ -15,14 +15,32 @@ Layout
 ------
     config/       reference .cgra files (config/stdlib/ = bundled library)
     completions/  bash completion
+    scripts/      CLI-driven pipelines (cgra-bench.sh)
+    test/         assert.h unit tests for the DSL + compiler
     doc/          man pages (cgra.1, cgra.5) + texinfo manual (cgra.texi)
+
+Options are parsed with getopt_long (they may appear anywhere; bare negative
+numbers go after "--" or via --a/--b/stdin). `cgra shell` is an interactive
+prompt with readline line-editing + history when readline is present (detected
+by pkg-config), else it falls back to fgets.
 
 Build (make -f sw.mk <target>)
 ------------------------------
-    all      build/cgra          (default; builds ../lib first)
-    test     run kernels + CLI smoke tests against the sim: emulator
-    doc      makeinfo the texi manual + lint/render the man pages
+    all                  build/cgra          (default; builds ../lib first)
+    unit                 assert.h unit tests (DSL + compiler)
+    smoke                CLI smoke tests against the sim: emulator
+    test                 unit + smoke
+    PROFILE=asan test    everything under AddressSanitizer + UBSan
+    bench DEV=sim        stress-bench the whole stdlib (scripts/cgra-bench.sh)
+    valgrind             unit tests under valgrind
+    analyze              gcc -fanalyzer static analysis
+    gprof|perf|callgrind profile the CLI driving the emulator (CPU-bound)
+    doc                  makeinfo the texi manual + lint/render the man pages
     clean
+
+Profiles (PROFILE=...): release (default, -O3 -DNDEBUG), debug, asan, ubsan,
+gprof (-pg), perf (-O2 -g, frame pointers). The gprof/perf/callgrind targets
+rebuild with the right instrumentation automatically.
 
 Try it (no FPGA)
 ----------------

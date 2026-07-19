@@ -9,15 +9,26 @@ Layout
 ------
     include/    public API - cgra.h (the only header you include)
     src/        implementation: transport+kernels, emulator, pty server
+    test/       assert.h unit tests (TAP output), run against sim:
     doc/        man page (libcgra.3), hand-written, groff -man
+    cgra.pc.in  pkg-config template (installed as cgra.pc, see root `make install`)
 
 Build (make -f lib.mk <target>)
 -------------------------------
-    all      build/libcgra.a          (default)
-    man      lint + render doc/libcgra.3 -> build/libcgra.3.txt
+    all                  build/libcgra.a + build/libcgra.so* (static + shared)
+    test                 build + run the unit tests (assertions forced on)
+    PROFILE=asan test    tests under AddressSanitizer + UBSan
+    valgrind             tests under valgrind
+    analyze              gcc -fanalyzer static analysis
+    man                  lint + render doc/libcgra.3 -> build/libcgra.3.txt
     clean
 
+Build profiles (PROFILE=...): release (default, -O3 -DNDEBUG), debug (-O0 -g3),
+asan, ubsan. Diagnostics are strict everywhere (-Wall -Wextra -Wconversion
+-Wshadow -Wcast-qual ... ; see WARN in lib.mk).
+
 Link against it with: cc ... -Iinclude -Llib/build -lcgra
+Installed, prefer pkg-config: cc ... $(pkg-config --cflags --libs cgra)
 
 Quick taste
 -----------

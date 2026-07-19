@@ -7,51 +7,86 @@
     let
       systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
       forAll = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
+      version = "0.1.0";
     in
     {
-      # `nix develop` — full toolchain to simulate, build the library/CLI and docs.
+      # `nix develop` - full toolchain to simulate, build/test the library+CLI,
+      # and build the docs. This is the *primary*, standard-Unix workflow;
+      # `nix build`/`nix profile install` below are the optional Nix-native path.
       devShells = forAll (pkgs: {
         default = pkgs.mkShell {
           packages = with pkgs; [
             # HDL simulation
-            ghdl
-            gtkwave
+            ghdl gtkwave
             # FPGA programming without Vivado
             openfpgaloader
             # host software
-            gcc
-            gnumake
-            pkg-config
-            clang-tools           # clangd for compile_flags.txt
+            gcc gnumake pkg-config
+            readline                # `cgra shell` line editing
+            clang-tools             # clangd (make compdb -> compile_commands.json)
+            bear                    # alt. compile_commands.json generator
+            # profiling / bug-hunting
+            valgrind                # make valgrind / callgrind
+            linuxPackages.perf      # make perf
+            binutils                # gprof (make gprof)
             # documentation
-            texliveSmall
+            texinfo groff           # man pages + GNU info manual
+            texliveMedium           # LaTeX report (needs tikz/pgf -> scheme-medium)
           ];
           shellHook = ''
-            echo "cgra dev shell — make sim | make sw | make test | make doc"
-            echo "note: bitstream synthesis (make bit) still needs Vivado, which is not packaged here."
+            echo "cgra dev shell - make | make test | make sim | make docs | make check-deps"
+            echo "note: bitstream synthesis (make bit / make sta) needs Vivado, not packaged here."
           '';
         };
       });
 
-      # `nix build` — the host library + cgra CLI.
+      # `nix build`            -> the cgra CLI + libcgra + man/info/completion.
+      # `nix profile install .` -> installs it like any package manager would,
+      # by reusing the project's standard `make install` (KISS: one install path).
+      # `nix run . -- <args>`  -> runs the cgra CLI.
       packages = forAll (pkgs: {
         default = pkgs.stdenv.mkDerivation {
           pname = "cgra";
-          version = "0.1.0";
+          inherit version;
           src = ./.;
-          nativeBuildInputs = [ pkgs.gnumake pkgs.gcc ];
-          buildPhase = "make lib sw";
+          nativeBuildInputs = [ pkgs.gcc pkgs.gnumake pkgs.pkg-config pkgs.texinfo ];
+          buildInputs = [ pkgs.readline ];
+          # The Makefile's install target builds the optimised (-O3) binaries,
+          # the info manual, and lays out bin/lib/include/man/info/completion
+          # plus a pkg-config file under $out.
+          dontConfigure = true;
+          dontBuild = true;
           installPhase = ''
-            mkdir -p $out/bin $out/lib $out/include
-            install -m755 sw/build/cgra           $out/bin/cgra
-            install -m644 lib/build/libcgra.a     $out/lib/
-            install -m644 lib/include/cgra.h      $out/include/
-            mkdir -p $out/share/cgra
-            cp -r sw/config/* $out/share/cgra/ 2>/dev/null || true
-            mkdir -p $out/share/bash-completion/completions
-            install -m644 sw/completions/cgra.bash \
-              $out/share/bash-completion/completions/cgra 2>/dev/null || true
+            runHook preInstall
+            make install PREFIX="$out"
+            runHook postInstall
           '';
+          meta = with pkgs.lib; {
+            description = "Host CLI + library for a UART-attached CGRA accelerator";
+            license = licenses.mit;
+            platforms = platforms.unix;
+            mainProgram = "cgra";
+          };
+        };
+
+        # `nix build .#doc` -> the IEEE-style hardware report (PDF).
+        doc = pkgs.stdenv.mkDerivation {
+          pname = "cgra-doc";
+          inherit version;
+          src = ./.;
+          nativeBuildInputs = [ pkgs.gnumake pkgs.texliveMedium ];
+          dontConfigure = true;
+          buildPhase = "make -C doc -f doc.mk";
+          installPhase = "install -Dm644 doc/build/main.pdf $out/share/doc/cgra/cgra.pdf";
+          meta.description = "CGRA logical-design report (IEEE LaTeX)";
+        };
+      });
+
+      # `nix run` the CLI directly.
+      apps = forAll (pkgs: {
+        default = {
+          type = "app";
+          program = "${self.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/cgra";
         };
       });
     };

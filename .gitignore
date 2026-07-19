@@ -31,6 +31,21 @@ vivado_*.backup*
 *.toc
 doc/build/
 
+# generated / packaging
+lib/cgra.pc
+cgra-*.tar.gz
+compile_commands.json
+
+# profiling output
+gmon.out
+callgrind.out.*
+perf.data
+perf.data.old
+
+# nix
+result
+result-*
+
 # editor / OS
 .vscode/
 *.swp

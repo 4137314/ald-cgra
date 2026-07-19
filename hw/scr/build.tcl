@@ -44,12 +44,21 @@ report_timing_summary -file  $outdir/timing_summary.rpt
 report_utilization    -file  $outdir/utilization_impl.rpt
 report_drc            -file  $outdir/drc.rpt
 
-# Fail loudly if timing is not met.
-set wns [get_property SLACK [get_timing_paths -max_paths 1 -nworst 1 -setup]]
-if { $wns < 0 } {
-    puts "WARNING: negative setup slack (WNS = $wns ns) — check $outdir/timing_summary.rpt"
+# ---------------------------------------------------------------- timing gate
+# Refuse to emit a bitstream unless setup AND hold timing are met, so a .bit
+# that exists is a .bit that will run on the board. (See scr/timing.tcl for a
+# standalone check.)
+set setup_paths [get_timing_paths -max_paths 1 -nworst 1 -setup]
+set hold_paths  [get_timing_paths -max_paths 1 -nworst 1 -hold]
+set wns [expr {[llength $setup_paths] ? [get_property SLACK $setup_paths] : 0}]
+set whs [expr {[llength $hold_paths]  ? [get_property SLACK $hold_paths]  : 0}]
+puts "timing: setup WNS = $wns ns, hold WHS = $whs ns"
+if { $wns < 0 || $whs < 0 } {
+    puts "ERROR: timing NOT met (WNS=$wns ns, WHS=$whs ns) — no bitstream written."
+    puts "       inspect $outdir/timing_summary.rpt"
+    exit 1
 }
 
 # ---------------------------------------------------------------- bitstream
 write_bitstream -force $outdir/${top}_${board}.bit
-puts "OK: bitstream written to $outdir/${top}_${board}.bit"
+puts "OK: timing met; bitstream written to $outdir/${top}_${board}.bit"

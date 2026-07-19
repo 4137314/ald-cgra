@@ -100,6 +100,16 @@ times, and print the elapsed time plus the link statistics
 not the ALU, dominate.
 @end deffn
 
+@deffn Command benchall [--size @var{N}] [--repeat @var{R}] [--json]
+Stress-benchmark @emph{every} benchable mode currently loaded---element-wise
+and reduction modes, so the whole standard library---and print a structured
+report: an aligned table of throughput (elems/s) and link cost (TX/RX bytes,
+retries) per mode, or a JSON object with @option{--json}.  This is the
+CGRA-under-stress sweep you run once the FPGA is up; @command{make bench}
+(@pxref{Overview}) wraps it to autodiscover the board and sweep several vector
+sizes.
+@end deffn
+
 @section Development
 
 @deffn Command emulate

@@ -38,9 +38,9 @@ same protocol, so the whole stack runs and is tested without an FPGA.
 | `hw/rtl/` | Synthesisable VHDL (package, UART, PE, array, controller, top) |
 | `hw/sim/` | GHDL testbenches (`tb_pe`, `tb_cgra_top`, `tb_matvec`) |
 | `hw/con/` | Constraint files (`basys3.xdc`, `nexys_a7.xdc`) |
-| `hw/scr/` | Vivado batch scripts (`build.tcl`, `program.tcl`) |
-| `lib/` | Host C library `libcgra.a` (serial transport, kernels, `sim:` emulator) |
-| `sw/` | `cgra` CLI: DSL parser, config discovery, mode compiler, vector I/O |
+| `hw/scr/` | Vivado batch scripts (`build.tcl`, `timing.tcl`, `program.tcl`) |
+| `lib/` | Host C library `libcgra` (static + shared; transport, kernels, `sim:` emulator, `test/`, `libcgra.3`, `cgra.pc.in`) |
+| `sw/` | `cgra` CLI: DSL parser, config discovery, mode compiler, vector I/O, `test/` |
 | `sw/config/` | Reference `.cgra` config files |
 | `doc/` | LaTeX (IEEE) hardware report — modular `config/`, `src/`, `figures/` |
 
@@ -51,10 +51,15 @@ the whole toolchain (`nix develop`) and a package build (`nix build`).
 ## Quickstart
 
 ```sh
-make            # build libcgra.a and the cgra CLI
-make test       # run the CLI + kernels against the sim: emulator (no FPGA)
-make sim        # GHDL testbenches (tb_pe, tb_cgra_top)
+make            # build libcgra.a (+ .so) and the cgra CLI, optimized (-O3)
+make test       # unit tests (assert.h) + CLI smoke tests on the sim: emulator
+make sim        # GHDL testbenches (tb_pe, tb_uart, tb_cgra_top, tb_matvec)
+make check-deps # report which build/runtime deps are present
 ```
+
+Everything is standard Unix and KISS: plain Makefiles, `pkg-config`, man pages,
+and a `README` in every source subdirectory. Nix is offered as an optional
+package-manager path, not a requirement.
 
 Drive the array — the emulator needs no hardware, so try it first:
 
@@ -77,10 +82,108 @@ a port: `cgra run add -d /dev/ttyUSB1 --a … --b …`.
 Bitstream (Vivado batch, no GUI; on a machine with Vivado):
 
 ```sh
-make bit BOARD=basys3      # or BOARD=nexys_a7
+make bit BOARD=basys3      # timing-gated: no .bit unless setup+hold met
+make sta BOARD=basys3      # static timing analysis gate on its own
 make prog                  # program via Vivado hw_server
 make prog-ofl              # alternative: openFPGALoader, no Vivado needed
 ```
+
+`make bit`/`make sta` **refuse to emit a bitstream unless timing is met** (WNS
+and WHS ≥ 0 at the constrained 100 MHz clock), so a bitstream that exists is
+one that runs on the board — certified by STA, not by reading a waveform.
+
+## Install
+
+Standard `make install`, relocatable with the usual `PREFIX`/`DESTDIR`:
+
+```sh
+sudo make install                      # -> /usr/local (optimized -O3 build)
+make install PREFIX=~/.local           # user install
+make install DESTDIR=/tmp/stage PREFIX=/usr   # staged (packaging)
+make uninstall                         # same PREFIX/DESTDIR
+```
+
+It installs the CLI, the static **and** shared library (with soname symlinks),
+the `cgra.h` header, a **pkg-config** file, the man pages (`cgra.1`, `cgra.5`,
+`libcgra.3`), the GNU info manual, the bash completion, and the `.cgra` stdlib.
+Downstream builds then use pkg-config:
+
+```sh
+cc myapp.c $(pkg-config --cflags --libs cgra) -o myapp
+```
+
+### Optional: Nix as the package manager
+
+A `flake.nix` wraps the same `make install`, so Nix is a drop-in alternative
+(not the primary path):
+
+```sh
+nix build .            # -> ./result/{bin,lib,include,share}
+nix run . -- selftest  # run the CLI without installing
+nix profile install .  # install like any package
+nix build .#doc        # the IEEE PDF report
+nix develop            # dev shell with the whole toolchain
+```
+
+## Building, testing, sanitizers
+
+The C build is strict (`-Wall -Wextra -Wpedantic -Wconversion -Wshadow
+-Wcast-qual …`) and has four **profiles**, selected with `PROFILE=`:
+
+| PROFILE | Flags | Use |
+|---------|-------|-----|
+| `release` (default) | `-O3 -DNDEBUG` | builds and `install` |
+| `debug` | `-O0 -g3` | stepping in a debugger |
+| `asan` | `-fsanitize=address,undefined` | memory/UB bug hunting |
+| `ubsan` | `-fsanitize=undefined` | undefined-behaviour only |
+
+```sh
+make test                     # unit (assert.h) + smoke, release
+make PROFILE=asan test        # everything under ASan + UBSan
+make -C lib -f lib.mk valgrind   # unit tests under valgrind
+make -C lib -f lib.mk analyze    # gcc -fanalyzer
+make -C hw  -f hw.mk  lint       # GHDL RTL syntax/elaboration check
+```
+
+Unit tests use `assert.h` with TAP-style output (`ok N …`, a `1..N` plan) and a
+non-zero exit on failure; assertions stay live even in release builds. Builds
+are parallel-safe (`make -j`).
+
+`clangd` reads a generated compilation database (there is no `compile_flags.txt`):
+
+```sh
+make compdb        # -> ./compile_commands.json (git-ignored; or `bear -- make`)
+```
+
+### Stress benchmark (the FPGA bring-up pipeline)
+
+Once the board is programmed with the synthesized RTL, one command sweeps the
+**entire `.cgra` standard library** under stress and prints a structured report
+— throughput and serial link cost (tx/rx bytes, retries) per mode, at growing
+vector sizes — plus a JSON artifact:
+
+```sh
+make bench DEV=auto                       # discovers + checks the FPGA, then benchmarks
+make bench DEV=sim SIZES="1024 8192" REPEAT=100   # dry-run on the emulator
+cgra benchall -d auto --size 4096 --json  # the underlying structured command
+```
+
+`DEV=auto` first runs `cgra probe` (autodiscover + known-answer correctness), so
+only a trusted device is measured. See [sw/scripts/cgra-bench.sh](sw/scripts/cgra-bench.sh).
+
+### Profiling the C code
+
+Whole-program profiles of the CLI driving the emulator (CPU-bound, so the
+hotspots are the protocol framing, checksums and the PE model):
+
+```sh
+make gprof       # -pg build -> sw/build/gprof.txt
+make perf        # perf record/report -> sw/build/perf.txt
+make callgrind   # valgrind callgrind -> sw/build/callgrind.txt (+ kcachegrind)
+make profile     # all three
+```
+
+Override the workload with `WORKLOAD='benchall -d sim --size 8192 --repeat 500'`.
 
 ## The `cgra` CLI
 
@@ -99,9 +202,16 @@ cgra [-d DEVICE] [-c FILE] <command> [args]
   conv -m KERNEL --x SIGNAL [--io P]           1-D convolution
   scan [nums...] [--a SRC] [--op sum|max|min|prod]   inclusive prefix scan
   bench [MODE] [--size N] [--repeat R]         time a mode + report link stats
+  benchall [--size N] [--repeat R] [--json]    stress-bench every mode (structured)
   emulate                                      serve a virtual CGRA on a pty
   selftest                                     run kernels on the sim: emulator
+  shell                                        interactive prompt (readline)
 ```
+
+Options are parsed with `getopt_long`, so they may appear anywhere on the line;
+bare negative numbers go after `--` (`cgra run relu -- -3 -1 0 5`) or through
+`--a`/`--b`/stdin. `cgra shell` is an interactive REPL with line editing and
+history (readline when available, else plain `fgets`).
 
 Input vectors (`--a`/`--b`, or positional numbers, or stdin) accept an inline
 list `"1 2 3"`, a file `@path`, or `-` for stdin — so the tool composes in

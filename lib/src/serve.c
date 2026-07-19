@@ -63,20 +63,16 @@ int cgra_emulate_pty(void (*on_ready)(const char *path, void *user), void *user)
             break;
         if (k == 0)
             continue;
-        for (ssize_t i = 0; i < k; i++)
-            emu_push(e, in[i]);
+        emu_feed(e, in, (size_t)k);
 
         uint8_t out[512];
-        int n = 0;
-        uint8_t b;
-        while (n < (int)sizeof(out) && emu_pop(e, &b))
-            out[n++] = b;
+        size_t n = emu_drain(e, out, sizeof(out));
         if (n > 0) {
-            ssize_t off = 0;
+            size_t off = 0;
             while (off < n) {
-                ssize_t w = write(mfd, out + off, (size_t)(n - off));
+                ssize_t w = write(mfd, out + off, n - off);
                 if (w <= 0) { emu_free(e); close(sfd); close(mfd); return CGRA_ERR_IO; }
-                off += w;
+                off += (size_t)w;
             }
         }
     }

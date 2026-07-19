@@ -1,0 +1,15 @@
+scripts/ - repo-level helper scripts
+====================================
+
+    gen-compdb.sh   generate compile_commands.json for clangd, with per-file
+                    flags matching lib/lib.mk and sw/sw.mk (incl. the optional
+                    readline path). Replaces the old static compile_flags.txt.
+
+Use it
+------
+    make compdb                    # -> ./compile_commands.json (git-ignored)
+    sh scripts/gen-compdb.sh       # same, directly
+
+Regenerate after adding a C source or changing include flags. The file holds
+absolute paths (machine-specific), so it is git-ignored; `bear -- make` is an
+equivalent if you prefer (bear is in the nix dev shell).

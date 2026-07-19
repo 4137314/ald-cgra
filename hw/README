@@ -15,11 +15,20 @@ Layout
 Build (make -f hw.mk <target>)
 ------------------------------
     sim              analyse + elaborate + run every testbench (GHDL)
+    lint             analyse the RTL alone (syntax/elaboration check)
     wave             run tb_cgra_top, dump build/tb_cgra_top.ghw (gtkwave)
-    bit  BOARD=b     synthesise a bitstream        (b = basys3 | nexys_a7)
+    bit  BOARD=b     synthesise a bitstream, timing-gated  (b = basys3|nexys_a7)
+    sta  BOARD=b     static timing analysis gate: fail unless timing is met
     prog             flash via the Vivado hw_server
     prog-ofl         flash via openFPGALoader (no Vivado)
     clean
+
+Timing, a priori
+----------------
+The XDCs constrain the 100 MHz clock and false-path the async UART/button/LED
+pins. `make bit` refuses to emit a bitstream unless setup and hold timing are
+met; `make sta` is the same check on its own. So a bitstream that exists is one
+that will run on the board -- certified by STA, not by staring at a waveform.
 
 Design in one breath
 --------------------

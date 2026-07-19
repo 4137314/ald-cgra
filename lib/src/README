@@ -4,7 +4,8 @@ lib/src/ - implementation
     cgra.c    serial transport (termios), the v2 protocol, retry/resync
               logic, and the accelerated kernels (diagonal element-wise,
               MAC dot product). The public entry points from cgra.h.
-    emu.h     internal interface to the emulator (emu_push / emu_pop).
+    emu.h     internal interface to the emulator (emu_push/emu_pop + the bulk
+              emu_feed/emu_drain used by the hot transport path).
     emu.c     the "sim:" device: a byte-accurate model of cgra_ctrl.vhd +
               the PE mesh. GOLDEN REFERENCE for the RTL. "sim:flaky" NACKs
               the first CFG and WR to exercise host retries.
@@ -17,6 +18,11 @@ Notes
 - Transport is strictly request/reply; a cgra_t handle is not locked, so
   serialise calls per handle (see THREAD SAFETY in libcgra(3)).
 - RUN is never retried (it advances state); a failed RUN resyncs instead.
+- Perf: the sim: transport moves whole buffers (emu_feed/emu_drain) rather than
+  one byte per library call; payload and reply copies are memcpy'd. Byte
+  behaviour is identical to the per-byte path (verified by the test suite), but
+  it profiles ~24% faster on the CPU-bound emulator (see `make gprof`). The
+  floor is run_command/step_array, the cycle-accurate PE model itself.
 
 Editing the protocol here means editing hw/rtl/cgra_pkg.vhd and
 include/cgra.h too. emu.c and the silicon must agree byte for byte.

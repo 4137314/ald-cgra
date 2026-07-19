@@ -16,10 +16,11 @@
  * Input sources (--a/--b): inline "1 2 3", "@file", or "-" for stdin.
  */
 
-#define _POSIX_C_SOURCE 200809L
+#define _GNU_SOURCE
 
 #include <ctype.h>
 #include <errno.h>
+#include <getopt.h>
 #include <glob.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +28,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+
+#ifdef HAVE_READLINE
+#include <readline/readline.h>
+#include <readline/history.h>
+#endif
 
 #include "cgra.h"
 #include "dsl.h"
@@ -661,6 +667,47 @@ static int cmd_conv(dsl_ctx *d, const char *devname, const char *h_src,
     return 0;
 }
 
+/* One benchmark measurement of a mode. */
+typedef struct {
+    double ms_total, ms_iter, elems_per_s;
+    cgra_stats_t st;
+} bench_result;
+
+/* Only element-wise / reduction modes are plain vector ops that mode_run can
+ * time directly; systolic/conv/scan have their own drivers. */
+static int mode_benchable(const dsl_mode *m)
+{
+    const char *p = m->pattern[0] ? m->pattern : "diagonal";
+    return !strcmp(p, "diagonal") || !strcmp(p, "custom") || !strcmp(p, "reduce");
+}
+
+/* Time 'repeat' runs of a mode over 'size' elements. Returns 0 or a negative
+ * CGRA_ERR_*; on error 'err' is filled. Device stats are per-call (reset here). */
+static int bench_mode(cgra_t *dev, const dsl_mode *m, int size, int repeat,
+                      const int16_t *a, const int16_t *b, int16_t *out,
+                      bench_result *r, char *err, size_t errsz)
+{
+    cgra_reset_stats(dev);
+    struct timespec t0, t1;
+    clock_gettime(CLOCK_MONOTONIC, &t0);
+    for (int i = 0; i < repeat; i++) {
+        int rc = mode_run(dev, m, a, b, (size_t)size, 0, 0, out, MAX_VEC, err, errsz);
+        if (rc < 0) return rc;
+    }
+    clock_gettime(CLOCK_MONOTONIC, &t1);
+    double ms = (double)(t1.tv_sec - t0.tv_sec) * 1e3 + (double)(t1.tv_nsec - t0.tv_nsec) / 1e6;
+    r->ms_total    = ms;
+    r->ms_iter     = ms / repeat;
+    r->elems_per_s = (double)size * repeat / (ms / 1e3);
+    cgra_get_stats(dev, &r->st);
+    return 0;
+}
+
+static void bench_fill(int16_t *a, int16_t *b, int size)
+{
+    for (int i = 0; i < size; i++) { a[i] = (int16_t)(i * 3 + 1); b[i] = (int16_t)(i - 7); }
+}
+
 static int cmd_bench(dsl_ctx *d, const char *devname, const char *modename,
                      int size, int repeat)
 {
@@ -672,31 +719,92 @@ static int cmd_bench(dsl_ctx *d, const char *devname, const char *modename,
     if (repeat <= 0) repeat = 100;
 
     static int16_t a[MAX_VEC], b[MAX_VEC], out[MAX_VEC];
-    for (int i = 0; i < size; i++) { a[i] = (int16_t)(i * 3 + 1); b[i] = (int16_t)(i - 7); }
+    bench_fill(a, b, size);
 
     char err[DSL_VAL];
     cgra_t *dev = open_device(d, devname, err, sizeof(err));
     if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
 
-    cgra_reset_stats(dev);
-    struct timespec t0, t1;
-    clock_gettime(CLOCK_MONOTONIC, &t0);
-    for (int r = 0; r < repeat; r++) {
-        int rc = mode_run(dev, m, a, b, (size_t)size, 0, 0, out, MAX_VEC, err, sizeof(err));
-        if (rc < 0) { fprintf(stderr, "cgra: %s\n", err); cgra_close(dev); return 1; }
+    bench_result r;
+    int rc = bench_mode(dev, m, size, repeat, a, b, out, &r, err, sizeof(err));
+    cgra_close(dev);
+    if (rc < 0) { fprintf(stderr, "cgra: %s\n", err); return 1; }
+
+    printf("bench %s: %d elems x %d iters in %.2f ms (%.3f ms/iter, %.0f elems/s)\n",
+           name, size, repeat, r.ms_total, r.ms_iter, r.elems_per_s);
+    printf("  link: %lu transactions, %lu retries, %lu tx bytes, %lu rx bytes\n",
+           r.st.transactions, r.st.retries, r.st.tx_bytes, r.st.rx_bytes);
+    return 0;
+}
+
+/*
+ * Stress-benchmark every benchable mode currently loaded (e.g. the whole
+ * standard library) and print a structured report: an aligned table by
+ * default, or a JSON object with --json. This is the CGRA-under-stress sweep
+ * you run once the FPGA is up: `cgra benchall -d auto --size 4096 --json`.
+ */
+static int cmd_benchall(dsl_ctx *d, const char *devname, int size, int repeat)
+{
+    if (size <= 0) size = 1024;
+    if (size > MAX_VEC) size = MAX_VEC;
+    if (repeat <= 0) repeat = 50;
+
+    static int16_t a[MAX_VEC], b[MAX_VEC], out[MAX_VEC];
+    bench_fill(a, b, size);
+
+    char err[DSL_VAL];
+    cgra_t *dev = open_device(d, devname, err, sizeof(err));
+    if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
+
+    int json = g_fmt_override && !strcmp(g_fmt_override, "json");
+    FILE *o = g_out ? g_out : stdout;
+
+    if (json) fprintf(o, "{\"size\": %d, \"repeat\": %d, \"results\": [\n", size, repeat);
+    else {
+        fprintf(o, "# CGRA stress benchmark: %d elems x %d iters per mode\n", size, repeat);
+        fprintf(o, "%-16s %-8s %10s %9s %8s %8s %8s\n",
+                "mode", "pattern", "ms/iter", "elems/s", "tx", "rx", "retries");
+        fprintf(o, "%-16s %-8s %10s %9s %8s %8s %8s\n",
+                "----", "-------", "-------", "-------", "--", "--", "-------");
     }
-    clock_gettime(CLOCK_MONOTONIC, &t1);
-    cgra_stats_t st;
-    cgra_get_stats(dev, &st);
+
+    int n = 0, fails = 0;
+    unsigned long tot_tx = 0, tot_rx = 0, tot_ret = 0;
+    double tot_ms = 0;
+    for (int i = 0; i < d->nmode; i++) {
+        dsl_mode *m = &d->mode[i];
+        if (!mode_benchable(m)) continue;
+        bench_result r;
+        if (bench_mode(dev, m, size, repeat, a, b, out, &r, err, sizeof(err)) < 0) {
+            fails++;
+            if (!json) fprintf(o, "%-16s %-8s   (skipped: %s)\n",
+                               m->name, m->pattern[0] ? m->pattern : "diagonal", err);
+            continue;
+        }
+        const char *pat = m->pattern[0] ? m->pattern : "diagonal";
+        if (json)
+            fprintf(o, "%s  {\"mode\": \"%s\", \"pattern\": \"%s\", \"elems\": %d, "
+                       "\"iters\": %d, \"ms_per_iter\": %.4f, \"elems_per_s\": %.1f, "
+                       "\"tx_bytes\": %lu, \"rx_bytes\": %lu, \"retries\": %lu}",
+                    n ? ",\n" : "", m->name, pat, size, repeat, r.ms_iter,
+                    r.elems_per_s, r.st.tx_bytes, r.st.rx_bytes, r.st.retries);
+        else
+            fprintf(o, "%-16s %-8s %10.4f %9.0f %8lu %8lu %8lu\n",
+                    m->name, pat, r.ms_iter, r.elems_per_s,
+                    r.st.tx_bytes, r.st.rx_bytes, r.st.retries);
+        n++;
+        tot_ms += r.ms_total; tot_tx += r.st.tx_bytes; tot_rx += r.st.rx_bytes; tot_ret += r.st.retries;
+    }
     cgra_close(dev);
 
-    double ms = (t1.tv_sec - t0.tv_sec) * 1e3 + (t1.tv_nsec - t0.tv_nsec) / 1e6;
-    double per = ms / repeat;
-    double eps = (double)size * repeat / (ms / 1e3);
-    printf("bench %s: %d elems x %d iters in %.2f ms (%.3f ms/iter, %.0f elems/s)\n",
-           name, size, repeat, ms, per, eps);
-    printf("  link: %lu transactions, %lu retries, %lu tx bytes, %lu rx bytes\n",
-           st.transactions, st.retries, st.tx_bytes, st.rx_bytes);
+    if (json) fprintf(o, "\n], \"modes\": %d, \"total_ms\": %.2f, "
+                         "\"total_tx\": %lu, \"total_rx\": %lu, \"total_retries\": %lu}\n",
+                      n, tot_ms, tot_tx, tot_rx, tot_ret);
+    else {
+        fprintf(o, "# %d mode(s) benchmarked, %d skipped; "
+                   "total %.1f ms, %lu tx, %lu rx, %lu retries\n",
+                n, fails, tot_ms, tot_tx, tot_rx, tot_ret);
+    }
     return 0;
 }
 
@@ -939,54 +1047,113 @@ static void usage(void)
         "  conv -m KERNEL --x SIGNAL [--io P]           1-D convolution\n"
         "  scan [nums...] [--a SRC] [--op sum|max|min|prod] [--io P]  prefix scan\n"
         "  bench [MODE] [--size N] [--repeat R]         time a mode on the device\n"
+        "  benchall [--size N] [--repeat R] [--json]    stress-bench every mode (structured)\n"
         "  emulate                                      serve a virtual CGRA on a pty\n"
         "  probe                            [-d DEVICE]  no -d: scan ports; with -d: known-answer tests\n"
         "  selftest                                     run kernels on the sim: emulator\n"
+        "  shell                                        interactive prompt (readline)\n"
         "\n"
         "input SRC: inline \"1 2 3\", \"@file\", or \"-\" for stdin.\n"
         "device: a profile name, a serial path, or \"sim:\" for the emulator.\n"
-        "output: --io PROFILE, --json, --dtype u16|s16, -o/--out FILE.\n",
+        "output: --io PROFILE, --json, --dtype u16|s16, -o/--out FILE.\n"
+        "note: options may appear anywhere; put bare negative numbers after \"--\"\n"
+        "      (or pass them via --a/--b/stdin), e.g. cgra run relu -- -3 -1 0 5.\n",
         stderr);
 }
 
-/* -------------------------------------------------- main */
+/* -------------------------------------------------- option parsing (getopt) */
 
-int main(int argc, char **argv)
+/* Long-only options get codes above the byte range so they never clash with
+ * the short options (-d -c -m -o -v -h). */
+enum {
+    OPT_A = 256, OPT_B, OPT_X, OPT_COLS, OPT_OP, OPT_IO,
+    OPT_JSON, OPT_DTYPE, OPT_SIZE, OPT_REPEAT, OPT_IMM, OPT_STEPS, OPT_FORCE
+};
+
+static const struct option long_opts[] = {
+    { "device",  required_argument, NULL, 'd'        },
+    { "config",  required_argument, NULL, 'c'        },
+    { "matrix",  required_argument, NULL, 'm'        },
+    { "out",     required_argument, NULL, 'o'        },
+    { "verbose", no_argument,       NULL, 'v'        },
+    { "help",    no_argument,       NULL, 'h'        },
+    { "a",       required_argument, NULL, OPT_A      },
+    { "b",       required_argument, NULL, OPT_B      },
+    { "x",       required_argument, NULL, OPT_X      },
+    { "cols",    required_argument, NULL, OPT_COLS   },
+    { "op",      required_argument, NULL, OPT_OP     },
+    { "io",      required_argument, NULL, OPT_IO     },
+    { "json",    no_argument,       NULL, OPT_JSON   },
+    { "dtype",   required_argument, NULL, OPT_DTYPE  },
+    { "size",    required_argument, NULL, OPT_SIZE   },
+    { "repeat",  required_argument, NULL, OPT_REPEAT },
+    { "imm",     required_argument, NULL, OPT_IMM    },
+    { "steps",   required_argument, NULL, OPT_STEPS  },
+    { "force",   no_argument,       NULL, OPT_FORCE  },
+    { NULL,      0,                 NULL, 0          }
+};
+
+static int cmd_shell(char *opt_config);
+
+/*
+ * Parse one command line (argv[0] is the program/tool name) with getopt_long
+ * and run the requested command. Used for both the one-shot invocation and
+ * each line typed at the interactive shell. Returns the command's exit code.
+ */
+static int dispatch(int argc, char **argv, int in_shell)
 {
-    const char *opt_device = NULL, *opt_config = NULL;
-    const char *opt_a = NULL, *opt_b = NULL, *opt_io = NULL;
-    const char *opt_matrix = NULL, *opt_x = NULL, *opt_outfile = NULL, *opt_op = NULL;
+    /* option values come from getopt's optarg (char *), so keep them mutable
+     * to stay const-clean when we hand opt_config to the shell's argv. */
+    char *opt_device = NULL, *opt_config = NULL;
+    char *opt_a = NULL, *opt_b = NULL, *opt_io = NULL;
+    char *opt_matrix = NULL, *opt_x = NULL, *opt_outfile = NULL, *opt_op = NULL;
     long opt_imm = 0; int has_imm = 0;
     int opt_steps = 0, has_steps = 0;
     int opt_cols = 0, opt_size = 0, opt_repeat = 0;
     int force = 0, verbose = 0;
-    char *pos[64]; int npos = 0;
 
-    for (int i = 1; i < argc; i++) {
-        const char *arg = argv[i];
-        if ((!strcmp(arg, "-d") || !strcmp(arg, "--device")) && i + 1 < argc) opt_device = argv[++i];
-        else if ((!strcmp(arg, "-c") || !strcmp(arg, "--config")) && i + 1 < argc) opt_config = argv[++i];
-        else if (!strcmp(arg, "--a") && i + 1 < argc) opt_a = argv[++i];
-        else if (!strcmp(arg, "--b") && i + 1 < argc) opt_b = argv[++i];
-        else if ((!strcmp(arg, "-m") || !strcmp(arg, "--matrix")) && i + 1 < argc) opt_matrix = argv[++i];
-        else if (!strcmp(arg, "--x") && i + 1 < argc) opt_x = argv[++i];
-        else if (!strcmp(arg, "--cols") && i + 1 < argc) opt_cols = atoi(argv[++i]);
-        else if (!strcmp(arg, "--op") && i + 1 < argc) opt_op = argv[++i];
-        else if (!strcmp(arg, "--io") && i + 1 < argc) opt_io = argv[++i];
-        else if ((!strcmp(arg, "-o") || !strcmp(arg, "--out")) && i + 1 < argc) opt_outfile = argv[++i];
-        else if (!strcmp(arg, "--json")) g_fmt_override = "json";
-        else if (!strcmp(arg, "--dtype") && i + 1 < argc) {
-            const char *dt = argv[++i];
-            g_unsigned = (dt[0] == 'u');
+    /* reset the formatting globals for this invocation (matters in the shell) */
+    g_out = NULL; g_unsigned = 0; g_fmt_override = NULL;
+
+    optind = 0;             /* glibc: full re-init, so the shell can re-parse */
+    opterr = 1;
+    int c;
+    while ((c = getopt_long(argc, argv, "d:c:m:o:vh", long_opts, NULL)) != -1) {
+        switch (c) {
+        case 'd':        opt_device  = optarg; break;
+        case 'c':        opt_config  = optarg; break;
+        case 'm':        opt_matrix  = optarg; break;
+        case 'o':        opt_outfile = optarg; break;
+        case 'v':        verbose = 1;          break;
+        case 'h':        usage();              return 0;
+        case OPT_A:      opt_a  = optarg;      break;
+        case OPT_B:      opt_b  = optarg;      break;
+        case OPT_X:      opt_x  = optarg;      break;
+        case OPT_COLS:   opt_cols   = atoi(optarg); break;
+        case OPT_OP:     opt_op     = optarg;  break;
+        case OPT_IO:     opt_io     = optarg;  break;
+        case OPT_JSON:   g_fmt_override = "json"; break;
+        case OPT_DTYPE:  g_unsigned = (optarg[0] == 'u'); break;
+        case OPT_SIZE:   opt_size   = atoi(optarg); break;
+        case OPT_REPEAT: opt_repeat = atoi(optarg); break;
+        case OPT_IMM:    opt_imm = strtol(optarg, NULL, 0); has_imm = 1; break;
+        case OPT_STEPS:  opt_steps = atoi(optarg); has_steps = 1; break;
+        case OPT_FORCE:  force = 1;            break;
+        case '?':        usage();              return 1;   /* getopt already complained */
+        default:         usage();              return 1;
         }
-        else if (!strcmp(arg, "--size") && i + 1 < argc) opt_size = atoi(argv[++i]);
-        else if (!strcmp(arg, "--repeat") && i + 1 < argc) opt_repeat = atoi(argv[++i]);
-        else if (!strcmp(arg, "--imm") && i + 1 < argc) { opt_imm = strtol(argv[++i], NULL, 0); has_imm = 1; }
-        else if (!strcmp(arg, "--steps") && i + 1 < argc) { opt_steps = atoi(argv[++i]); has_steps = 1; }
-        else if (!strcmp(arg, "--force")) force = 1;
-        else if (!strcmp(arg, "-v") || !strcmp(arg, "--verbose")) verbose = 1;
-        else if (!strcmp(arg, "-h") || !strcmp(arg, "--help")) { usage(); return 0; }
-        else if (npos < 64) pos[npos++] = argv[i];
+    }
+
+    char **pos = argv + optind;      /* command + positional numbers */
+    int    npos = argc - optind;
+    if (npos == 0) { usage(); return 1; }
+    const char *cmd = pos[0];
+    char **rest = pos + 1;
+    int nrest = npos - 1;
+
+    if (!strcmp(cmd, "shell")) {
+        if (in_shell) { fprintf(stderr, "cgra: already in a shell\n"); return 1; }
+        return cmd_shell(opt_config);
     }
 
     if (opt_outfile) {
@@ -994,58 +1161,157 @@ int main(int argc, char **argv)
         if (!g_out) { fprintf(stderr, "cgra: cannot write %s: %s\n", opt_outfile, strerror(errno)); return 1; }
     }
 
-    if (npos == 0) { usage(); return 1; }
-    const char *cmd = pos[0];
-    char **rest = pos + 1;
-    int nrest = npos - 1;
-
     dsl_ctx d;
     dsl_init(&d);
     char err[DSL_VAL];
     if (dsl_load(&d, opt_config, err, sizeof(err)) != 0) {
         fprintf(stderr, "cgra: config error: %s\n", err);
+        if (g_out) fclose(g_out);
         return 1;
     }
     dsl_io *io = opt_io ? dsl_find_io(&d, opt_io) : dsl_find_io(&d, "dec");
 
-    if (!strcmp(cmd, "devices"))   return cmd_devices(&d);
-    if (!strcmp(cmd, "modes"))     return cmd_modes(&d);
-    if (!strcmp(cmd, "pipelines")) return cmd_pipelines(&d);
-    if (!strcmp(cmd, "io"))        return cmd_io(&d);
-    if (!strcmp(cmd, "config"))    return cmd_config(&d);
-    if (!strcmp(cmd, "check"))     return cmd_check(&d);
-    if (!strcmp(cmd, "init"))      return cmd_init(force);
-    if (!strcmp(cmd, "ping"))      return cmd_ping(&d, opt_device);
-    if (!strcmp(cmd, "reset"))     return cmd_reset(&d, opt_device);
-    if (!strcmp(cmd, "dump"))      return cmd_dump(&d, opt_device, io);
-    if (!strcmp(cmd, "selftest"))  return selftest();
-    if (!strcmp(cmd, "probe"))     return cmd_probe(&d, opt_device);
-    if (!strcmp(cmd, "emulate"))   return cmd_emulate();
-    if (!strcmp(cmd, "show")) {
-        if (nrest < 1) { fprintf(stderr, "cgra: show needs a MODE\n"); return 1; }
-        return cmd_show(&d, rest[0], opt_imm, has_imm, verbose);
+    int rc = 0;
+    if      (!strcmp(cmd, "devices"))   rc = cmd_devices(&d);
+    else if (!strcmp(cmd, "modes"))     rc = cmd_modes(&d);
+    else if (!strcmp(cmd, "pipelines")) rc = cmd_pipelines(&d);
+    else if (!strcmp(cmd, "io"))        rc = cmd_io(&d);
+    else if (!strcmp(cmd, "config"))    rc = cmd_config(&d);
+    else if (!strcmp(cmd, "check"))     rc = cmd_check(&d);
+    else if (!strcmp(cmd, "init"))      rc = cmd_init(force);
+    else if (!strcmp(cmd, "ping"))      rc = cmd_ping(&d, opt_device);
+    else if (!strcmp(cmd, "reset"))     rc = cmd_reset(&d, opt_device);
+    else if (!strcmp(cmd, "dump"))      rc = cmd_dump(&d, opt_device, io);
+    else if (!strcmp(cmd, "selftest"))  rc = selftest();
+    else if (!strcmp(cmd, "probe"))     rc = cmd_probe(&d, opt_device);
+    else if (!strcmp(cmd, "emulate"))   rc = cmd_emulate();
+    else if (!strcmp(cmd, "show")) {
+        if (nrest < 1) { fprintf(stderr, "cgra: show needs a MODE\n"); rc = 1; }
+        else rc = cmd_show(&d, rest[0], opt_imm, has_imm, verbose);
     }
-    if (!strcmp(cmd, "run")) {
-        if (nrest < 1) { fprintf(stderr, "cgra: run needs a MODE\n"); return 1; }
-        return cmd_run(&d, opt_device, rest[0], rest + 1, nrest - 1,
-                       opt_a, opt_b, opt_imm, has_imm, opt_steps, has_steps, io);
+    else if (!strcmp(cmd, "run")) {
+        if (nrest < 1) { fprintf(stderr, "cgra: run needs a MODE\n"); rc = 1; }
+        else rc = cmd_run(&d, opt_device, rest[0], rest + 1, nrest - 1,
+                          opt_a, opt_b, opt_imm, has_imm, opt_steps, has_steps, io);
     }
-    if (!strcmp(cmd, "pipe")) {
-        if (nrest < 1) { fprintf(stderr, "cgra: pipe needs a NAME\n"); return 1; }
-        return cmd_pipe(&d, opt_device, rest[0], rest + 1, nrest - 1,
-                        opt_a, opt_b, io);
+    else if (!strcmp(cmd, "pipe")) {
+        if (nrest < 1) { fprintf(stderr, "cgra: pipe needs a NAME\n"); rc = 1; }
+        else rc = cmd_pipe(&d, opt_device, rest[0], rest + 1, nrest - 1,
+                           opt_a, opt_b, io);
     }
-    if (!strcmp(cmd, "matvec"))
-        return cmd_matvec(&d, opt_device, opt_matrix ? opt_matrix : opt_a,
-                          opt_x ? opt_x : opt_b, opt_cols, io);
-    if (!strcmp(cmd, "scan"))
-        return cmd_scan(&d, opt_device, rest, nrest, opt_a, opt_op, io);
-    if (!strcmp(cmd, "conv"))
-        return cmd_conv(&d, opt_device, opt_matrix, opt_x, opt_a, opt_b, io);
-    if (!strcmp(cmd, "bench"))
-        return cmd_bench(&d, opt_device, nrest > 0 ? rest[0] : NULL, opt_size, opt_repeat);
+    else if (!strcmp(cmd, "matvec"))
+        rc = cmd_matvec(&d, opt_device, opt_matrix ? opt_matrix : opt_a,
+                        opt_x ? opt_x : opt_b, opt_cols, io);
+    else if (!strcmp(cmd, "scan"))
+        rc = cmd_scan(&d, opt_device, rest, nrest, opt_a, opt_op, io);
+    else if (!strcmp(cmd, "conv"))
+        rc = cmd_conv(&d, opt_device, opt_matrix, opt_x, opt_a, opt_b, io);
+    else if (!strcmp(cmd, "bench"))
+        rc = cmd_bench(&d, opt_device, nrest > 0 ? rest[0] : NULL, opt_size, opt_repeat);
+    else if (!strcmp(cmd, "benchall"))
+        rc = cmd_benchall(&d, opt_device, opt_size, opt_repeat);
+    else {
+        fprintf(stderr, "cgra: unknown command '%s'\n", cmd);
+        usage();
+        rc = 1;
+    }
 
-    fprintf(stderr, "cgra: unknown command '%s'\n", cmd);
-    usage();
-    return 1;
+    if (g_out) { fclose(g_out); g_out = NULL; }
+    return rc;
+}
+
+/* -------------------------------------------------- interactive shell */
+
+/*
+ * Split a line into an argv[], honouring single/double quotes so that
+ * `run add --a "1 2 3"` keeps the vector as one token. Tokens are compacted
+ * in place (quotes stripped); argv[0] is the tool name. Returns argc.
+ */
+static int shell_tokenize(char *line, char **argv, int max)
+{
+    static char prog[] = "cgra";
+    int argc = 0;
+    argv[argc++] = prog;
+    char *p = line;
+    while (*p && argc < max - 1) {
+        while (*p && isspace((unsigned char)*p)) p++;
+        if (!*p) break;
+        char *dst = p;
+        argv[argc++] = dst;
+        char quote = 0;
+        while (*p && (quote || !isspace((unsigned char)*p))) {
+            if (!quote && (*p == '"' || *p == '\'')) { quote = *p; p++; continue; }
+            if (quote && *p == quote)                { quote = 0;  p++; continue; }
+            *dst++ = *p++;
+        }
+        if (*p) p++;               /* consume the separating space */
+        *dst = '\0';
+    }
+    argv[argc] = NULL;
+    return argc;
+}
+
+/* Read one line, with readline (history + editing) if available, else fgets.
+ * Returns a malloc'd string the caller frees, or NULL on EOF. */
+static char *shell_readline(const char *prompt)
+{
+#ifdef HAVE_READLINE
+    char *line = readline(prompt);
+    if (line && *line) add_history(line);
+    return line;
+#else
+    char buf[1024];
+    fputs(prompt, stdout);
+    fflush(stdout);
+    if (!fgets(buf, sizeof buf, stdin))
+        return NULL;
+    buf[strcspn(buf, "\r\n")] = '\0';
+    return strdup(buf);
+#endif
+}
+
+static int cmd_shell(char *opt_config)
+{
+    printf("cgra interactive shell — commands without the leading 'cgra'.\n"
+           "  help    list commands        quit / exit / Ctrl-D    leave\n");
+    if (opt_config)
+        printf("  (config: %s)\n", opt_config);
+
+    int last = 0;
+    for (;;) {
+        char *line = shell_readline("cgra> ");
+        if (!line) { putchar('\n'); break; }         /* EOF */
+
+        char *argv[128];
+        int argc = shell_tokenize(line, argv, 128);
+        if (argc <= 1) { free(line); continue; }     /* empty line */
+
+        const char *w = argv[1];
+        if (!strcmp(w, "quit") || !strcmp(w, "exit") || !strcmp(w, "q")) { free(line); break; }
+        if (!strcmp(w, "help") || !strcmp(w, "?")) { usage(); free(line); continue; }
+
+        /* A per-line -c overrides, else inherit the shell's config file. */
+        int has_c = 0;
+        for (int i = 1; i < argc; i++)
+            if (!strcmp(argv[i], "-c") || !strcmp(argv[i], "--config")) has_c = 1;
+        if (opt_config && !has_c && argc < 125) {
+            /* splice "-c <file>" right after argv[0] */
+            static char dashc[] = "-c";
+            for (int i = argc; i >= 1; i--) argv[i + 2] = argv[i];
+            argv[1] = dashc;
+            argv[2] = opt_config;
+            argc += 2;
+        }
+
+        last = dispatch(argc, argv, 1);
+        free(line);
+    }
+    return last;
+}
+
+/* -------------------------------------------------- main */
+
+int main(int argc, char **argv)
+{
+    return dispatch(argc, argv, 0);
 }

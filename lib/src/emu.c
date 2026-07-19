@@ -114,7 +114,7 @@ static int16_t alu(int op, int16_t a, int16_t b, int16_t r, int16_t imm)
     case CGRA_OP_AND:   return (int16_t)(a & b);
     case CGRA_OP_OR:    return (int16_t)(a | b);
     case CGRA_OP_XOR:   return (int16_t)(a ^ b);
-    case CGRA_OP_SHL:   return (int16_t)(a << (b & 0xF));
+    case CGRA_OP_SHL:   return (int16_t)((uint16_t)a << (b & 0xF)); /* shift in unsigned: defined 2's-complement wrap */
     case CGRA_OP_SHR:   return (int16_t)(a >> (b & 0xF));   /* arithmetic: a is signed */
     case CGRA_OP_MAX:   return a >= b ? a : b;
     case CGRA_OP_MIN:   return a <= b ? a : b;
@@ -216,7 +216,8 @@ static void run_command(cgra_emu_t *e)
     }
 }
 
-void emu_push(cgra_emu_t *e, uint8_t byte)
+/* One host->device byte through the FSM. Static so emu_feed inlines it. */
+static void push_byte(cgra_emu_t *e, uint8_t byte)
 {
     if (e->cmd < 0) {
         /* waiting for a command byte */
@@ -264,4 +265,47 @@ void emu_push(cgra_emu_t *e, uint8_t byte)
             e->cmd = -1;
         }
     }
+}
+
+void emu_push(cgra_emu_t *e, uint8_t byte)
+{
+    push_byte(e, byte);
+}
+
+void emu_feed(cgra_emu_t *e, const uint8_t *buf, size_t n)
+{
+    size_t i = 0;
+    while (i < n) {
+        if (e->cmd < 0) {
+            /* command byte: dispatch (sets cmd/need, or replies immediately) */
+            push_byte(e, buf[i++]);
+        } else {
+            /* payload: bulk-copy the whole span still due in one memcpy
+             * instead of one FSM step per byte (identical result). */
+            size_t due  = (size_t)(e->need - e->got);
+            size_t take = due < (n - i) ? due : (n - i);
+            memcpy(&e->buf[e->got], &buf[i], take);
+            e->got += (int)take;
+            i      += take;
+            if (e->got >= e->need) {
+                run_command(e);
+                e->cmd = -1;
+            }
+        }
+    }
+}
+
+size_t emu_drain(cgra_emu_t *e, uint8_t *buf, size_t n)
+{
+    size_t avail = (size_t)((e->tail - e->head + OUT_CAP) % OUT_CAP);
+    size_t take  = n < avail ? n : avail;
+    /* copy the (up to two) contiguous spans of the ring with memcpy */
+    size_t first = (size_t)(OUT_CAP - e->head);
+    if (first > take)
+        first = take;
+    memcpy(buf, &e->out[e->head], first);
+    if (take > first)
+        memcpy(buf + first, &e->out[0], take - first);
+    e->head = (int)(((size_t)e->head + take) % OUT_CAP);
+    return take;
 }
