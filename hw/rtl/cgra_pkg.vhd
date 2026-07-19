@@ -23,11 +23,30 @@ package cgra_pkg is
   constant NUM_PE : natural := ROWS * COLS;
   constant CFG_W  : natural := 32;
 
-  subtype data_t is signed(DATA_W - 1 downto 0);
-  subtype cfg_t  is std_logic_vector(CFG_W - 1 downto 0);
+  subtype data_t   is signed(DATA_W - 1 downto 0);
+  subtype cfg_t    is std_logic_vector(CFG_W - 1 downto 0);
+  subtype opcode_t is std_logic_vector(3 downto 0);   -- cfg[19:16]
+  subtype sel_t    is std_logic_vector(2 downto 0);   -- operand mux select
 
   type data_vec_t is array (natural range <>) of data_t;
   type cfg_vec_t  is array (natural range <>) of cfg_t;
+
+  -- The four nearest-neighbour operands presented to a PE (registered outputs
+  -- of the N/S/E/W neighbours, or the injected edge operands on the borders).
+  type pe_neigh_t is record
+    n : data_t;
+    s : data_t;
+    e : data_t;
+    w : data_t;
+  end record pe_neigh_t;
+
+  -- A configuration word decoded into its fields (see the layout above).
+  type cfg_fields_t is record
+    op    : opcode_t;
+    sel_a : sel_t;
+    sel_b : sel_t;
+    imm   : data_t;
+  end record cfg_fields_t;
 
   -- PE opcodes (cfg[19:16])
   constant OP_NOP   : std_logic_vector(3 downto 0) := x"0"; -- keep register
@@ -81,6 +100,9 @@ package cgra_pkg is
                     sb   : std_logic_vector(2 downto 0);
                     imm  : integer) return cfg_t;
 
+  -- Split a raw config word into its opcode / operand-select / immediate fields.
+  function decode_cfg(w : cfg_t) return cfg_fields_t;
+
 end package cgra_pkg;
 
 package body cgra_pkg is
@@ -96,6 +118,16 @@ package body cgra_pkg is
     w(22 downto 20) := sa;
     w(25 downto 23) := sb;
     return w;
+  end function;
+
+  function decode_cfg(w : cfg_t) return cfg_fields_t is
+    variable f : cfg_fields_t;
+  begin
+    f.imm   := signed(w(15 downto 0));
+    f.op    := w(19 downto 16);
+    f.sel_a := w(22 downto 20);
+    f.sel_b := w(25 downto 23);
+    return f;
   end function;
 
 end package body cgra_pkg;

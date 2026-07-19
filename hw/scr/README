@@ -2,24 +2,38 @@ hw/scr/ - Vivado batch scripts
 ==============================
 
 Tcl driven headless (vivado -mode batch), so the whole FPGA flow is
-scriptable and diffable - no GUI, no project files checked in.
+scriptable and diffable - no GUI, no project files checked in. Each flow script
+takes [board] [period_ns] tclargs (default nexys_a7 @ 10 ns).
 
-    build.tcl     read rtl/*.vhd (VHDL-2008) + the BOARD's con/*.xdc, run
-                  synth + implementation + write_bitstream. Args: BOARD.
-                  Refuses to write a bitstream unless setup AND hold timing are
-                  met, so a .bit that exists is one that runs on the board.
-                  Output: build/vivado/<top>_<board>.bit
-    timing.tcl    static timing analysis GATE: synth + impl + report, then exit
-                  non-zero unless WNS >= 0 and WHS >= 0. Passing means the
-                  design meets timing at the constrained 100 MHz clock, so you
-                  know it works before programming -- no waveform needed.
-    program.tcl   open the hw_server, find the FPGA, download a .bit. Args:
-                  path to the bitstream.
+    constraints.tcl  NOT a flow: defines cgra_timing_constraints <period_ns>,
+                     sourced by the others. All timing lives here (create_clock,
+                     async-I/O false paths, the datapath multicycle) so one knob
+                     -- the period -- drives the whole flow and the Fmax sweep.
+                     The board .xdc carry only physical (pin/IO/config) data.
+    floorplan.tcl    NOT a flow: defines cgra_floorplan <board>, sourced when
+                     FLOORPLAN=1. Pblocks the 4x4 PE array into one compact box
+                     over a DSP column to shorten the datapath routes.
+    synth.tcl        SYNTHESIS ONLY (no place/route): post-synth checkpoint +
+                     utilization/timing reports, exit non-zero on any ERROR or
+                     CRITICAL WARNING. The fast RTL gate (~seconds) -- run first.
+    fmax.tcl         binary-search the maximum closing clock frequency and print
+                     the limiting path (what to optimise next). Appends a row to
+                     build/vivado/fmax_history.csv (the improvement trail). Set
+                     FLOORPLAN=1 to fold in the floorplan.
+    build.tcl        synth + implementation + write_bitstream. Refuses to write a
+                     bitstream unless setup AND hold timing are met, so a .bit
+                     that exists is one that runs on the board.
+    timing.tcl       STA GATE: synth + impl + report, exit non-zero unless
+                     WNS >= 0 and WHS >= 0. Know it works before programming.
+    program.tcl      open the hw_server, find the FPGA, download a .bit.
 
-Invoked by hw.mk:
-    make -f hw.mk bit  BOARD=basys3     # build.tcl (timing-gated)
-    make -f hw.mk sta  BOARD=nexys_a7   # timing.tcl (STA gate)
-    make -f hw.mk prog                  # program.tcl
+Invoked by hw.mk (BOARD defaults to nexys_a7 = Nexys 4 DDR):
+    make -f hw.mk synth              # synth.tcl (synthesis-only gate)
+    make -f hw.mk fmax               # fmax.tcl  (max frequency + bottleneck)
+    make -f hw.mk bit   [PERIOD=]    # build.tcl (timing-gated bitstream)
+    make -f hw.mk sta   [PERIOD=]    # timing.tcl (STA gate)
+    make -f hw.mk sta FLOORPLAN=1    # any of the above, with the floorplan
+    make -f hw.mk prog               # program.tcl
 
 Vivado is not packaged in flake.nix (proprietary). For flashing without it,
 use `make -f hw.mk prog-ofl` (openFPGALoader).

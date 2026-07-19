@@ -8,12 +8,17 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.cgra_pkg.all;
+use work.cgra_comp_pkg.all;
 
 entity cgra_top is
   generic (
     G_CLK_FREQ_HZ    : natural := 100_000_000;
     G_BAUD           : natural := 115_200;
-    G_TIMEOUT_CYCLES : natural := 100_000_000
+    G_TIMEOUT_CYCLES : natural := 100_000_000;
+    -- Datapath multicycle factor: clocks per array step (see cgra_ctrl). Keep in
+    -- sync with the -setup number in scr/constraints.tcl -- the flow passes both
+    -- from one knob (make STEP_DIV=...).
+    G_STEP_DIV       : natural := 2
   );
   port (
     clk       : in  std_logic;
@@ -62,7 +67,7 @@ begin
 
   arr_rst <= rst or dp_rst;
 
-  u_rx : entity work.uart_rx
+  u_rx : uart_rx
     generic map (CLKS_PER_BIT => CLKS_PER_BIT)
     port map (
       clk       => clk,
@@ -72,7 +77,7 @@ begin
       rx_data   => rx_data
     );
 
-  u_tx : entity work.uart_tx
+  u_tx : uart_tx
     generic map (CLKS_PER_BIT => CLKS_PER_BIT)
     port map (
       clk       => clk,
@@ -83,8 +88,9 @@ begin
       tx_busy   => tx_busy
     );
 
-  u_ctrl : entity work.cgra_ctrl
-    generic map (G_TIMEOUT_CYCLES => G_TIMEOUT_CYCLES)
+  u_ctrl : cgra_ctrl
+    generic map (G_TIMEOUT_CYCLES => G_TIMEOUT_CYCLES,
+                 G_STEP_DIV       => G_STEP_DIV)
     port map (
       clk      => clk,
       rst      => rst,
@@ -102,7 +108,8 @@ begin
       busy     => ctrl_busy
     );
 
-  u_array : entity work.cgra_array
+  u_array : cgra_array
+    generic map (G_ROWS => ROWS, G_COLS => COLS)
     port map (
       clk      => clk,
       rst      => arr_rst,

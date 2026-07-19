@@ -38,7 +38,7 @@ same protocol, so the whole stack runs and is tested without an FPGA.
 | `hw/rtl/` | Synthesisable VHDL (package, UART, PE, array, controller, top) |
 | `hw/sim/` | GHDL testbenches (`tb_pe`, `tb_cgra_top`, `tb_matvec`) |
 | `hw/con/` | Constraint files (`basys3.xdc`, `nexys_a7.xdc`) |
-| `hw/scr/` | Vivado batch scripts (`build.tcl`, `timing.tcl`, `program.tcl`) |
+| `hw/scr/` | Vivado batch scripts (`synth`/`fmax`/`build`/`timing`/`program`.tcl + sourced `constraints`/`floorplan`.tcl) |
 | `lib/` | Host C library `libcgra` (static + shared; transport, kernels, `sim:` emulator, `test/`, `libcgra.3`, `cgra.pc.in`) |
 | `sw/` | `cgra` CLI: DSL parser, config discovery, mode compiler, vector I/O, `test/` |
 | `sw/config/` | Reference `.cgra` config files |
@@ -82,15 +82,22 @@ a port: `cgra run add -d /dev/ttyUSB1 --a … --b …`.
 Bitstream (Vivado batch, no GUI; on a machine with Vivado):
 
 ```sh
-make bit BOARD=basys3      # timing-gated: no .bit unless setup+hold met
-make sta BOARD=basys3      # static timing analysis gate on its own
+make synth                 # fast synthesis-only gate (error/critical-warning)
+make fmax                  # binary-search the max closing clock + name the wall
+make bit                   # timing-gated: no .bit unless setup+hold met
+make sta                   # static timing analysis gate on its own
+make sta FLOORPLAN=1       # any of the above, with the PE-array floorplan
 make prog                  # program via Vivado hw_server
 make prog-ofl              # alternative: openFPGALoader, no Vivado needed
 ```
 
-`make bit`/`make sta` **refuse to emit a bitstream unless timing is met** (WNS
-and WHS ≥ 0 at the constrained 100 MHz clock), so a bitstream that exists is
-one that runs on the board — certified by STA, not by reading a waveform.
+`BOARD` defaults to `nexys_a7` (Digilent **Nexys 4 DDR** / Nexys A7-100T,
+xc7a100t); pass `BOARD=basys3` for the Basys 3. `make bit`/`make sta` **refuse
+to emit a bitstream unless timing is met** (WNS and WHS ≥ 0 at the constrained
+clock, default 100 MHz — override with `PERIOD=<ns>`), so a bitstream that
+exists is one that runs on the board — certified by STA, not by reading a
+waveform. `make fmax` and `hw/perf/PERFLOG` track how high the clock can go and
+what limits it.
 
 ## Install
 
@@ -404,5 +411,10 @@ that row (S/E edges read zero).
 * The `sim:` emulator (`lib/src/emu.c`) is the golden reference for the RTL:
   it re-implements the PE ALU and the protocol FSM, so `make test` validates
   the host stack against the same semantics the hardware must have.
-* Timing: everything runs in the 100 MHz clock domain; UART I/O and buttons are
-  false-pathed in the XDC.
+* Timing: everything runs in one 100 MHz clock domain; UART I/O and buttons are
+  false-pathed in the XDC. The PE ALU (operand mux → DSP multiply → accumulate →
+  op mux) is too deep for 10 ns on a −1 Artix-7, so the controller pulses `step`
+  every second cycle and the XDC marks the datapath a two-cycle multicycle path:
+  100 MHz closes without pipelining the DSP, and one step is still one result
+  (bit-identical to `emu.c`). Verified end-to-end — `make sta` reports WNS ≈
+  +2.6 ns; removing either half re-opens a ≈ −1.8 ns setup violation.

@@ -13,7 +13,12 @@ via std.env; a failed assertion fails `make -f hw.mk sim`.
                       and checks CFG/WR/RUN/RD/RST, checksums and NACKs at
                       the wire level. This is the protocol conformance test.
     tb_matvec.vhd     exercises the weight-stationary systolic matrix-vector
-                      mapping end to end.
+                      mapping end to end. Parametric on G_STEP_DIV (the datapath
+                      multicycle factor): the same result must hold at any
+                      cadence, e.g.
+                        ghdl -r --std=08 --workdir=build/ghdl tb_matvec \
+                             -gG_STEP_DIV=3 --assert-level=error
+                      proves one step = one result independent of G_STEP_DIV.
 
 All are self-checking (assert ... severity failure + std.env.finish), so a
 failure fails `make sim`; there is nothing to eyeball in a waveform.

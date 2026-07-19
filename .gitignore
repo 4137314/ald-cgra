@@ -19,6 +19,9 @@ e~*
 vivado_*.backup*
 *.dcp
 *.bit
+# batch byproducts dropped in the cwd by route_design/report_*
+clockInfo.txt
+tight_setup_hold_pins.txt
 
 # LaTeX (doc/)
 *.aux

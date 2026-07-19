@@ -1,19 +1,23 @@
 # build.tcl — Vivado non-project batch flow: sources -> bitstream.
 #
 # Usage (from hw/):
-#   vivado -mode batch -nolog -nojournal -source scr/build.tcl -tclargs [board]
-# or simply:  make bit BOARD=basys3
+#   vivado -mode batch -nolog -nojournal -source scr/build.tcl -tclargs [board] [period_ns]
+# or simply:  make bit BOARD=nexys_a7
 #
+# Set FLOORPLAN=1 in the environment to apply scr/floorplan.tcl before place.
 # Outputs in build/vivado/: checkpoints, reports and <top>_<board>.bit
 
-set board "basys3"
-if { $argc > 0 } { set board [lindex $argv 0] }
+set board  "nexys_a7"
+if { $argc > 0 } { set board    [lindex $argv 0] }
+set period 10.000
+if { $argc > 1 } { set period   [lindex $argv 1] }
+set step_div 2
+if { $argc > 2 } { set step_div [lindex $argv 2] }
 
 array set board_parts {
     basys3   xc7a35tcpg236-1
     nexys_a7 xc7a100tcsg324-1
 }
-
 if { ![info exists board_parts($board)] } {
     puts "ERROR: unknown board '$board'. Known boards: [array names board_parts]"
     exit 1
@@ -22,17 +26,24 @@ if { ![info exists board_parts($board)] } {
 set part   $board_parts($board)
 set top    cgra_top
 set outdir build/vivado
-
 file mkdir $outdir
 
 # ---------------------------------------------------------------- sources
 read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
+source    scr/constraints.tcl
 
 # ---------------------------------------------------------------- synthesis
-synth_design -top $top -part $part
+synth_design -top $top -part $part -generic G_STEP_DIV=$step_div
+cgra_timing_constraints $period $step_div
 write_checkpoint  -force $outdir/post_synth.dcp
 report_utilization -file $outdir/utilization_synth.rpt
+
+# ---------------------------------------------------------------- floorplan
+if { [info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0" } {
+    source scr/floorplan.tcl
+    cgra_floorplan $board
+}
 
 # ---------------------------------------------------------------- implementation
 opt_design

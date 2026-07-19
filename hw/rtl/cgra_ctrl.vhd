@@ -24,7 +24,14 @@ use work.cgra_pkg.all;
 
 entity cgra_ctrl is
   generic (
-    G_TIMEOUT_CYCLES : natural := 100_000_000  -- 1 s at 100 MHz
+    G_TIMEOUT_CYCLES : natural := 100_000_000; -- 1 s at 100 MHz
+    -- Clocks per logical array step. 'step' is issued once every G_STEP_DIV
+    -- clocks, giving the ALU datapath G_STEP_DIV clock periods to settle -- the
+    -- multicycle factor. MUST equal the -setup number in cgra_timing_constraints
+    -- (scr/constraints.tcl). Raising it lets the clock run faster (the datapath
+    -- gets more periods) at the cost of more clocks per step. One step is always
+    -- one result, so emu.c stays golden regardless of the value.
+    G_STEP_DIV       : natural := 2
   );
   port (
     clk      : in  std_logic;
@@ -66,6 +73,10 @@ architecture rtl of cgra_ctrl is
   signal byte_idx : natural range 0 to 3 := 0;
   signal word_idx : natural range 0 to NUM_PE - 1 := 0;
   signal run_cnt  : unsigned(7 downto 0) := (others => '0');
+  -- Counts clocks within one logical step (0 .. G_STEP_DIV-1); 'step' fires at
+  -- phase 0, the remaining phases let the datapath settle. See S_RUN and the
+  -- matching multicycle-path constraint in scr/constraints.tcl.
+  signal run_phase : natural range 0 to G_STEP_DIV - 1 := 0;
   signal tx_byte  : std_logic_vector(7 downto 0) := (others => '0');
   signal wd       : natural range 0 to G_TIMEOUT_CYCLES := 0;
   signal cksum    : unsigned(7 downto 0) := (others => '0');
@@ -102,7 +113,8 @@ begin
         cfg_r    <= (others => (others => '0'));
         west_r   <= (others => (others => '0'));
         north_r  <= (others => (others => '0'));
-        run_cnt  <= (others => '0');
+        run_cnt   <= (others => '0');
+        run_phase <= 0;
         word_idx <= 0;
         byte_idx <= 0;
         wd       <= 0;
@@ -238,13 +250,29 @@ begin
             end if;
 
           when S_RUN =>
+            -- One logical array step every G_STEP_DIV clocks: pulse 'step' on
+            -- phase 0, then G_STEP_DIV-1 settle cycles let the ALU datapath
+            -- (operand mux -> DSP multiply -> accumulate -> op mux) span
+            -- G_STEP_DIV clock periods. The matching multicycle-path constraint
+            -- (scr/constraints.tcl) tells the timing engine the same. One step
+            -- still yields one result, so the fabric stays bit-identical to
+            -- emu.c step_array() at any G_STEP_DIV.
             if run_cnt = 0 then
               tx_byte   <= RSP_ACK;
               ret_state <= S_IDLE;
               state     <= S_SEND;
+            elsif run_phase = 0 then
+              step <= '1';                        -- launch the step
+              if G_STEP_DIV = 1 then
+                run_cnt <= run_cnt - 1;           -- single-cycle: consume now
+              else
+                run_phase <= 1;                   -- settle cycles follow
+              end if;
+            elsif run_phase = G_STEP_DIV - 1 then
+              run_phase <= 0;
+              run_cnt   <= run_cnt - 1;           -- last settle cycle
             else
-              step    <= '1';
-              run_cnt <= run_cnt - 1;
+              run_phase <= run_phase + 1;
             end if;
 
           when S_RD =>

@@ -1,11 +1,13 @@
-## basys3.xdc — Digilent Basys 3 (Artix-7 xc7a35tcpg236-1)
+## basys3.xdc -- Digilent Basys 3 (Artix-7 xc7a35tcpg236-1)
+## PHYSICAL constraints only (pins, I/O standards, config). All timing lives in
+## scr/constraints.tcl (clock period, false paths, datapath multicycle) so the
+## Fmax sweep can drive the period from one place.
 
-## 100 MHz system clock
+## 100 MHz system clock (oscillator on pin W5)
 set_property PACKAGE_PIN W5 [get_ports clk]
 set_property IOSTANDARD LVCMOS33 [get_ports clk]
-create_clock -period 10.000 -name sys_clk [get_ports clk]
 
-## Reset: center push button (active high)
+## Reset: centre push button (active high)
 set_property PACKAGE_PIN U18 [get_ports btn_rst]
 set_property IOSTANDARD LVCMOS33 [get_ports btn_rst]
 
@@ -21,12 +23,6 @@ set_property PACKAGE_PIN E19 [get_ports {led[1]}]
 set_property PACKAGE_PIN U19 [get_ports {led[2]}]
 set_property PACKAGE_PIN V19 [get_ports {led[3]}]
 set_property IOSTANDARD LVCMOS33 [get_ports {led[*]}]
-
-## Asynchronous I/O: exclude from timing analysis
-set_false_path -from [get_ports uart_rx_i]
-set_false_path -to   [get_ports uart_tx_o]
-set_false_path -from [get_ports btn_rst]
-set_false_path -to   [get_ports {led[*]}]
 
 ## Configuration
 set_property CFGBVS VCCO [current_design]

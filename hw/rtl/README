@@ -3,25 +3,41 @@ hw/rtl/ - synthesisable RTL
 
 VHDL-2008, one entity per file, elaborated in this order (see hw.mk SRCS):
 
-    cgra_pkg.vhd    constants + types. THE protocol/config-word contract:
-                    opcodes, operand selects, command bytes, checksum rules.
-                    Mirror of lib/include/cgra.h and lib/src/emu.c.
-    uart_rx.vhd     8N1 receiver, two-flop input sync, mid-bit sampling.
-                    rx_valid pulses one clock per received byte.
-    uart_tx.vhd     8N1 transmitter. Pulse tx_start while tx_busy = '0'.
-    pe.vhd          the processing element: two operand muxes -> 16-bit ALU
-                    -> one step-gated register. dout is the registered value.
-    cgra_array.vhd  ROWS x COLS mesh of pe. Interior PEs read the registered
-                    outputs of their N/S/E/W neighbours; north/west edges take
-                    the input ports, south/east edges read zero.
-    cgra_ctrl.vhd   protocol FSM: ID / CFG / WR / RUN / RD / RST, checksum
-                    verify, and a watchdog that aborts a stalled payload.
-    cgra_top.vhd    top level: clk + reset sync + UART + ctrl + array + LEDs.
+    cgra_pkg.vhd      constants + types + functions. THE protocol/config-word
+                      contract: opcodes, operand selects, command bytes, checksum
+                      rules. Mirror of lib/include/cgra.h and lib/src/emu.c.
+                      Records: pe_neigh_t (the N/S/E/W operand bundle) and
+                      cfg_fields_t (a decoded config word); decode_cfg() splits a
+                      raw word into fields, cfg_word() packs one.
+    cgra_comp_pkg.vhd component declarations for every block below, so the
+                      structural parents instantiate by component (not by
+                      entity). Mirror each entity's ports exactly.
+    uart_rx.vhd       8N1 receiver, two-flop input sync, mid-bit sampling.
+                      rx_valid pulses one clock per received byte.
+    uart_tx.vhd       8N1 transmitter. Pulse tx_start while tx_busy = '0'.
+    pe.vhd            the processing element: neigh (pe_neigh_t) + decode_cfg ->
+                      two operand muxes -> 16-bit ALU -> one step-gated register.
+    cgra_array.vhd    G_ROWS x G_COLS mesh of pe (generics default to the package
+                      geometry; ports are unconstrained so a different size just
+                      needs vectors of matching length). Interior PEs read their
+                      N/S/E/W neighbours; north/west edges take the input ports,
+                      south/east edges read zero. Instantiates pe by component.
+    cgra_ctrl.vhd     protocol FSM: ID / CFG / WR / RUN / RD / RST, checksum
+                      verify, watchdog. Issues 'step' once every G_STEP_DIV
+                      clocks (generic, default 2), making the ALU datapath a
+                      G_STEP_DIV-cycle multicycle path (see scr/constraints.tcl).
+                      One step is always one result, so raising G_STEP_DIV lets
+                      the clock run faster without touching emu.c. The make knob
+                      STEP_DIV drives both this generic and the XDC number.
+    cgra_top.vhd      top level: clk + reset sync + UART + ctrl + array + LEDs.
+                      Instantiates the four blocks by component.
 
 Conventions
 -----------
 - Active-high synchronous reset, everything on rising_edge(clk).
 - Signals lower_snake, constants UPPER, generics G_*, states S_*.
+- Types/records in cgra_pkg; components in cgra_comp_pkg; the PE output register
+  is named 'r' (synthesises to r_reg -- the multicycle XDC selector matches it).
 - No vendor primitives: portable across Xilinx parts and GHDL.
 
 Editing cgra_pkg.vhd? It is a three-way contract - update the C header and

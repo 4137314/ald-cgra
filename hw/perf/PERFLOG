@@ -1,0 +1,48 @@
+CGRA Fmax trajectory  (board: nexys_a7 = Nexys 4 DDR, xc7a100tcsg324-1, speed -1)
+================================================================================
+
+Method: `make -f hw.mk fmax [STEP_DIV=N] [FLOORPLAN=1]` binary-searches the
+smallest clock period meeting setup AND hold, then names the limiting path.
+Fmax = 1000/(best_period - WNS). Route-only (no phys_opt) so CONSERVATIVE -- the
+real `make bit` adds phys_opt and does at least as well. One logical step = one
+result at every STEP_DIV (validated in GHDL for N=1..4), so emu.c stays golden.
+
+Constraint recap: the ALU datapath is an N-cycle multicycle path with N=STEP_DIV
+(step fires every Nth clock). At period T the datapath has N*T while
+control/reset/IO paths have T. Small N => the datapath sets the wall; large N =>
+the single-cycle control paths do.
+
+  #  date        change                          STEP_DIV  Fmax      wall
+  -- ----------  ------------------------------  --------  --------  --------------------------
+  0  2026-07-19  baseline (modular RTL, no FP)      2      171.4MHz  datapath multicycle
+                                                                     r_reg->r_reg, 11 levels, 11.73ns
+  1  2026-07-19  raise multicycle factor to 3       3      192.8MHz  ctrl single-cycle
+                                                                     word_idx_reg->cksum_reg, 8 levels, 5.20ns
+
+  Also tried: FLOORPLAN=1 (box the PE array into one DSP-rich clock region).
+  MEASURED NEUTRAL-TO-NEGATIVE here: boxing the array shortens intra-array nets
+  but stretches the wide array<->controller interface (readback / cfg / operands),
+  and the default placer already packs this small design well. Script kept as a
+  working tool; it is not the lever for a 4x4 array on a large part.
+
+Reading the trajectory
+----------------------
+STEP_DIV is a clock-vs-throughput knob, not free speed. At N the clock can reach
+the point where either the datapath/N or the single-cycle control paths bind,
+but each step costs N clocks, so step-rate = Fmax/N:
+    N=2 -> 171.4/2 = 85.7 Msteps/s   (datapath-bound: the throughput sweet spot)
+    N=3 -> 192.8/3 = 64.3 Msteps/s   (higher CLOCK, lower step-rate)
+The fabric is UART-bound in practice, so raw Fclk is headroom + a known ceiling,
+not throughput. Pick N=2 for work per second; raise N to prove/where the control
+logic tops out.
+
+Next targets (where to go)
+--------------------------
+* To lift the THROUGHPUT-relevant number (the N=2, datapath-bound Fmax), shorten
+  the 11-level ALU path: let the DSP48 do the MAC/ACC accumulate internally
+  (P=A*B+C) so the fabric CARRY4 leaves the critical path, and/or flatten the
+  16-way op mux. Target: get the datapath under ~10.5 ns -> N=2 Fmax ~190 MHz.
+* To lift the N>=3 (control-bound) Fmax, shorten u_ctrl word_idx -> cksum: it is
+  the CFG/RD byte-assembly + checksum accumulate. 8 levels, 5.20 ns.
+* Re-run `make fmax` after each change; it re-names the wall and appends to
+  build/vivado/fmax_history.csv.

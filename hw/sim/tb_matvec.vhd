@@ -14,6 +14,7 @@ use ieee.numeric_std.all;
 use work.cgra_pkg.all;
 
 entity tb_matvec is
+  generic (G_STEP_DIV : natural := 2);   -- override with ghdl -gG_STEP_DIV=N
 end entity tb_matvec;
 
 architecture sim of tb_matvec is
@@ -109,7 +110,8 @@ begin
   end process;
 
   dut : entity work.cgra_top
-    generic map (G_CLK_FREQ_HZ => CLK_HZ, G_BAUD => BAUD, G_TIMEOUT_CYCLES => 200_000)
+    generic map (G_CLK_FREQ_HZ => CLK_HZ, G_BAUD => BAUD, G_TIMEOUT_CYCLES => 200_000,
+                 G_STEP_DIV => G_STEP_DIV)
     port map (clk => clk, btn_rst => rst_btn,
               uart_rx_i => rx_line, uart_tx_o => tx_line, led => led);
 

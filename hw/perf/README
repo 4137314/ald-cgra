@@ -1,0 +1,30 @@
+hw/perf/ - timing / frequency performance tracking
+===================================================
+
+The record of how fast this design closes and WHY, so every iteration starts
+from "where the wall is" instead of guessing.
+
+    PERFLOG      hand-maintained trajectory: one entry per optimisation, with
+                 the achieved Fmax, the limiting path, what changed, and the
+                 next thing to attack. Read top-to-bottom to see the climb.
+
+How to add a data point
+-----------------------
+    make -f hw.mk fmax                 # nexys_a7, no floorplan
+    make -f hw.mk fmax FLOORPLAN=1     # with the PE-array pblock
+
+fmax.tcl binary-searches the smallest clock period that still meets setup AND
+hold, reports the achieved Fmax and the limiting path (the "wall"), and appends
+a machine-readable row to build/vivado/fmax_history.csv (ephemeral -- build/ is
+git-ignored). When a change moves the number, copy the headline into PERLOG with
+a one-line note on what did it and what the new wall is.
+
+Reading the wall
+----------------
+"single-cycle (control/reset/IO)" -> the datapath multicycle is NOT binding;
+attack fanout / logic depth on that control path (e.g. reset distribution,
+readback mux). "datapath (multicycle)" -> the two-cycle ALU path is binding
+again; either raise the multicycle factor (slower step cadence, still one step =
+one result) or shorten the operand-mux/DSP/op-mux chain. Fmax here is UART-bound
+in practice, so a higher clock is about headroom and knowing the design's limit,
+not throughput.

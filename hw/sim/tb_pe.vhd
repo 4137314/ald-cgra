@@ -32,15 +32,12 @@ begin
 
   dut : entity work.pe
     port map (
-      clk  => clk,
-      rst  => rst,
-      step => step,
-      cfg  => cfg,
-      in_n => n,
-      in_s => s,
-      in_e => e,
-      in_w => w,
-      dout => dout
+      clk   => clk,
+      rst   => rst,
+      step  => step,
+      cfg   => cfg,
+      neigh => (n => n, s => s, e => e, w => w),
+      dout  => dout
     );
 
   stim_p : process

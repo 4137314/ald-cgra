@@ -10,13 +10,15 @@
 #   make uninstall     remove an installation
 #   make check-deps    report which build/runtime dependencies are present
 #   make dist          make a source tarball
-#   make bit           build the FPGA bitstream (needs Vivado)  [BOARD=basys3]
+#   make synth         synthesis-only RTL gate (needs Vivado)  [BOARD=nexys_a7]
+#   make fmax          search the maximum closing clock frequency (needs Vivado)
+#   make bit           build the FPGA bitstream (needs Vivado)  [BOARD=nexys_a7]
 #   make sta           static timing analysis gate (needs Vivado)
 #   make clean
 #
 # Build profile propagates to the sub-makefiles, e.g. `make PROFILE=asan test`.
 
-BOARD   ?= basys3
+BOARD   ?= nexys_a7
 PROFILE ?= release
 VERSION  = 0.1.0
 
@@ -45,7 +47,7 @@ SOVERSION     = 0
 SOFILE        = libcgra.so.$(VERSION)
 
 .PHONY: all release sim wave lib sw test bench gprof perf callgrind profile \
-        bit sta prog prog-ofl doc docs \
+        synth fmax bit sta prog prog-ofl doc docs \
         install uninstall install-strip check-deps dist compdb clean
 
 all: lib sw
@@ -88,6 +90,12 @@ bench: sw
 # C performance analysis of the CLI driving the emulator (CPU-bound): pick one.
 gprof perf callgrind profile: lib
 	$(MAKE_SW) $@
+
+synth:
+	$(MAKE_HW) synth BOARD=$(BOARD)
+
+fmax:
+	$(MAKE_HW) fmax BOARD=$(BOARD)
 
 bit:
 	$(MAKE_HW) bit BOARD=$(BOARD)

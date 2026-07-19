@@ -1,19 +1,23 @@
 # timing.tcl - static timing analysis gate for the CGRA on a Xilinx target.
 #
 # Usage (from hw/):
-#   vivado -mode batch -nolog -nojournal -source scr/timing.tcl -tclargs [board]
-# or simply:  make -f hw.mk sta BOARD=nexys_a7
+#   vivado -mode batch -nolog -nojournal -source scr/timing.tcl -tclargs [board] [period_ns]
+# or simply:  make sta BOARD=nexys_a7
 #
-# Runs synth + implementation, then EXITS NON-ZERO unless both setup (WNS) and
-# hold (WHS) slack are >= 0 with no failing endpoints. A zero exit means the
-# design is timing-clean at the constrained 100 MHz clock, so a bitstream from
-# the same sources is guaranteed to meet timing on the board -- you know it
-# works before ever programming it, without reading a waveform.
+# Runs synth + implementation at the given clock period (default 10 ns = 100 MHz)
+# then EXITS NON-ZERO unless both setup (WNS) and hold (WHS) slack are >= 0. A
+# zero exit means the design is timing-clean at that clock, so a bitstream from
+# the same sources is guaranteed to meet timing on the board. Set FLOORPLAN=1 to
+# apply scr/floorplan.tcl. To search the maximum frequency use scr/fmax.tcl.
 #
 # Reports land in build/vivado/*_${board}.rpt.
 
-set board "nexys_a7"
-if { $argc > 0 } { set board [lindex $argv 0] }
+set board  "nexys_a7"
+if { $argc > 0 } { set board    [lindex $argv 0] }
+set period 10.000
+if { $argc > 1 } { set period   [lindex $argv 1] }
+set step_div 2
+if { $argc > 2 } { set step_div [lindex $argv 2] }
 
 array set board_parts {
     basys3   xc7a35tcpg236-1
@@ -32,7 +36,13 @@ file mkdir $outdir
 # ---------------------------------------------------------------- build
 read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
-synth_design -top $top -part $part
+source    scr/constraints.tcl
+synth_design -top $top -part $part -generic G_STEP_DIV=$step_div
+cgra_timing_constraints $period $step_div
+if { [info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0" } {
+    source scr/floorplan.tcl
+    cgra_floorplan $board
+}
 opt_design
 place_design
 phys_opt_design
@@ -52,7 +62,7 @@ set wns [expr {[llength $setup_paths] ? [get_property SLACK $setup_paths] : 0}]
 set whs [expr {[llength $hold_paths]  ? [get_property SLACK $hold_paths]  : 0}]
 
 puts "======================================================================"
-puts "  STA gate: $top on $board ($part)"
+puts "  STA gate: $top on $board ($part) @ ${period} ns"
 puts "    setup  WNS = $wns ns"
 puts "    hold   WHS = $whs ns"
 

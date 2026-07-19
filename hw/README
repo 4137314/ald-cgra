@@ -5,37 +5,62 @@ Synthesisable VHDL-2008 for a 4x4 mesh of 16-bit processing elements, a
 UART, and the protocol controller that stitches them together. Simulate with
 GHDL; build/flash a bitstream with Vivado in batch mode (no GUI).
 
+Default board is nexys_a7 = Digilent Nexys 4 DDR / Nexys A7-100T (xc7a100t);
+basys3 (xc7a35t) is also supported via BOARD=basys3.
+
 Layout
 ------
-    rtl/    synthesisable sources (package, UART, PE, array, controller, top)
+    rtl/    synthesisable sources (2 packages + UART, PE, array, controller, top)
     sim/    GHDL testbenches
-    con/    board constraint files (.xdc)
-    scr/    Vivado batch scripts (build + program)
+    con/    board constraint files (.xdc) -- PHYSICAL only (pins/IO/config)
+    scr/    Vivado batch scripts; timing + floorplan factored into sourced procs
+    perf/   Fmax trajectory tracking (PERFLOG) -- where the timing wall is
 
-Build (make -f hw.mk <target>)
-------------------------------
+Build (make -f hw.mk <target>; BOARD defaults to nexys_a7)
+---------------------------------------------------------
     sim              analyse + elaborate + run every testbench (GHDL)
     lint             analyse the RTL alone (syntax/elaboration check)
     wave             run tb_cgra_top, dump build/tb_cgra_top.ghw (gtkwave)
-    bit  BOARD=b     synthesise a bitstream, timing-gated  (b = basys3|nexys_a7)
-    sta  BOARD=b     static timing analysis gate: fail unless timing is met
+    synth            synthesis-only gate: fail on error/critical warning (fast)
+    fmax             binary-search the max closing frequency + report the wall
+    bit  [PERIOD=]   synthesise a bitstream, timing-gated at PERIOD ns (def 10)
+    sta  [PERIOD=]   static timing analysis gate: fail unless timing is met
     prog             flash via the Vivado hw_server
     prog-ofl         flash via openFPGALoader (no Vivado)
     clean
+  Knobs: BOARD, PERIOD=<ns>, FLOORPLAN=1 (apply scr/floorplan.tcl in bit/sta/fmax).
 
 Timing, a priori
 ----------------
-The XDCs constrain the 100 MHz clock and false-path the async UART/button/LED
-pins. `make bit` refuses to emit a bitstream unless setup and hold timing are
-met; `make sta` is the same check on its own. So a bitstream that exists is one
+scr/constraints.tcl constrains the clock (period is the knob) and false-paths
+the async UART/button/LED pins. `make bit` refuses to emit a bitstream unless
+setup and hold timing are met; `make sta` is the same check on its own; `make
+synth` is the quick synthesis-only pre-check. So a bitstream that exists is one
 that will run on the board -- certified by STA, not by staring at a waveform.
+
+The one non-obvious constraint: the PE ALU (operand mux -> DSP multiply ->
+accumulate -> op mux) is too deep to settle in 10 ns on a -1 Artix-7, so the
+controller issues 'step' on alternate clocks (cgra_ctrl.vhd S_RUN) and
+constraints.tcl declares the datapath a two-cycle multicycle path. This closes
+timing without pipelining the DSP, so one step still yields one result and the
+fabric stays bit-identical to lib/src/emu.c. Drop either half and setup fails by
+~1.8 ns at 100 MHz.
+
+Pushing Fmax
+------------
+`make fmax` binary-searches the highest clock the design closes at and names the
+limiting path, so each optimisation starts from the actual wall (see perf/PERFLOG
+for the trajectory). FLOORPLAN=1 boxes the PE array over a DSP column to shorten
+the datapath routes. Because the fabric only advances when the UART-bound
+controller pulses 'step', a higher clock is headroom + a known limit, not raw
+throughput -- but it is the discipline that keeps the datapath honest.
 
 Design in one breath
 --------------------
 uart_rx/tx move bytes; cgra_ctrl is the protocol FSM (v2, checksum-protected)
 that loads per-PE config words, injects edge operands, pulses 'step' and reads
-the register file back; cgra_array wires ROWS*COLS instances of pe into a
-nearest-neighbour mesh. Everything runs in one 100 MHz clock domain.
+the register file back; cgra_array wires G_ROWS*G_COLS instances of pe into a
+nearest-neighbour mesh. Everything runs in one clock domain.
 
 Protocol note
 -------------
