@@ -704,7 +704,7 @@ static int diag_vec_op(cgra_t *dev, enum cgra_op op,
     int rc = cgra_get_info(dev, &g);
     if (rc != CGRA_OK) return rc;
     size_t lanes = g.rows < g.cols ? g.rows : g.cols;
-    uint32_t cfg[CGRA_MAX_PE];
+    uint32_t cfg[CGRA_MAX_PE] = {0};
     diag_cfg(cfg, op, b == NULL, imm, g);
     rc = cgra_configure_n(dev, cfg, (size_t)g.rows * g.cols);
     if (rc != CGRA_OK)
