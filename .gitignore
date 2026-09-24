@@ -46,6 +46,7 @@ perf.data
 perf.data.old
 
 # nix
+.direnv/
 result
 result-*
 
