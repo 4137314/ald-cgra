@@ -39,6 +39,11 @@ infodir        = $(datarootdir)/info
 pkgconfigdir   = $(libdir)/pkgconfig
 completiondir  = $(datarootdir)/bash-completion/completions
 pkgdatadir     = $(datarootdir)/cgra
+export pkgdatadir
+
+# POSIX shell quoting for installation paths (including spaces/apostrophes).
+sh_quote = '$(subst ','"'"',$(1))'
+escape_sed = $(subst |,\|,$(subst &,\&,$(subst \,\\,$(1))))
 
 INSTALL      ?= install
 INSTALL_DATA  = $(INSTALL) -m644
@@ -48,7 +53,7 @@ SOFILE        = libcgra.so.$(VERSION)
 
 .PHONY: all release sim wave lib sw test bench gprof perf callgrind profile \
         synth fmax bit sta prog prog-ofl doc docs \
-        install uninstall install-strip check-deps dist compdb clean
+        install uninstall install-strip test-install check-deps dist compdb clean
 
 all: lib sw
 
@@ -77,6 +82,10 @@ sw: lib
 test: lib
 	$(MAKE_LIB) test
 	$(MAKE_SW) test
+
+# Copies working sources to a temporary directory; never installs system-wide.
+test-install:
+	python3 sw/test/test_install.py
 
 # Stress-benchmark the whole .cgra standard library on a device (structured
 # output). DEV=sim (default) dry-runs on the emulator; DEV=auto uses the FPGA
@@ -121,54 +130,54 @@ docs: doc
 # Builds the optimised binaries and the info manual, then lays everything out
 # under $(DESTDIR)$(PREFIX) following the FHS. Man page sources install as-is.
 install: release
-	$(MAKE_SW) info
+	$(MAKE_SW) PROFILE=release info
 	# binary
-	$(INSTALL) -d $(DESTDIR)$(bindir)
-	$(INSTALL_PROG) sw/build/cgra $(DESTDIR)$(bindir)/cgra
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(bindir))
+	$(INSTALL_PROG) sw/build/cgra $(call sh_quote,$(DESTDIR)$(bindir)/cgra)
 	# libraries (static + shared with soname symlinks)
-	$(INSTALL) -d $(DESTDIR)$(libdir)
-	$(INSTALL_DATA) lib/build/libcgra.a $(DESTDIR)$(libdir)/libcgra.a
-	$(INSTALL_PROG) lib/build/$(SOFILE) $(DESTDIR)$(libdir)/$(SOFILE)
-	ln -sf $(SOFILE) $(DESTDIR)$(libdir)/libcgra.so.$(SOVERSION)
-	ln -sf $(SOFILE) $(DESTDIR)$(libdir)/libcgra.so
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(libdir))
+	$(INSTALL_DATA) lib/build/libcgra.a $(call sh_quote,$(DESTDIR)$(libdir)/libcgra.a)
+	$(INSTALL_PROG) lib/build/$(SOFILE) $(call sh_quote,$(DESTDIR)$(libdir)/$(SOFILE))
+	ln -sf $(SOFILE) $(call sh_quote,$(DESTDIR)$(libdir)/libcgra.so.$(SOVERSION))
+	ln -sf $(SOFILE) $(call sh_quote,$(DESTDIR)$(libdir)/libcgra.so)
 	# header
-	$(INSTALL) -d $(DESTDIR)$(includedir)
-	$(INSTALL_DATA) lib/include/cgra.h $(DESTDIR)$(includedir)/cgra.h
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(includedir))
+	$(INSTALL_DATA) lib/include/cgra.h $(call sh_quote,$(DESTDIR)$(includedir)/cgra.h)
 	# pkg-config file (prefix/version substituted in)
-	$(INSTALL) -d $(DESTDIR)$(pkgconfigdir)
-	sed -e 's|@PREFIX@|$(PREFIX)|g' -e 's|@VERSION@|$(VERSION)|g' \
-	    lib/cgra.pc.in > $(DESTDIR)$(pkgconfigdir)/cgra.pc
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(pkgconfigdir))
+	sed -e $(call sh_quote,s|@PREFIX@|$(call escape_sed,$(PREFIX))|g) -e $(call sh_quote,s|@VERSION@|$(VERSION)|g) \
+	    lib/cgra.pc.in > $(call sh_quote,$(DESTDIR)$(pkgconfigdir)/cgra.pc)
 	# man pages (1 = CLI, 3 = library, 5 = config format)
-	$(INSTALL) -d $(DESTDIR)$(mandir)/man1 $(DESTDIR)$(mandir)/man3 $(DESTDIR)$(mandir)/man5
-	$(INSTALL_DATA) sw/doc/cgra.1     $(DESTDIR)$(mandir)/man1/cgra.1
-	$(INSTALL_DATA) lib/doc/libcgra.3 $(DESTDIR)$(mandir)/man3/libcgra.3
-	$(INSTALL_DATA) sw/doc/cgra.5     $(DESTDIR)$(mandir)/man5/cgra.5
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(mandir)/man1) $(call sh_quote,$(DESTDIR)$(mandir)/man3) $(call sh_quote,$(DESTDIR)$(mandir)/man5)
+	$(INSTALL_DATA) sw/doc/cgra.1     $(call sh_quote,$(DESTDIR)$(mandir)/man1/cgra.1)
+	$(INSTALL_DATA) lib/doc/libcgra.3 $(call sh_quote,$(DESTDIR)$(mandir)/man3/libcgra.3)
+	$(INSTALL_DATA) sw/doc/cgra.5     $(call sh_quote,$(DESTDIR)$(mandir)/man5/cgra.5)
 	# info manual
-	$(INSTALL) -d $(DESTDIR)$(infodir)
-	$(INSTALL_DATA) sw/build/cgra.info $(DESTDIR)$(infodir)/cgra.info
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(infodir))
+	$(INSTALL_DATA) sw/build/cgra.info $(call sh_quote,$(DESTDIR)$(infodir)/cgra.info)
 	# bash completion
-	$(INSTALL) -d $(DESTDIR)$(completiondir)
-	$(INSTALL_DATA) sw/completions/cgra.bash $(DESTDIR)$(completiondir)/cgra
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(completiondir))
+	$(INSTALL_DATA) sw/completions/cgra.bash $(call sh_quote,$(DESTDIR)$(completiondir)/cgra)
 	# runtime standard library (.cgra)
-	$(INSTALL) -d $(DESTDIR)$(pkgdatadir)/stdlib
-	$(INSTALL_DATA) sw/config/stdlib/*.cgra $(DESTDIR)$(pkgdatadir)/stdlib/
-	@echo "installed cgra $(VERSION) under $(DESTDIR)$(PREFIX)"
+	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(pkgdatadir)/stdlib)
+	$(INSTALL_DATA) sw/config/stdlib/*.cgra $(call sh_quote,$(DESTDIR)$(pkgdatadir)/stdlib/)
+	@printf '%s\n' $(call sh_quote,installed cgra $(VERSION) under $(DESTDIR)$(PREFIX))
 	@echo "run 'ldconfig' if you installed the shared library to a system dir"
 
 install-strip: install
-	strip $(DESTDIR)$(bindir)/cgra
+	strip $(call sh_quote,$(DESTDIR)$(bindir)/cgra)
 
 uninstall:
-	rm -f  $(DESTDIR)$(bindir)/cgra
-	rm -f  $(DESTDIR)$(libdir)/libcgra.a
-	rm -f  $(DESTDIR)$(libdir)/$(SOFILE) $(DESTDIR)$(libdir)/libcgra.so.$(SOVERSION) $(DESTDIR)$(libdir)/libcgra.so
-	rm -f  $(DESTDIR)$(includedir)/cgra.h
-	rm -f  $(DESTDIR)$(pkgconfigdir)/cgra.pc
-	rm -f  $(DESTDIR)$(mandir)/man1/cgra.1 $(DESTDIR)$(mandir)/man3/libcgra.3 $(DESTDIR)$(mandir)/man5/cgra.5
-	rm -f  $(DESTDIR)$(infodir)/cgra.info
-	rm -f  $(DESTDIR)$(completiondir)/cgra
-	rm -rf $(DESTDIR)$(pkgdatadir)
-	@echo "uninstalled cgra from $(DESTDIR)$(PREFIX)"
+	rm -f  $(call sh_quote,$(DESTDIR)$(bindir)/cgra)
+	rm -f  $(call sh_quote,$(DESTDIR)$(libdir)/libcgra.a)
+	rm -f  $(call sh_quote,$(DESTDIR)$(libdir)/$(SOFILE)) $(call sh_quote,$(DESTDIR)$(libdir)/libcgra.so.$(SOVERSION)) $(call sh_quote,$(DESTDIR)$(libdir)/libcgra.so)
+	rm -f  $(call sh_quote,$(DESTDIR)$(includedir)/cgra.h)
+	rm -f  $(call sh_quote,$(DESTDIR)$(pkgconfigdir)/cgra.pc)
+	rm -f  $(call sh_quote,$(DESTDIR)$(mandir)/man1/cgra.1) $(call sh_quote,$(DESTDIR)$(mandir)/man3/libcgra.3) $(call sh_quote,$(DESTDIR)$(mandir)/man5/cgra.5)
+	rm -f  $(call sh_quote,$(DESTDIR)$(infodir)/cgra.info)
+	rm -f  $(call sh_quote,$(DESTDIR)$(completiondir)/cgra)
+	rm -rf $(call sh_quote,$(DESTDIR)$(pkgdatadir))
+	@printf '%s\n' $(call sh_quote,uninstalled cgra from $(DESTDIR)$(PREFIX))
 
 # ---- dependency probe (mirrors the flake's toolchain) ---------------------
 # The library itself needs only a C11 compiler + libc; the rest is optional

@@ -6,5 +6,5 @@ includedir=${prefix}/include
 Name: cgra
 Description: Host library for the UART-attached CGRA accelerator
 Version: @VERSION@
-Cflags: -I${includedir}
-Libs: -L${libdir} -lcgra
+Cflags: -I"${includedir}"
+Libs: -L"${libdir}" -lcgra
