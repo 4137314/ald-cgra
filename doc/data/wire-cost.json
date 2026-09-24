@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "experiment": "current-kernels-wire-v1",
+  "recorded_at_utc": "2026-09-22T13:37:26.338892+00:00",
+  "system": "Linux-6.18.52-1-lts-x86_64-with-glibc2.42",
+  "base_commit": "8e6b770351c7e2550cab77b4956e8873f81e291f",
+  "working_tree": "source hashes identify the measured code; HEAD alone is insufficient",
+  "compiler_command": "gcc",
+  "compiler": "gcc (GCC) 15.2.0",
+  "binary_sha256": "eccbd74c141e92f9d0dace0b12f3087dbfcf13c5bb6e5d5705a6ec569e0e3722",
+  "build": "make -C lib -f lib.mk PROFILE=release static; make -C doc -f doc.mk measure",
+  "backend": "in-process emulator, protocol v2 and v3, no serial-time model",
+  "counting": "one successful call per row after ID; CFG/compute included; no retries",
+  "verification": "independent scalar results and output canary before recording",
+  "sha256": {
+    "doc/tools/measure_wire.c": "fcf747128d2c21a724c3ff7352836f6af3b2926a0b24abb0a25e3295c31b7c33",
+    "doc/tools/wire_data.py": "8c8443726883c153939d486edaac9441f712c89c4360ed7c3d1ff29bfa8826e8",
+    "lib/lib.mk": "f24883cda5ba4b1bf668d94c0d69028ed5b840963b60dfa0c343fec6e23f16bc",
+    "lib/include/cgra.h": "ec5df13410eab48ac5cb9e9ccd29e4d2ddd198a703deee94c2310ab94d52ff08",
+    "lib/src/cgra.c": "ac8b043ac51ea1e5203a0d6b1eb65257ee98429c8dcd4d4253fb57923832a6f7",
+    "lib/src/kernels.c": "c3e7e39eb9e5da4fe6a52ffe6d3d666912a572ac854f8eb7d2b7649948fe986a",
+    "lib/src/buffers.h": "6edec617e92fd3394a54059e9c1ea30e73d4fc6dd3a1b43fc20d8183befc905d",
+    "lib/src/emu.c": "c193eef9a4ad5c116bb09b695a54274628c5c82ed437385575c33602bdd88b69",
+    "lib/src/emu.h": "8a07a851f3f3915367c4495cda7f848695c9caa1d02a29a050c717a2290c9510"
+  },
+  "csv_sha256": "86a76683cc27c32a0402339acf83fdbd6441866ffab175aca5c1ad4f0d9659ef"
+}
