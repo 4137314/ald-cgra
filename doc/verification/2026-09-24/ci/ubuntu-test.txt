@@ -1,0 +1,1158 @@
+$ make test
+make -C lib -f lib.mk PROFILE=release
+make[1]: Entering directory '/work/lib'
+mkdir -p build
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+src/cgra.c: In function 'cgra_exec_n':
+src/cgra.c:571:39: warning: writing 16 bytes into a region of size 15 [-Wstringop-overflow=]
+  571 |         req[1 + EXEC_HDR + 2 * j + 1] = (uint8_t)(v >> 8);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+src/cgra.c:556:13: note: at offset [55, 70] into destination object 'req' of size 70
+  556 |     uint8_t req[EXEC_REQ_MAX];
+      |             ^~~
+src/cgra.c:570:39: warning: writing 16 bytes into a region of size 15 [-Wstringop-overflow=]
+  570 |         req[1 + EXEC_HDR + 2 * j + 0] = (uint8_t)(v & 0xFFu);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+src/cgra.c:556:13: note: at offset [55, 70] into destination object 'req' of size 70
+  556 |     uint8_t req[EXEC_REQ_MAX];
+      |             ^~~
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/kernels.c -o build/kernels.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/emu.c -o build/emu.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/serve.c -o build/serve.o
+ar rcs build/libcgra.a build/cgra.o build/kernels.o build/emu.o build/serve.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/cgra.pic.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/kernels.c -o build/kernels.pic.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/emu.c -o build/emu.pic.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/serve.c -o build/serve.pic.o
+cc -shared -Wl,-soname,libcgra.so.0  -o build/libcgra.so.0.1.0 build/cgra.pic.o build/kernels.pic.o build/emu.pic.o build/serve.pic.o
+ln -sf libcgra.so.0.1.0 build/libcgra.so.0
+ln -sf libcgra.so.0.1.0 build/libcgra.so
+make[1]: Leaving directory '/work/lib'
+make -C lib -f lib.mk PROFILE=release test
+make[1]: Entering directory '/work/lib'
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_cgra.c build/cgra.o build/kernels.o build/emu.o build/serve.o  -o build/test_cgra
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_transport.c build/cgra.o build/kernels.o build/emu.o build/serve.o  -o build/test_transport
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_kernels.c build/libcgra.a  -o build/test_kernels
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_faults.c build/libcgra.a  -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk -o build/test_faults
+./build/test_cgra
+ok 1 - open kernel validation device
+ok 2 - unsupported binary kernel op rejected
+ok 3 - unsupported immediate kernel op rejected
+ok 4 - unsupported binary kernel op rejected
+ok 5 - unsupported immediate kernel op rejected
+ok 6 - unsupported binary kernel op rejected
+ok 7 - unsupported immediate kernel op rejected
+ok 8 - unsupported binary kernel op rejected
+ok 9 - unsupported immediate kernel op rejected
+ok 10 - unsupported binary kernel op rejected
+ok 11 - unsupported immediate kernel op rejected
+ok 12 - unsupported binary kernel op rejected
+ok 13 - unsupported immediate kernel op rejected
+ok 14 - unsupported binary kernel op rejected
+ok 15 - unsupported immediate kernel op rejected
+ok 16 - unsupported binary kernel op rejected
+ok 17 - unsupported immediate kernel op rejected
+ok 18 - invalid op does not contact device or modify output
+ok 19 - open kernel validation device
+ok 20 - unsupported binary kernel op rejected
+ok 21 - unsupported immediate kernel op rejected
+ok 22 - unsupported binary kernel op rejected
+ok 23 - unsupported immediate kernel op rejected
+ok 24 - unsupported binary kernel op rejected
+ok 25 - unsupported immediate kernel op rejected
+ok 26 - unsupported binary kernel op rejected
+ok 27 - unsupported immediate kernel op rejected
+ok 28 - unsupported binary kernel op rejected
+ok 29 - unsupported immediate kernel op rejected
+ok 30 - unsupported binary kernel op rejected
+ok 31 - unsupported immediate kernel op rejected
+ok 32 - unsupported binary kernel op rejected
+ok 33 - unsupported immediate kernel op rejected
+ok 34 - unsupported binary kernel op rejected
+ok 35 - unsupported immediate kernel op rejected
+ok 36 - invalid op does not contact device or modify output
+# libcgra unit tests
+ok 37 - CFG imm field round-trips signed
+ok 38 - CFG opcode field
+ok 39 - CFG sel_a field
+ok 40 - CFG sel_b field
+ok 41 - CFG reserved bits are zero
+ok 42 - identify succeeds on sim:
+ok 43 - identify reports protocol version
+ok 44 - identify reports ROWS
+ok 45 - identify reports COLS
+ok 46 - identify reports datapath width
+ok 47 - configure ok
+ok 48 - write_inputs ok
+ok 49 - run ok
+ok 50 - read_regs ok
+ok 51 - PE(0,0)=north+west=42
+ok 52 - reset_datapath ok
+ok 53 - read after reset ok
+ok 54 - registers cleared by reset
+ok 55 - vec_add ok
+ok 56 - vec_add matches host reference
+ok 57 - vec_sub ok
+ok 58 - vec_sub matches host reference
+ok 59 - vec_mul ok
+ok 60 - vec_mul matches (16-bit wrap)
+ok 61 - vec_relu ok
+ok 62 - vec_relu = max(a,0)
+ok 63 - vec_addi ok
+ok 64 - vec_addi = a + imm
+ok 65 - vec_max (n=3, partial lane)
+ok 66 - vec_max tail chunk correct
+ok 67 - apply(shl) ok
+ok 68 - SHL of negative wraps (=-16)
+ok 69 - dot ok
+ok 70 - dot product = 35
+ok 71 - sim: advertises protocol v3 (exec)
+ok 72 - exec: configure
+ok 73 - exec: single-tap transaction
+ok 74 - exec: tapped register holds 7 + 5
+ok 75 - exec: two-tap mask
+ok 76 - exec: taps come back in PE order
+ok 77 - exec: empty mask (write+run only)
+ok 78 - exec: empty mask still stepped the array
+ok 79 - exec: rejects ntaps != popcount(mask)
+ok 80 - exec: configure ACC
+ok 81 - exec: reset then accumulate
+ok 82 - exec: three accumulates of 5 from a cleared register
+ok 83 - exec: accumulate without reset
+ok 84 - exec: without the flag the accumulator carries over
+ok 85 - exec: accumulate with fused reset
+ok 86 - exec: fused reset cleared the accumulator first
+ok 87 - configure(NULL) -> ERR_ARG
+ok 88 - vec_add(b=NULL) -> ERR_ARG
+ok 89 - dot(b=NULL) -> ERR_ARG
+ok 90 - strerror returns non-empty text
+ok 91 - strerror returns non-empty text
+ok 92 - strerror returns non-empty text
+ok 93 - strerror returns non-empty text
+ok 94 - strerror returns non-empty text
+ok 95 - strerror returns non-empty text
+ok 96 - open sim:flaky
+ok 97 - vec_add recovers through the retry path
+ok 98 - flaky result still correct
+ok 99 - exactly two retries (first CFG + first EXEC/WR NACKed)
+ok 100 - transaction counter advanced
+ok 101 - reset_stats zeroes counters
+ok 102 - open sim:v2 (legacy device)
+ok 103 - sim:v2 identifies as protocol v2
+ok 104 - sim:v2 does not advertise exec
+ok 105 - cgra_exec refuses a pre-v3 device
+ok 106 - v2 fallback: vec_add runs
+ok 107 - v2 fallback: results identical to the fused path
+ok 108 - v2 fallback: dot identical to the fused path
+ok 109 - open both protocol backends
+ok 110 - fused path uses less than half the round trips
+ok 111 - fused path also moves fewer bytes
+ok 112 - sim:1x1
+ok 113 - ID reports actual geometry
+ok 114 - cached ID succeeds
+ok 115 - short configuration rejected
+ok 116 - long configuration rejected
+ok 117 - short west edge rejected
+ok 118 - long north edge rejected
+ok 119 - short register buffer rejected
+ok 120 - unknown EXEC flags rejected
+ok 121 - NULL input with nonzero length rejected
+ok 122 - tap count mismatch rejected
+ok 123 - mask selecting absent PE rejected
+ok 124 - legacy CFG requires 4x4
+ok 125 - legacy WR requires 4x4
+ok 126 - legacy RD requires 4x4
+ok 127 - legacy EXEC requires 4x4
+ok 128 - legacy apply requires 4x4
+ok 129 - invalid buffers/geometry perform no transfers after cached ID
+ok 130 - runtime CFG succeeds
+ok 131 - runtime WR succeeds
+ok 132 - runtime RUN succeeds
+ok 133 - runtime RD succeeds with exact capacity
+ok 134 - row-major results and read buffer canary intact
+ok 135 - last PE masked read and zero inputs
+ok 136 - sim:1x16
+ok 137 - ID reports actual geometry
+ok 138 - cached ID succeeds
+ok 139 - short configuration rejected
+ok 140 - long configuration rejected
+ok 141 - short west edge rejected
+ok 142 - long north edge rejected
+ok 143 - short register buffer rejected
+ok 144 - unknown EXEC flags rejected
+ok 145 - NULL input with nonzero length rejected
+ok 146 - tap count mismatch rejected
+ok 147 - legacy CFG requires 4x4
+ok 148 - legacy WR requires 4x4
+ok 149 - legacy RD requires 4x4
+ok 150 - legacy EXEC requires 4x4
+ok 151 - legacy apply requires 4x4
+ok 152 - invalid buffers/geometry perform no transfers after cached ID
+ok 153 - runtime CFG succeeds
+ok 154 - runtime WR succeeds
+ok 155 - runtime RUN succeeds
+ok 156 - runtime RD succeeds with exact capacity
+ok 157 - row-major results and read buffer canary intact
+ok 158 - last PE masked read and zero inputs
+ok 159 - sim:16x1
+ok 160 - ID reports actual geometry
+ok 161 - cached ID succeeds
+ok 162 - short configuration rejected
+ok 163 - long configuration rejected
+ok 164 - short west edge rejected
+ok 165 - long north edge rejected
+ok 166 - short register buffer rejected
+ok 167 - unknown EXEC flags rejected
+ok 168 - NULL input with nonzero length rejected
+ok 169 - tap count mismatch rejected
+ok 170 - legacy CFG requires 4x4
+ok 171 - legacy WR requires 4x4
+ok 172 - legacy RD requires 4x4
+ok 173 - legacy EXEC requires 4x4
+ok 174 - legacy apply requires 4x4
+ok 175 - invalid buffers/geometry perform no transfers after cached ID
+ok 176 - runtime CFG succeeds
+ok 177 - runtime WR succeeds
+ok 178 - runtime RUN succeeds
+ok 179 - runtime RD succeeds with exact capacity
+ok 180 - row-major results and read buffer canary intact
+ok 181 - last PE masked read and zero inputs
+ok 182 - sim:2x3
+ok 183 - ID reports actual geometry
+ok 184 - cached ID succeeds
+ok 185 - short configuration rejected
+ok 186 - long configuration rejected
+ok 187 - short west edge rejected
+ok 188 - long north edge rejected
+ok 189 - short register buffer rejected
+ok 190 - unknown EXEC flags rejected
+ok 191 - NULL input with nonzero length rejected
+ok 192 - tap count mismatch rejected
+ok 193 - mask selecting absent PE rejected
+ok 194 - legacy CFG requires 4x4
+ok 195 - legacy WR requires 4x4
+ok 196 - legacy RD requires 4x4
+ok 197 - legacy EXEC requires 4x4
+ok 198 - legacy apply requires 4x4
+ok 199 - invalid buffers/geometry perform no transfers after cached ID
+ok 200 - runtime CFG succeeds
+ok 201 - runtime WR succeeds
+ok 202 - runtime RUN succeeds
+ok 203 - runtime RD succeeds with exact capacity
+ok 204 - row-major results and read buffer canary intact
+ok 205 - last PE masked read and zero inputs
+ok 206 - sim:3x2
+ok 207 - ID reports actual geometry
+ok 208 - cached ID succeeds
+ok 209 - short configuration rejected
+ok 210 - long configuration rejected
+ok 211 - short west edge rejected
+ok 212 - long north edge rejected
+ok 213 - short register buffer rejected
+ok 214 - unknown EXEC flags rejected
+ok 215 - NULL input with nonzero length rejected
+ok 216 - tap count mismatch rejected
+ok 217 - mask selecting absent PE rejected
+ok 218 - legacy CFG requires 4x4
+ok 219 - legacy WR requires 4x4
+ok 220 - legacy RD requires 4x4
+ok 221 - legacy EXEC requires 4x4
+ok 222 - legacy apply requires 4x4
+ok 223 - invalid buffers/geometry perform no transfers after cached ID
+ok 224 - runtime CFG succeeds
+ok 225 - runtime WR succeeds
+ok 226 - runtime RUN succeeds
+ok 227 - runtime RD succeeds with exact capacity
+ok 228 - row-major results and read buffer canary intact
+ok 229 - last PE masked read and zero inputs
+ok 230 - sim:2x8
+ok 231 - ID reports actual geometry
+ok 232 - cached ID succeeds
+ok 233 - short configuration rejected
+ok 234 - long configuration rejected
+ok 235 - short west edge rejected
+ok 236 - long north edge rejected
+ok 237 - short register buffer rejected
+ok 238 - unknown EXEC flags rejected
+ok 239 - NULL input with nonzero length rejected
+ok 240 - tap count mismatch rejected
+ok 241 - legacy CFG requires 4x4
+ok 242 - legacy WR requires 4x4
+ok 243 - legacy RD requires 4x4
+ok 244 - legacy EXEC requires 4x4
+ok 245 - legacy apply requires 4x4
+ok 246 - invalid buffers/geometry perform no transfers after cached ID
+ok 247 - runtime CFG succeeds
+ok 248 - runtime WR succeeds
+ok 249 - runtime RUN succeeds
+ok 250 - runtime RD succeeds with exact capacity
+ok 251 - row-major results and read buffer canary intact
+ok 252 - last PE masked read and zero inputs
+ok 253 - sim:8x2
+ok 254 - ID reports actual geometry
+ok 255 - cached ID succeeds
+ok 256 - short configuration rejected
+ok 257 - long configuration rejected
+ok 258 - short west edge rejected
+ok 259 - long north edge rejected
+ok 260 - short register buffer rejected
+ok 261 - unknown EXEC flags rejected
+ok 262 - NULL input with nonzero length rejected
+ok 263 - tap count mismatch rejected
+ok 264 - legacy CFG requires 4x4
+ok 265 - legacy WR requires 4x4
+ok 266 - legacy RD requires 4x4
+ok 267 - legacy EXEC requires 4x4
+ok 268 - legacy apply requires 4x4
+ok 269 - invalid buffers/geometry perform no transfers after cached ID
+ok 270 - runtime CFG succeeds
+ok 271 - runtime WR succeeds
+ok 272 - runtime RUN succeeds
+ok 273 - runtime RD succeeds with exact capacity
+ok 274 - row-major results and read buffer canary intact
+ok 275 - last PE masked read and zero inputs
+ok 276 - sim:4x4
+ok 277 - ID reports actual geometry
+ok 278 - cached ID succeeds
+ok 279 - short configuration rejected
+ok 280 - long configuration rejected
+ok 281 - short west edge rejected
+ok 282 - long north edge rejected
+ok 283 - short register buffer rejected
+ok 284 - unknown EXEC flags rejected
+ok 285 - NULL input with nonzero length rejected
+ok 286 - tap count mismatch rejected
+ok 287 - invalid buffers/geometry perform no transfers after cached ID
+ok 288 - runtime CFG succeeds
+ok 289 - runtime WR succeeds
+ok 290 - runtime RUN succeeds
+ok 291 - runtime RD succeeds with exact capacity
+ok 292 - row-major results and read buffer canary intact
+ok 293 - last PE masked read and zero inputs
+ok 294 - invalid emulator geometry rejected
+ok 295 - invalid emulator geometry rejected
+ok 296 - invalid emulator geometry rejected
+ok 297 - invalid emulator geometry rejected
+ok 298 - invalid emulator geometry rejected
+ok 299 - invalid emulator geometry rejected
+1..299
+# 299 passed, 0 failed
+./build/test_transport
+ok transport 1 - create PTY
+ok transport 2 - open serial library on PTY
+ok transport 3 - silent peer times out
+ok transport 4 - silent peer contributes no received bytes
+ok transport 5 - create PTY
+ok transport 6 - open serial library on PTY
+ok transport 7 - fork delayed peer
+ok transport 8 - fragments cannot restart the whole-reply deadline
+ok transport 9 - only bytes read before timeout are counted
+ok transport 10 - delayed peer delivered the complete reply
+ok transport 11 - create PTY
+ok transport 12 - open serial library on PTY
+ok transport 13 - disconnected PTY rejects write
+ok transport 14 - failed transfer does not invent byte counts
+ok transport 15 - create PTY
+ok transport 16 - open serial library on PTY
+ok transport 17 - establish geometry before injecting reply failure
+ok transport 18 - failing command preserves its original error
+ok transport 19 - uncertain request is sent once with no recovery byte
+ok transport 20 - peer observes exactly the original request
+ok transport 21 - all protocol entry points reject a desynchronized session
+ok transport 22 - blocked calls leave wire, counters and output untouched
+ok transport 23 - create PTY
+ok transport 24 - open serial library on PTY
+ok transport 25 - establish geometry before injecting reply failure
+ok transport 26 - failing command preserves its original error
+ok transport 27 - uncertain request is sent once with no recovery byte
+ok transport 28 - peer observes exactly the original request
+ok transport 29 - all protocol entry points reject a desynchronized session
+ok transport 30 - blocked calls leave wire, counters and output untouched
+ok transport 31 - create PTY
+ok transport 32 - open serial library on PTY
+ok transport 33 - establish geometry before injecting reply failure
+ok transport 34 - failing command preserves its original error
+ok transport 35 - uncertain request is sent once with no recovery byte
+ok transport 36 - peer observes exactly the original request
+ok transport 37 - all protocol entry points reject a desynchronized session
+ok transport 38 - blocked calls leave wire, counters and output untouched
+ok transport 39 - create PTY
+ok transport 40 - open serial library on PTY
+ok transport 41 - establish geometry before injecting reply failure
+ok transport 42 - failing command preserves its original error
+ok transport 43 - uncertain request is sent once with no recovery byte
+ok transport 44 - peer observes exactly the original request
+ok transport 45 - all protocol entry points reject a desynchronized session
+ok transport 46 - blocked calls leave wire, counters and output untouched
+ok transport 47 - create PTY
+ok transport 48 - open serial library on PTY
+ok transport 49 - establish geometry before injecting reply failure
+ok transport 50 - failing command preserves its original error
+ok transport 51 - uncertain request is sent once with no recovery byte
+ok transport 52 - peer observes exactly the original request
+ok transport 53 - all protocol entry points reject a desynchronized session
+ok transport 54 - blocked calls leave wire, counters and output untouched
+ok transport 55 - create PTY
+ok transport 56 - open serial library on PTY
+ok transport 57 - establish geometry before injecting reply failure
+ok transport 58 - inject malformed reply
+ok transport 59 - failing command preserves its original error
+ok transport 60 - uncertain request is sent once with no recovery byte
+ok transport 61 - peer observes exactly the original request
+ok transport 62 - all protocol entry points reject a desynchronized session
+ok transport 63 - blocked calls leave wire, counters and output untouched
+ok transport 64 - create PTY
+ok transport 65 - open serial library on PTY
+ok transport 66 - establish geometry before injecting reply failure
+ok transport 67 - inject malformed reply
+ok transport 68 - failing command preserves its original error
+ok transport 69 - uncertain request is sent once with no recovery byte
+ok transport 70 - peer observes exactly the original request
+ok transport 71 - all protocol entry points reject a desynchronized session
+ok transport 72 - blocked calls leave wire, counters and output untouched
+ok transport - high descriptor # SKIP process descriptor limit too low
+ok transport 73 - create PTY
+ok transport 74 - open serial library on PTY
+ok transport 75 - identify kernel fault-injection peer
+ok transport 76 - queue mid-kernel protocol error
+ok transport 77 - kernel returns the original mid-execution error
+ok transport 78 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 79 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 80 - all nonempty kernels reject the stopped session
+ok transport 81 - stopped kernel session sends no retries or later kernel commands
+ok transport 82 - create PTY
+ok transport 83 - open serial library on PTY
+ok transport 84 - identify kernel fault-injection peer
+ok transport 85 - queue mid-kernel protocol error
+ok transport 86 - kernel returns the original mid-execution error
+ok transport 87 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 88 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 89 - all nonempty kernels reject the stopped session
+ok transport 90 - stopped kernel session sends no retries or later kernel commands
+ok transport 91 - create PTY
+ok transport 92 - open serial library on PTY
+ok transport 93 - identify kernel fault-injection peer
+ok transport 94 - queue mid-kernel protocol error
+ok transport 95 - kernel returns the original mid-execution error
+ok transport 96 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 97 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 98 - all nonempty kernels reject the stopped session
+ok transport 99 - stopped kernel session sends no retries or later kernel commands
+ok transport 100 - create PTY
+ok transport 101 - open serial library on PTY
+ok transport 102 - identify kernel fault-injection peer
+ok transport 103 - queue mid-kernel protocol error
+ok transport 104 - kernel returns the original mid-execution error
+ok transport 105 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 106 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 107 - all nonempty kernels reject the stopped session
+ok transport 108 - stopped kernel session sends no retries or later kernel commands
+ok transport 109 - create PTY
+ok transport 110 - open serial library on PTY
+ok transport 111 - identify kernel fault-injection peer
+ok transport 112 - queue mid-kernel protocol error
+ok transport 113 - kernel returns the original mid-execution error
+ok transport 114 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 115 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 116 - all nonempty kernels reject the stopped session
+ok transport 117 - stopped kernel session sends no retries or later kernel commands
+# 117 transport checks passed
+./build/test_kernels
+ok kernel 1 - open public contract test device
+ok kernel 2 - vector partial overlap rejected in both directions
+ok kernel 3 - immediate and scan partial overlap rejected
+ok kernel 4 - matrix output cannot overwrite A or x
+ok kernel 5 - convolution output cannot overwrite either input
+ok kernel 6 - new kernels enforce output capacities
+ok kernel 7 - matrix product, convolution sum and workspace overflow rejected
+ok kernel 8 - vector footprints must fit addressable storage
+ok kernel 9 - op validation also applies to empty input
+ok kernel 10 - nonempty input pointers are required
+ok kernel 11 - argument errors preserve output and perform no ID or compute I/O
+ok kernel 12 - empty vectors and scans accept NULL buffers
+ok kernel 13 - empty dot returns zero and still requires its result pointer
+ok kernel 14 - empty matrix rows are a no-op; zero columns write exactly rows zeros
+ok kernel 15 - either empty convolution input yields empty output
+ok kernel 16 - even empty kernels require a handle
+ok kernel 17 - empty operations do not discover or modify the device
+ok kernel 18 - NULL device reports EINVAL
+ok kernel 19 - invalid emulator reports EINVAL
+ok kernel 20 - unsupported serial baud reports EINVAL
+ok kernel 21 - serial open preserves tcgetattr errno
+ok kernel 22 - workspace allocation has a distinct error
+ok kernel 23 - sim:1x1:v2
+ok kernel 24 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 25 - public scan matches independent scalar fold and preserves output canary
+ok kernel 26 - scan supports exact in-place output
+ok kernel 27 - public scan matches independent scalar fold and preserves output canary
+ok kernel 28 - scan supports exact in-place output
+ok kernel 29 - public scan matches independent scalar fold and preserves output canary
+ok kernel 30 - scan supports exact in-place output
+ok kernel 31 - public scan matches independent scalar fold and preserves output canary
+ok kernel 32 - scan supports exact in-place output
+ok kernel 33 - public convolution matches scalar reference and preserves output canary
+ok kernel 34 - vector output may equal A
+ok kernel 35 - vector output may equal B
+ok kernel 36 - immediate vector supports in-place output
+ok kernel 37 - dot may store its result inside a consumed input
+ok kernel 38 - sim:1x1
+ok kernel 39 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 40 - public scan matches independent scalar fold and preserves output canary
+ok kernel 41 - scan supports exact in-place output
+ok kernel 42 - public scan matches independent scalar fold and preserves output canary
+ok kernel 43 - scan supports exact in-place output
+ok kernel 44 - public scan matches independent scalar fold and preserves output canary
+ok kernel 45 - scan supports exact in-place output
+ok kernel 46 - public scan matches independent scalar fold and preserves output canary
+ok kernel 47 - scan supports exact in-place output
+ok kernel 48 - public convolution matches scalar reference and preserves output canary
+ok kernel 49 - vector output may equal A
+ok kernel 50 - vector output may equal B
+ok kernel 51 - immediate vector supports in-place output
+ok kernel 52 - dot may store its result inside a consumed input
+ok kernel 53 - sim:1x16:v2
+ok kernel 54 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 55 - public scan matches independent scalar fold and preserves output canary
+ok kernel 56 - scan supports exact in-place output
+ok kernel 57 - public scan matches independent scalar fold and preserves output canary
+ok kernel 58 - scan supports exact in-place output
+ok kernel 59 - public scan matches independent scalar fold and preserves output canary
+ok kernel 60 - scan supports exact in-place output
+ok kernel 61 - public scan matches independent scalar fold and preserves output canary
+ok kernel 62 - scan supports exact in-place output
+ok kernel 63 - public convolution matches scalar reference and preserves output canary
+ok kernel 64 - vector output may equal A
+ok kernel 65 - vector output may equal B
+ok kernel 66 - immediate vector supports in-place output
+ok kernel 67 - dot may store its result inside a consumed input
+ok kernel 68 - sim:1x16
+ok kernel 69 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 70 - public scan matches independent scalar fold and preserves output canary
+ok kernel 71 - scan supports exact in-place output
+ok kernel 72 - public scan matches independent scalar fold and preserves output canary
+ok kernel 73 - scan supports exact in-place output
+ok kernel 74 - public scan matches independent scalar fold and preserves output canary
+ok kernel 75 - scan supports exact in-place output
+ok kernel 76 - public scan matches independent scalar fold and preserves output canary
+ok kernel 77 - scan supports exact in-place output
+ok kernel 78 - public convolution matches scalar reference and preserves output canary
+ok kernel 79 - vector output may equal A
+ok kernel 80 - vector output may equal B
+ok kernel 81 - immediate vector supports in-place output
+ok kernel 82 - dot may store its result inside a consumed input
+ok kernel 83 - sim:16x1:v2
+ok kernel 84 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 85 - public scan matches independent scalar fold and preserves output canary
+ok kernel 86 - scan supports exact in-place output
+ok kernel 87 - public scan matches independent scalar fold and preserves output canary
+ok kernel 88 - scan supports exact in-place output
+ok kernel 89 - public scan matches independent scalar fold and preserves output canary
+ok kernel 90 - scan supports exact in-place output
+ok kernel 91 - public scan matches independent scalar fold and preserves output canary
+ok kernel 92 - scan supports exact in-place output
+ok kernel 93 - public convolution matches scalar reference and preserves output canary
+ok kernel 94 - vector output may equal A
+ok kernel 95 - vector output may equal B
+ok kernel 96 - immediate vector supports in-place output
+ok kernel 97 - dot may store its result inside a consumed input
+ok kernel 98 - sim:16x1
+ok kernel 99 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 100 - public scan matches independent scalar fold and preserves output canary
+ok kernel 101 - scan supports exact in-place output
+ok kernel 102 - public scan matches independent scalar fold and preserves output canary
+ok kernel 103 - scan supports exact in-place output
+ok kernel 104 - public scan matches independent scalar fold and preserves output canary
+ok kernel 105 - scan supports exact in-place output
+ok kernel 106 - public scan matches independent scalar fold and preserves output canary
+ok kernel 107 - scan supports exact in-place output
+ok kernel 108 - public convolution matches scalar reference and preserves output canary
+ok kernel 109 - vector output may equal A
+ok kernel 110 - vector output may equal B
+ok kernel 111 - immediate vector supports in-place output
+ok kernel 112 - dot may store its result inside a consumed input
+ok kernel 113 - sim:2x3:v2
+ok kernel 114 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 115 - public scan matches independent scalar fold and preserves output canary
+ok kernel 116 - scan supports exact in-place output
+ok kernel 117 - public scan matches independent scalar fold and preserves output canary
+ok kernel 118 - scan supports exact in-place output
+ok kernel 119 - public scan matches independent scalar fold and preserves output canary
+ok kernel 120 - scan supports exact in-place output
+ok kernel 121 - public scan matches independent scalar fold and preserves output canary
+ok kernel 122 - scan supports exact in-place output
+ok kernel 123 - public convolution matches scalar reference and preserves output canary
+ok kernel 124 - vector output may equal A
+ok kernel 125 - vector output may equal B
+ok kernel 126 - immediate vector supports in-place output
+ok kernel 127 - dot may store its result inside a consumed input
+ok kernel 128 - sim:2x3
+ok kernel 129 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 130 - public scan matches independent scalar fold and preserves output canary
+ok kernel 131 - scan supports exact in-place output
+ok kernel 132 - public scan matches independent scalar fold and preserves output canary
+ok kernel 133 - scan supports exact in-place output
+ok kernel 134 - public scan matches independent scalar fold and preserves output canary
+ok kernel 135 - scan supports exact in-place output
+ok kernel 136 - public scan matches independent scalar fold and preserves output canary
+ok kernel 137 - scan supports exact in-place output
+ok kernel 138 - public convolution matches scalar reference and preserves output canary
+ok kernel 139 - vector output may equal A
+ok kernel 140 - vector output may equal B
+ok kernel 141 - immediate vector supports in-place output
+ok kernel 142 - dot may store its result inside a consumed input
+ok kernel 143 - sim:3x2:v2
+ok kernel 144 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 145 - public scan matches independent scalar fold and preserves output canary
+ok kernel 146 - scan supports exact in-place output
+ok kernel 147 - public scan matches independent scalar fold and preserves output canary
+ok kernel 148 - scan supports exact in-place output
+ok kernel 149 - public scan matches independent scalar fold and preserves output canary
+ok kernel 150 - scan supports exact in-place output
+ok kernel 151 - public scan matches independent scalar fold and preserves output canary
+ok kernel 152 - scan supports exact in-place output
+ok kernel 153 - public convolution matches scalar reference and preserves output canary
+ok kernel 154 - vector output may equal A
+ok kernel 155 - vector output may equal B
+ok kernel 156 - immediate vector supports in-place output
+ok kernel 157 - dot may store its result inside a consumed input
+ok kernel 158 - sim:3x2
+ok kernel 159 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 160 - public scan matches independent scalar fold and preserves output canary
+ok kernel 161 - scan supports exact in-place output
+ok kernel 162 - public scan matches independent scalar fold and preserves output canary
+ok kernel 163 - scan supports exact in-place output
+ok kernel 164 - public scan matches independent scalar fold and preserves output canary
+ok kernel 165 - scan supports exact in-place output
+ok kernel 166 - public scan matches independent scalar fold and preserves output canary
+ok kernel 167 - scan supports exact in-place output
+ok kernel 168 - public convolution matches scalar reference and preserves output canary
+ok kernel 169 - vector output may equal A
+ok kernel 170 - vector output may equal B
+ok kernel 171 - immediate vector supports in-place output
+ok kernel 172 - dot may store its result inside a consumed input
+ok kernel 173 - sim:2x8:v2
+ok kernel 174 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 175 - public scan matches independent scalar fold and preserves output canary
+ok kernel 176 - scan supports exact in-place output
+ok kernel 177 - public scan matches independent scalar fold and preserves output canary
+ok kernel 178 - scan supports exact in-place output
+ok kernel 179 - public scan matches independent scalar fold and preserves output canary
+ok kernel 180 - scan supports exact in-place output
+ok kernel 181 - public scan matches independent scalar fold and preserves output canary
+ok kernel 182 - scan supports exact in-place output
+ok kernel 183 - public convolution matches scalar reference and preserves output canary
+ok kernel 184 - vector output may equal A
+ok kernel 185 - vector output may equal B
+ok kernel 186 - immediate vector supports in-place output
+ok kernel 187 - dot may store its result inside a consumed input
+ok kernel 188 - sim:2x8
+ok kernel 189 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 190 - public scan matches independent scalar fold and preserves output canary
+ok kernel 191 - scan supports exact in-place output
+ok kernel 192 - public scan matches independent scalar fold and preserves output canary
+ok kernel 193 - scan supports exact in-place output
+ok kernel 194 - public scan matches independent scalar fold and preserves output canary
+ok kernel 195 - scan supports exact in-place output
+ok kernel 196 - public scan matches independent scalar fold and preserves output canary
+ok kernel 197 - scan supports exact in-place output
+ok kernel 198 - public convolution matches scalar reference and preserves output canary
+ok kernel 199 - vector output may equal A
+ok kernel 200 - vector output may equal B
+ok kernel 201 - immediate vector supports in-place output
+ok kernel 202 - dot may store its result inside a consumed input
+ok kernel 203 - sim:8x2:v2
+ok kernel 204 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 205 - public scan matches independent scalar fold and preserves output canary
+ok kernel 206 - scan supports exact in-place output
+ok kernel 207 - public scan matches independent scalar fold and preserves output canary
+ok kernel 208 - scan supports exact in-place output
+ok kernel 209 - public scan matches independent scalar fold and preserves output canary
+ok kernel 210 - scan supports exact in-place output
+ok kernel 211 - public scan matches independent scalar fold and preserves output canary
+ok kernel 212 - scan supports exact in-place output
+ok kernel 213 - public convolution matches scalar reference and preserves output canary
+ok kernel 214 - vector output may equal A
+ok kernel 215 - vector output may equal B
+ok kernel 216 - immediate vector supports in-place output
+ok kernel 217 - dot may store its result inside a consumed input
+ok kernel 218 - sim:8x2
+ok kernel 219 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 220 - public scan matches independent scalar fold and preserves output canary
+ok kernel 221 - scan supports exact in-place output
+ok kernel 222 - public scan matches independent scalar fold and preserves output canary
+ok kernel 223 - scan supports exact in-place output
+ok kernel 224 - public scan matches independent scalar fold and preserves output canary
+ok kernel 225 - scan supports exact in-place output
+ok kernel 226 - public scan matches independent scalar fold and preserves output canary
+ok kernel 227 - scan supports exact in-place output
+ok kernel 228 - public convolution matches scalar reference and preserves output canary
+ok kernel 229 - vector output may equal A
+ok kernel 230 - vector output may equal B
+ok kernel 231 - immediate vector supports in-place output
+ok kernel 232 - dot may store its result inside a consumed input
+ok kernel 233 - sim:4x4:v2
+ok kernel 234 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 235 - public scan matches independent scalar fold and preserves output canary
+ok kernel 236 - scan supports exact in-place output
+ok kernel 237 - public scan matches independent scalar fold and preserves output canary
+ok kernel 238 - scan supports exact in-place output
+ok kernel 239 - public scan matches independent scalar fold and preserves output canary
+ok kernel 240 - scan supports exact in-place output
+ok kernel 241 - public scan matches independent scalar fold and preserves output canary
+ok kernel 242 - scan supports exact in-place output
+ok kernel 243 - public convolution matches scalar reference and preserves output canary
+ok kernel 244 - vector output may equal A
+ok kernel 245 - vector output may equal B
+ok kernel 246 - immediate vector supports in-place output
+ok kernel 247 - dot may store its result inside a consumed input
+ok kernel 248 - sim:4x4
+ok kernel 249 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 250 - public scan matches independent scalar fold and preserves output canary
+ok kernel 251 - scan supports exact in-place output
+ok kernel 252 - public scan matches independent scalar fold and preserves output canary
+ok kernel 253 - scan supports exact in-place output
+ok kernel 254 - public scan matches independent scalar fold and preserves output canary
+ok kernel 255 - scan supports exact in-place output
+ok kernel 256 - public scan matches independent scalar fold and preserves output canary
+ok kernel 257 - scan supports exact in-place output
+ok kernel 258 - public convolution matches scalar reference and preserves output canary
+ok kernel 259 - vector output may equal A
+ok kernel 260 - vector output may equal B
+ok kernel 261 - immediate vector supports in-place output
+ok kernel 262 - dot may store its result inside a consumed input
+# 262 public kernel checks passed
+./build/test_faults
+ok fault 1 - open before injecting allocation failures
+ok fault 2 - workspace failure is distinct from invalid arguments and preserves output
+ok fault 3 - workspace failure performs no device I/O
+ok fault 4 - open allocation failure reports ENOMEM
+ok fault 5 - server allocation failure returns NOMEM before readiness callback
+ok fault 6 - server retries EINTR and reports the subsequent read failure
+# 6 injected fault checks passed
+make[1]: Leaving directory '/work/lib'
+make -C sw  -f sw.mk  PROFILE=release test
+make[1]: Entering directory '/work/sw'
+mkdir -p build
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include  -MMD -MP -include build/install_paths.h -c dsl.c -o build/dsl.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include  -MMD -MP -include build/install_paths.h -c compile.c -o build/compile.o
+make -C ../lib -f lib.mk PROFILE=release static
+make[2]: Entering directory '/work/lib'
+make[2]: Nothing to be done for 'static'.
+make[2]: Leaving directory '/work/lib'
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include  -MMD -MP -include build/install_paths.h -UNDEBUG test/test_sw.c build/dsl.o build/compile.o ../lib/build/libcgra.a   -o build/test_sw
+./build/test_sw
+# cgra CLI unit tests (DSL + compiler)
+ok 1 - dsl_parse accepts a valid config
+ok 2 - device 'lab' found
+ok 3 - device port parsed
+ok 4 - device baud parsed
+ok 5 - mode 'amplify' found
+ok 6 - mode op parsed
+ok 7 - variable $GAIN expanded to 7
+ok 8 - pipeline 'chain' has two stages
+ok 9 - io profile 'hx' found
+ok 10 - unknown directive is rejected
+ok 11 - directive outside any section is rejected
+ok 12 - unknown section type is rejected
+ok 13 - built-in defaults parse
+ok 14 - core modes present in defaults
+ok 15 - sim device in defaults
+ok 16 - strict parser defaults
+ok 17 - invalid token/value rejected without changing configuration
+ok 18 - invalid token/value rejected without changing configuration
+ok 19 - invalid token/value rejected without changing configuration
+ok 20 - invalid token/value rejected without changing configuration
+ok 21 - invalid token/value rejected without changing configuration
+ok 22 - invalid token/value rejected without changing configuration
+ok 23 - invalid token/value rejected without changing configuration
+ok 24 - invalid token/value rejected without changing configuration
+ok 25 - invalid token/value rejected without changing configuration
+ok 26 - invalid token/value rejected without changing configuration
+ok 27 - invalid token/value rejected without changing configuration
+ok 28 - invalid token/value rejected without changing configuration
+ok 29 - invalid token/value rejected without changing configuration
+ok 30 - invalid token/value rejected without changing configuration
+ok 31 - invalid token/value rejected without changing configuration
+ok 32 - invalid token/value rejected without changing configuration
+ok 33 - invalid token/value rejected without changing configuration
+ok 34 - invalid token/value rejected without changing configuration
+ok 35 - invalid token/value rejected without changing configuration
+ok 36 - invalid token/value rejected without changing configuration
+ok 37 - invalid token/value rejected without changing configuration
+ok 38 - variable capacity overflow rolls back
+ok 39 - literal dollar, braced variable and explicit zero timeout accepted
+ok 40 - invalid output selector is not silently ignored
+ok 41 - invalid output selector is not silently ignored
+ok 42 - invalid output selector is not silently ignored
+ok 43 - invalid output selector is not silently ignored
+ok 44 - validation defaults
+ok 45 - malformed override rejected
+ok 46 - failed override leaves the original mode intact
+ok 47 - diagnostic counts blank lines
+ok 48 - unknown PE field rejected
+ok 49 - failed parse creates no partial mode
+ok 50 - stage immediate requires complete integer
+ok 51 - invalid step count rejected
+ok 52 - invalid step count rejected
+ok 53 - invalid step count rejected
+ok 54 - invalid step count rejected
+ok 55 - explicit zero steps is valid
+ok 56 - 255 steps is valid
+ok 57 - malformed immediate rejected
+ok 58 - malformed immediate rejected
+ok 59 - malformed immediate rejected
+ok 60 - malformed immediate rejected
+ok 61 - malformed immediate rejected
+ok 62 - two different diagonal immediates rejected
+ok 63 - override sets both constant operands
+ok 64 - two different reduction immediates rejected
+ok 65 - two different custom immediates rejected
+ok 66 - equivalent signed and unsigned immediates accepted
+ok 67 - pipeline syntax parses before semantic validation
+ok 68 - binary later pipeline stage rejected
+ok 69 - open validation device
+ok 70 - reduction capacity rejected before execution
+ok 71 - missing B rejected by the C engine
+ok 72 - convolution length overflow rejected before arithmetic
+ok 73 - unsupported scan operation rejected instead of becoming ADD
+ok 74 - invalid engine arguments leave device and output untouched
+ok 75 - binding defaults
+ok 76 - load actual arithmetic standard library
+ok 77 - parse reversed operands
+ok 78 - sim:
+ok 79 - stdlib neg uses A even in ALU operand B
+ok 80 - both north operands read A
+ok 81 - swapped subtraction reads B minus A
+ok 82 - reduction injects B into ALU operand A
+ok 83 - sim:v2
+ok 84 - stdlib neg uses A even in ALU operand B
+ok 85 - both north operands read A
+ok 86 - swapped subtraction reads B minus A
+ok 87 - reduction injects B into ALU operand A
+ok 88 - sim:2x3
+ok 89 - stdlib neg uses A even in ALU operand B
+ok 90 - both north operands read A
+ok 91 - swapped subtraction reads B minus A
+ok 92 - reduction injects B into ALU operand A
+ok 93 - sim:2x3:v2
+ok 94 - stdlib neg uses A even in ALU operand B
+ok 95 - both north operands read A
+ok 96 - swapped subtraction reads B minus A
+ok 97 - reduction injects B into ALU operand A
+ok 98 - sim:3x2
+ok 99 - stdlib neg uses A even in ALU operand B
+ok 100 - both north operands read A
+ok 101 - swapped subtraction reads B minus A
+ok 102 - reduction injects B into ALU operand A
+ok 103 - sim:1x16
+ok 104 - stdlib neg uses A even in ALU operand B
+ok 105 - both north operands read A
+ok 106 - swapped subtraction reads B minus A
+ok 107 - reduction injects B into ALU operand A
+ok 108 - open reset semantics device
+ok 109 - identify reset semantics device
+ok 110 - seed stale registers before mode invocation
+ok 111 - default once clears stale state and accumulates across chunks
+ok 112 - explicit once starts a new invocation from zero
+ok 113 - read full state after reset once
+ok 114 - initial reset also clears untapped NOP registers
+ok 115 - each clears the accumulator for every chunk
+ok 116 - open reset semantics device
+ok 117 - identify reset semantics device
+ok 118 - seed stale registers before mode invocation
+ok 119 - default once clears stale state and accumulates across chunks
+ok 120 - explicit once starts a new invocation from zero
+ok 121 - read full state after reset once
+ok 122 - initial reset also clears untapped NOP registers
+ok 123 - each clears the accumulator for every chunk
+ok 124 - open reset semantics device
+ok 125 - identify reset semantics device
+ok 126 - seed stale registers before mode invocation
+ok 127 - default once clears stale state and accumulates across chunks
+ok 128 - explicit once starts a new invocation from zero
+ok 129 - read full state after reset once
+ok 130 - initial reset also clears untapped NOP registers
+ok 131 - each clears the accumulator for every chunk
+ok 132 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 133 - zero steps returns cleared registers even after a previous execution
+ok 134 - open reset semantics device
+ok 135 - identify reset semantics device
+ok 136 - seed stale registers before mode invocation
+ok 137 - default once clears stale state and accumulates across chunks
+ok 138 - explicit once starts a new invocation from zero
+ok 139 - read full state after reset once
+ok 140 - initial reset also clears untapped NOP registers
+ok 141 - each clears the accumulator for every chunk
+ok 142 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 143 - zero steps returns cleared registers even after a previous execution
+ok 144 - open reset semantics device
+ok 145 - identify reset semantics device
+ok 146 - seed stale registers before mode invocation
+ok 147 - default once clears stale state and accumulates across chunks
+ok 148 - explicit once starts a new invocation from zero
+ok 149 - read full state after reset once
+ok 150 - initial reset also clears untapped NOP registers
+ok 151 - each clears the accumulator for every chunk
+ok 152 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 153 - zero steps returns cleared registers even after a previous execution
+ok 154 - open reset semantics device
+ok 155 - identify reset semantics device
+ok 156 - seed stale registers before mode invocation
+ok 157 - default once clears stale state and accumulates across chunks
+ok 158 - explicit once starts a new invocation from zero
+ok 159 - read full state after reset once
+ok 160 - initial reset also clears untapped NOP registers
+ok 161 - each clears the accumulator for every chunk
+ok 162 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 163 - zero steps returns cleared registers even after a previous execution
+ok 164 - open pattern validation device
+ok 165 - field syntax remains independent of final merged pattern
+ok 166 - compile and execution reject an ignored field without changing output
+ok 167 - field syntax remains independent of final merged pattern
+ok 168 - compile and execution reject an ignored field without changing output
+ok 169 - field syntax remains independent of final merged pattern
+ok 170 - compile and execution reject an ignored field without changing output
+ok 171 - field syntax remains independent of final merged pattern
+ok 172 - compile and execution reject an ignored field without changing output
+ok 173 - field syntax remains independent of final merged pattern
+ok 174 - compile and execution reject an ignored field without changing output
+ok 175 - field syntax remains independent of final merged pattern
+ok 176 - compile and execution reject an ignored field without changing output
+ok 177 - field syntax remains independent of final merged pattern
+ok 178 - compile and execution reject an ignored field without changing output
+ok 179 - field syntax remains independent of final merged pattern
+ok 180 - compile and execution reject an ignored field without changing output
+ok 181 - field syntax remains independent of final merged pattern
+ok 182 - compile and execution reject an ignored field without changing output
+ok 183 - field syntax remains independent of final merged pattern
+ok 184 - compile and execution reject an ignored field without changing output
+ok 185 - field syntax remains independent of final merged pattern
+ok 186 - compile and execution reject an ignored field without changing output
+ok 187 - field syntax remains independent of final merged pattern
+ok 188 - compile and execution reject an ignored field without changing output
+ok 189 - field syntax remains independent of final merged pattern
+ok 190 - compile and execution reject an ignored field without changing output
+ok 191 - inapplicable fields issue no configuration/reset/run commands
+ok 192 - compile 'add' ok
+ok 193 - PE(0,0) opcode = ADD
+ok 194 - PE(0,0) sel_a = north
+ok 195 - PE(0,0) sel_b = west
+ok 196 - cfg_decode names the opcode
+ok 197 - open sim: for engine tests
+ok 198 - matvec_run ok
+ok 199 - matvec matches host reference (6x5)
+ok 200 - scan_run returns n
+ok 201 - scan matches host reference
+ok 202 - conv_run returns n+k-1
+ok 203 - conv matches host reference
+ok 204 - open both protocol backends
+ok 205 - matvec v3 ok
+ok 206 - matvec v2 ok
+ok 207 - matvec identical across protocols
+ok 208 - scan v3 ok
+ok 209 - scan v2 ok
+ok 210 - scan identical across protocols
+ok 211 - scan: fused path uses fewer round trips
+ok 212 - scan: fused path moves fewer bytes
+ok 213 - open sim: for the sparse-skip test
+ok 214 - conv 3*48 runs
+ok 215 - conv still matches the host reference
+ok 216 - dense matvec runs
+ok 217 - conv skips the Toeplitz zero blocks (>4x fewer round trips)
+ok 218 - sim:1x1:v2
+ok 219 - rectangular kernels match scalar reference
+ok 220 - sim:1x1
+ok 221 - rectangular kernels match scalar reference
+ok 222 - sim:1x16:v2
+ok 223 - rectangular kernels match scalar reference
+ok 224 - sim:1x16
+ok 225 - rectangular kernels match scalar reference
+ok 226 - sim:16x1:v2
+ok 227 - rectangular kernels match scalar reference
+ok 228 - sim:16x1
+ok 229 - rectangular kernels match scalar reference
+ok 230 - sim:2x3:v2
+ok 231 - rectangular kernels match scalar reference
+ok 232 - sim:2x3
+ok 233 - rectangular kernels match scalar reference
+ok 234 - sim:3x2:v2
+ok 235 - rectangular kernels match scalar reference
+ok 236 - sim:3x2
+ok 237 - rectangular kernels match scalar reference
+ok 238 - sim:2x8:v2
+ok 239 - rectangular kernels match scalar reference
+ok 240 - sim:2x8
+ok 241 - rectangular kernels match scalar reference
+ok 242 - sim:8x2:v2
+ok 243 - rectangular kernels match scalar reference
+ok 244 - sim:8x2
+ok 245 - rectangular kernels match scalar reference
+ok 246 - sim:4x4:v2
+ok 247 - rectangular kernels match scalar reference
+ok 248 - sim:4x4
+ok 249 - rectangular kernels match scalar reference
+ok 250 - parse custom coordinate beyond default 4x4
+ok 251 - custom coordinate valid on 1x16
+ok 252 - custom coordinate rejected on 2x3
+ok 253 - out-of-range output tap rejected
+1..253
+# 253 passed, 0 failed
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include  -MMD -MP -include build/install_paths.h -c main.c -o build/main.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include  -MMD -MP -include build/install_paths.h -c bench_ref.c -o build/bench_ref.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include  -MMD -MP -include build/install_paths.h build/main.o build/dsl.o build/compile.o build/bench_ref.o ../lib/build/libcgra.a   -o build/cgra
+./build/cgra selftest
+-- protocol v3 (fused exec) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+-- protocol v2 (write/run/read) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+ok    retry-on-nack (retries=2)
+all tests PASSED
+--- CLI smoke tests (device sim) ---
+11 22 33 44 55 66 77 88
+0 0 0 2 5
+./build/cgra run muli -d sim --imm 10 --a "1 2 3 4" --io hex
+0x000A 0x0014 0x001E 0x0028
+./build/cgra pipe saxpy -d sim --a "1 2 3 4"
+10 13 16 19
+./build/cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+10 26 42 58
+./build/cgra scan -d sim --a "3 1 4 1 5 9 2 6"
+3 4 8 9 14 23 25 31
+./build/cgra scan -d sim --op max --a "3 1 4 1 5 9 2 6"
+3 3 4 4 5 9 9 9
+./build/cgra conv -d sim -m "1 2 3" --x "4 5 6 7 8"
+4 13 28 34 40 37 24
+./build/cgra run add -d sim:flaky --a "1 2 3 4" --b "10 20 30 40"   # retry recovers
+11 22 33 44
+./build/cgra run add -d sim:v2 --a "1 2 3 4" --b "10 20 30 40"      # pre-v3 fallback
+11 22 33 44
+./build/cgra scan -d sim:v2 --a "3 1 4 1 5 9 2 6"                   # pre-v3 fallback
+3 4 8 9 14 23 25 31
+./build/cgra run add -d sim --a "1 2 3" --b "10 20 30" --json
+{"count": 3, "result": [11, 22, 33]}
+CGRA_PATH=config/stdlib ./build/cgra run square -d sim --a "2 3 4 5"   # stdlib via CGRA_PATH
+4 9 16 25
+./build/cgra show relu -v | head -1
+mode relu (pattern diagonal):
+./build/cgra show add >/dev/null && echo "show ok"
+show ok
+./build/cgra probe -d sim:2x3
+device: protocol v3, 2x3 array, 16-bit datapath
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+device OK
+./build/cgra show add -d sim:3x2 >/dev/null
+sh test/test_cli.sh ./build/cgra
+ok CLI 1 - reject run add -d sim: --a 1 2 --b 3 4 --steps 256
+ok CLI 2 - reject run add -d sim: --a 1 2 --b 3 4 --steps -1
+ok CLI 3 - reject run add -d sim: --a 1 2 --b 3 4 --steps 1junk
+ok CLI 4 - reject run add -d sim: --a 1 2 --b 3 4 --steps 999999999999999999999999
+ok CLI 5 - reject run addi -d sim: --a 1 --imm 4junk
+ok CLI 6 - explicit zero steps
+ok CLI 7 - reject run add -d sim: --a 2 --b 3
+ok CLI 8 - reject check
+ok CLI 9 - reject check
+ok CLI 10 - reject -c /tmp/tmp.FA1tveAs8z/pipeline.cgra pipe invalid -d sim: --a 1 2 3
+ok CLI 11 - check validates pipeline arity
+ok CLI 12 - same input and output file keeps data until read
+ok CLI 13 - hard-linked input and output
+ok CLI 14 - reject run missing -d sim: --a 1 -o /tmp/tmp.FA1tveAs8z/result
+ok CLI 15 - failed command preserves existing output
+ok CLI 16 - reject run addi -d sim: --a 1 -o /dev/full
+# 16 CLI regression checks passed
+python3 test/test_bench.py ./build/cgra
+ok benchmark 1 - benchmark metadata describes the actual backend and geometry
+ok benchmark 2 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 3 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 4 - benchmark metadata describes the actual backend and geometry
+ok benchmark 5 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 6 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 7 - benchmark metadata describes the actual backend and geometry
+ok benchmark 8 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 9 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 10 - benchmark metadata describes the actual backend and geometry
+ok benchmark 11 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 12 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 13 - benchmark metadata describes the actual backend and geometry
+ok benchmark 14 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 15 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 16 - benchmark metadata describes the actual backend and geometry
+ok benchmark 17 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 18 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 19 - benchmark metadata describes the actual backend and geometry
+ok benchmark 20 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 21 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 22 - benchmark metadata describes the actual backend and geometry
+ok benchmark 23 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 24 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 25 - benchmark metadata describes the actual backend and geometry
+ok benchmark 26 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4: b''
+ok benchmark 27 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 28 - benchmark metadata describes the actual backend and geometry
+ok benchmark 29 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4:v2: b''
+ok benchmark 30 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 31 - reject --size=0
+ok benchmark 32 - reject --size=-1
+ok benchmark 33 - reject --size=4097
+ok benchmark 34 - reject --size=2junk
+ok benchmark 35 - reject --repeat=0
+ok benchmark 36 - reject --repeat=-1
+ok benchmark 37 - reject --repeat=2junk
+ok benchmark 38 - reject --repeat=999999999999999999999
+ok benchmark 39 - reject --cols=0
+ok benchmark 40 - reject --cols=4097
+ok benchmark 41 - reject --cols=2junk
+ok benchmark 42 - reject malformed/out-of-range vector 32768junk
+ok benchmark 43 - reject malformed/out-of-range vector 65536
+ok benchmark 44 - reject malformed/out-of-range vector -32769
+ok benchmark 45 - reject malformed/out-of-range vector 1-2
+ok benchmark 46 - reject malformed/out-of-range vector 999999999999999999999999999
+ok benchmark 47 - reject unknown formatting ('--dtype', 'u8')
+ok benchmark 48 - reject unknown formatting ('--io', 'missing')
+ok benchmark 49 - failed sweep returns nonzero and publishes its complete JSON artifact
+ok benchmark 50 - escaped names round-trip; invalid modes and patterns are never omitted
+ok benchmark 51 - a single unsupported benchmark does not claim success
+ok benchmark 52 - valid single benchmark JSON
+ok benchmark 53 - invalid UTF-8 bytes cannot invalidate JSON
+ok benchmark 54 - embedded NUL in configuration rejected
+ok benchmark 55 - embedded NUL in vector input rejected
+ok benchmark 56 - CGRA_PATH longer than the old fixed buffer is fully searched
+ok benchmark 57 - CGRA_BAUD requires a complete integer
+ok benchmark 58 - oversized configuration path is rejected instead of truncated
+ok benchmark 59 - configuration file capacity overflow is explicit
+ok benchmark 60 - sweep script preserves failing JSON and propagates nonzero status
+ok benchmark 61 - checksum-valid wrong hardware output fails scalar validation: []
+# 61 benchmark/CLI checks passed
+make[1]: Leaving directory '/work/sw'

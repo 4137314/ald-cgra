@@ -1,0 +1,149 @@
+$ make sim
+make -C hw  -f hw.mk sim
+make[1]: Entering directory '/work/hw'
+cc -std=c11 -O2 -Wall -Wextra -Werror -I../lib/include sim/gen_diff_vectors.c ../lib/src/cgra.c ../lib/src/kernels.c ../lib/src/emu.c -o build/ghdl/gen_diff_vectors
+./build/ghdl/gen_diff_vectors build/array_diff.vec.tmp
+mv build/array_diff.vec.tmp build/array_diff.vec
+cc -std=c11 -O2 -Wall -Wextra -Werror -I../lib/include -I../lib/src sim/gen_protocol_vectors.c ../lib/src/emu.c -o build/ghdl/gen_protocol_vectors
+./build/ghdl/gen_protocol_vectors build/protocol_diff.vec.tmp
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_diff.vec.tmp build/protocol_diff.vec
+./build/ghdl/gen_protocol_vectors build/protocol_1x1.vec.tmp 1 1
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_1x1.vec.tmp build/protocol_1x1.vec
+./build/ghdl/gen_protocol_vectors build/protocol_1x16.vec.tmp 1 16
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_1x16.vec.tmp build/protocol_1x16.vec
+./build/ghdl/gen_protocol_vectors build/protocol_16x1.vec.tmp 16 1
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_16x1.vec.tmp build/protocol_16x1.vec
+./build/ghdl/gen_protocol_vectors build/protocol_2x3.vec.tmp 2 3
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_2x3.vec.tmp build/protocol_2x3.vec
+./build/ghdl/gen_protocol_vectors build/protocol_3x2.vec.tmp 3 2
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_3x2.vec.tmp build/protocol_3x2.vec
+./build/ghdl/gen_protocol_vectors build/protocol_2x8.vec.tmp 2 8
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_2x8.vec.tmp build/protocol_2x8.vec
+./build/ghdl/gen_protocol_vectors build/protocol_8x2.vec.tmp 8 2
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_8x2.vec.tmp build/protocol_8x2.vec
+./build/ghdl/gen_protocol_vectors build/protocol_4x4.vec.tmp 4 4
+generated 504 protocol transactions (seed 0x7C6A2026)
+mv build/protocol_4x4.vec.tmp build/protocol_4x4.vec
+cc -std=c11 -O2 -Wall -Wextra -Werror -I../lib/include -I../lib/src -I../sw sim/gen_kernel_vectors.c ../lib/src/cgra.c ../lib/src/kernels.c ../lib/src/emu.c ../sw/compile.c ../sw/dsl.c -o build/ghdl/gen_kernel_vectors
+./build/ghdl/gen_kernel_vectors build/kernels_1x1.vec.tmp 1 1
+kernel transcript: 1x1, 407 transactions, scalar references passed
+mv build/kernels_1x1.vec.tmp build/kernels_1x1.vec
+./build/ghdl/gen_kernel_vectors build/kernels_1x16.vec.tmp 1 16
+kernel transcript: 1x16, 291 transactions, scalar references passed
+mv build/kernels_1x16.vec.tmp build/kernels_1x16.vec
+./build/ghdl/gen_kernel_vectors build/kernels_16x1.vec.tmp 16 1
+kernel transcript: 16x1, 549 transactions, scalar references passed
+mv build/kernels_16x1.vec.tmp build/kernels_16x1.vec
+./build/ghdl/gen_kernel_vectors build/kernels_2x3.vec.tmp 2 3
+kernel transcript: 2x3, 233 transactions, scalar references passed
+mv build/kernels_2x3.vec.tmp build/kernels_2x3.vec
+./build/ghdl/gen_kernel_vectors build/kernels_3x2.vec.tmp 3 2
+kernel transcript: 3x2, 259 transactions, scalar references passed
+mv build/kernels_3x2.vec.tmp build/kernels_3x2.vec
+./build/ghdl/gen_kernel_vectors build/kernels_2x8.vec.tmp 2 8
+kernel transcript: 2x8, 198 transactions, scalar references passed
+mv build/kernels_2x8.vec.tmp build/kernels_2x8.vec
+./build/ghdl/gen_kernel_vectors build/kernels_8x2.vec.tmp 8 2
+kernel transcript: 8x2, 273 transactions, scalar references passed
+mv build/kernels_8x2.vec.tmp build/kernels_8x2.vec
+./build/ghdl/gen_kernel_vectors build/kernels_4x4.vec.tmp 4 4
+kernel transcript: 4x4, 167 transactions, scalar references passed
+mv build/kernels_4x4.vec.tmp build/kernels_4x4.vec
+ghdl -a --std=08 --workdir=build/ghdl rtl/cgra_pkg.vhd rtl/cgra_comp_pkg.vhd rtl/uart_rx.vhd rtl/uart_tx.vhd rtl/pe.vhd rtl/cgra_array.vhd rtl/cgra_ctrl.vhd rtl/cgra_top.vhd sim/tb_pe.vhd sim/tb_uart.vhd sim/tb_cgra_top.vhd sim/tb_matvec.vhd sim/tb_array_diff.vhd sim/tb_protocol_diff.vhd sim/tb_kernel_uart.vhd sim/tb_array_geometry.vhd
+sim/tb_matvec.vhd:129:16:warning: declaration of "a" hides constant "A" [-Whide]
+      variable a : std_logic_vector(7 downto 0);
+               ^
+sim/tb_kernel_uart.vhd:35:34:warning: declaration of "value" hides variable "value" [-Whide]
+    procedure send_byte(constant value : natural) is
+                                 ^
+== tb_pe ==
+sim/tb_pe.vhd:136:5:@260ns:(report note): tb_pe PASSED
+== tb_uart ==
+sim/tb_uart.vhd:99:5:@23695ns:(report note): tb_uart PASSED (10 loopback bytes, invalid stop/break rejected, recovery)
+simulation finished @23695ns
+== tb_cgra_top ==
+sim/tb_cgra_top.vhd:271:5:@62950ns:(report note): tb_cgra_top: extended ID handshake ok
+sim/tb_cgra_top.vhd:298:5:@1321150ns:(report note): tb_cgra_top: ADD via UART ok
+sim/tb_cgra_top.vhd:305:5:@1990750ns:(report note): tb_cgra_top: bad-checksum CFG rejected ok
+sim/tb_cgra_top.vhd:334:5:@3468650ns:(report note): tb_cgra_top: MAC + datapath reset ok
+sim/tb_cgra_top.vhd:353:5:@4707250ns:(report note): tb_cgra_top: signed SUB ok
+sim/tb_cgra_top.vhd:392:5:@5946450ns:(report note): tb_cgra_top: diagonal element-wise mode ok
+sim/tb_cgra_top.vhd:408:5:@6269950ns:(report note): tb_cgra_top: fused EXEC (masked read-back) ok
+sim/tb_cgra_top.vhd:422:5:@6592450ns:(report note): tb_cgra_top: corrupt EXEC rejected without stepping ok
+sim/tb_cgra_top.vhd:441:5:@7854950ns:(report note): tb_cgra_top: EXEC with empty tap mask ok
+sim/tb_cgra_top.vhd:443:5:@7854950ns:(report note): tb_cgra_top PASSED
+== tb_matvec ==
+sim/tb_matvec.vhd:198:5:@1980250ns:(report note): tb_matvec PASSED (y = 30 40 50 60)
+== tb_array_diff ==
+sim/tb_array_diff.vhd:69:5:@2560ns:(report note): tb_array_diff PASSED (64 cases, 1024 PE results)
+simulation finished @2560ns
+ghdl -e --std=08 --workdir=build/ghdl tb_protocol_diff
+sim/tb_protocol_diff.vhd:176:5:@769360ns:(report note): tb_protocol_diff PASSED (504 transactions, 4x4, STEP_DIV=1, watchdog recovery)
+simulation finished @769360ns
+sim/tb_protocol_diff.vhd:176:5:@803140ns:(report note): tb_protocol_diff PASSED (504 transactions, 4x4, STEP_DIV=2, watchdog recovery)
+simulation finished @803140ns
+sim/tb_protocol_diff.vhd:176:5:@836920ns:(report note): tb_protocol_diff PASSED (504 transactions, 4x4, STEP_DIV=3, watchdog recovery)
+simulation finished @836920ns
+sim/tb_protocol_diff.vhd:176:5:@870700ns:(report note): tb_protocol_diff PASSED (504 transactions, 4x4, STEP_DIV=4, watchdog recovery)
+simulation finished @870700ns
+sim/tb_protocol_diff.vhd:176:5:@203210ns:(report note): tb_protocol_diff PASSED (504 transactions, 1x1, STEP_DIV=2, watchdog recovery)
+simulation finished @203210ns
+sim/tb_protocol_diff.vhd:176:5:@277680ns:(report note): tb_protocol_diff PASSED (407 transactions, 1x1, STEP_DIV=2, watchdog recovery)
+simulation finished @277680ns
+sim/tb_protocol_diff.vhd:176:5:@895300ns:(report note): tb_protocol_diff PASSED (504 transactions, 1x16, STEP_DIV=2, watchdog recovery)
+simulation finished @895300ns
+sim/tb_protocol_diff.vhd:176:5:@678540ns:(report note): tb_protocol_diff PASSED (291 transactions, 1x16, STEP_DIV=2, watchdog recovery)
+simulation finished @678540ns
+sim/tb_protocol_diff.vhd:176:5:@895300ns:(report note): tb_protocol_diff PASSED (504 transactions, 16x1, STEP_DIV=2, watchdog recovery)
+simulation finished @895300ns
+sim/tb_protocol_diff.vhd:176:5:@1212940ns:(report note): tb_protocol_diff PASSED (549 transactions, 16x1, STEP_DIV=2, watchdog recovery)
+simulation finished @1212940ns
+sim/tb_protocol_diff.vhd:176:5:@412550ns:(report note): tb_protocol_diff PASSED (504 transactions, 2x3, STEP_DIV=2, watchdog recovery)
+simulation finished @412550ns
+sim/tb_protocol_diff.vhd:176:5:@268320ns:(report note): tb_protocol_diff PASSED (233 transactions, 2x3, STEP_DIV=2, watchdog recovery)
+simulation finished @268320ns
+sim/tb_protocol_diff.vhd:176:5:@412550ns:(report note): tb_protocol_diff PASSED (504 transactions, 3x2, STEP_DIV=2, watchdog recovery)
+simulation finished @412550ns
+sim/tb_protocol_diff.vhd:176:5:@289980ns:(report note): tb_protocol_diff PASSED (259 transactions, 3x2, STEP_DIV=2, watchdog recovery)
+simulation finished @289980ns
+sim/tb_protocol_diff.vhd:176:5:@823620ns:(report note): tb_protocol_diff PASSED (504 transactions, 2x8, STEP_DIV=2, watchdog recovery)
+simulation finished @823620ns
+sim/tb_protocol_diff.vhd:176:5:@375700ns:(report note): tb_protocol_diff PASSED (198 transactions, 2x8, STEP_DIV=2, watchdog recovery)
+simulation finished @375700ns
+sim/tb_protocol_diff.vhd:176:5:@823620ns:(report note): tb_protocol_diff PASSED (504 transactions, 8x2, STEP_DIV=2, watchdog recovery)
+simulation finished @823620ns
+sim/tb_protocol_diff.vhd:176:5:@493040ns:(report note): tb_protocol_diff PASSED (273 transactions, 8x2, STEP_DIV=2, watchdog recovery)
+simulation finished @493040ns
+sim/tb_protocol_diff.vhd:176:5:@803140ns:(report note): tb_protocol_diff PASSED (504 transactions, 4x4, STEP_DIV=2, watchdog recovery)
+simulation finished @803140ns
+sim/tb_protocol_diff.vhd:176:5:@308480ns:(report note): tb_protocol_diff PASSED (167 transactions, 4x4, STEP_DIV=2, watchdog recovery)
+simulation finished @308480ns
+ghdl -e --std=08 --workdir=build/ghdl tb_kernel_uart
+sim/tb_kernel_uart.vhd:72:5:@51967050ns:(report note): tb_kernel_uart PASSED (2x3, 233 host kernel transactions)
+simulation finished @51967050ns
+sim/tb_kernel_uart.vhd:72:5:@56671950ns:(report note): tb_kernel_uart PASSED (3x2, 259 host kernel transactions)
+simulation finished @56671950ns
+ghdl -e --std=08 --workdir=build/ghdl tb_array_geometry
+sim/tb_array_geometry.vhd:122:5:@420ns:(report note): tb_array_geometry PASSED (1x1, 23 checks)
+simulation finished @420ns
+sim/tb_array_geometry.vhd:122:5:@450ns:(report note): tb_array_geometry PASSED (1x4, 104 checks)
+simulation finished @450ns
+sim/tb_array_geometry.vhd:122:5:@450ns:(report note): tb_array_geometry PASSED (4x1, 104 checks)
+simulation finished @450ns
+sim/tb_array_geometry.vhd:122:5:@450ns:(report note): tb_array_geometry PASSED (2x3, 156 checks)
+simulation finished @450ns
+sim/tb_array_geometry.vhd:122:5:@450ns:(report note): tb_array_geometry PASSED (3x2, 156 checks)
+simulation finished @450ns
+sim/tb_array_geometry.vhd:122:5:@480ns:(report note): tb_array_geometry PASSED (4x4, 464 checks)
+simulation finished @480ns
+sim/tb_array_geometry.vhd:122:5:@560ns:(report note): tb_array_geometry PASSED (8x8, 2368 checks)
+simulation finished @560ns
+make[1]: Leaving directory '/work/hw'

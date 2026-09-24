@@ -1,0 +1,147 @@
+make: Entering directory '/work/hw'
+tclsh test/test_timing.tcl
+ok timing 1 - reject invalid period '0'
+ok timing 2 - reject invalid period '-1'
+ok timing 3 - reject invalid period 'Inf'
+ok timing 4 - reject invalid period 'NaN'
+ok timing 5 - reject invalid period 'abc'
+ok timing 6 - reject invalid period ''
+ok timing 7 - reject invalid divider '0'
+ok timing 8 - reject invalid divider '-1'
+ok timing 9 - reject invalid divider '1.5'
+ok timing 10 - reject invalid divider 'abc'
+ok timing 11 - frequency uses actual period, not slack extrapolation
+ok timing 12 - reject invalid/failing slack -0.1 0
+ok timing 13 - reject invalid/failing slack 0 -0.1
+ok timing 14 - reject invalid/failing slack NaN 0
+ok timing 15 - reject invalid/failing slack 0 Inf
+ok timing 16 - reject invalid/failing slack {} 0
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 17 - fmax.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 18 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 19 - fmax.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 20 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 21 - fmax.tcl rejects missing_cells (no objects matched PE result registers)
+ok timing 22 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 23 - fmax.tcl rejects missing_port (no objects matched port clk)
+ok timing 24 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 25 - fmax.tcl rejects final_setup (timing NOT met: WNS=-0.1 ns, WHS=0.5 ns)
+ok timing 26 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 27 - fmax.tcl rejects final_hold (timing NOT met: WNS=0.5 ns, WHS=-0.1 ns)
+ok timing 28 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 29 - build.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 30 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 31 - build.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 32 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 33 - build.tcl rejects missing_cells (no objects matched PE result registers)
+ok timing 34 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 35 - build.tcl rejects missing_port (no objects matched port clk)
+ok timing 36 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+timing: setup WNS = -0.1 ns, hold WHS = 0.5 ns
+ERROR: timing NOT met (WNS=-0.1 ns, WHS=0.5 ns) — no bitstream written.
+       inspect /work/hw/build/timing-test-5327/timing_summary.rpt
+ok timing 37 - build.tcl rejects final_setup (EXIT:1)
+ok timing 38 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+timing: setup WNS = 0.5 ns, hold WHS = -0.1 ns
+ERROR: timing NOT met (WNS=0.5 ns, WHS=-0.1 ns) — no bitstream written.
+       inspect /work/hw/build/timing-test-5327/timing_summary.rpt
+ok timing 39 - build.tcl rejects final_hold (EXIT:1)
+ok timing 40 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 41 - timing.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 42 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 43 - timing.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 44 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 45 - timing.tcl rejects missing_cells (no objects matched PE result registers)
+ok timing 46 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+ok timing 47 - timing.tcl rejects missing_port (no objects matched port clk)
+ok timing 48 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = -0.1 ns
+    hold   WHS = 0.5 ns
+    FAIL: setup timing violated
+    see /work/hw/build/timing-test-5327/timing_summary_nexys_a7.rpt
+======================================================================
+ok timing 49 - timing.tcl rejects final_setup (EXIT:1)
+ok timing 50 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = -0.1 ns
+    FAIL: hold timing violated
+    see /work/hw/build/timing-test-5327/timing_summary_nexys_a7.rpt
+======================================================================
+ok timing 51 - timing.tcl rejects final_hold (EXIT:1)
+ok timing 52 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+======================================================================
+  Fmax RESULT: cgra_top on nexys_a7 (xc7a100tcsg324-1)
+    best closing period = 5.078 ns
+    setup slack (WNS)   = 0.500 ns   hold (WHS) = 0.500 ns
+    validated frequency = 196.923 MHz  (1000 / constrained period)
+    ---- the wall (optimise this next) ----
+    limiting path kind  = datapath (multicycle)
+    startpoint          = a/Q
+    endpoint            = b/D
+    logic levels        = 2   datapath delay = 4.000 ns
+    LUTs used = ?   DSPs used = ?
+    full path -> /work/hw/build/timing-test-5327/fmax_nexys_a7.rpt
+======================================================================
+  logged to /work/hw/build/timing-test-5327/fmax_validated_history.csv
+ok timing 53 - passing Fmax run completes (EXIT:0)
+ok timing 54 - successful CSV uses validated period
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+timing: setup WNS = 0.5 ns, hold WHS = 0.5 ns
+OK: timing met; bitstream written to /work/hw/build/timing-test-5327/cgra_top_nexys_a7.bit
+ok timing 55 - passing build reaches bitstream generation
+mesh: 4x4; outputs: /work/hw/build/timing-test-5327
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = 0.5 ns
+    PASS: setup and hold met under the applied constraints.
+======================================================================
+ok timing 56 - passing STA gate completes
+# 56 timing script checks passed (synthetic paths; Vivado still required)
+make: Leaving directory '/work/hw'

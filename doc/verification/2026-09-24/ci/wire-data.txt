@@ -1,0 +1,13 @@
+$ make -C doc -f doc.mk measure
+make: Entering directory '/home/main/dev/git/ald-cgra/doc'
+make -C ../lib -f lib.mk PROFILE=release static
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+ar rcs build/libcgra.a build/cgra.o build/kernels.o build/emu.o build/serve.o
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+mkdir -p build
+gcc -std=c11 -O2 -Wall -Wextra -Werror -I../lib/include tools/measure_wire.c ../lib/build/libcgra.a -o build/measure_wire
+python3 tools/wire_data.py record --binary build/measure_wire --compiler "gcc"
+record: 10 validated rows, source doc/data/wire-cost.csv
+make: Leaving directory '/home/main/dev/git/ald-cgra/doc'
+PASS: measured CSV is byte-identical; metadata identifies the corrected source.

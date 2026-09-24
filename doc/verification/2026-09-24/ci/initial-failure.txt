@@ -1,0 +1,23 @@
+build-and-test	HDL simulation (GHDL)	﻿2026-09-24T09:57:29.3182856Z ##[group]Run make sim
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:29.3183121Z ^[[36;1mmake sim^[[0m
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:29.3217788Z shell: /usr/bin/bash -e {0}
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:29.3218040Z ##[endgroup]
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:29.3285998Z make -C hw  -f hw.mk sim
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:29.3301999Z make[1]: Entering directory '/home/runner/work/ald-cgra/ald-cgra/hw'
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:29.3302656Z mkdir -p build/ghdl
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:29.3314317Z cc -std=c11 -O2 -Wall -Wextra -Werror -I../lib/include sim/gen_diff_vectors.c ../lib/src/cgra.c ../lib/src/kernels.c ../lib/src/emu.c -o build/ghdl/gen_diff_vectors
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8515097Z ../lib/src/cgra.c: In function ‘diag_vec_op’:
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8517754Z ../lib/src/cgra.c:709:10: error: ‘cfg’ may be used uninitialized [-Werror=maybe-uninitialized]
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8519551Z   709 |     rc = cgra_configure_n(dev, cfg, (size_t)g.rows * g.cols);
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8520618Z       |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8522786Z ../lib/src/cgra.c:412:5: note: by argument 2 of type ‘const uint32_t *’ {aka ‘const unsigned int *’} to ‘cgra_configure_n’ declared here
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8524459Z   412 | int cgra_configure_n(cgra_t *dev, const uint32_t *cfg, size_t ncfg)
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8525379Z       |     ^~~~~~~~~~~~~~~~
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8526159Z ../lib/src/cgra.c:707:14: note: ‘cfg’ declared here
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8529510Z   707 |     uint32_t cfg[CGRA_MAX_PE];
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.8530172Z       |              ^~~
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:30.9303978Z cc1: all warnings being treated as errors
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:31.1974949Z make[1]: *** [hw.mk:75: build/ghdl/gen_diff_vectors] Error 1
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:31.1975723Z make[1]: Leaving directory '/home/runner/work/ald-cgra/ald-cgra/hw'
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:31.1976390Z make: *** [Makefile:70: sim] Error 2
+build-and-test	HDL simulation (GHDL)	2026-09-24T09:57:31.1993893Z ##[error]Process completed with exit code 2.

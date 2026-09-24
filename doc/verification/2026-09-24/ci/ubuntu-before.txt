@@ -1,0 +1,17 @@
+$ docker exec cgra-ci-z07b9rw6 make -C hw -f hw.mk build/ghdl/gen_diff_vectors
+make: Entering directory '/work/hw'
+mkdir -p build/ghdl
+cc -std=c11 -O2 -Wall -Wextra -Werror -I../lib/include sim/gen_diff_vectors.c ../lib/src/cgra.c ../lib/src/kernels.c ../lib/src/emu.c -o build/ghdl/gen_diff_vectors
+../lib/src/cgra.c: In function 'diag_vec_op':
+../lib/src/cgra.c:709:10: error: 'cfg' may be used uninitialized [-Werror=maybe-uninitialized]
+  709 |     rc = cgra_configure_n(dev, cfg, (size_t)g.rows * g.cols);
+      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+../lib/src/cgra.c:412:5: note: by argument 2 of type 'const uint32_t *' {aka 'const unsigned int *'} to 'cgra_configure_n' declared here
+  412 | int cgra_configure_n(cgra_t *dev, const uint32_t *cfg, size_t ncfg)
+      |     ^~~~~~~~~~~~~~~~
+../lib/src/cgra.c:707:14: note: 'cfg' declared here
+  707 |     uint32_t cfg[CGRA_MAX_PE];
+      |              ^~~
+cc1: all warnings being treated as errors
+make: Leaving directory '/work/hw'
+make: *** [hw.mk:75: build/ghdl/gen_diff_vectors] Error 1

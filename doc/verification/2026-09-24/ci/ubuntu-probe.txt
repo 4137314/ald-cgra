@@ -1,0 +1,14 @@
+device: protocol v3, 4x4 array, 16-bit datapath
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+device OK

@@ -1,0 +1,12 @@
+make -C doc -f doc.mk
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/doc'
+python3 tools/wire_data.py render
+render: 10 validated rows, source doc/data/wire-cost.csv
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build main.tex
+Rc files read:
+  NONE
+Latexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.
+Latexmk: Nothing to do for 'main.tex'.
+Latexmk: All targets (build/main.pdf) are up-to-date
+
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/doc'

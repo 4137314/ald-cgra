@@ -342,10 +342,29 @@ Evidenze modularità in [`doc/verification/2026-09-23/modularity/`](doc/verifica
 versione Vivado, comandi, hash e sette report grezzi in
 [`doc/verification/2026-09-23/vivado/`](doc/verification/2026-09-23/vivado/README.md).
 
+### 2026-09-24 — Compatibilità GCC 13 e verifica CI completa
+
+- Riprodotto in Ubuntu 24.04 il fallimento CI del generatore GHDL:
+  GCC 13 con `-O2 -Werror` segnalava il buffer `cfg` del mapping diagonale
+  come potenzialmente non inizializzato. La verifica geometrica garantiva
+  gli elementi trasmessi, ma il compilatore non lo deduceva attraverso i cicli.
+- Corretto con inizializzazione esplicita in `lib/src/cgra.c`, commit
+  `4025339`; mantenuti `-Werror`, test e controlli. Nessuna modifica RTL.
+- Snapshot pulito Ubuntu: `make sim`, **1019** controlli software in release
+  e ASan/UBSan, **9** verifiche d'installazione, **56** controlli Tcl e probe
+  PTY superati. Ripetuta la misura wire: CSV identico, provenienza aggiornata.
+- Su GitHub il [run 35985004700](https://github.com/4137314/ald-cgra/actions/runs/35985004700)
+  è concluso con **successo**: `build-and-test` ha superato tutti gli step;
+  `nix` ha completato pacchetto host, report e `nix flake check`. Verificato
+  Linux x86_64; T3 resta parziale per altre piattaforme e classi di guasto.
+
+Run, riproduzione e log in
+[`doc/verification/2026-09-24/ci/`](doc/verification/2026-09-24/ci/README.md).
+
 ## Prossime correzioni senza scheda
 
 1. **H3/T3:** completare la matrice di corruzione header/opcode, byte
-   inseriti/persi e le verifiche del pacchetto host Nix/piattaforme; aggiungere
+   inseriti/persi e le verifiche sulle altre piattaforme; aggiungere
    oracoli benchmark per i mapping attualmente esclusi.
 2. **Convoluzione:** generare tile implicite senza allocare Toeplitz densa,
    preservando ABI, semantica v2/v3, overflow, errori e confronti scalari.
