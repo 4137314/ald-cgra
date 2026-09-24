@@ -8,6 +8,9 @@
       systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
       forAll = f: nixpkgs.lib.genAttrs systems (system: f nixpkgs.legacyPackages.${system});
       version = "0.1.0";
+      reportTex = pkgs: pkgs.texlive.combine {
+        inherit (pkgs.texlive) scheme-medium pgfplots;
+      };
     in
     {
       # `nix develop` - full toolchain to simulate, build/test the library+CLI,
@@ -17,11 +20,11 @@
         default = pkgs.mkShell {
           packages = with pkgs; [
             # HDL simulation
-            ghdl gtkwave
+            ghdl gtkwave tcl         # includes offline timing script tests
             # FPGA programming without Vivado
             openfpgaloader
             # host software
-            gcc gnumake pkg-config
+            gcc gnumake pkg-config python3  # JSON/PTY regression tests
             readline                # `cgra shell` line editing
             clang-tools             # clangd (make compdb -> compile_commands.json)
             bear                    # alt. compile_commands.json generator
@@ -31,7 +34,7 @@
             binutils                # gprof (make gprof)
             # documentation
             texinfo groff           # man pages + GNU info manual
-            texliveMedium           # LaTeX report (needs tikz/pgf -> scheme-medium)
+            (reportTex pkgs)         # LaTeX report, including the pgfplots chart
           ];
           shellHook = ''
             echo "cgra dev shell - make | make test | make sim | make docs | make check-deps"
@@ -74,7 +77,7 @@
           pname = "cgra-doc";
           inherit version;
           src = ./.;
-          nativeBuildInputs = [ pkgs.gnumake pkgs.texliveMedium ];
+          nativeBuildInputs = [ pkgs.gnumake pkgs.python3 (reportTex pkgs) ];
           dontConfigure = true;
           buildPhase = "make -C doc -f doc.mk";
           installPhase = "install -Dm644 doc/build/main.pdf $out/share/doc/cgra/cgra.pdf";

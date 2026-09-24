@@ -13,7 +13,10 @@ jobs:
       - name: Install toolchain
         run: |
           sudo apt-get update
-          sudo apt-get install -y ghdl gcc make
+          sudo apt-get install -y ghdl gcc make tcl python3 texinfo pkg-config
+
+      - name: Offline timing script gates
+        run: make -C hw -f hw.mk test-scripts
 
       - name: HDL simulation (GHDL)
         run: make sim
@@ -23,6 +26,14 @@ jobs:
 
       - name: Software tests (CLI + kernels on the emulator)
         run: make test
+
+      - name: Isolated installation and external C client
+        run: make test-install
+
+      - name: Address and undefined behavior sanitizers
+        env:
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: make PROFILE=asan test
 
       - name: Probe the virtual device over a pty
         run: |
@@ -42,5 +53,7 @@ jobs:
           extra_nix_config: "experimental-features = nix-command flakes"
       - name: nix build
         run: nix build .
+      - name: Build the report
+        run: nix build .#doc
       - name: nix flake check
-        run: nix flake check || true
+        run: nix flake check
