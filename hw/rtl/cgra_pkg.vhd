@@ -85,15 +85,34 @@ package cgra_pkg is
   constant CMD_RUN : std_logic_vector(7 downto 0) := x"04"; -- + 1 byte step count, reply ACK when done
   constant CMD_RD  : std_logic_vector(7 downto 0) := x"05"; -- reply: 16 x 16-bit LE PE registers (row-major)
   constant CMD_RST : std_logic_vector(7 downto 0) := x"06"; -- reset datapath registers (config kept), reply ACK
+  constant CMD_EXEC : std_logic_vector(7 downto 0) := x"07"; -- v3: fused WR + RUN + masked RD (see below)
 
   constant RSP_ACK  : std_logic_vector(7 downto 0) := x"79";
   constant RSP_NACK : std_logic_vector(7 downto 0) := x"1F";
   constant ID_BYTE0 : std_logic_vector(7 downto 0) := x"CA"; -- device signature
-  constant PROTO_VER : std_logic_vector(7 downto 0) := x"02"; -- protocol version
+  constant PROTO_VER : std_logic_vector(7 downto 0) := x"03"; -- protocol version
 
   -- Protocol v2 adds an 8-bit additive checksum (sum of payload bytes mod 256)
   -- after the CFG and WR payloads (device NACKs on mismatch) and after the RD
   -- reply. The ID reply is ID_BYTE0, PROTO_VER, ROWS, COLS, DATA_W.
+  --
+  -- Protocol v3 adds CMD_EXEC, which fuses the three transactions an
+  -- element-wise kernel issues per chunk (WR, RUN, RD) into ONE round trip and
+  -- reads back only the registers the host actually taps:
+  --
+  --   host -> device  EXEC steps flags mask_lo mask_hi
+  --                   west(0..ROWS-1) north(0..COLS-1)   -- 16-bit LE
+  --                   cksum                              -- over the 20 bytes above
+  --   device -> host  <selected registers, 16-bit LE, ascending PE index>
+  --                   cksum                              -- over the data bytes
+  --                   status                             -- RSP_ACK / RSP_NACK
+  --
+  -- mask bit i selects PE register i (row-major); flags bit 0 clears the PE
+  -- registers before stepping (a fused CMD_RST). The reply length is fixed by
+  -- (mask, and nothing else), so the host always knows how much to read even
+  -- when the payload checksum fails -- on a mismatch the device replies with
+  -- the *current* registers and RSP_NACK, and does not step the array.
+  constant EXEC_FLAG_RST : natural := 0;   -- flags bit 0: clear PE regs first
 
   function cfg_word(op   : std_logic_vector(3 downto 0);
                     sa   : std_logic_vector(2 downto 0);

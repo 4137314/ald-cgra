@@ -49,24 +49,26 @@ package cgra_comp_pkg is
 
   component cgra_array is
     generic (
-      G_ROWS : natural := ROWS;
-      G_COLS : natural := COLS
+      G_ROWS : positive := ROWS;
+      G_COLS : positive := COLS
     );
     port (
       clk      : in  std_logic;
       rst      : in  std_logic;
       step     : in  std_logic;
-      cfg      : in  cfg_vec_t;
-      west_in  : in  data_vec_t;
-      north_in : in  data_vec_t;
-      pe_out   : out data_vec_t
+      cfg      : in  cfg_vec_t(0 to G_ROWS * G_COLS - 1);
+      west_in  : in  data_vec_t(0 to G_ROWS - 1);
+      north_in : in  data_vec_t(0 to G_COLS - 1);
+      pe_out   : out data_vec_t(0 to G_ROWS * G_COLS - 1)
     );
   end component cgra_array;
 
   component cgra_ctrl is
     generic (
       G_TIMEOUT_CYCLES : natural := 100_000_000;
-      G_STEP_DIV       : natural := 2
+      G_STEP_DIV       : positive := 2;
+      G_ROWS           : positive := ROWS;
+      G_COLS           : positive := COLS
     );
     port (
       clk      : in  std_logic;
@@ -76,12 +78,12 @@ package cgra_comp_pkg is
       tx_data  : out std_logic_vector(7 downto 0);
       tx_start : out std_logic;
       tx_busy  : in  std_logic;
-      cfg      : out cfg_vec_t(0 to NUM_PE - 1);
-      west_o   : out data_vec_t(0 to ROWS - 1);
-      north_o  : out data_vec_t(0 to COLS - 1);
+      cfg      : out cfg_vec_t(0 to G_ROWS * G_COLS - 1);
+      west_o   : out data_vec_t(0 to G_ROWS - 1);
+      north_o  : out data_vec_t(0 to G_COLS - 1);
       step     : out std_logic;
       dp_rst   : out std_logic;
-      pe_regs  : in  data_vec_t(0 to NUM_PE - 1);
+      pe_regs  : in  data_vec_t(0 to G_ROWS * G_COLS - 1);
       busy     : out std_logic
     );
   end component cgra_ctrl;

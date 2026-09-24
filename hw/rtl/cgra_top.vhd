@@ -1,5 +1,5 @@
 -- cgra_top.vhd
--- FPGA top level: UART <-> protocol controller <-> 4x4 CGRA.
+-- FPGA top level: UART <-> protocol controller <-> R x C CGRA (default 4x4).
 --
 -- LEDs: led(0) heartbeat, led(1) controller busy,
 --       led(2) UART RX activity, led(3) UART TX activity.
@@ -18,7 +18,9 @@ entity cgra_top is
     -- Datapath multicycle factor: clocks per array step (see cgra_ctrl). Keep in
     -- sync with the -setup number in scr/constraints.tcl -- the flow passes both
     -- from one knob (make STEP_DIV=...).
-    G_STEP_DIV       : natural := 2
+    G_STEP_DIV       : positive := 2;
+    G_ROWS           : positive := ROWS;
+    G_COLS           : positive := COLS
   );
   port (
     clk       : in  std_logic;
@@ -42,10 +44,10 @@ architecture rtl of cgra_top is
   signal tx_start : std_logic;
   signal tx_busy  : std_logic;
 
-  signal cfg      : cfg_vec_t(0 to NUM_PE - 1);
-  signal west_in  : data_vec_t(0 to ROWS - 1);
-  signal north_in : data_vec_t(0 to COLS - 1);
-  signal pe_regs  : data_vec_t(0 to NUM_PE - 1);
+  signal cfg      : cfg_vec_t(0 to G_ROWS * G_COLS - 1);
+  signal west_in  : data_vec_t(0 to G_ROWS - 1);
+  signal north_in : data_vec_t(0 to G_COLS - 1);
+  signal pe_regs  : data_vec_t(0 to G_ROWS * G_COLS - 1);
   signal step     : std_logic;
   signal dp_rst   : std_logic;
   signal arr_rst  : std_logic;
@@ -90,7 +92,8 @@ begin
 
   u_ctrl : cgra_ctrl
     generic map (G_TIMEOUT_CYCLES => G_TIMEOUT_CYCLES,
-                 G_STEP_DIV       => G_STEP_DIV)
+                 G_STEP_DIV       => G_STEP_DIV,
+                 G_ROWS => G_ROWS, G_COLS => G_COLS)
     port map (
       clk      => clk,
       rst      => rst,
@@ -109,7 +112,7 @@ begin
     );
 
   u_array : cgra_array
-    generic map (G_ROWS => ROWS, G_COLS => COLS)
+    generic map (G_ROWS => G_ROWS, G_COLS => G_COLS)
     port map (
       clk      => clk,
       rst      => arr_rst,

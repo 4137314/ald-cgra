@@ -18,18 +18,29 @@ VHDL-2008, one entity per file, elaborated in this order (see hw.mk SRCS):
     pe.vhd            the processing element: neigh (pe_neigh_t) + decode_cfg ->
                       two operand muxes -> 16-bit ALU -> one step-gated register.
     cgra_array.vhd    G_ROWS x G_COLS mesh of pe (generics default to the package
-                      geometry; ports are unconstrained so a different size just
-                      needs vectors of matching length). Interior PEs read their
+                      geometry; positive dimensions set the port bounds).
+                      Interior PEs read their
                       N/S/E/W neighbours; north/west edges take the input ports,
                       south/east edges read zero. Instantiates pe by component.
-    cgra_ctrl.vhd     protocol FSM: ID / CFG / WR / RUN / RD / RST, checksum
-                      verify, watchdog. Issues 'step' once every G_STEP_DIV
+    cgra_ctrl.vhd     protocol FSM: ID / CFG / WR / RUN / RD / RST / EXEC,
+                      checksum verify, watchdog. EXEC (protocol v3) is the fused
+                      transaction -- edge inputs, an optional datapath clear, N
+                      steps and a MASKED register read-back in one round trip;
+                      it shares the S_WR payload path and the S_RUN step engine
+                      with the unfused commands rather than duplicating them
+                      (wr_ret / run_ret say where each returns). The PE
+                      read-back mux is registered into rd_word before the
+                      checksum adder, so word_idx -> cksum is a mux OR an adder
+                      per clock, never both. Issues 'step' once every G_STEP_DIV
                       clocks (generic, default 2), making the ALU datapath a
                       G_STEP_DIV-cycle multicycle path (see scr/constraints.tcl).
                       One step is always one result, so raising G_STEP_DIV lets
                       the clock run faster without touching emu.c. The make knob
                       STEP_DIV drives both this generic and the XDC number.
-    cgra_top.vhd      top level: clk + reset sync + UART + ctrl + array + LEDs.
+    cgra_top.vhd      G_ROWS/G_COLS propagate to controller and array (default
+                      4x4; complete device supports at most 16 16-bit PEs).
+                      The ID response reports these dimensions.
+                      Top level: clk + reset sync + UART + ctrl + array + LEDs.
                       Instantiates the four blocks by component.
 
 Conventions
@@ -42,3 +53,9 @@ Conventions
 
 Editing cgra_pkg.vhd? It is a three-way contract - update the C header and
 the emulator to match, or `make test` on the host will diverge from silicon.
+
+The controller retains a 16-bit EXEC mask for every geometry. Mask bits beyond
+the PE count are ignored on the wire and rejected by the host API. Its shared
+word index covers max(R*C, R+C), with a guarded PE read mux for single-row and
+single-column arrays. MESH_ROWS/MESH_COLS drive both Vivado generic arguments
+and the output directory; see doc/mesh-generalization.md.

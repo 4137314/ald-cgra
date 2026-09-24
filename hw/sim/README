@@ -4,14 +4,18 @@ hw/sim/ - GHDL testbenches
 Self-checking VHDL-2008 testbenches. Each asserts expected values and reports
 via std.env; a failed assertion fails `make -f hw.mk sim`.
 
-    tb_pe.vhd         drives one pe through every ALU opcode and operand
-                      select, checking the register after each step.
+    tb_pe.vhd         directed PE checks for arithmetic, accumulation, shift,
+                      signed comparison, constants and register hold.
     tb_uart.vhd       loops uart_tx.tx_serial back into uart_rx and checks that
                       adversarial byte patterns survive framing + mid-bit
                       sampling bit-exact. Has a watchdog that fails on a stall.
     tb_cgra_top.vhd   full-chip: feeds real UART byte streams into cgra_top
-                      and checks CFG/WR/RUN/RD/RST, checksums and NACKs at
+                      and checks CFG/WR/RUN/RD/RST/EXEC, checksums and NACKs at
                       the wire level. This is the protocol conformance test.
+                      The EXEC cases cover a masked read-back with a fused
+                      reset, an empty tap mask (pure fused write+run), and the
+                      guarantee that a corrupted EXEC payload returns a
+                      full-length reply with NACK *without* stepping the array.
     tb_matvec.vhd     exercises the weight-stationary systolic matrix-vector
                       mapping end to end. Parametric on G_STEP_DIV (the datapath
                       multicycle factor): the same result must hold at any
@@ -19,14 +23,50 @@ via std.env; a failed assertion fails `make -f hw.mk sim`.
                         ghdl -r --std=08 --workdir=build/ghdl tb_matvec \
                              -gG_STEP_DIV=3 --assert-level=error
                       proves one step = one result independent of G_STEP_DIV.
+    tb_array_diff.vhd compares all 16 RTL PE outputs against values generated
+                      by libcgra's C emulator for 64 deterministic full-array
+                      configurations: every opcode with all 8x8 operand-select
+                      pairs, 1-4 steps, and samples including signed extremes.
+                      The generated vector file lives in build/.
+    tb_protocol_diff.vhd
+                      replays 504 transactions generated from emu.c against
+                      cgra_ctrl + cgra_array, comparing every reply byte under
+                      variable transmit backpressure. Includes all commands,
+                      0/1/2/7/255 steps, single/full/sparse/empty EXEC masks,
+                      reset and accumulation, split CFG packets, and bad
+                      CFG/WR/EXEC checksums followed by RUN/RD. Runs at
+                      STEP_DIV=1,2,3,4, with assertions on actual step spacing.
+                      Also runs raw transcripts and real host kernel traces
+                      on 1x1, 1x16, 16x1, 2x3, 3x2, 2x8, 8x2 and 4x4.
+                      Timed watchdog recovery is checked
+                      separately in RTL (the C emulator has no clock).
+    tb_array_geometry.vhd
+                      verifies 1x1, 1x4, 4x1, 2x3, 3x2, 4x4 and 8x8 arrays:
+                      both operand muxes, all neighbour/edge connections,
+                      one-hop-per-step propagation, hold, and reset priority.
+                      The standalone 8x8 array exceeds the current protocol
+                      limit of 16 PEs and is not a full-device configuration.
+    tb_kernel_uart.vhd
+                      replays real libcgra + DSL kernel requests through the
+                      complete UART top-level, on 2x3 and 3x2.
+    gen_kernel_vectors.c
+                      records serial traffic through a POSIX PTY while the
+                      real host kernels check independent scalar references.
+                      Shares the workload in sw/test/kernel_cases.h.
 
 All are self-checking (assert ... severity failure + std.env.finish), so a
 failure fails `make sim`; there is nothing to eyeball in a waveform.
 
 Run
 ---
-    make -f hw.mk sim     # analyse, elaborate and run all four (assert-level=error)
+    make -f hw.mk sim     # run all benches, differential checks and shape sweep
     make -f hw.mk wave    # tb_cgra_top -> build/tb_cgra_top.ghw (gtkwave)
+    make -f hw.mk sim DEVICE_SHAPES="2x3 3x2" UART_SHAPES="2x3"
+    make -f hw.mk sim MESH_SHAPES="2x4 4x2" STEP_DIVS="2 3"
+
+Simulation needs GHDL, a C11 compiler and POSIX pseudo-terminals. Vector generators
+compile the current emulator sources in build/ghdl, independent of the host
+library's build/profile. A failed generator cannot replace a valid vector file.
 
 The host-side emulator (lib/src/emu.c) is the golden reference for the same
 semantics: if a testbench and the emulator disagree, one of them is wrong.

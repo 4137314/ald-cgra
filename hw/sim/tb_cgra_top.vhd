@@ -1,8 +1,10 @@
 -- tb_cgra_top.vhd
--- End-to-end test of the full design through the UART protocol (v2):
+-- End-to-end test of the full design through the UART protocol (v3):
 -- extended ID handshake, configuration + checksum, input write + checksum,
 -- run, checksum-verified register readback, MAC with datapath reset, signed
--- result, diagonal element-wise mode, and a rejected (bad-checksum) CFG.
+-- result, diagonal element-wise mode, a rejected (bad-checksum) CFG, and the
+-- v3 fused EXEC transaction (masked read-back, fused reset, empty mask, and
+-- the guarantee that a corrupted EXEC payload does not advance the datapath).
 --
 -- The DUT runs at 10 MHz / 1 Mbaud in simulation to keep runtimes short;
 -- on the board the generics default to 100 MHz / 115200.
@@ -107,6 +109,48 @@ architecture sim of tb_cgra_top is
     uart_send(std_logic_vector(ck), l);
   end procedure;
 
+  -- Send CMD_EXEC + steps + flags + 16-bit tap mask + west/north (LE) +
+  -- checksum (protocol v3). 'corrupt' flips the checksum so the device must
+  -- refuse to step the array.
+  procedure send_exec(signal   l       : out std_logic;
+                      constant steps   : in  natural;
+                      constant flags   : in  std_logic_vector(7 downto 0);
+                      constant mask    : in  std_logic_vector(NUM_PE - 1 downto 0);
+                      constant west    : in  data_vec_t;
+                      constant north   : in  data_vec_t;
+                      constant corrupt : in  boolean := false) is
+    variable ck : unsigned(7 downto 0) := (others => '0');
+    variable s  : std_logic_vector(15 downto 0);
+    variable hb : std_logic_vector(7 downto 0);
+
+    procedure put(constant x : in std_logic_vector(7 downto 0)) is
+    begin
+      uart_send(x, l);
+      ck := ck + unsigned(x);
+    end procedure;
+  begin
+    uart_send(CMD_EXEC, l);
+    hb := std_logic_vector(to_unsigned(steps, 8));
+    put(hb);
+    put(flags);
+    put(mask(7 downto 0));
+    put(mask(15 downto 8));
+    for i in west'range loop
+      s := std_logic_vector(west(i));
+      put(s(7 downto 0));
+      put(s(15 downto 8));
+    end loop;
+    for i in north'range loop
+      s := std_logic_vector(north(i));
+      put(s(7 downto 0));
+      put(s(15 downto 8));
+    end loop;
+    if corrupt then
+      ck := ck + 1;
+    end if;
+    uart_send(std_logic_vector(ck), l);
+  end procedure;
+
 begin
 
   clk_p : process
@@ -174,6 +218,27 @@ begin
       uart_recv(tx_line, b);
       assert b = std_logic_vector(ck)
         report "RD checksum mismatch: got 0x" & to_hstring(b) severity failure;
+    end procedure;
+
+    -- Read an EXEC reply: 'ntap' masked registers (LE), the data checksum and
+    -- the status byte. Taps land in regs(0 .. ntap-1) in ascending PE order.
+    procedure read_exec(constant ntap : in  integer;
+                        variable st   : out std_logic_vector(7 downto 0)) is
+      variable ck : unsigned(7 downto 0) := (others => '0');
+    begin
+      for i in 0 to ntap - 1 loop
+        uart_recv(tx_line, b);
+        v16(7 downto 0) := b;
+        ck := ck + unsigned(b);
+        uart_recv(tx_line, b);
+        v16(15 downto 8) := b;
+        ck := ck + unsigned(b);
+        regs(i) := to_integer(signed(v16));
+      end loop;
+      uart_recv(tx_line, b);
+      assert b = std_logic_vector(ck)
+        report "EXEC checksum mismatch: got 0x" & to_hstring(b) severity failure;
+      uart_recv(tx_line, st);
     end procedure;
 
     procedure set_inputs(constant w0, w1, w2, w3, n0, n1, n2, n3 : in integer) is
@@ -325,6 +390,55 @@ begin
     assert regs(15) = 36
       report "diag[3] wrong: " & integer'image(regs(15)) severity failure;
     report "tb_cgra_top: diagonal element-wise mode ok";
+
+    ---------------------------------------------------------------
+    -- 8. Protocol v3: the same diagonal chunk in ONE fused EXEC
+    --    transaction (reset + inputs + 4 steps + masked read-back).
+    --    Mask 0x8421 taps the four diagonal PEs 0, 5, 10, 15.
+    ---------------------------------------------------------------
+    set_inputs(1, 2, 3, -4, 10, 20, 30, 40);
+    send_exec(rx_line, 4, x"01", x"8421", west, north);   -- flags: fused reset
+    read_exec(4, b);
+    assert b = RSP_ACK
+      report "EXEC status not ACK: 0x" & to_hstring(b) severity failure;
+    assert regs(0) = 11 and regs(1) = 22 and regs(2) = 33 and regs(3) = 36
+      report "EXEC diagonal taps wrong: " & integer'image(regs(0)) & " "
+             & integer'image(regs(1)) & " " & integer'image(regs(2)) & " "
+             & integer'image(regs(3)) severity failure;
+    report "tb_cgra_top: fused EXEC (masked read-back) ok";
+
+    ---------------------------------------------------------------
+    -- 9. A corrupted EXEC payload must NACK *and* leave the datapath
+    --    untouched: the reply still has its fixed length, and the taps
+    --    still hold the previous results.
+    ---------------------------------------------------------------
+    set_inputs(100, 100, 100, 100, 100, 100, 100, 100);
+    send_exec(rx_line, 4, x"01", x"8421", west, north, corrupt => true);
+    read_exec(4, b);
+    assert b = RSP_NACK
+      report "corrupt EXEC status not NACK: 0x" & to_hstring(b) severity failure;
+    assert regs(0) = 11 and regs(3) = 36
+      report "corrupt EXEC advanced the datapath" severity failure;
+    report "tb_cgra_top: corrupt EXEC rejected without stepping ok";
+
+    ---------------------------------------------------------------
+    -- 10. EXEC with an empty tap mask: pure fused write+run (the shape
+    --     the reduction/systolic drivers use), verified with a plain RD.
+    ---------------------------------------------------------------
+    cfg_arr := (others => cfg_word(OP_NOP, SEL_ZERO, SEL_ZERO, 0));
+    cfg_arr(0) := cfg_word(OP_ADD, SEL_N, SEL_W, 0);
+    send_cfg(rx_line, cfg_arr);
+    recv_ack;
+
+    set_inputs(7, 0, 0, 0, 5, 0, 0, 0);
+    send_exec(rx_line, 1, x"01", x"0000", west, north);
+    read_exec(0, b);
+    assert b = RSP_ACK
+      report "empty-mask EXEC status not ACK" severity failure;
+    read_regs;
+    assert regs(0) = 12
+      report "empty-mask EXEC did not step: " & integer'image(regs(0)) severity failure;
+    report "tb_cgra_top: EXEC with empty tap mask ok";
 
     report "tb_cgra_top PASSED";
     done <= true;

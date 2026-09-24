@@ -8,8 +8,7 @@
 -- All PE registers are exposed row-major on pe_out for readback.
 --
 -- The generics default to the package geometry (4x4); the array ports are
--- unconstrained so the same entity can build a differently sized mesh when the
--- caller supplies vectors of the matching length.
+-- sized from the generics, with row-major PE indexing starting at zero.
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -19,17 +18,17 @@ use work.cgra_comp_pkg.all;
 
 entity cgra_array is
   generic (
-    G_ROWS : natural := ROWS;
-    G_COLS : natural := COLS
+    G_ROWS : positive := ROWS;
+    G_COLS : positive := COLS
   );
   port (
     clk      : in  std_logic;
     rst      : in  std_logic;
     step     : in  std_logic;
-    cfg      : in  cfg_vec_t;    -- 0 to G_ROWS*G_COLS-1, row-major
-    west_in  : in  data_vec_t;   -- 0 to G_ROWS-1
-    north_in : in  data_vec_t;   -- 0 to G_COLS-1
-    pe_out   : out data_vec_t    -- 0 to G_ROWS*G_COLS-1, row-major
+    cfg      : in  cfg_vec_t(0 to G_ROWS * G_COLS - 1);
+    west_in  : in  data_vec_t(0 to G_ROWS - 1);
+    north_in : in  data_vec_t(0 to G_COLS - 1);
+    pe_out   : out data_vec_t(0 to G_ROWS * G_COLS - 1)
   );
 end entity cgra_array;
 

@@ -16,6 +16,7 @@
 # for bit/sta, FLOORPLAN=1 to apply scr/floorplan.tcl in bit/sta/fmax.
 
 BOARD    ?= nexys_a7
+.DEFAULT_GOAL := all
 TOP      ?= cgra_top
 GHDL     ?= ghdl
 VIVADO   ?= vivado
@@ -44,10 +45,53 @@ SRCS = rtl/cgra_pkg.vhd \
 TBS  = sim/tb_pe.vhd \
        sim/tb_uart.vhd \
        sim/tb_cgra_top.vhd \
-       sim/tb_matvec.vhd
+       sim/tb_matvec.vhd \
+       sim/tb_array_diff.vhd \
+       sim/tb_protocol_diff.vhd \
+       sim/tb_kernel_uart.vhd \
+       sim/tb_array_geometry.vhd
 
 # Self-checking testbench top-levels, run in order of increasing scope.
-TB_UNITS = tb_pe tb_uart tb_cgra_top tb_matvec
+TB_UNITS = tb_pe tb_uart tb_cgra_top tb_matvec tb_array_diff
+STEP_DIVS ?= 1 2 3 4
+MESH_SHAPES ?= 1x1 1x4 4x1 2x3 3x2 4x4 8x8
+UART_SHAPES ?= 2x3 3x2
+DEVICE_SHAPES ?= 1x1 1x16 16x1 2x3 3x2 2x8 8x2 4x4
+KERNEL_VECTORS = $(addprefix build/kernels_,$(addsuffix .vec,$(DEVICE_SHAPES)))
+PROTOCOL_VECTORS = $(addprefix build/protocol_,$(addsuffix .vec,$(DEVICE_SHAPES)))
+
+DIFF_GEN = $(GHDL_DIR)/gen_diff_vectors
+MODEL_SRCS = ../lib/src/cgra.c ../lib/src/kernels.c ../lib/src/emu.c
+MODEL_HEADERS = ../lib/include/cgra.h ../lib/src/emu.h ../lib/src/buffers.h
+SIM_CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Werror
+
+# Build the reference from source in the simulation directory. Standalone HDL
+# runs must not pick up a stale library or one built with a different profile.
+$(DIFF_GEN): sim/gen_diff_vectors.c $(MODEL_SRCS) $(MODEL_HEADERS) | $(GHDL_DIR)
+	$(CC) $(SIM_CFLAGS) -I../lib/include $< $(MODEL_SRCS) -o $@
+
+build/array_diff.vec: $(DIFF_GEN)
+	./$(DIFF_GEN) $@.tmp
+	mv $@.tmp $@
+
+$(GHDL_DIR)/gen_protocol_vectors: sim/gen_protocol_vectors.c ../lib/src/emu.c $(MODEL_HEADERS) | $(GHDL_DIR)
+	$(CC) $(SIM_CFLAGS) -I../lib/include -I../lib/src $< ../lib/src/emu.c -o $@
+
+build/protocol_diff.vec: $(GHDL_DIR)/gen_protocol_vectors
+	./$(GHDL_DIR)/gen_protocol_vectors $@.tmp
+	mv $@.tmp $@
+
+build/protocol_%.vec: $(GHDL_DIR)/gen_protocol_vectors
+	./$(GHDL_DIR)/gen_protocol_vectors $@.tmp $(word 1,$(subst x, ,$*)) $(word 2,$(subst x, ,$*))
+	mv $@.tmp $@
+
+$(GHDL_DIR)/gen_kernel_vectors: sim/gen_kernel_vectors.c $(MODEL_SRCS) $(MODEL_HEADERS) \
+        ../sw/compile.c ../sw/compile.h ../sw/dsl.c ../sw/dsl.h ../sw/test/kernel_cases.h | $(GHDL_DIR)
+	$(CC) $(SIM_CFLAGS) -I../lib/include -I../lib/src -I../sw $< $(MODEL_SRCS) ../sw/compile.c ../sw/dsl.c -o $@
+
+build/kernels_%.vec: $(GHDL_DIR)/gen_kernel_vectors
+	./$(GHDL_DIR)/gen_kernel_vectors $@.tmp $(word 1,$(subst x, ,$*)) $(word 2,$(subst x, ,$*))
+	mv $@.tmp $@
 
 BIT = build/vivado/$(TOP)_$(BOARD).bit
 
@@ -58,12 +102,34 @@ all: sim
 $(GHDL_DIR):
 	mkdir -p $(GHDL_DIR)
 
-sim: | $(GHDL_DIR)
+sim: build/array_diff.vec build/protocol_diff.vec $(PROTOCOL_VECTORS) $(KERNEL_VECTORS) $(addprefix build/kernels_,$(addsuffix .vec,$(UART_SHAPES))) | $(GHDL_DIR)
 	$(GHDL) -a $(GHDL_FLAGS) $(SRCS) $(TBS)
 	@for tb in $(TB_UNITS); do \
 	    echo "== $$tb =="; \
 	    $(GHDL) -e $(GHDL_FLAGS) $$tb || exit 1; \
 	    $(GHDL) -r $(GHDL_FLAGS) $$tb --assert-level=error || exit 1; \
+	done
+	$(GHDL) -e $(GHDL_FLAGS) tb_protocol_diff
+	@for div in $(STEP_DIVS); do \
+	    $(GHDL) -r $(GHDL_FLAGS) tb_protocol_diff -gG_STEP_DIV=$$div --assert-level=error || exit 1; \
+	done
+	@for shape in $(DEVICE_SHAPES); do \
+	    rows=$${shape%x*}; cols=$${shape#*x}; \
+	    $(GHDL) -r $(GHDL_FLAGS) tb_protocol_diff -gG_ROWS=$$rows -gG_COLS=$$cols \
+	        -gG_VECTOR_FILE=build/protocol_$$shape.vec --assert-level=error || exit 1; \
+	    $(GHDL) -r $(GHDL_FLAGS) tb_protocol_diff -gG_ROWS=$$rows -gG_COLS=$$cols \
+	        -gG_VECTOR_FILE=build/kernels_$$shape.vec --assert-level=error || exit 1; \
+	done
+	$(GHDL) -e $(GHDL_FLAGS) tb_kernel_uart
+	@for shape in $(UART_SHAPES); do \
+	    rows=$${shape%x*}; cols=$${shape#*x}; \
+	    $(GHDL) -r $(GHDL_FLAGS) tb_kernel_uart -gG_ROWS=$$rows -gG_COLS=$$cols \
+	        -gG_VECTOR_FILE=build/kernels_$$shape.vec --assert-level=error || exit 1; \
+	done
+	$(GHDL) -e $(GHDL_FLAGS) tb_array_geometry
+	@for shape in $(MESH_SHAPES); do \
+	    rows=$${shape%x*}; cols=$${shape#*x}; \
+	    $(GHDL) -r $(GHDL_FLAGS) tb_array_geometry -gG_ROWS=$$rows -gG_COLS=$$cols --assert-level=error || exit 1; \
 	done
 
 # Analyse the synthesisable RTL on its own: catches syntax/elaboration errors
