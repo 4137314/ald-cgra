@@ -1,0 +1,5 @@
+# Preserve upstream formatting and verbatim verification output.
+doc/IEEEtran.bst -whitespace
+doc/audit/**/*.txt -whitespace
+doc/verification/**/*.txt -whitespace
+doc/verification/**/*.rpt -whitespace
