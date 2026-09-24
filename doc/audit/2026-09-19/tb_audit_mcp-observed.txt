@@ -1,0 +1,7 @@
+doc/audit/2026-09-19/tb_audit_mcp.vhd:93:9:@47525ns:(assertion failure): AUDIT: first capture after datapath reset has only 10000000 fs; multicycle exception grants 2 clocks
+ghdl:error: assertion failed
+  instance: /tb_audit_mcp/reset_spacing_audit
+  from: process work.tb_audit_mcp(sim).reset_spacing_audit at tb_audit_mcp.vhd:93
+ghdl:error: simulation failed
+
+exit 1

@@ -1,0 +1,3 @@
+*** bit out of range 0 - FD_SETSIZE on fd_set ***: terminated
+
+subprocess returncode -6

@@ -1,0 +1,16 @@
+['-fsyntax-only']
+
+exit 0
+
+['-c', '-o', '/tmp/cgra-audit-analyzer-20260919.o']
+doc/audit/2026-09-19/analyzer_probe.c: In function ‘f’:
+doc/audit/2026-09-19/analyzer_probe.c:2:34: warning: dereference of NULL ‘0’ [CWE-476] [-Wanalyzer-null-dereference]
+    2 | int f(void) { int *p = 0; return *p; }
+      |                                  ^~
+  ‘f’: event 1
+    2 | int f(void) { int *p = 0; return *p; }
+      |                                  ^~
+      |                                  |
+      |                                  (1) ⚠️  dereference of NULL ‘0’
+
+exit 0

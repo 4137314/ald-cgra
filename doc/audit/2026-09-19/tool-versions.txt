@@ -1,0 +1,22 @@
+cc --version
+gcc (GCC) 15.2.0
+Copyright (C) 2025 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+
+ghdl --version
+GHDL 6.0.0 (tarball) [Dunoon edition]
+ Compiled with GNAT Version: 15.2.0
+ static elaboration, mcode JIT code generator
+Written by Tristan Gingold.
+
+Copyright (C) 2003 - 2026 Tristan Gingold.
+GHDL is free software, covered by the GNU General Public License.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+nix --version
+nix (Nix) 2.35.2
+
+python3 --version
+Python 3.14.7

@@ -1,0 +1,444 @@
+make -C lib -f lib.mk PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+ar rcs build/libcgra.a build/cgra.o build/emu.o build/serve.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/cgra.pic.o
+gcc -shared -Wl,-soname,libcgra.so.0  -o build/libcgra.so.0.1.0 build/cgra.pic.o build/emu.pic.o build/serve.pic.o
+ln -sf libcgra.so.0.1.0 build/libcgra.so.0
+ln -sf libcgra.so.0.1.0 build/libcgra.so
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C lib -f lib.mk PROFILE=release test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_cgra.c build/cgra.o build/emu.o build/serve.o  -o build/test_cgra
+./build/test_cgra
+# libcgra unit tests
+ok 1 - CFG imm field round-trips signed
+ok 2 - CFG opcode field
+ok 3 - CFG sel_a field
+ok 4 - CFG sel_b field
+ok 5 - CFG reserved bits are zero
+ok 6 - identify succeeds on sim:
+ok 7 - identify reports protocol version
+ok 8 - identify reports ROWS
+ok 9 - identify reports COLS
+ok 10 - identify reports datapath width
+ok 11 - configure ok
+ok 12 - write_inputs ok
+ok 13 - run ok
+ok 14 - read_regs ok
+ok 15 - PE(0,0)=north+west=42
+ok 16 - reset_datapath ok
+ok 17 - read after reset ok
+ok 18 - registers cleared by reset
+ok 19 - vec_add ok
+ok 20 - vec_add matches host reference
+ok 21 - vec_sub ok
+ok 22 - vec_sub matches host reference
+ok 23 - vec_mul ok
+ok 24 - vec_mul matches (16-bit wrap)
+ok 25 - vec_relu ok
+ok 26 - vec_relu = max(a,0)
+ok 27 - vec_addi ok
+ok 28 - vec_addi = a + imm
+ok 29 - vec_max (n=3, partial lane)
+ok 30 - vec_max tail chunk correct
+ok 31 - apply(shl) ok
+ok 32 - SHL of negative wraps (=-16)
+ok 33 - dot ok
+ok 34 - dot product = 35
+ok 35 - sim: advertises protocol v3 (exec)
+ok 36 - exec: configure
+ok 37 - exec: single-tap transaction
+ok 38 - exec: tapped register holds 7 + 5
+ok 39 - exec: two-tap mask
+ok 40 - exec: taps come back in PE order
+ok 41 - exec: empty mask (write+run only)
+ok 42 - exec: empty mask still stepped the array
+ok 43 - exec: rejects ntaps != popcount(mask)
+ok 44 - exec: configure ACC
+ok 45 - exec: reset then accumulate
+ok 46 - exec: three accumulates of 5 from a cleared register
+ok 47 - exec: accumulate without reset
+ok 48 - exec: without the flag the accumulator carries over
+ok 49 - exec: accumulate with fused reset
+ok 50 - exec: fused reset cleared the accumulator first
+ok 51 - configure(NULL) -> ERR_ARG
+ok 52 - vec_add(b=NULL) -> ERR_ARG
+ok 53 - dot(b=NULL) -> ERR_ARG
+ok 54 - strerror returns non-empty text
+ok 55 - strerror returns non-empty text
+ok 56 - strerror returns non-empty text
+ok 57 - strerror returns non-empty text
+ok 58 - strerror returns non-empty text
+ok 59 - strerror returns non-empty text
+ok 60 - open sim:flaky
+ok 61 - vec_add recovers through the retry path
+ok 62 - flaky result still correct
+ok 63 - exactly two retries (first CFG + first EXEC/WR NACKed)
+ok 64 - transaction counter advanced
+ok 65 - reset_stats zeroes counters
+ok 66 - open sim:v2 (legacy device)
+ok 67 - sim:v2 identifies as protocol v2
+ok 68 - sim:v2 does not advertise exec
+ok 69 - cgra_exec refuses a pre-v3 device
+ok 70 - v2 fallback: vec_add runs
+ok 71 - v2 fallback: results identical to the fused path
+ok 72 - v2 fallback: dot identical to the fused path
+ok 73 - open both protocol backends
+ok 74 - fused path uses less than half the round trips
+ok 75 - fused path also moves fewer bytes
+ok 76 - sim:1x1
+ok 77 - ID reports actual geometry
+ok 78 - cached ID succeeds
+ok 79 - short configuration rejected
+ok 80 - long configuration rejected
+ok 81 - short west edge rejected
+ok 82 - long north edge rejected
+ok 83 - short register buffer rejected
+ok 84 - unknown EXEC flags rejected
+ok 85 - NULL input with nonzero length rejected
+ok 86 - tap count mismatch rejected
+ok 87 - mask selecting absent PE rejected
+ok 88 - legacy CFG requires 4x4
+ok 89 - legacy WR requires 4x4
+ok 90 - legacy RD requires 4x4
+ok 91 - legacy EXEC requires 4x4
+ok 92 - legacy apply requires 4x4
+ok 93 - invalid buffers/geometry perform no transfers after cached ID
+ok 94 - runtime CFG succeeds
+ok 95 - runtime WR succeeds
+ok 96 - runtime RUN succeeds
+ok 97 - runtime RD succeeds with exact capacity
+ok 98 - row-major results and read buffer canary intact
+ok 99 - last PE masked read and zero inputs
+ok 100 - sim:1x16
+ok 101 - ID reports actual geometry
+ok 102 - cached ID succeeds
+ok 103 - short configuration rejected
+ok 104 - long configuration rejected
+ok 105 - short west edge rejected
+ok 106 - long north edge rejected
+ok 107 - short register buffer rejected
+ok 108 - unknown EXEC flags rejected
+ok 109 - NULL input with nonzero length rejected
+ok 110 - tap count mismatch rejected
+ok 111 - legacy CFG requires 4x4
+ok 112 - legacy WR requires 4x4
+ok 113 - legacy RD requires 4x4
+ok 114 - legacy EXEC requires 4x4
+ok 115 - legacy apply requires 4x4
+ok 116 - invalid buffers/geometry perform no transfers after cached ID
+ok 117 - runtime CFG succeeds
+ok 118 - runtime WR succeeds
+ok 119 - runtime RUN succeeds
+ok 120 - runtime RD succeeds with exact capacity
+ok 121 - row-major results and read buffer canary intact
+ok 122 - last PE masked read and zero inputs
+ok 123 - sim:16x1
+ok 124 - ID reports actual geometry
+ok 125 - cached ID succeeds
+ok 126 - short configuration rejected
+ok 127 - long configuration rejected
+ok 128 - short west edge rejected
+ok 129 - long north edge rejected
+ok 130 - short register buffer rejected
+ok 131 - unknown EXEC flags rejected
+ok 132 - NULL input with nonzero length rejected
+ok 133 - tap count mismatch rejected
+ok 134 - legacy CFG requires 4x4
+ok 135 - legacy WR requires 4x4
+ok 136 - legacy RD requires 4x4
+ok 137 - legacy EXEC requires 4x4
+ok 138 - legacy apply requires 4x4
+ok 139 - invalid buffers/geometry perform no transfers after cached ID
+ok 140 - runtime CFG succeeds
+ok 141 - runtime WR succeeds
+ok 142 - runtime RUN succeeds
+ok 143 - runtime RD succeeds with exact capacity
+ok 144 - row-major results and read buffer canary intact
+ok 145 - last PE masked read and zero inputs
+ok 146 - sim:2x3
+ok 147 - ID reports actual geometry
+ok 148 - cached ID succeeds
+ok 149 - short configuration rejected
+ok 150 - long configuration rejected
+ok 151 - short west edge rejected
+ok 152 - long north edge rejected
+ok 153 - short register buffer rejected
+ok 154 - unknown EXEC flags rejected
+ok 155 - NULL input with nonzero length rejected
+ok 156 - tap count mismatch rejected
+ok 157 - mask selecting absent PE rejected
+ok 158 - legacy CFG requires 4x4
+ok 159 - legacy WR requires 4x4
+ok 160 - legacy RD requires 4x4
+ok 161 - legacy EXEC requires 4x4
+ok 162 - legacy apply requires 4x4
+ok 163 - invalid buffers/geometry perform no transfers after cached ID
+ok 164 - runtime CFG succeeds
+ok 165 - runtime WR succeeds
+ok 166 - runtime RUN succeeds
+ok 167 - runtime RD succeeds with exact capacity
+ok 168 - row-major results and read buffer canary intact
+ok 169 - last PE masked read and zero inputs
+ok 170 - sim:3x2
+ok 171 - ID reports actual geometry
+ok 172 - cached ID succeeds
+ok 173 - short configuration rejected
+ok 174 - long configuration rejected
+ok 175 - short west edge rejected
+ok 176 - long north edge rejected
+ok 177 - short register buffer rejected
+ok 178 - unknown EXEC flags rejected
+ok 179 - NULL input with nonzero length rejected
+ok 180 - tap count mismatch rejected
+ok 181 - mask selecting absent PE rejected
+ok 182 - legacy CFG requires 4x4
+ok 183 - legacy WR requires 4x4
+ok 184 - legacy RD requires 4x4
+ok 185 - legacy EXEC requires 4x4
+ok 186 - legacy apply requires 4x4
+ok 187 - invalid buffers/geometry perform no transfers after cached ID
+ok 188 - runtime CFG succeeds
+ok 189 - runtime WR succeeds
+ok 190 - runtime RUN succeeds
+ok 191 - runtime RD succeeds with exact capacity
+ok 192 - row-major results and read buffer canary intact
+ok 193 - last PE masked read and zero inputs
+ok 194 - sim:2x8
+ok 195 - ID reports actual geometry
+ok 196 - cached ID succeeds
+ok 197 - short configuration rejected
+ok 198 - long configuration rejected
+ok 199 - short west edge rejected
+ok 200 - long north edge rejected
+ok 201 - short register buffer rejected
+ok 202 - unknown EXEC flags rejected
+ok 203 - NULL input with nonzero length rejected
+ok 204 - tap count mismatch rejected
+ok 205 - legacy CFG requires 4x4
+ok 206 - legacy WR requires 4x4
+ok 207 - legacy RD requires 4x4
+ok 208 - legacy EXEC requires 4x4
+ok 209 - legacy apply requires 4x4
+ok 210 - invalid buffers/geometry perform no transfers after cached ID
+ok 211 - runtime CFG succeeds
+ok 212 - runtime WR succeeds
+ok 213 - runtime RUN succeeds
+ok 214 - runtime RD succeeds with exact capacity
+ok 215 - row-major results and read buffer canary intact
+ok 216 - last PE masked read and zero inputs
+ok 217 - sim:8x2
+ok 218 - ID reports actual geometry
+ok 219 - cached ID succeeds
+ok 220 - short configuration rejected
+ok 221 - long configuration rejected
+ok 222 - short west edge rejected
+ok 223 - long north edge rejected
+ok 224 - short register buffer rejected
+ok 225 - unknown EXEC flags rejected
+ok 226 - NULL input with nonzero length rejected
+ok 227 - tap count mismatch rejected
+ok 228 - legacy CFG requires 4x4
+ok 229 - legacy WR requires 4x4
+ok 230 - legacy RD requires 4x4
+ok 231 - legacy EXEC requires 4x4
+ok 232 - legacy apply requires 4x4
+ok 233 - invalid buffers/geometry perform no transfers after cached ID
+ok 234 - runtime CFG succeeds
+ok 235 - runtime WR succeeds
+ok 236 - runtime RUN succeeds
+ok 237 - runtime RD succeeds with exact capacity
+ok 238 - row-major results and read buffer canary intact
+ok 239 - last PE masked read and zero inputs
+ok 240 - sim:4x4
+ok 241 - ID reports actual geometry
+ok 242 - cached ID succeeds
+ok 243 - short configuration rejected
+ok 244 - long configuration rejected
+ok 245 - short west edge rejected
+ok 246 - long north edge rejected
+ok 247 - short register buffer rejected
+ok 248 - unknown EXEC flags rejected
+ok 249 - NULL input with nonzero length rejected
+ok 250 - tap count mismatch rejected
+ok 251 - invalid buffers/geometry perform no transfers after cached ID
+ok 252 - runtime CFG succeeds
+ok 253 - runtime WR succeeds
+ok 254 - runtime RUN succeeds
+ok 255 - runtime RD succeeds with exact capacity
+ok 256 - row-major results and read buffer canary intact
+ok 257 - last PE masked read and zero inputs
+ok 258 - invalid emulator geometry rejected
+ok 259 - invalid emulator geometry rejected
+ok 260 - invalid emulator geometry rejected
+ok 261 - invalid emulator geometry rejected
+ok 262 - invalid emulator geometry rejected
+ok 263 - invalid emulator geometry rejected
+1..263
+# 263 passed, 0 failed
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C sw  -f sw.mk  PROFILE=release test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+make -C ../lib -f lib.mk PROFILE=release static
+make[2]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+make[2]: Nothing to be done for 'static'.
+make[2]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -UNDEBUG test/test_sw.c build/dsl.o build/compile.o ../lib/build/libcgra.a  -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/test_sw
+./build/test_sw
+# cgra CLI unit tests (DSL + compiler)
+ok 1 - dsl_parse accepts a valid config
+ok 2 - device 'lab' found
+ok 3 - device port parsed
+ok 4 - device baud parsed
+ok 5 - mode 'amplify' found
+ok 6 - mode op parsed
+ok 7 - variable $GAIN expanded to 7
+ok 8 - pipeline 'chain' has two stages
+ok 9 - io profile 'hx' found
+ok 10 - unknown directive is rejected
+ok 11 - directive outside any section is rejected
+ok 12 - unknown section type is rejected
+ok 13 - built-in defaults parse
+ok 14 - core modes present in defaults
+ok 15 - sim device in defaults
+ok 16 - compile 'add' ok
+ok 17 - PE(0,0) opcode = ADD
+ok 18 - PE(0,0) sel_a = north
+ok 19 - PE(0,0) sel_b = west
+ok 20 - cfg_decode names the opcode
+ok 21 - open sim: for engine tests
+ok 22 - matvec_run ok
+ok 23 - matvec matches host reference (6x5)
+ok 24 - scan_run returns n
+ok 25 - scan matches host reference
+ok 26 - conv_run returns n+k-1
+ok 27 - conv matches host reference
+ok 28 - open both protocol backends
+ok 29 - matvec v3 ok
+ok 30 - matvec v2 ok
+ok 31 - matvec identical across protocols
+ok 32 - scan v3 ok
+ok 33 - scan v2 ok
+ok 34 - scan identical across protocols
+ok 35 - scan: fused path uses fewer round trips
+ok 36 - scan: fused path moves fewer bytes
+ok 37 - open sim: for the sparse-skip test
+ok 38 - conv 3*48 runs
+ok 39 - conv still matches the host reference
+ok 40 - dense matvec runs
+ok 41 - conv skips the Toeplitz zero blocks (>4x fewer round trips)
+ok 42 - sim:1x1:v2
+ok 43 - rectangular kernels match scalar reference
+ok 44 - sim:1x1
+ok 45 - rectangular kernels match scalar reference
+ok 46 - sim:1x16:v2
+ok 47 - rectangular kernels match scalar reference
+ok 48 - sim:1x16
+ok 49 - rectangular kernels match scalar reference
+ok 50 - sim:16x1:v2
+ok 51 - rectangular kernels match scalar reference
+ok 52 - sim:16x1
+ok 53 - rectangular kernels match scalar reference
+ok 54 - sim:2x3:v2
+ok 55 - rectangular kernels match scalar reference
+ok 56 - sim:2x3
+ok 57 - rectangular kernels match scalar reference
+ok 58 - sim:3x2:v2
+ok 59 - rectangular kernels match scalar reference
+ok 60 - sim:3x2
+ok 61 - rectangular kernels match scalar reference
+ok 62 - sim:2x8:v2
+ok 63 - rectangular kernels match scalar reference
+ok 64 - sim:2x8
+ok 65 - rectangular kernels match scalar reference
+ok 66 - sim:8x2:v2
+ok 67 - rectangular kernels match scalar reference
+ok 68 - sim:8x2
+ok 69 - rectangular kernels match scalar reference
+ok 70 - sim:4x4:v2
+ok 71 - rectangular kernels match scalar reference
+ok 72 - sim:4x4
+ok 73 - rectangular kernels match scalar reference
+ok 74 - parse custom coordinate beyond default 4x4
+ok 75 - custom coordinate valid on 1x16
+ok 76 - custom coordinate rejected on 2x3
+ok 77 - out-of-range output tap rejected
+1..77
+# 77 passed, 0 failed
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP build/main.o build/dsl.o build/compile.o ../lib/build/libcgra.a  -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/cgra
+./build/cgra selftest
+-- protocol v3 (fused exec) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+-- protocol v2 (write/run/read) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+ok    retry-on-nack (retries=2)
+all tests PASSED
+--- CLI smoke tests (device sim) ---
+11 22 33 44 55 66 77 88
+0 0 0 2 5
+./build/cgra run muli -d sim --imm 10 --a "1 2 3 4" --io hex
+0x000A 0x0014 0x001E 0x0028
+./build/cgra pipe saxpy -d sim --a "1 2 3 4"
+10 13 16 19
+./build/cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+10 26 42 58
+./build/cgra scan -d sim --a "3 1 4 1 5 9 2 6"
+3 4 8 9 14 23 25 31
+./build/cgra scan -d sim --op max --a "3 1 4 1 5 9 2 6"
+3 3 4 4 5 9 9 9
+./build/cgra conv -d sim -m "1 2 3" --x "4 5 6 7 8"
+4 13 28 34 40 37 24
+./build/cgra run add -d sim:flaky --a "1 2 3 4" --b "10 20 30 40"   # retry recovers
+11 22 33 44
+./build/cgra run add -d sim:v2 --a "1 2 3 4" --b "10 20 30 40"      # pre-v3 fallback
+11 22 33 44
+./build/cgra scan -d sim:v2 --a "3 1 4 1 5 9 2 6"                   # pre-v3 fallback
+3 4 8 9 14 23 25 31
+./build/cgra run add -d sim --a "1 2 3" --b "10 20 30" --json
+{"count": 3, "result": [11, 22, 33]}
+CGRA_PATH=config/stdlib ./build/cgra run square -d sim --a "2 3 4 5"   # stdlib via CGRA_PATH
+4 9 16 25
+./build/cgra show relu -v | head -1
+mode relu (pattern diagonal):
+./build/cgra show add >/dev/null && echo "show ok"
+show ok
+./build/cgra probe -d sim:2x3
+device: protocol v3, 2x3 array, 16-bit datapath
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+device OK
+./build/cgra show add -d sim:3x2 >/dev/null
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'

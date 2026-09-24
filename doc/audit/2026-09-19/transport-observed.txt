@@ -1,0 +1,4 @@
+ID slow rc 0 elapsed_ms 151 rx_counter 5 actual_rx 5
+ID silent rc -2 elapsed_ms 50 rx_counter 5 actual_rx 0
+configure 0
+dropped RUN argument: run_rc -2 read_rc 0 PE0 6 expected after promised reset 0

@@ -1,0 +1,6 @@
+invalid opcode 18: rc=0 out=11 22 33 44
+NULL binary b: rc=-5 out=11 22 33 44
+scan SUB: rc=4 out=1 3 6 10
+insufficient output: rc=-5 device transactions=7
+
+subprocess returncode 0

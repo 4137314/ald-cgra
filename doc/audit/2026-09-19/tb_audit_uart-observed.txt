@@ -1,0 +1,7 @@
+doc/audit/2026-09-19/tb_audit_uart.vhd:19:4:@13850ns:(assertion failure): AUDIT: UART accepted a byte with stop bit held LOW
+ghdl:error: assertion failed
+  instance: /tb_audit_uart/P2
+  from: process work.tb_audit_uart(sim).P2 at tb_audit_uart.vhd:19
+ghdl:error: simulation failed
+
+exit 1

@@ -1,0 +1,84 @@
+[
+  {
+    "key": "cgra-survey",
+    "doi": "10.1145/3357375",
+    "error": "HTTP 429"
+  },
+  {
+    "key": "adres",
+    "doi": "10.1007/978-3-540-45234-8_7",
+    "title": [
+      "ADRES: An Architecture with Tightly Coupled VLIW Processor and Coarse-Grained Reconfigurable Matrix"
+    ],
+    "authors": [
+      "Bingfeng Mei",
+      "Serge Vernalde",
+      "Diederik Verkest",
+      "Hugo De Man",
+      "Rudy Lauwereins"
+    ],
+    "date": {
+      "date-parts": [
+        [
+          2003
+        ]
+      ]
+    },
+    "page": "61-70",
+    "volume": null,
+    "issue": null
+  },
+  {
+    "key": "kung",
+    "doi": "10.1109/MC.1982.1653825",
+    "title": [
+      "Why systolic architectures?"
+    ],
+    "authors": [
+      " Kung"
+    ],
+    "date": {
+      "date-parts": [
+        [
+          1982,
+          1
+        ]
+      ]
+    },
+    "page": "37-46",
+    "volume": "15",
+    "issue": "1"
+  },
+  {
+    "key": "sze-survey",
+    "doi": "10.1109/JPROC.2017.2761740",
+    "error": "HTTP 429"
+  },
+  {
+    "key": "cgra-me",
+    "doi": "10.1109/ASAP.2017.7995277",
+    "title": [
+      "CGRA-ME: A unified framework for CGRA modelling and exploration"
+    ],
+    "authors": [
+      "S. Alexander Chin",
+      "Noriaki Sakamoto",
+      "Allan Rui",
+      "Jim Zhao",
+      "Jin Hee Kim",
+      "Yuko Hara-Azumi",
+      "Jason Anderson"
+    ],
+    "date": {
+      "date-parts": [
+        [
+          2017,
+          7
+        ]
+      ]
+    },
+    "page": "184-189",
+    "volume": null,
+    "issue": null
+  }
+]

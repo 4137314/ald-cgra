@@ -1,0 +1,17 @@
+[mode swapped]
+pattern = diagonal
+op = add
+a = west
+b = north
+[mode twoconst]
+pattern = diagonal
+op = add
+a = const(2)
+b = const(3)
+[mode typo]
+pattern = custom
+pe 0,0 = opp=add a=north b=west
+out = pe 0,0
+[pipeline binarylater]
+stage = addi imm=1
+stage = mul

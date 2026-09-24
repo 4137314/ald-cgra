@@ -1,0 +1,3 @@
+Audit iniziato il 2026-09-18, concluso il 2026-09-19.
+HEAD: 8e6b770351c7e2550cab77b4956e8873f81e291f
+Working tree gia modificato: i risultati riguardano gli hash in source-sha256.txt, non il solo HEAD.
