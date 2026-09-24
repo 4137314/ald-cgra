@@ -5,15 +5,29 @@
 #define _POSIX_C_SOURCE 200809L
 
 #include "dsl.h"
+#include "paths.h"
 
 #include <ctype.h>
 #include <dirent.h>
+#include <errno.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
 
 /* -------------------------------------------------- small helpers */
+
+int dsl_integer(const char *text, long lo, long hi, long *value)
+{
+    if (!text || !*text || !value) return -1;
+    char *end;
+    errno = 0;
+    long v = strtol(text, &end, 0);
+    if (errno == ERANGE || end == text || *end || v < lo || v > hi) return -1;
+    *value = v;
+    return 0;
+}
 
 static char *trim(char *s)
 {
@@ -40,13 +54,32 @@ static void strip_comment(char *s)
         *t = '\0';
 }
 
-static void copy_field(char *dst, size_t dstsz, const char *src)
+static int copy_field(char *dst, size_t dstsz, const char *src)
 {
     size_t n = strlen(src);
-    if (n >= dstsz)
-        n = dstsz - 1;
+    if (n >= dstsz) return -1;
     memcpy(dst, src, n);
     dst[n] = '\0';
+    return 0;
+}
+
+/* Coordinate grammar: two complete, bounded integers separated by a comma. */
+int dsl_coordinate(const char *text, int *row, int *col)
+{
+    char *end;
+    errno = 0;
+    long r = strtol(text, &end, 0);
+    if (errno == ERANGE || end == text || r < 0 || r >= CGRA_MAX_EDGE) return -1;
+    while (isspace((unsigned char)*end)) end++;
+    if (*end++ != ',') return -1;
+    const char *start = end;
+    errno = 0;
+    long c = strtol(start, &end, 0);
+    if (errno == ERANGE || end == start || c < 0 || c >= CGRA_MAX_EDGE) return -1;
+    while (isspace((unsigned char)*end)) end++;
+    if (*end) return -1;
+    *row = (int)r; *col = (int)c;
+    return 0;
 }
 
 /* -------------------------------------------------- model construction */
@@ -97,6 +130,7 @@ static dsl_device *device_get(dsl_ctx *d, const char *name)
         return NULL;
     e = &d->dev[d->ndev++];
     memset(e, 0, sizeof(*e));
+    e->baud = 115200; e->timeout_ms = 2000;
     copy_field(e->name, sizeof(e->name), name);
     return e;
 }
@@ -148,49 +182,44 @@ static const char *var_lookup(dsl_ctx *d, const char *name)
     return NULL;
 }
 
-static void var_set(dsl_ctx *d, const char *name, const char *val)
+static int var_set(dsl_ctx *d, const char *name, const char *val)
 {
     for (int i = 0; i < d->nvar; i++)
-        if (strcmp(d->var[i].name, name) == 0) {
-            copy_field(d->var[i].val, sizeof(d->var[i].val), val);
-            return;
-        }
-    if (d->nvar >= DSL_MAX_VARS)
-        return;
-    copy_field(d->var[d->nvar].name, sizeof(d->var[d->nvar].name), name);
-    copy_field(d->var[d->nvar].val, sizeof(d->var[d->nvar].val), val);
+        if (strcmp(d->var[i].name, name) == 0)
+            return copy_field(d->var[i].val, sizeof(d->var[i].val), val);
+    if (d->nvar >= DSL_MAX_VARS) return -1;
+    if (copy_field(d->var[d->nvar].name, DSL_NAME, name) != 0 ||
+        copy_field(d->var[d->nvar].val, DSL_VAL, val) != 0) return -1;
     d->nvar++;
+    return 0;
 }
 
-/* Expand $NAME references (and ${NAME}) using the defined variables. Unknown
- * names are left verbatim. */
-static void subst_vars(dsl_ctx *d, const char *in, char *out, size_t outsz)
+/* Expand defined $NAME / ${NAME}; $$ emits a literal dollar sign.
+ * Reject malformed/unknown references and output that would be truncated. */
+static int subst_vars(dsl_ctx *d, const char *in, char *out, size_t outsz)
 {
     size_t o = 0;
-    for (size_t i = 0; in[i] != '\0' && o + 1 < outsz; ) {
-        if (in[i] == '$') {
-            int braced = (in[i + 1] == '{');
-            size_t s = i + 1 + (size_t)braced;
-            size_t e = s;
-            while ((isalnum((unsigned char)in[e]) || in[e] == '_'))
-                e++;
+    for (size_t i = 0; in[i]; ) {
+        if (in[i] == '$' && in[i + 1] != '$') {
+            int braced = in[i + 1] == '{';
+            size_t start = i + 1 + (size_t)braced, end = start;
+            if (!isalpha((unsigned char)in[end]) && in[end] != '_') return -1;
+            while (isalnum((unsigned char)in[end]) || in[end] == '_') end++;
+            if (end - start >= DSL_NAME || (braced && in[end] != '}')) return -1;
             char name[DSL_NAME];
-            size_t len = e - s;
-            if (len > 0 && len < sizeof(name)) {
-                memcpy(name, in + s, len);
-                name[len] = '\0';
-                const char *v = var_lookup(d, name);
-                if (v) {
-                    for (size_t k = 0; v[k] && o + 1 < outsz; k++)
-                        out[o++] = v[k];
-                    i = e + (braced && in[e] == '}' ? 1 : 0);
-                    continue;
-                }
-            }
+            memcpy(name, in + start, end - start); name[end - start] = '\0';
+            const char *value = var_lookup(d, name);
+            if (!value || strlen(value) >= outsz - o) return -1;
+            memcpy(out + o, value, strlen(value)); o += strlen(value);
+            i = end + (size_t)braced;
+        } else {
+            if (o + 1 >= outsz) return -1;
+            out[o++] = in[i];
+            i += (in[i] == '$' && in[i + 1] == '$') ? 2 : 1;
         }
-        out[o++] = in[i++];
     }
     out[o] = '\0';
+    return 0;
 }
 
 /* -------------------------------------------------- directive handlers */
@@ -202,7 +231,7 @@ static dsl_pe *mode_pe_get(dsl_mode *m, int r, int c)
     for (int i = 0; i < m->npe; i++)
         if (m->pe[i].r == r && m->pe[i].c == c)
             return &m->pe[i];
-    if (m->npe >= CGRA_NUM_PE)
+    if (m->npe >= CGRA_MAX_PE)
         return NULL;
     dsl_pe *p = &m->pe[m->npe++];
     memset(p, 0, sizeof(*p));
@@ -212,22 +241,28 @@ static dsl_pe *mode_pe_get(dsl_mode *m, int r, int c)
 }
 
 /* Fill a dsl_pe from "op=mac a=north b=west". */
-static void parse_pe_value(dsl_pe *p, const char *value)
+static int parse_pe_value(dsl_pe *p, const char *value)
 {
+    if (!*value) return -1;
     char tmp[DSL_VAL];
-    copy_field(tmp, sizeof(tmp), value);
+    if (copy_field(tmp, sizeof(tmp), value) != 0) return -1;
     char *save = NULL;
+    unsigned seen = 0;
     for (char *tok = strtok_r(tmp, " \t", &save); tok;
          tok = strtok_r(NULL, " \t", &save)) {
         char *eq = strchr(tok, '=');
-        if (!eq)
-            continue;
+        if (!eq || !eq[1]) return -1;
         *eq = '\0';
         const char *k = tok, *v = eq + 1;
-        if (strcmp(k, "op") == 0)      copy_field(p->op, sizeof(p->op), v);
-        else if (strcmp(k, "a") == 0)  copy_field(p->a, sizeof(p->a), v);
-        else if (strcmp(k, "b") == 0)  copy_field(p->b, sizeof(p->b), v);
+        unsigned field = !strcmp(k, "op") ? 1u : !strcmp(k, "a") ? 2u : !strcmp(k, "b") ? 4u : 0u;
+        if (!field || (seen & field)) return -1;
+        seen |= field;
+        if (strcmp(k, "op") == 0) { if (copy_field(p->op, sizeof(p->op), v)) return -1; }
+        else if (strcmp(k, "a") == 0) { if (copy_field(p->a, sizeof(p->a), v)) return -1; }
+        else if (strcmp(k, "b") == 0) { if (copy_field(p->b, sizeof(p->b), v)) return -1; }
+        else return -1;
     }
+    return 0;
 }
 
 static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
@@ -236,6 +271,8 @@ static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
                            char *err, size_t errsz)
 {
     (void)d;
+    long number;
+#define COPY(field) do { if (copy_field((field), sizeof(field), value)) goto invalid; } while (0)
     /* 'doc' is accepted (and ignored) in sections without a doc field. */
     if (strcmp(key, "doc") == 0 && (sect == SECT_DEVICE || sect == SECT_IO))
         return 0;
@@ -243,10 +280,16 @@ static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
     switch (sect) {
     case SECT_DEVICE: {
         dsl_device *e = cur;
-        if (strcmp(key, "port") == 0)         copy_field(e->port, sizeof(e->port), value);
-        else if (strcmp(key, "baud") == 0)    e->baud = atoi(value);
-        else if (strcmp(key, "timeout") == 0) e->timeout_ms = atoi(value);
-        else if (strcmp(key, "board") == 0)   copy_field(e->board, sizeof(e->board), value);
+        if (strcmp(key, "port") == 0)         COPY(e->port);
+        else if (strcmp(key, "baud") == 0)    {
+            if (dsl_integer(value, 1, INT_MAX, &number)) goto invalid;
+            e->baud = (int)number;
+        }
+        else if (strcmp(key, "timeout") == 0) {
+            if (dsl_integer(value, 0, INT_MAX, &number)) goto invalid;
+            e->timeout_ms = (int)number;
+        }
+        else if (strcmp(key, "board") == 0)   COPY(e->board);
         else goto unknown;
         return 0;
     }
@@ -254,8 +297,7 @@ static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
         dsl_mode *e = cur;
         if (strncmp(key, "pe ", 3) == 0 || strncmp(key, "pe\t", 3) == 0) {
             int r = -1, c = -1;
-            if (sscanf(key + 3, " %d , %d", &r, &c) != 2 ||
-                r < 0 || r >= CGRA_ROWS || c < 0 || c >= CGRA_COLS) {
+            if (dsl_coordinate(key + 3, &r, &c) != 0) {
                 snprintf(err, errsz, "%s:%d: bad PE coordinate '%s'", origin, lineno, key);
                 return -1;
             }
@@ -264,24 +306,27 @@ static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
                 snprintf(err, errsz, "%s:%d: too many PEs", origin, lineno);
                 return -1;
             }
-            parse_pe_value(p, value);
+            if (parse_pe_value(p, value) != 0) {
+                snprintf(err, errsz, "%s:%d: expected PE fields op=, a=, b=", origin, lineno);
+                return -1;
+            }
             return 0;
         }
-        if (strcmp(key, "doc") == 0)          copy_field(e->doc, sizeof(e->doc), value);
-        else if (strcmp(key, "pattern") == 0) copy_field(e->pattern, sizeof(e->pattern), value);
-        else if (strcmp(key, "op") == 0)      copy_field(e->op, sizeof(e->op), value);
-        else if (strcmp(key, "a") == 0)       copy_field(e->a, sizeof(e->a), value);
-        else if (strcmp(key, "b") == 0)       copy_field(e->b, sizeof(e->b), value);
-        else if (strcmp(key, "steps") == 0)   copy_field(e->steps, sizeof(e->steps), value);
-        else if (strcmp(key, "out") == 0)     copy_field(e->out, sizeof(e->out), value);
-        else if (strcmp(key, "reset") == 0)   copy_field(e->reset, sizeof(e->reset), value);
+        if (strcmp(key, "doc") == 0)          COPY(e->doc);
+        else if (strcmp(key, "pattern") == 0) COPY(e->pattern);
+        else if (strcmp(key, "op") == 0)      COPY(e->op);
+        else if (strcmp(key, "a") == 0)       COPY(e->a);
+        else if (strcmp(key, "b") == 0)       COPY(e->b);
+        else if (strcmp(key, "steps") == 0)   COPY(e->steps);
+        else if (strcmp(key, "out") == 0)     COPY(e->out);
+        else if (strcmp(key, "reset") == 0)   COPY(e->reset);
         else goto unknown;
         return 0;
     }
     case SECT_PIPE: {
         dsl_pipeline *e = cur;
         if (strcmp(key, "doc") == 0) {
-            copy_field(e->doc, sizeof(e->doc), value);
+            COPY(e->doc);
             return 0;
         }
         if (strcmp(key, "stage") == 0) {
@@ -292,17 +337,22 @@ static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
             dsl_stage *st = &e->stage[e->nstage++];
             memset(st, 0, sizeof(*st));
             char tmp[DSL_VAL];
-            copy_field(tmp, sizeof(tmp), value);
+            if (copy_field(tmp, sizeof(tmp), value)) goto invalid;
             char *save = NULL;
             char *first = strtok_r(tmp, " \t", &save);
-            if (first)
-                copy_field(st->mode, sizeof(st->mode), first);
+            if (!first) {
+                snprintf(err, errsz, "%s:%d: stage needs a mode", origin, lineno);
+                return -1;
+            }
+            if (copy_field(st->mode, sizeof(st->mode), first)) goto invalid;
             for (char *tok = strtok_r(NULL, " \t", &save); tok;
                  tok = strtok_r(NULL, " \t", &save)) {
-                if (strncmp(tok, "imm=", 4) == 0) {
-                    st->imm = strtol(tok + 4, NULL, 0);
-                    st->has_imm = 1;
+                if (st->has_imm || strncmp(tok, "imm=", 4) != 0 ||
+                    dsl_integer(tok + 4, INT16_MIN, UINT16_MAX, &st->imm) != 0) {
+                    snprintf(err, errsz, "%s:%d: invalid stage option '%s'", origin, lineno, tok);
+                    return -1;
                 }
+                st->has_imm = 1;
             }
             return 0;
         }
@@ -310,9 +360,16 @@ static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
     }
     case SECT_IO: {
         dsl_io *e = cur;
-        if (strcmp(key, "format") == 0)     copy_field(e->format, sizeof(e->format), value);
-        else if (strcmp(key, "width") == 0) e->width = atoi(value);
-        else if (strcmp(key, "sep") == 0)   copy_field(e->sep, sizeof(e->sep), value);
+        if (!strcmp(key, "format") && strcmp(value, "dec") && strcmp(value, "hex") &&
+            strcmp(value, "bin") && strcmp(value, "json")) goto invalid;
+        if (!strcmp(key, "sep") && strcmp(value, "ws") && strcmp(value, "comma") &&
+            strcmp(value, "newline")) goto invalid;
+        if (strcmp(key, "format") == 0)     COPY(e->format);
+        else if (strcmp(key, "width") == 0) {
+            if (dsl_integer(value, CGRA_DATA_W, CGRA_DATA_W, &number)) goto invalid;
+            e->width = (int)number;
+        }
+        else if (strcmp(key, "sep") == 0)   COPY(e->sep);
         else goto unknown;
         return 0;
     }
@@ -322,6 +379,10 @@ static int apply_directive(dsl_ctx *d, enum sect sect, void *cur,
         return -1;
     }
 
+#undef COPY
+invalid:
+    snprintf(err, errsz, "%s:%d: invalid or oversized value for '%s'", origin, lineno, key);
+    return -1;
 unknown:
     snprintf(err, errsz, "%s:%d: unknown directive '%s'", origin, lineno, key);
     return -1;
@@ -345,41 +406,41 @@ static int try_root(const char *root, const char *sub, const char *path,
                     char *out, size_t outsz)
 {
     char cand[2 * DSL_VAL];
-    if (sub)
-        snprintf(cand, sizeof(cand), "%s/%s/%s", root, sub, path);
-    else
-        snprintf(cand, sizeof(cand), "%s/%s", root, path);
+    int length = sub ? snprintf(cand, sizeof(cand), "%s/%s/%s", root, sub, path)
+                     : snprintf(cand, sizeof(cand), "%s/%s", root, path);
+    if (length < 0 || (size_t)length >= sizeof(cand)) return 0;
     if (!file_exists(cand))
         return 0;
-    copy_field(out, outsz, cand);
-    return 1;
+    return copy_field(out, outsz, cand) == 0;
 }
 
 static int find_include(const char *origin, const char *path,
                         char *out, size_t outsz)
 {
     if (path[0] == '/') {
-        copy_field(out, outsz, path);
-        return file_exists(out);
+        return copy_field(out, outsz, path) == 0 && file_exists(out);
     }
 
     /* 1. relative to the including file */
     const char *slash = strrchr(origin, '/');
     if (slash) {
         char cand[2 * DSL_VAL];
-        snprintf(cand, sizeof(cand), "%.*s/%s", (int)(slash - origin), origin, path);
-        if (file_exists(cand)) { copy_field(out, outsz, cand); return 1; }
+        int length = snprintf(cand, sizeof(cand), "%.*s/%s", (int)(slash - origin), origin, path);
+        if (length >= 0 && (size_t)length < sizeof(cand) && file_exists(cand))
+            return copy_field(out, outsz, cand) == 0;
     }
 
     /* 2. CGRA_PATH entries */
     const char *cp = getenv("CGRA_PATH");
     if (cp && *cp) {
-        char tmp[DSL_VAL];
-        snprintf(tmp, sizeof(tmp), "%s", cp);
+        char *tmp = strdup(cp);
+        if (!tmp) return 0;
+        int found = 0;
         char *save = NULL;
         for (char *dir = strtok_r(tmp, ":", &save); dir; dir = strtok_r(NULL, ":", &save))
-            if (try_root(dir, NULL, path, out, outsz))
-                return 1;
+            if (try_root(dir, NULL, path, out, outsz)) { found = 1; break; }
+        free(tmp);
+        if (found) return 1;
     }
 
     /* 3. user config dir and its stdlib/ */
@@ -390,18 +451,18 @@ static int find_include(const char *origin, const char *path,
     }
 
     /* 4. system locations */
-    if (try_root("/usr/share/cgra/stdlib", NULL, path, out, outsz)) return 1;
+    if (try_root(CGRA_STDLIB_DIR, NULL, path, out, outsz)) return 1;
     if (try_root("/etc/cgra", NULL, path, out, outsz)) return 1;
 
     return 0;
 }
 
-int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
-              char *err, size_t errsz)
+static int parse_into(dsl_ctx *d, const char *text, const char *origin,
+                      char *err, size_t errsz)
 {
     char errbuf[DSL_VAL];
     if (!err) { err = errbuf; errsz = sizeof(errbuf); }
-    err[0] = '\0';
+    if (errsz) err[0] = '\0';
 
     enum sect sect = SECT_NONE;
     void *cur = NULL;
@@ -413,9 +474,11 @@ int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
     }
 
     int lineno = 0, rc = 0;
-    char *save_line = NULL;
-    for (char *line = strtok_r(copy, "\n", &save_line); line;
-         line = strtok_r(NULL, "\n", &save_line)) {
+    char *next = copy;
+    while (next) {
+        char *line = next;
+        next = strchr(line, '\n');
+        if (next) *next++ = '\0';
         lineno++;
         strip_comment(line);
         char *s = trim(line);
@@ -426,10 +489,12 @@ int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
          * include roots (relative, CGRA_PATH, stdlib, /etc). */
         if (strncmp(s, "include", 7) == 0 && (s[7] == ' ' || s[7] == '\t')) {
             char *path = trim(s + 7);
-            if ((path[0] == '"' || path[0] == '\'') && strlen(path) >= 2) {
+            if (path[0] == '"' || path[0] == '\'') {
+                if (strlen(path) < 2 || path[strlen(path) - 1] != path[0]) goto syntax;
                 path[strlen(path) - 1] = '\0';
                 path++;
             }
+            if (!*path || strlen(path) >= DSL_VAL) goto syntax;
             if (g_include_depth >= 8) {
                 snprintf(err, errsz, "%s:%d: include nesting too deep", origin, lineno);
                 rc = -1;
@@ -452,18 +517,17 @@ int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
         if (strncmp(s, "set", 3) == 0 && (s[3] == ' ' || s[3] == '\t')) {
             char *rest = trim(s + 3);
             char name[DSL_NAME] = {0};
+            if (!isalpha((unsigned char)*rest) && *rest != '_') goto syntax;
             size_t k = 0;
-            while (rest[k] && (isalnum((unsigned char)rest[k]) || rest[k] == '_')
-                   && k < sizeof(name) - 1) {
-                name[k] = rest[k];
-                k++;
-            }
+            while (isalnum((unsigned char)rest[k]) || rest[k] == '_') k++;
+            if (k >= sizeof(name) || (rest[k] && rest[k] != '=' &&
+                !isspace((unsigned char)rest[k]))) goto syntax;
+            memcpy(name, rest, k);
             char *v = trim(rest + k);
-            if (*v == '=')
-                v = trim(v + 1);
+            if (*v == '=') v = trim(v + 1);
             char expanded[DSL_VAL];
-            subst_vars(d, v, expanded, sizeof(expanded));
-            var_set(d, name, expanded);
+            if (subst_vars(d, v, expanded, sizeof(expanded)) || var_set(d, name, expanded))
+                goto syntax;
             continue;
         }
 
@@ -474,14 +538,16 @@ int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
                 rc = -1;
                 break;
             }
+            if (*trim(close + 1)) goto syntax;
             *close = '\0';
             char *hdr = trim(s + 1);
-            char type[DSL_TOK] = {0}, name[DSL_NAME] = {0};
-            if (sscanf(hdr, "%31s %47s", type, name) != 2) {
-                snprintf(err, errsz, "%s:%d: section needs 'type name'", origin, lineno);
-                rc = -1;
-                break;
-            }
+            char *save = NULL;
+            char *type = strtok_r(hdr, " \t\r", &save);
+            char *name = strtok_r(NULL, " \t\r", &save);
+            if (!type || !name || strlen(type) >= DSL_TOK || strlen(name) >= DSL_NAME ||
+                strtok_r(NULL, " \t\r", &save)) goto syntax;
+            for (const char *p = name; *p; p++)
+                if (iscntrl((unsigned char)*p)) goto syntax;
             if (strcmp(type, "device") == 0)        { sect = SECT_DEVICE; cur = device_get(d, name); }
             else if (strcmp(type, "mode") == 0)     { sect = SECT_MODE;   cur = mode_get(d, name); }
             else if (strcmp(type, "pipeline") == 0) { sect = SECT_PIPE;   cur = pipeline_get(d, name); }
@@ -509,7 +575,7 @@ int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
         char *key = trim(s);
         char *value = trim(eq + 1);
         char expanded[DSL_VAL];
-        subst_vars(d, value, expanded, sizeof(expanded));
+        if (subst_vars(d, value, expanded, sizeof(expanded))) goto syntax;
         if (apply_directive(d, sect, cur, key, expanded, origin, lineno, err, errsz) != 0) {
             rc = -1;
             break;
@@ -518,29 +584,76 @@ int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
 
     free(copy);
     return rc;
+syntax:
+    snprintf(err, errsz, "%s:%d: malformed/oversized token or undefined variable", origin, lineno);
+    free(copy);
+    return -1;
+}
+
+int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
+              char *err, size_t errsz)
+{
+    if (!d || !text || !origin) return -1;
+    dsl_ctx *candidate = malloc(sizeof(*candidate));
+    if (!candidate) {
+        if (err) snprintf(err, errsz, "%s: out of memory", origin);
+        return -1;
+    }
+    *candidate = *d;
+    int rc = parse_into(candidate, text, origin, err, errsz);
+    if (rc == 0) *d = *candidate;
+    free(candidate);
+    return rc;
 }
 
 int dsl_parse_file(dsl_ctx *d, const char *path, char *err, size_t errsz)
 {
+    if (!d || !path || strlen(path) >= DSL_VAL) {
+        if (err) snprintf(err, errsz, "invalid configuration path (maximum %d bytes)", DSL_VAL - 1);
+        return -1;
+    }
     FILE *f = fopen(path, "rb");
     if (!f) {
         if (err) snprintf(err, errsz, "cannot open %s", path);
         return -1;
     }
-    fseek(f, 0, SEEK_END);
+    if (fseek(f, 0, SEEK_END) != 0) {
+        if (err) snprintf(err, errsz, "cannot seek %s", path);
+        fclose(f);
+        return -1;
+    }
     long sz = ftell(f);
-    fseek(f, 0, SEEK_SET);
-    if (sz < 0) { fclose(f); return -1; }
+    if (sz < 0 || (uintmax_t)sz >= SIZE_MAX || fseek(f, 0, SEEK_SET) != 0) {
+        if (err) snprintf(err, errsz, "cannot size/read %s", path);
+        fclose(f);
+        return -1;
+    }
     char *buf = malloc((size_t)sz + 1);
-    if (!buf) { fclose(f); return -1; }
+    if (!buf) {
+        if (err) snprintf(err, errsz, "%s: out of memory", path);
+        fclose(f); return -1;
+    }
     size_t n = fread(buf, 1, (size_t)sz, f);
+    int failed = ferror(f) || n != (size_t)sz || memchr(buf, 0, n) != NULL;
     buf[n] = '\0';
-    fclose(f);
+    if (fclose(f) != 0) failed = 1;
+    if (failed) {
+        if (err) snprintf(err, errsz, "cannot read complete configuration %s", path);
+        free(buf);
+        return -1;
+    }
 
-    int rc = dsl_parse(d, buf, path, err, errsz);
+    dsl_ctx *candidate = malloc(sizeof(*candidate));
+    if (!candidate || d->npath >= DSL_MAX_PATHS) {
+        if (err) snprintf(err, errsz, "%s: out of memory or too many configuration files", path);
+        free(candidate); free(buf); return -1;
+    }
+    *candidate = *d;
+    copy_field(candidate->paths[candidate->npath++], DSL_VAL, path);
+    int rc = parse_into(candidate, buf, path, err, errsz);
+    if (rc == 0) *d = *candidate;
+    free(candidate);
     free(buf);
-    if (rc == 0 && d->npath < DSL_MAX_PATHS)
-        copy_field(d->paths[d->npath++], DSL_VAL, path);
     return rc;
 }
 
@@ -550,13 +663,13 @@ int dsl_user_dir(char *buf, size_t bufsz)
 {
     const char *xdg = getenv("XDG_CONFIG_HOME");
     if (xdg && *xdg) {
-        snprintf(buf, bufsz, "%s/cgra", xdg);
-        return 0;
+        int n = snprintf(buf, bufsz, "%s/cgra", xdg);
+        return n < 0 || (size_t)n >= bufsz ? -2 : 0;
     }
     const char *home = getenv("HOME");
     if (home && *home) {
-        snprintf(buf, bufsz, "%s/.config/cgra", home);
-        return 0;
+        int n = snprintf(buf, bufsz, "%s/.config/cgra", home);
+        return n < 0 || (size_t)n >= bufsz ? -2 : 0;
     }
     return -1;
 }
@@ -568,30 +681,49 @@ static int ends_with_cgra(const char *name)
 }
 
 /* Parse config.cgra first (if present), then the remaining *.cgra sorted. */
-static void load_dir(dsl_ctx *d, const char *dir)
+static int load_dir(dsl_ctx *d, const char *dir, char *err, size_t errsz)
 {
+    if (strlen(dir) >= DSL_VAL) {
+        if (err) snprintf(err, errsz, "configuration directory exceeds %d bytes", DSL_VAL - 1);
+        return -1;
+    }
     struct stat stbuf;
-    if (stat(dir, &stbuf) != 0 || !S_ISDIR(stbuf.st_mode))
-        return;
+    if (stat(dir, &stbuf) != 0) {
+        if (errno == ENOENT || errno == ENOTDIR) return 0;
+        if (err) snprintf(err, errsz, "cannot inspect %s: %s", dir, strerror(errno));
+        return -1;
+    }
+    if (!S_ISDIR(stbuf.st_mode)) {
+        if (err) snprintf(err, errsz, "%s is not a configuration directory", dir);
+        return -1;
+    }
 
     char path[DSL_VAL + 260];
     snprintf(path, sizeof(path), "%s/config.cgra", dir);
-    if (stat(path, &stbuf) == 0)
-        dsl_parse_file(d, path, NULL, 0);
+    if (stat(path, &stbuf) == 0) {
+        if (dsl_parse_file(d, path, err, errsz) != 0) return -1;
+    } else if (errno != ENOENT) {
+        if (err) snprintf(err, errsz, "cannot inspect %s: %s", path, strerror(errno));
+        return -1;
+    }
 
     struct dirent **names = NULL;
     int n = scandir(dir, &names, NULL, alphasort);
-    if (n < 0)
-        return;
+    if (n < 0) {
+        if (err) snprintf(err, errsz, "cannot list %s: %s", dir, strerror(errno));
+        return -1;
+    }
+    int rc = 0;
     for (int i = 0; i < n; i++) {
-        if (ends_with_cgra(names[i]->d_name) &&
+        if (rc == 0 && ends_with_cgra(names[i]->d_name) &&
             strcmp(names[i]->d_name, "config.cgra") != 0) {
             snprintf(path, sizeof(path), "%s/%s", dir, names[i]->d_name);
-            dsl_parse_file(d, path, NULL, 0);
+            rc = dsl_parse_file(d, path, err, errsz);
         }
         free(names[i]);
     }
     free(names);
+    return rc;
 }
 
 int dsl_load_defaults(dsl_ctx *d, char *err, size_t errsz)
@@ -601,12 +733,12 @@ int dsl_load_defaults(dsl_ctx *d, char *err, size_t errsz)
 
 /* Load a directory's top-level *.cgra, then its conf.d/ drop-ins (alphabetical,
  * so 99_*.cgra overrides 01_*.cgra by name). */
-static void load_tree(dsl_ctx *d, const char *dir)
+static int load_tree(dsl_ctx *d, const char *dir, char *err, size_t errsz)
 {
     char confd[DSL_VAL + 16];
-    load_dir(d, dir);
+    if (load_dir(d, dir, err, errsz) != 0) return -1;
     snprintf(confd, sizeof(confd), "%s/conf.d", dir);
-    load_dir(d, confd);
+    return load_dir(d, confd, err, errsz);
 }
 
 int dsl_load(dsl_ctx *d, const char *extra, char *err, size_t errsz)
@@ -614,28 +746,34 @@ int dsl_load(dsl_ctx *d, const char *extra, char *err, size_t errsz)
     if (dsl_load_defaults(d, err, errsz) != 0)
         return -1;
 
-    load_tree(d, "/etc/cgra");
+    if (load_tree(d, "/etc/cgra", err, errsz) != 0) return -1;
 
     char udir[DSL_VAL];
-    if (dsl_user_dir(udir, sizeof(udir)) == 0)
-        load_tree(d, udir);
+    int user_dir = dsl_user_dir(udir, sizeof(udir));
+    if (user_dir == -2) {
+        if (err) snprintf(err, errsz, "user configuration directory is too long");
+        return -1;
+    }
+    if (user_dir == 0 && load_tree(d, udir, err, errsz) != 0) return -1;
 
     /* CGRA_PATH: extra config roots (like PATH), colon-separated. */
     const char *cp = getenv("CGRA_PATH");
     if (cp && *cp) {
-        char tmp[DSL_VAL];
-        snprintf(tmp, sizeof(tmp), "%s", cp);
+        char *tmp = strdup(cp);
+        if (!tmp) { if (err) snprintf(err, errsz, "out of memory reading CGRA_PATH"); return -1; }
         char *save = NULL;
+        int failed = 0;
         for (char *dir = strtok_r(tmp, ":", &save); dir; dir = strtok_r(NULL, ":", &save))
-            load_tree(d, dir);
+            if (load_tree(d, dir, err, errsz) != 0) { failed = 1; break; }
+        free(tmp);
+        if (failed) return -1;
     }
 
     /* project-local: $CGRA_CONFIG file, else ./.cgra/ */
     const char *proj = getenv("CGRA_CONFIG");
-    if (proj && *proj)
-        dsl_parse_file(d, proj, err, errsz);
-    else
-        load_tree(d, ".cgra");
+    if (proj && *proj) {
+        if (dsl_parse_file(d, proj, err, errsz) != 0) return -1;
+    } else if (load_tree(d, ".cgra", err, errsz) != 0) return -1;
 
     if (extra && *extra)
         return dsl_parse_file(d, extra, err, errsz);

@@ -55,8 +55,8 @@ typedef struct {
     char b[DSL_TOK];        /* operand source (default west)  */
     char steps[DSL_TOK];    /* rows | auto | <int> */
     char out[DSL_TOK];      /* diag | pe R,C (default depends on pattern) */
-    char reset[DSL_TOK];    /* each | once (clear PE registers between chunks) */
-    dsl_pe pe[CGRA_NUM_PE];
+    char reset[DSL_TOK];    /* each | once (default: clear at each invocation) */
+    dsl_pe pe[CGRA_MAX_PE];
     int  npe;
 } dsl_mode;
 
@@ -100,9 +100,15 @@ typedef struct {
 /* Reset to empty. */
 void dsl_init(dsl_ctx *d);
 
+/* Parse a complete integer token (decimal, hex or octal) within [lo, hi]. */
+int dsl_integer(const char *text, long lo, long hi, long *value);
+
+/* Parse a complete R,C coordinate bounded by CGRA_MAX_EDGE. */
+int dsl_coordinate(const char *text, int *row, int *col);
+
 /* Parse one buffer / file into d (merging by name). Returns 0 or -1;
  * on error, err (if non-NULL) receives a message. `origin` labels the
- * source in error messages. */
+ * source in error messages. On failure, d is unchanged (including includes). */
 int dsl_parse(dsl_ctx *d, const char *text, const char *origin,
               char *err, size_t errsz);
 int dsl_parse_file(dsl_ctx *d, const char *path, char *err, size_t errsz);
@@ -118,7 +124,8 @@ int dsl_load(dsl_ctx *d, const char *extra, char *err, size_t errsz);
 const char *dsl_default_text(void);
 
 /* Resolved user config directory ($XDG_CONFIG_HOME/cgra or ~/.config/cgra).
- * Returns 0 and fills buf, or -1 if HOME is unset. */
+ * Returns 0 and fills buf, -1 if HOME/XDG_CONFIG_HOME are unset,
+ * or -2 if the resolved path does not fit. */
 int dsl_user_dir(char *buf, size_t bufsz);
 
 /* Lookups (NULL if not found). */
