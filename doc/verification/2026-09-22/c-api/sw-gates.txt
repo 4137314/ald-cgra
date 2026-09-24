@@ -1,0 +1,7 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/sw'
+mkdir -p build/analyze
+  lint   doc/cgra.1
+  render doc/cgra.1
+  lint   doc/cgra.5
+  render doc/cgra.5
+make: Leaving directory '/home/main/dev/git/ald-cgra/sw'

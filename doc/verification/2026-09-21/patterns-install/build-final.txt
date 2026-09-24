@@ -1,0 +1,14 @@
+make -C lib -f lib.mk PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C sw  -f sw.mk  PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c main.c -o build/main.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c bench_ref.c -o build/bench_ref.o
+make -C ../lib -f lib.mk PROFILE=release static
+make[2]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+make[2]: Nothing to be done for 'static'.
+make[2]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h build/main.o build/dsl.o build/compile.o build/bench_ref.o ../lib/build/libcgra.a  -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/cgra
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'

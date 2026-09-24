@@ -1,0 +1,612 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+/opt/Xilinx/2026.1/Vivado/bin/vivado -mode batch -nolog -nojournal -source scr/synth.tcl -tclargs nexys_a7 10.000 2 4 4
+INFO: [Common 17-3922] A valid Vivado Design Suite BASIC license has been detected. Your current license is active and will expire on 19-jul-2027.
+
+****** Vivado v2026.1 (64-bit)
+  **** SW Build 6511674 on Tue Jun 16 11:01:26 MDT 2026
+  **** IP Build 6504888 on Tue Jun 09 09:05:25 MDT 2026
+  **** SharedData Build 6501428 on Mon Jun 08 17:34:18 MDT 2026
+  **** Start of session at: Wed Sep 23 16:18:56 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source scr/synth.tcl
+# set board  "nexys_a7"
+# if { $argc > 0 } { set board    [lindex $argv 0] }
+# set period 10.000
+# if { $argc > 1 } { set period   [lindex $argv 1] }
+# set step_div 2
+# if { $argc > 2 } { set step_div [lindex $argv 2] }
+# array set board_parts {
+#     basys3   xc7a35tcpg236-1
+#     nexys_a7 xc7a100tcsg324-1
+# }
+# if { ![info exists board_parts($board)] } {
+#     puts "ERROR: unknown board '$board'. Known: [array names board_parts]"
+#     exit 1
+# }
+# set part   $board_parts($board)
+# set top    cgra_top
+# source scr/geometry.tcl
+## proc cgra_geometry {arguments first} {
+##     set rows 4
+##     set cols 4
+##     if {[llength $arguments] > $first} { set rows [lindex $arguments $first] }
+##     if {[llength $arguments] > $first + 1} { set cols [lindex $arguments [expr {$first + 1}]] }
+##     foreach value [list $rows $cols] {
+##         if {![regexp {^[1-9][0-9]*$} $value] || $value > 16} {
+##             error "mesh dimensions must be integers in 1..16"
+##         }
+##     }
+##     if {$rows * $cols > 16} { error "protocol v3 supports at most 16 PEs" }
+##     set outdir build/vivado
+##     if {$rows != 4 || $cols != 4} { append outdir /${rows}x${cols} }
+##     return [list $rows $cols $outdir]
+## }
+# lassign [cgra_geometry $argv 3] mesh_rows mesh_cols outdir
+# file mkdir $outdir
+# puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
+mesh: 4x4; outputs: build/vivado
+# read_vhdl -vhdl2008 [glob rtl/*.vhd]
+# read_xdc  con/${board}.xdc
+# source    scr/constraints.tcl
+## source [file join [file dirname [info script]] timing_checks.tcl]
+### proc cgra_positive_real {value name} {
+###     if {![string is double -strict $value] ||
+###         [catch {expr {$value > 0 && $value < Inf}} valid] || !$valid} {
+###         error "$name must be a finite positive number (got '$value')"
+###     }
+### }
+### proc cgra_timing_args {period step_div} {
+###     cgra_positive_real $period period
+###     if {![string is integer -strict $step_div] || $step_div < 1} {
+###         error "step_div must be a positive integer"
+###     }
+### }
+### proc cgra_nonempty {objects name} {
+###     if {[llength $objects] == 0} { error "no objects matched $name" }
+###     return $objects
+### }
+### proc cgra_finite_slack {value name} {
+###     if {![string is double -strict $value] ||
+###         [catch {expr {$value > -Inf && $value < Inf}} valid] || !$valid} {
+###         error "$name is not a finite slack value (got '$value')"
+###     }
+### }
+### proc cgra_timing_slacks {} {
+###     set sp [cgra_nonempty [get_timing_paths -max_paths 1 -nworst 1 -setup] "setup paths"]
+###     set hp [cgra_nonempty [get_timing_paths -max_paths 1 -nworst 1 -hold] "hold paths"]
+###     set wns [get_property SLACK $sp]
+###     set whs [get_property SLACK $hp]
+###     cgra_finite_slack $wns WNS
+###     cgra_finite_slack $whs WHS
+###     return [list $wns $whs]
+### }
+### proc cgra_checked_frequency {period wns whs} {
+###     cgra_positive_real $period period
+###     cgra_finite_slack $wns WNS
+###     cgra_finite_slack $whs WHS
+###     if {$wns < 0 || $whs < 0} {
+###         error "timing NOT met: WNS=$wns ns, WHS=$whs ns"
+###     }
+###     return [expr {1000.0 / $period}]
+### }
+## proc cgra_timing_constraints {period_ns {step_div 2}} {
+##     cgra_timing_args $period_ns $step_div
+##     foreach port {clk uart_rx_i uart_tx_o btn_rst {led[*]}} {
+##         cgra_nonempty [get_ports $port] "port $port"
+##     }
+##     # ---- system clock (board oscillator pin) ----------------------------
+##     create_clock -period $period_ns -name sys_clk [get_ports clk]
+## 
+##     # ---- asynchronous I/O: excluded from timing -------------------------
+##     set_false_path -from [get_ports uart_rx_i]
+##     set_false_path -to   [get_ports uart_tx_o]
+##     set_false_path -from [get_ports btn_rst]
+##     set_false_path -to   [get_ports {led[*]}]
+## 
+##     # ---- CGRA datapath: N-cycle multicycle path (N = step_div) ----------
+##     # The controller issues 'step' once every G_STEP_DIV clocks (cgra_ctrl.vhd
+##     # S_RUN), so every PE result register (u_pe/r_reg) captures at most once
+##     # every G_STEP_DIV cycles. S_RUN's initial guard also separates a fused
+##     # EXEC reset from the first capture by at least G_STEP_DIV cycles; this is
+##     # checked alongside consecutive captures by tb_protocol_diff.
+##     # Give the datapath -- neighbour/self/config/edge
+##     # operands through the operand mux, DSP multiply, accumulate and op mux --
+##     # the full G_STEP_DIV clock periods it needs. This closes timing WITHOUT
+##     # pipelining the DSP, so one step still equals one result and the fabric
+##     # stays bit-identical to emu.c. step_div MUST equal the synthesised
+##     # G_STEP_DIV; dropping it (or step_div=1 at a fast clock) re-opens a large
+##     # setup violation on the 16x16 single-step MAC path.
+##     # Match only the flip-flops (REF_NAME FDRE/FDSE/...), NOT the combinational
+##     # LUTs Vivado names r_reg[N]_i_M after synthesis -- not valid endpoints.
+##     if { $step_div >= 2 } {
+##         set dst [cgra_nonempty [get_cells -hier -filter {REF_NAME =~ FD* && NAME =~ *u_pe/r_reg*}] "PE result registers"]
+##         set src $dst
+##         foreach pattern {*cfg_r_reg* *west_r_reg* *north_r_reg*} {
+##             set cells [cgra_nonempty [get_cells -hier -filter "REF_NAME =~ FD* && NAME =~ $pattern"] $pattern]
+##             set src [concat $src $cells]
+##         }
+##         set_multicycle_path $step_div              -setup -from $src -to $dst
+##         set_multicycle_path [expr {$step_div - 1}] -hold  -from $src -to $dst
+##     }
+## }
+# if { [catch { synth_design -top $top -part $part -flatten_hierarchy none \
+#                            -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols] } err] } {
+#     puts "ERROR: synth_design failed: $err"
+#     exit 1
+# }
+Command: synth_design -top cgra_top -part xc7a100tcsg324-1 -flatten_hierarchy none -generic {G_STEP_DIV=2 G_ROWS=4 G_COLS=4}
+INFO: [Vivado_Tcl 97-130] Option flatten_hierarchy used for synth_design is: none
+Starting synth_design
+Attempting to get a license for feature 'Vivado_Synthesis' and/or device 'xc7a100t'
+INFO: [Common 17-349] Got license for feature 'Vivado_Synthesis' and/or device 'xc7a100t'
+INFO: [Device 21-403] Loading part xc7a100tcsg324-1
+INFO: [Designutils 20-5008] Incremental synthesis strategy default
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 250459
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2413.359 ; gain = 516.117 ; free physical = 379 ; free virtual = 29711
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'cgra_top' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_top.vhd:34]
+	Parameter G_STEP_DIV bound to: 2 - type: integer 
+	Parameter G_ROWS bound to: 4 - type: integer 
+	Parameter G_COLS bound to: 4 - type: integer 
+	Parameter CLKS_PER_BIT bound to: 868 - type: integer 
+INFO: [Synth 8-3491] module 'uart_rx' declared at '/home/main/dev/git/ald-cgra/hw/rtl/uart_rx.vhd:8' bound to instance 'u_rx' of component 'uart_rx' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_top.vhd:72]
+INFO: [Synth 8-638] synthesizing module 'uart_rx' [/home/main/dev/git/ald-cgra/hw/rtl/uart_rx.vhd:21]
+	Parameter CLKS_PER_BIT bound to: 868 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'uart_rx' (0#1) [/home/main/dev/git/ald-cgra/hw/rtl/uart_rx.vhd:21]
+	Parameter CLKS_PER_BIT bound to: 868 - type: integer 
+INFO: [Synth 8-3491] module 'uart_tx' declared at '/home/main/dev/git/ald-cgra/hw/rtl/uart_tx.vhd:8' bound to instance 'u_tx' of component 'uart_tx' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_top.vhd:82]
+INFO: [Synth 8-638] synthesizing module 'uart_tx' [/home/main/dev/git/ald-cgra/hw/rtl/uart_tx.vhd:22]
+	Parameter CLKS_PER_BIT bound to: 868 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'uart_tx' (0#1) [/home/main/dev/git/ald-cgra/hw/rtl/uart_tx.vhd:22]
+	Parameter G_TIMEOUT_CYCLES bound to: 100000000 - type: integer 
+	Parameter G_STEP_DIV bound to: 2 - type: integer 
+	Parameter G_ROWS bound to: 4 - type: integer 
+	Parameter G_COLS bound to: 4 - type: integer 
+INFO: [Synth 8-3491] module 'cgra_ctrl' declared at '/home/main/dev/git/ald-cgra/hw/rtl/cgra_ctrl.vhd:40' bound to instance 'u_ctrl' of component 'cgra_ctrl' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_top.vhd:93]
+INFO: [Synth 8-638] synthesizing module 'cgra_ctrl' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_ctrl.vhd:78]
+	Parameter G_TIMEOUT_CYCLES bound to: 100000000 - type: integer 
+	Parameter G_STEP_DIV bound to: 2 - type: integer 
+	Parameter G_ROWS bound to: 4 - type: integer 
+	Parameter G_COLS bound to: 4 - type: integer 
+INFO: [Synth 8-256] done synthesizing module 'cgra_ctrl' (0#1) [/home/main/dev/git/ald-cgra/hw/rtl/cgra_ctrl.vhd:78]
+	Parameter G_ROWS bound to: 4 - type: integer 
+	Parameter G_COLS bound to: 4 - type: integer 
+INFO: [Synth 8-3491] module 'cgra_array' declared at '/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:19' bound to instance 'u_array' of component 'cgra_array' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_top.vhd:114]
+INFO: [Synth 8-638] synthesizing module 'cgra_array' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:35]
+	Parameter G_ROWS bound to: 4 - type: integer 
+	Parameter G_COLS bound to: 4 - type: integer 
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-638] synthesizing module 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:26]
+INFO: [Synth 8-226] default block is never used [/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:62]
+INFO: [Synth 8-256] done synthesizing module 'pe' (0#1) [/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:26]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-3491] module 'pe' declared at '/home/main/dev/git/ald-cgra/hw/rtl/pe.vhd:15' bound to instance 'u_pe' of component 'pe' [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:61]
+INFO: [Synth 8-256] done synthesizing module 'cgra_array' (0#1) [/home/main/dev/git/ald-cgra/hw/rtl/cgra_array.vhd:35]
+INFO: [Synth 8-256] done synthesizing module 'cgra_top' (0#1) [/home/main/dev/git/ald-cgra/hw/rtl/cgra_top.vhd:34]
+WARNING: [Synth 8-7129] Port cfg[31] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[30] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[29] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[28] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[27] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[26] in module pe is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 2514.328 ; gain = 617.086 ; free physical = 268 ; free virtual = 29585
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2526.203 ; gain = 628.961 ; free physical = 260 ; free virtual = 29577
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2526.203 ; gain = 628.961 ; free physical = 260 ; free virtual = 29577
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 2526.203 ; gain = 0.000 ; free physical = 260 ; free virtual = 29576
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/main/dev/git/ald-cgra/hw/con/nexys_a7.xdc]
+Finished Parsing XDC File [/home/main/dev/git/ald-cgra/hw/con/nexys_a7.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [/home/main/dev/git/ald-cgra/hw/con/nexys_a7.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/cgra_top_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/cgra_top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2700.980 ; gain = 0.000 ; free physical = 165 ; free virtual = 29496
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2701.016 ; gain = 0.000 ; free physical = 326 ; free virtual = 29543
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2701.016 ; gain = 803.773 ; free physical = 246 ; free virtual = 29477
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a100tcsg324-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 2716.984 ; gain = 819.742 ; free physical = 246 ; free virtual = 29477
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:21 ; elapsed = 00:00:21 . Memory (MB): peak = 2716.984 ; gain = 819.742 ; free physical = 246 ; free virtual = 29477
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'uart_rx'
+INFO: [Synth 8-802] inferred FSM for state register 'state_reg' in module 'uart_tx'
+INFO: [Synth 8-802] inferred FSM for state register 'hdr_idx_reg' in module 'cgra_ctrl'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                  s_idle |                              000 |                              000
+                 s_start |                              001 |                              001
+                  s_data |                              010 |                              010
+                  s_stop |                              011 |                              011
+                 s_break |                              100 |                              100
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'uart_rx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                  s_idle |                               00 |                               00
+                 s_start |                               01 |                               01
+                  s_data |                               10 |                               10
+                  s_stop |                               11 |                               11
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'state_reg' using encoding 'sequential' in module 'uart_tx'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                 iSTATE0 |                               00 |                               00
+                 iSTATE1 |                               01 |                               01
+                 iSTATE2 |                               10 |                               10
+                  iSTATE |                               11 |                               11
+*
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'hdr_idx_reg' using encoding 'sequential' in module 'cgra_ctrl'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:22 ; elapsed = 00:00:23 . Memory (MB): peak = 2716.984 ; gain = 819.742 ; free physical = 239 ; free virtual = 29471
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input   16 Bit       Adders := 16    
+	   2 Input   16 Bit       Adders := 16    
+	   2 Input   10 Bit       Adders := 2     
+	   2 Input    8 Bit       Adders := 2     
+	   2 Input    4 Bit       Adders := 1     
+	   2 Input    3 Bit       Adders := 3     
+	   2 Input    2 Bit       Adders := 1     
+	   2 Input    1 Bit       Adders := 1     
++---XORs : 
+	   2 Input     16 Bit         XORs := 16    
++---Registers : 
+	               32 Bit    Registers := 16    
+	               24 Bit    Registers := 1     
+	               16 Bit    Registers := 26    
+	               10 Bit    Registers := 2     
+	                8 Bit    Registers := 8     
+	                5 Bit    Registers := 4     
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 3     
+	                2 Bit    Registers := 1     
+	                1 Bit    Registers := 14    
++---Muxes : 
+	   2 Input   24 Bit        Muxes := 1     
+	   4 Input   16 Bit        Muxes := 1     
+	  19 Input   16 Bit        Muxes := 1     
+	   2 Input   16 Bit        Muxes := 49    
+	  16 Input   16 Bit        Muxes := 16    
+	   5 Input   10 Bit        Muxes := 1     
+	   4 Input   10 Bit        Muxes := 1     
+	   2 Input    8 Bit        Muxes := 2     
+	  19 Input    8 Bit        Muxes := 1     
+	   8 Input    8 Bit        Muxes := 1     
+	   5 Input    8 Bit        Muxes := 1     
+	   3 Input    8 Bit        Muxes := 1     
+	   2 Input    7 Bit        Muxes := 2     
+	   2 Input    5 Bit        Muxes := 5     
+	   8 Input    5 Bit        Muxes := 1     
+	  19 Input    5 Bit        Muxes := 1     
+	   3 Input    4 Bit        Muxes := 1     
+	   2 Input    4 Bit        Muxes := 6     
+	   2 Input    3 Bit        Muxes := 5     
+	   5 Input    3 Bit        Muxes := 2     
+	   4 Input    3 Bit        Muxes := 2     
+	  19 Input    3 Bit        Muxes := 1     
+	   4 Input    2 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 4     
+	  22 Input    2 Bit        Muxes := 1     
+	   2 Input    1 Bit        Muxes := 72    
+	   5 Input    1 Bit        Muxes := 6     
+	   4 Input    1 Bit        Muxes := 9     
+	   8 Input    1 Bit        Muxes := 6     
+	  19 Input    1 Bit        Muxes := 30    
+	  16 Input    1 Bit        Muxes := 32    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 240 (col length:80)
+BRAMs: 270 (col length: RAMB18 80 RAMB36 40)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+DSP Report: Generating DSP alu_p.res0, operation Mode is: A*B.
+DSP Report: operator alu_p.res0 is absorbed into DSP alu_p.res0.
+WARNING: [Synth 8-7129] Port cfg[31] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[30] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[29] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[28] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[27] in module pe is either unconnected or has no load
+WARNING: [Synth 8-7129] Port cfg[26] in module pe is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:50 ; elapsed = 00:01:52 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 243 ; free virtual = 29044
+---------------------------------------------------------------------------------
+ Sort Area is  alu_p.res0_0 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_10 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_2 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_3 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_4 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_5 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_6 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_7 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_8 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_9 : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_a : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_b : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_c : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_d : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_e : 0 0 : 1937 1937 : Used 1 time 0
+ Sort Area is  alu_p.res0_f : 0 0 : 1937 1937 : Used 1 time 0
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+
+DSP: Preliminary Mapping Report (see note below. The ' indicates corresponding REG is set)
++------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 16     | 16     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
++------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+Note: The table above is a preliminary report that shows the DSPs inferred at the current stage of the synthesis flow. Some DSP may be reimplemented as non DSP primitives later in the synthesis flow. Multiple instantiated DSPs are reported only once.
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP, Shift Register and Retiming Reporting
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:59 ; elapsed = 00:02:00 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 221 ; free virtual = 29047
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:02:00 ; elapsed = 00:02:02 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 220 ; free virtual = 29046
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:02:03 ; elapsed = 00:02:04 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 193 ; free virtual = 29027
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 173 ; free virtual = 29008
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 173 ; free virtual = 29008
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 174 ; free virtual = 29008
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+DSP Final Report (the ' indicates corresponding REG is set)
++------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|Module Name | DSP Mapping | A Size | B Size | C Size | D Size | P Size | AREG | BREG | CREG | DREG | ADREG | MREG | PREG | 
++------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
+|pe          | A*B         | 30     | 18     | -      | -      | 32     | 0    | 0    | -    | -    | -     | 0    | 0    | 
++------------+-------------+--------+--------+--------+--------+--------+------+------+------+------+-------+------+------+
+
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+--------+------+
+|      |Cell    |Count |
++------+--------+------+
+|1     |BUFG    |     1|
+|2     |CARRY4  |   208|
+|3     |DSP48E1 |    16|
+|4     |LUT1    |   259|
+|5     |LUT2    |   145|
+|6     |LUT3    |   267|
+|7     |LUT4    |   677|
+|8     |LUT5    |  1515|
+|9     |LUT6    |  2714|
+|10    |MUXF7   |   116|
+|11    |MUXF8   |    57|
+|12    |FDRE    |  1032|
+|13    |FDSE    |     2|
+|14    |IBUF    |     3|
+|15    |OBUF    |     5|
++------+--------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:02:09 ; elapsed = 00:02:11 . Memory (MB): peak = 3143.242 ; gain = 1246.000 ; free physical = 174 ; free virtual = 29008
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 6 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:02:07 ; elapsed = 00:02:09 . Memory (MB): peak = 3143.242 ; gain = 1071.188 ; free physical = 174 ; free virtual = 29008
+Synthesis Optimization Complete : Time (s): cpu = 00:02:10 ; elapsed = 00:02:11 . Memory (MB): peak = 3143.250 ; gain = 1246.000 ; free physical = 174 ; free virtual = 29008
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3143.250 ; gain = 0.000 ; free physical = 315 ; free virtual = 29151
+INFO: [Netlist 29-17] Analyzing 397 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [/home/main/dev/git/ald-cgra/hw/con/nexys_a7.xdc]
+Finished Parsing XDC File [/home/main/dev/git/ald-cgra/hw/con/nexys_a7.xdc]
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3255.270 ; gain = 0.000 ; free physical = 318 ; free virtual = 29154
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 5ca61849
+INFO: [Common 17-83] Releasing license: Vivado_Synthesis
+56 Infos, 12 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:02:20 ; elapsed = 00:02:19 . Memory (MB): peak = 3255.305 ; gain = 1447.234 ; free physical = 317 ; free virtual = 29154
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2569.574; main = 2411.860; forked = 344.177
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4192.223; main = 3255.273; forked = 1048.977
+# cgra_timing_constraints $period $step_div
+# write_checkpoint   -force $outdir/post_synth_${board}.dcp
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Wrote PlaceDB: Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29155
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29155
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29155
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.02 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29155
+Wrote PlaceStorage: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29155
+Wrote Netlist Cache: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29155
+Wrote Device Cache: Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29156
+Write Physdb Complete: Time (s): cpu = 00:00:00.13 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 318 ; free virtual = 29156
+INFO: [Common 17-1381] The checkpoint '/home/main/dev/git/ald-cgra/hw/build/vivado/post_synth_nexys_a7.dcp' has been generated.
+# report_utilization -file  $outdir/utilization_synth_${board}.rpt
+# report_timing_summary -max_paths 10 -file $outdir/timing_synth_${board}.rpt
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -1, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+report_timing_summary: Time (s): cpu = 00:00:12 ; elapsed = 00:00:08 . Memory (MB): peak = 3319.285 ; gain = 0.000 ; free physical = 289 ; free virtual = 29135
+# set n_err  [get_msg_config -severity {ERROR}            -count]
+# set n_crit [get_msg_config -severity {CRITICAL WARNING} -count]
+# puts "======================================================================"
+======================================================================
+# puts "  synth gate: $top on $board ($part) @ ${period} ns"
+  synth gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+# puts "    errors            = $n_err"
+    errors            = 0
+# puts "    critical warnings = $n_crit"
+    critical warnings = 0
+# if { $n_err > 0 || $n_crit > 0 } {
+#     puts "    FAIL: synthesis reported errors / critical warnings above."
+#     puts "    see $outdir/utilization_synth_${board}.rpt"
+#     puts "======================================================================"
+#     exit 1
+# }
+# puts "    PASS: RTL synthesised clean for $part."
+    PASS: RTL synthesised clean for xc7a100tcsg324-1.
+# puts "======================================================================"
+======================================================================
+# exit 0
+INFO: [Common 17-206] Exiting Vivado at Wed Sep 23 16:21:32 2026...
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

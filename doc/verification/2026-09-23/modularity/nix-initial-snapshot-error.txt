@@ -1,0 +1,38 @@
+Clean snapshot with all modular sources; build/ and historical PDFs excluded.
+nix build --no-link --print-out-paths path:/tmp/nix-shell.KplJb2/cgra-atomic-doc-o8of3nrb#doc
+evaluation warning: Package 'texlive-combined-2025' in /nix/store/d1qrs4cfnhmkhkripp32pyn64c8ldjzq-source/pkgs/tools/typesetting/tex/texlive/build-tex-env.nix:447 has the following problem: removal: texlive.combine is deprecated and will be removed from Nixpkgs 27.05. Please switch to texliveSmall.withPackages. See https://nixos.org/manual/nixpkgs/stable/#sec-language-texlive-user-guide. See https://nixos.org/manual/nixpkgs/unstable#sec-problems
+this derivation will be built:
+  /nix/store/y2rfaqx4b8fh21msh8aarkmzaa6agdyh-cgra-doc-0.1.0.drv
+building '/nix/store/y2rfaqx4b8fh21msh8aarkmzaa6agdyh-cgra-doc-0.1.0.drv'...
+error: Cannot build '/nix/store/y2rfaqx4b8fh21msh8aarkmzaa6agdyh-cgra-doc-0.1.0.drv'.
+       Reason: builder failed with exit code 2.
+       Output paths:
+         /nix/store/xh84b8d9zbpmspvn541nyskaff4gbpfb-cgra-doc-0.1.0
+       Last 25 log lines:
+       > Latexmk: Summary of warnings from last run of *latex:
+       >   Latex failed to resolve 17 reference(s)
+       >   Latex failed to resolve 24 citation(s)
+       > Latexmk: ====Undefined refs and citations with line #s in .tex file:
+       >   Citation `cgra-survey' on page 1 undefined on input line 5
+       >   Citation `cgra-survey' on page 1 undefined on input line 2
+       >   Citation `adres' on page 1 undefined on input line 3
+       >   Citation `morphosys' on page 1 undefined on input line 4
+       >   Citation `hycube' on page 1 undefined on input line 5
+       >   Citation `piperench' on page 1 undefined on input line 6
+       >   Citation `dyser' on page 1 undefined on input line 7
+       >  And 34 more --- see log file 'build/main.log'
+       > Latexmk: Errors, so I did not complete making targets
+       > Collected error summary (may duplicate other messages):
+       >   pdflatex: Command for 'pdflatex' gave return code 1
+       >       Refer to 'build/main.log' and/or above output for details
+       >
+       > Latexmk: Sometimes, the -f option can be used to get latexmk
+       >   to try to force complete processing.
+       >   But normally, you will need to correct the file(s) that caused the
+       >   error, and then rerun latexmk.
+       >   In some cases, it is best to clean out generated files before rerunning
+       >   latexmk after you've corrected the files.
+       > make: *** [doc.mk:19: all] Error 12
+       > make: Leaving directory '/build/j5xj9d1bazjdicn5mjf8r8m6rlascbwz-source/doc'
+       For full logs, run:
+         nix-store -l /nix/store/y2rfaqx4b8fh21msh8aarkmzaa6agdyh-cgra-doc-0.1.0.drv

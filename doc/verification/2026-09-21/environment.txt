@@ -1,0 +1,6 @@
+System: Linux-6.18.51-1-lts-x86_64-with-glibc2.44
+HEAD: 8e6b770351c7e2550cab77b4956e8873f81e291f
+Working tree: modified (not a clean commit)
+gcc (GCC) 15.2.0
+GHDL 6.0.0 (tarball) [Dunoon edition]
+GNU Make 4.4.1

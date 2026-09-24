@@ -1,0 +1,2536 @@
+[
+  {
+    "key": "cgra-survey",
+    "url": "https://api.crossref.org/works/10.1145/3357375",
+    "metadata": {
+      "DOI": "10.1145/3357375",
+      "title": [
+        "A Survey of Coarse-Grained Reconfigurable Architecture and Design"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0002-0485-8034",
+          "authenticated-orcid": false,
+          "given": "Leibo",
+          "family": "Liu",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Institute of Microelectronics, Tsinghua University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jianfeng",
+          "family": "Zhu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Institute of Microelectronics, Tsinghua University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Zhaoshi",
+          "family": "Li",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Institute of Microelectronics, Tsinghua University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yanan",
+          "family": "Lu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Institute of Microelectronics, Tsinghua University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yangdong",
+          "family": "Deng",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "School of Software, Tsinghua University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jie",
+          "family": "Han",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Department of Electrical and Computer Engineering, University of Alberta, Edmonton, AB, Canada"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Shouyi",
+          "family": "Yin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Institute of Microelectronics, Tsinghua University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Shaojun",
+          "family": "Wei",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Institute of Microelectronics, Tsinghua University, Beijing, China"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "journal-article",
+      "container-title": [
+        "ACM Computing Surveys"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2019,
+            10,
+            16
+          ]
+        ]
+      },
+      "volume": "52",
+      "issue": "6",
+      "page": "1-39",
+      "article-number": null,
+      "publisher": "Association for Computing Machinery (ACM)",
+      "subtitle": [
+        "Taxonomy, Challenges, and Applications"
+      ],
+      "published-print": {
+        "date-parts": [
+          [
+            2020,
+            11,
+            30
+          ]
+        ]
+      },
+      "published-online": {
+        "date-parts": [
+          [
+            2019,
+            10,
+            16
+          ]
+        ]
+      },
+      "created": {
+        "date-parts": [
+          [
+            2019,
+            10,
+            16
+          ]
+        ],
+        "date-time": "2019-10-16T14:55:35Z",
+        "timestamp": 1571237735000
+      },
+      "event": null,
+      "ISBN": null
+    }
+  },
+  {
+    "key": "adres",
+    "url": "https://api.crossref.org/works/10.1007/978-3-540-45234-8_7",
+    "metadata": {
+      "DOI": "10.1007/978-3-540-45234-8_7",
+      "title": [
+        "ADRES: An Architecture with Tightly Coupled VLIW Processor and Coarse-Grained Reconfigurable Matrix"
+      ],
+      "author": [
+        {
+          "given": "Bingfeng",
+          "family": "Mei",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Serge",
+          "family": "Vernalde",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Diederik",
+          "family": "Verkest",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Hugo",
+          "family": "De Man",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Rudy",
+          "family": "Lauwereins",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "book-chapter",
+      "container-title": [
+        "Lecture Notes in Computer Science",
+        "Field Programmable Logic and Application"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2003
+          ]
+        ]
+      },
+      "volume": null,
+      "issue": null,
+      "page": "61-70",
+      "article-number": null,
+      "publisher": "Springer Berlin Heidelberg"
+    }
+  },
+  {
+    "key": "morphosys",
+    "url": "https://api.crossref.org/works/10.1109/12.859540",
+    "metadata": {
+      "DOI": "10.1109/12.859540",
+      "title": [
+        "MorphoSys: an integrated reconfigurable system for data-parallel and computation-intensive applications"
+      ],
+      "author": [
+        {
+          "given": "H.",
+          "family": "Singh",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "family": "Ming-Hau Lee",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "family": "Guangming Lu",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "F.J.",
+          "family": "Kurdahi",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "N.",
+          "family": "Bagherzadeh",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "E.M.",
+          "family": "Chaves Filho",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "journal-article",
+      "container-title": [
+        "IEEE Transactions on Computers"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2000,
+            5
+          ]
+        ]
+      },
+      "volume": "49",
+      "issue": "5",
+      "page": "465-481",
+      "article-number": null,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)"
+    }
+  },
+  {
+    "key": "tpu",
+    "url": "https://api.crossref.org/works/10.1145/3079856.3080246",
+    "metadata": {
+      "DOI": "10.1145/3079856.3080246",
+      "title": [
+        "In-Datacenter Performance Analysis of a Tensor Processing Unit"
+      ],
+      "author": [
+        {
+          "given": "Norman P.",
+          "family": "Jouppi",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Cliff",
+          "family": "Young",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Nishant",
+          "family": "Patil",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "David",
+          "family": "Patterson",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gaurav",
+          "family": "Agrawal",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Raminder",
+          "family": "Bajwa",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Sarah",
+          "family": "Bates",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Suresh",
+          "family": "Bhatia",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Nan",
+          "family": "Boden",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Al",
+          "family": "Borchers",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Rick",
+          "family": "Boyle",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Pierre-luc",
+          "family": "Cantin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Clifford",
+          "family": "Chao",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Chris",
+          "family": "Clark",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jeremy",
+          "family": "Coriell",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Mike",
+          "family": "Daley",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Matt",
+          "family": "Dau",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jeffrey",
+          "family": "Dean",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ben",
+          "family": "Gelb",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tara Vazir",
+          "family": "Ghaemmaghami",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Rajendra",
+          "family": "Gottipati",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "William",
+          "family": "Gulland",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Robert",
+          "family": "Hagmann",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "C. Richard",
+          "family": "Ho",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Doug",
+          "family": "Hogberg",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "John",
+          "family": "Hu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Robert",
+          "family": "Hundt",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Dan",
+          "family": "Hurt",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Julian",
+          "family": "Ibarz",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Aaron",
+          "family": "Jaffey",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Alek",
+          "family": "Jaworski",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Alexander",
+          "family": "Kaplan",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Harshit",
+          "family": "Khaitan",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Daniel",
+          "family": "Killebrew",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Andy",
+          "family": "Koch",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Naveen",
+          "family": "Kumar",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Steve",
+          "family": "Lacy",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "James",
+          "family": "Laudon",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "James",
+          "family": "Law",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Diemthu",
+          "family": "Le",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Chris",
+          "family": "Leary",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Zhuyuan",
+          "family": "Liu",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Kyle",
+          "family": "Lucke",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Alan",
+          "family": "Lundin",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gordon",
+          "family": "MacKean",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Adriana",
+          "family": "Maggiore",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Maire",
+          "family": "Mahony",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Kieran",
+          "family": "Miller",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Rahul",
+          "family": "Nagarajan",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ravi",
+          "family": "Narayanaswami",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ray",
+          "family": "Ni",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Kathy",
+          "family": "Nix",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Thomas",
+          "family": "Norrie",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Mark",
+          "family": "Omernick",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Narayana",
+          "family": "Penukonda",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Andy",
+          "family": "Phelps",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jonathan",
+          "family": "Ross",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Matt",
+          "family": "Ross",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Amir",
+          "family": "Salek",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Emad",
+          "family": "Samadiani",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Chris",
+          "family": "Severn",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gregory",
+          "family": "Sizikov",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Matthew",
+          "family": "Snelham",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jed",
+          "family": "Souter",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Dan",
+          "family": "Steinberg",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Andy",
+          "family": "Swing",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Mercedes",
+          "family": "Tan",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Gregory",
+          "family": "Thorson",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Bo",
+          "family": "Tian",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Horia",
+          "family": "Toma",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Erick",
+          "family": "Tuttle",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Vijay",
+          "family": "Vasudevan",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Richard",
+          "family": "Walter",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Walter",
+          "family": "Wang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Eric",
+          "family": "Wilcox",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Doe Hyun",
+          "family": "Yoon",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Google, Inc., Mountain View, CA USA"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "proceedings-article",
+      "container-title": [
+        "Proceedings of the 44th Annual International Symposium on Computer Architecture"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            24
+          ]
+        ]
+      },
+      "volume": null,
+      "issue": null,
+      "page": "1-12",
+      "article-number": null,
+      "publisher": "ACM"
+    }
+  },
+  {
+    "key": "plasticine",
+    "url": "https://api.crossref.org/works/10.1145/3079856.3080256",
+    "metadata": {
+      "DOI": "10.1145/3079856.3080256",
+      "title": [
+        "Plasticine"
+      ],
+      "author": [
+        {
+          "given": "Raghu",
+          "family": "Prabhakar",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yaqi",
+          "family": "Zhang",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "David",
+          "family": "Koeplinger",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Matt",
+          "family": "Feldman",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tian",
+          "family": "Zhao",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Stefan",
+          "family": "Hadjis",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Ardavan",
+          "family": "Pedram",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Christos",
+          "family": "Kozyrakis",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Kunle",
+          "family": "Olukotun",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "Stanford University"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "proceedings-article",
+      "container-title": [
+        "Proceedings of the 44th Annual International Symposium on Computer Architecture"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            24
+          ]
+        ]
+      },
+      "volume": null,
+      "issue": null,
+      "page": "389-402",
+      "article-number": null,
+      "publisher": "ACM",
+      "subtitle": [
+        "A Reconfigurable Architecture For Parallel Paterns"
+      ],
+      "published-print": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            24
+          ]
+        ]
+      },
+      "published-online": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            24
+          ]
+        ]
+      },
+      "created": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            15
+          ]
+        ],
+        "date-time": "2017-06-15T15:40:01Z",
+        "timestamp": 1497541201000
+      },
+      "event": {
+        "name": "ISCA '17: The 44th Annual International Symposium on Computer Architecture",
+        "location": "Toronto ON Canada",
+        "acronym": "ISCA '17",
+        "sponsor": [
+          "IEEE IEEE Computer Society Technical Committee on Design Automation",
+          "SIGARCH ACM Special Interest Group on Computer Architecture"
+        ]
+      },
+      "ISBN": null
+    }
+  },
+  {
+    "key": "kung",
+    "url": "https://api.crossref.org/works/10.1109/MC.1982.1653825",
+    "metadata": {
+      "DOI": "10.1109/mc.1982.1653825",
+      "title": [
+        "Why systolic architectures?"
+      ],
+      "author": [
+        {
+          "family": "Kung",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "journal-article",
+      "container-title": [
+        "Computer"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            1982,
+            1
+          ]
+        ]
+      },
+      "volume": "15",
+      "issue": "1",
+      "page": "37-46",
+      "article-number": null,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)"
+    }
+  },
+  {
+    "key": "eyeriss",
+    "url": "https://api.crossref.org/works/10.1109/JSSC.2016.2616357",
+    "metadata": {
+      "DOI": "10.1109/jssc.2016.2616357",
+      "title": [
+        "Eyeriss: An Energy-Efficient Reconfigurable Accelerator for Deep Convolutional Neural Networks"
+      ],
+      "author": [
+        {
+          "ORCID": "https://orcid.org/0000-0002-4403-956X",
+          "authenticated-orcid": false,
+          "given": "Yu-Hsin",
+          "family": "Chen",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tushar",
+          "family": "Krishna",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Joel S.",
+          "family": "Emer",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Vivienne",
+          "family": "Sze",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "journal-article",
+      "container-title": [
+        "IEEE Journal of Solid-State Circuits"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            1
+          ]
+        ]
+      },
+      "volume": "52",
+      "issue": "1",
+      "page": "127-138",
+      "article-number": null,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)"
+    }
+  },
+  {
+    "key": "sze-survey",
+    "url": "https://api.crossref.org/works/10.1109/JPROC.2017.2761740",
+    "metadata": {
+      "DOI": "10.1109/jproc.2017.2761740",
+      "title": [
+        "Efficient Processing of Deep Neural Networks: A Tutorial and Survey"
+      ],
+      "author": [
+        {
+          "given": "Vivienne",
+          "family": "Sze",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yu-Hsin",
+          "family": "Chen",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tien-Ju",
+          "family": "Yang",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Joel S.",
+          "family": "Emer",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "journal-article",
+      "container-title": [
+        "Proceedings of the IEEE"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            12
+          ]
+        ]
+      },
+      "volume": "105",
+      "issue": "12",
+      "page": "2295-2329",
+      "article-number": null,
+      "publisher": "Institute of Electrical and Electronics Engineers (IEEE)"
+    }
+  },
+  {
+    "key": "dyser",
+    "url": "https://api.crossref.org/works/10.1109/HPCA.2011.5749755",
+    "metadata": {
+      "DOI": "10.1109/hpca.2011.5749755",
+      "title": [
+        "Dynamically Specialized Datapaths for energy efficient computing"
+      ],
+      "author": [
+        {
+          "given": "Venkatraman",
+          "family": "Govindaraju",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Chen-Han",
+          "family": "Ho",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Karthikeyan",
+          "family": "Sankaralingam",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "proceedings-article",
+      "container-title": [
+        "2011 IEEE 17th International Symposium on High Performance Computer Architecture"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2011,
+            2
+          ]
+        ]
+      },
+      "volume": null,
+      "issue": null,
+      "page": "503-514",
+      "article-number": null,
+      "publisher": "IEEE"
+    }
+  },
+  {
+    "key": "hycube",
+    "url": "https://api.crossref.org/works/10.1145/3061639.3062262",
+    "metadata": {
+      "DOI": "10.1145/3061639.3062262",
+      "title": [
+        "HyCUBE"
+      ],
+      "author": [
+        {
+          "given": "Manupa",
+          "family": "Karunaratne",
+          "sequence": "first",
+          "affiliation": [
+            {
+              "name": "National University of Singapore"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Aditi Kulkarni",
+          "family": "Mohite",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "National University of Singapore"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Tulika",
+          "family": "Mitra",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "National University of Singapore"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Li-Shiuan",
+          "family": "Peh",
+          "sequence": "additional",
+          "affiliation": [
+            {
+              "name": "National University of Singapore"
+            }
+          ],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "proceedings-article",
+      "container-title": [
+        "Proceedings of the 54th Annual Design Automation Conference 2017"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            18
+          ]
+        ]
+      },
+      "volume": null,
+      "issue": null,
+      "page": "1-6",
+      "article-number": null,
+      "publisher": "ACM",
+      "subtitle": [
+        "A CGRA with Reconfigurable Single-cycle Multi-hop Interconnect"
+      ],
+      "published-print": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            18
+          ]
+        ]
+      },
+      "published-online": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            18
+          ]
+        ]
+      },
+      "created": {
+        "date-parts": [
+          [
+            2017,
+            6,
+            13
+          ]
+        ],
+        "date-time": "2017-06-13T08:18:42Z",
+        "timestamp": 1497341922000
+      },
+      "event": {
+        "name": "DAC '17: The 54th Annual Design Automation Conference 2017",
+        "location": "Austin TX USA",
+        "acronym": "DAC '17",
+        "sponsor": [
+          "EDAC Electronic Design Automation Consortium",
+          "SIGDA ACM Special Interest Group on Design Automation",
+          "IEEE-CEDA",
+          "SIGBED ACM Special Interest Group on Embedded Systems"
+        ]
+      },
+      "ISBN": null
+    }
+  },
+  {
+    "key": "cgra-me",
+    "url": "https://api.crossref.org/works/10.1109/ASAP.2017.7995277",
+    "metadata": {
+      "DOI": "10.1109/asap.2017.7995277",
+      "title": [
+        "CGRA-ME: A unified framework for CGRA modelling and exploration"
+      ],
+      "author": [
+        {
+          "given": "S. Alexander",
+          "family": "Chin",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Noriaki",
+          "family": "Sakamoto",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Allan",
+          "family": "Rui",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jim",
+          "family": "Zhao",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jin Hee",
+          "family": "Kim",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Yuko",
+          "family": "Hara-Azumi",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "Jason",
+          "family": "Anderson",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "proceedings-article",
+      "container-title": [
+        "2017 IEEE 28th International Conference on Application-specific Systems, Architectures and Processors (ASAP)"
+      ],
+      "published": {
+        "date-parts": [
+          [
+            2017,
+            7
+          ]
+        ]
+      },
+      "volume": null,
+      "issue": null,
+      "page": "184-189",
+      "article-number": null,
+      "publisher": "IEEE"
+    }
+  },
+  {
+    "key": "piperench",
+    "url": "https://api.crossref.org/works/10.1109/ISCA.1999.765937",
+    "metadata": {
+      "DOI": "10.1109/isca.1999.765937",
+      "title": [
+        "PipeRench: a coprocessor for streaming multimedia acceleration"
+      ],
+      "author": [
+        {
+          "given": "S.C.",
+          "family": "Goldstein",
+          "sequence": "first",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "H.",
+          "family": "Schmit",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "M.",
+          "family": "Moe",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "M.",
+          "family": "Budiu",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "S.",
+          "family": "Cadambi",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "R.R.",
+          "family": "Taylor",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        },
+        {
+          "given": "R.",
+          "family": "Laufer",
+          "sequence": "additional",
+          "affiliation": [],
+          "role": [
+            {
+              "vocabulary": "crossref",
+              "role": "author"
+            }
+          ]
+        }
+      ],
+      "type": "proceedings-article",
+      "container-title": [
+        "Proceedings of the 26th International Symposium on Computer Architecture (Cat. No.99CB36367)"
+      ],
+      "published": null,
+      "volume": null,
+      "issue": null,
+      "page": "28-39",
+      "article-number": null,
+      "publisher": "IEEE Comput. Soc. Press",
+      "subtitle": [],
+      "published-print": null,
+      "published-online": null,
+      "created": {
+        "date-parts": [
+          [
+            2003,
+            1,
+            20
+          ]
+        ],
+        "date-time": "2003-01-20T15:55:24Z",
+        "timestamp": 1043078124000
+      },
+      "event": {
+        "name": "International Symposium on Computer Architecture",
+        "location": "Atlanta, GA, USA",
+        "acronym": "ISCA-99"
+      },
+      "ISBN": null
+    }
+  },
+  {
+    "key": "bhasker-timing",
+    "url": "https://api.crossref.org/works/10.1007/978-0-387-93820-2",
+    "metadata": {
+      "DOI": "10.1007/978-0-387-93820-2",
+      "title": [
+        "Static Timing Analysis for Nanometer Designs"
+      ],
+      "author": null,
+      "type": "book",
+      "container-title": [],
+      "published": {
+        "date-parts": [
+          [
+            2009
+          ]
+        ]
+      },
+      "volume": null,
+      "issue": null,
+      "page": null,
+      "article-number": null,
+      "publisher": "Springer US",
+      "subtitle": [
+        "A Practical Approach"
+      ],
+      "published-print": {
+        "date-parts": [
+          [
+            2009
+          ]
+        ]
+      },
+      "published-online": null,
+      "created": {
+        "date-parts": [
+          [
+            2009,
+            3,
+            30
+          ]
+        ],
+        "date-time": "2009-03-30T10:44:59Z",
+        "timestamp": 1238409899000
+      },
+      "event": null,
+      "ISBN": [
+        "9780387938196",
+        "9780387938202"
+      ]
+    }
+  }
+]

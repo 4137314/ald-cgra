@@ -1,0 +1,2 @@
+sh scripts/gen-compdb.sh
+wrote /home/main/dev/git/ald-cgra/compile_commands.json

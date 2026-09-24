@@ -1,0 +1,1010 @@
+warning: Git tree '/home/main/dev/git/ald-cgra' is dirty
+evaluation warning: linuxPackages.perf is now perf
+evaluation warning: Package 'texlive-combined-2025' in /nix/store/d1qrs4cfnhmkhkripp32pyn64c8ldjzq-source/pkgs/tools/typesetting/tex/texlive/build-tex-env.nix:447 has the following problem: removal: texlive.combine is deprecated and will be removed from Nixpkgs 27.05. Please switch to texliveSmall.withPackages. See https://nixos.org/manual/nixpkgs/stable/#sec-language-texlive-user-guide. See https://nixos.org/manual/nixpkgs/unstable#sec-problems
+building '/nix/store/lfsk2f680jyi1bw0dsvhl5fdjspkxwpf-nix-shell-env.drv'...
+cgra dev shell - make | make test | make sim | make docs | make check-deps
+note: bitstream synthesis (make bit / make sta) needs Vivado, not packaged here.
+make -C doc -f doc.mk
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/doc'
+latexmk -g -pdf -output-directory=build main.tex
+Rc files read:
+  NONE
+Latexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.
+Force everything to be remade.
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Category 'other':
+  Rerun of 'pdflatex' forced or previously required:
+    Reason or flag: 'go_mode'
+
+------------
+Run number 1 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -recorder -output-directory="build"  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(./IEEEtran.cls
+Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/psnfss/ot1ptm.fd)
+-- Using 8.5in x 11in (letter) paper.
+-- Using PDF output.
+-- This is a 10 point document.
+)
+** ATTENTION: Overriding command lockouts (line 4).
+(./config/preamble.tex (./config/package.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/base/fontenc.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/psnfss/t1ptm.fd))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/base/inputenc.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/microtype.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/keyval.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/etoolbox/etoolbox.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/microtype-pdftex.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/microtype.cfg))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amstext.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsgen.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsbsy.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsopn.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/amssymb.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/amsfonts.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/booktabs/booktabs.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/tools/array.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/graphicx.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/graphics.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/trig.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics-cfg/graphics.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics-def/pdftex.def)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/xcolor/xcolor.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics-cfg/color.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/mathcolor.ltx))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/frontendlayer/tikz.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/basiclayer/pgf.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/utilities/pgfrcs.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfutil-common.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfutil-latex.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfrcs.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/pgf.revision.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/basiclayer/pgfcore.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/systemlayer/pgfsys.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsys.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfkeys.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgf.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsys-pdftex.def
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsys-common-pdf.def)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsyssoftpath.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsysprotocol.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcore.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmath.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathutil.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathparser.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.basic.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.random.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.comparison.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.base.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.round.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.misc.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathcalc.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfloat.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfint.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepoints.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepathusage.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorescopes.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoretransformations.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorequick.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreobjects.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorearrows.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreshade.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreimage.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreexternal.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorelayers.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoretransparency.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepatterns.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorerdf.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmoduleshapes.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmoduleplot.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/compatibility/pgfcomp-version-0-65.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/compatibility/pgfcomp-version-1-18.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/utilities/pgffor.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/utilities/pgfkeys.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfkeys.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/math/pgfmath.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmath.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgffor.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/tikz.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryplothandlers.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmodulematrix.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgfplots/pgfplots.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.revision.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotscore.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/sys/pgfplotssysgeneric.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/libs/pgfplotslibrary.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryfpu.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex))
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsutil.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsarray.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/numtable/pgfplotstableshared.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsdeque.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsbinary.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsbinary.data.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsutil.verb.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotscolormap.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotscolor.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsstackedplots.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsplothandlers.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsmeshplothandler.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsmeshplotimage.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.scaling.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotscoordprocessing.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.errorbars.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.markers.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsticks.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.paths.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmoduledecorations.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.
+code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex
+))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing
+.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.te
+x))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryplotmarks.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/cite/cite.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/url/url.sty) (./config/colors.tex) (./config/tikz.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryarrows.meta.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybackgrounds.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.misc.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex))
+(./config/macros.tex) (./config/hyperref.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/hyperref.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/iftex/iftex.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/kvsetkeys/kvsetkeys.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/kvdefinekeys/kvdefinekeys.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pdfescape/pdfescape.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/ltxcmds/ltxcmds.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pdftexcmds/pdftexcmds.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/infwarerr/infwarerr.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hycolor/hycolor.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/nameref.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/refcount/refcount.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/gettitlestring/gettitlestring.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/kvoptions/kvoptions.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/stringenc/stringenc.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/pd1enc.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/intcalc/intcalc.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/puenc.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/bitset/bitset.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/bigintcalc/bigintcalc.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/hpdftex.def
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/rerunfilecheck/rerunfilecheck.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/uniquecounter/uniquecounter.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/bookmark/bookmark.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/bookmark/bkm-pdftex.def))))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/l3backend/l3backend-pdftex.def) (build/main.aux)
+-- Lines per column: 56 (exact).
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-ptm.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/epstopdf-pkg/epstopdf-base.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/latexconfig/epstopdf-sys.cfg))
+Package pgfplots notification 'compat/show suggested version=true': document ha
+s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
+
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-cmr.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/umsa.fd)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-msa.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/umsb.fd)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-msb.cfg) (./src/introduction.tex
+Underfull \hbox (badness 1558) in paragraph at lines 30--34
+[]\T1/ptm/m/n/10 (+20) a map-ping of element-wise, re-duc-tion and weight-
+) (./src/background.tex [1{/nix/store/gygb8llwp0gwcs8hhlmvza693jpscn7f-texlive-
+combined-2025/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/nix/store/gm
+pqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/enc/dvips/
+base/8r.enc}]) (./src/architecture.tex (./figures/pe.tex) [2]
+(./figures/array.tex)) (./src/protocol.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/psnfss/t1pcr.fd) (./figures/exec.tex) [3] (./figures/fsm.tex)
+Underfull \vbox (badness 2521) has occurred while \output is active)
+(./src/dataflow.tex
+Underfull \hbox (badness 7238) in paragraph at lines 152--1
+[]\T1/ptm/m/n/10 (+20) After an un-cer-tain trans-fer the li-brary in-val-i-dat
+es
+
+Underfull \hbox (badness 1910) in paragraph at lines 152--1
+\T1/ptm/m/n/10 (+20) cached iden-tity and blocks fur-ther pro-to-col calls with
+
+[4] (./figures/systolic.tex)
+Overfull \hbox (0.5934pt too wide) in paragraph at lines 44--56
+\T1/ptm/m/n/10 (-20) each PE to forward one value \T1/ptm/m/it/10 (-20) and \T1
+/ptm/m/n/10 (-20) retain a distinct accumulator---
+) (./src/software.tex
+Underfull \vbox (badness 2884) has occurred while \output is active [5]
+(./figures/stack.tex)) (./src/analysis.tex [6]) (./src/implementation.tex
+[7] (./figures/timing.tex) [8]) (./src/results.tex [9]
+Overfull \hbox (5.47131pt too wide) in paragraph at lines 103--116
+ [][] 
+(./figures/cost.tex)) (./src/conclusion.tex [10]) (./bib/bib.tex)
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+[11] (build/main.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ )
+(see the transcript file for additional information)</nix/store/gmpqpifqypljn5c
+nc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/c
+mextra/cmex7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-
+2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></nix/store/gmpqpifqyp
+ljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfo
+nts/cm/cmmi5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-
+2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></nix/store/gmpqpifqypl
+jn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfon
+ts/cm/cmmi8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2
+025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></nix/store/gmpqpifqyplj
+n5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-20
+25-texmfdist/fonts/type1/public/amsfonts/cm/cmr5.pfb></nix/store/gmpqpifqypljn5
+cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/
+cm/cmr7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-
+texmfdist/fonts/type1/public/amsfonts/cm/cmr8.pfb></nix/store/gmpqpifqypljn5cnc
+419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/
+cmr9.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-tex
+mfdist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></nix/store/gmpqpifqypljn5cnc4
+19b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/c
+msy5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-tex
+mfdist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></nix/store/gmpqpifqypljn5cnc41
+9b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cm
+sy8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texm
+fdist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></nix/store/gmpqpifqypljn5cnc419
+b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/courier/ucrr8a.pfb
+></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/f
+onts/type1/urw/times/utmb8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-te
+xlive-combined-2025-texmfdist/fonts/type1/urw/times/utmbi8a.pfb></nix/store/gmp
+qpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/t
+imes/utmr8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2
+025-texmfdist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on build/main.pdf (11 pages, 323826 bytes).
+Transcript written on build/main.log.
+Latexmk: Getting log file 'build/main.log'
+Latexmk: Examining 'build/main.fls'
+Latexmk: Examining 'build/main.log'
+Latexmk: References changed.
+Latexmk: Log file says output to 'build/main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  build/main.aux
+
+------------
+Run number 2 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -recorder -output-directory="build"  "main.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+(./IEEEtran.cls
+Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+-- See the "IEEEtran_HOWTO" manual for usage information.
+-- http://www.michaelshell.org/tex/ieeetran/
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/psnfss/ot1ptm.fd)
+-- Using 8.5in x 11in (letter) paper.
+-- Using PDF output.
+-- This is a 10 point document.
+)
+** ATTENTION: Overriding command lockouts (line 4).
+(./config/preamble.tex (./config/package.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/base/fontenc.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/psnfss/t1ptm.fd))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/base/inputenc.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/microtype.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/keyval.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/etoolbox/etoolbox.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/microtype-pdftex.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/microtype.cfg))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amstext.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsgen.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsbsy.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsmath/amsopn.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/amssymb.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/amsfonts.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/booktabs/booktabs.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/tools/array.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/graphicx.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/graphics.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/trig.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics-cfg/graphics.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics-def/pdftex.def)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/xcolor/xcolor.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics-cfg/color.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/graphics/mathcolor.ltx))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/frontendlayer/tikz.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/basiclayer/pgf.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/utilities/pgfrcs.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfutil-common.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfutil-latex.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfrcs.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/pgf.revision.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/basiclayer/pgfcore.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/systemlayer/pgfsys.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsys.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfkeys.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgf.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsys-pdftex.def
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsys-common-pdf.def)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsyssoftpath.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/systemlayer/pgfsysprotocol.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcore.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmath.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathutil.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathparser.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.basic.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.random.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.comparison.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.base.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.round.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.misc.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathcalc.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmathfloat.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfint.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepoints.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepathusage.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorescopes.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoretransformations.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorequick.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreobjects.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorearrows.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreshade.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreimage.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoreexternal.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorelayers.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcoretransparency.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorepatterns.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/basiclayer/pgfcorerdf.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmoduleshapes.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmoduleplot.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/compatibility/pgfcomp-version-0-65.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/compatibility/pgfcomp-version-1-18.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/utilities/pgffor.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/utilities/pgfkeys.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgfkeys.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgf/math/pgfmath.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/math/pgfmath.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/utilities/pgffor.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/tikz.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryplothandlers.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmodulematrix.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/pgfplots/pgfplots.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.revision.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotscore.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/sys/pgfplotssysgeneric.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/libs/pgfplotslibrary.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryfpu.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex))
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsutil.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsarray.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/numtable/pgfplotstableshared.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/liststructure/pgfplotsdeque.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsbinary.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsbinary.data.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotsutil.verb.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotscolormap.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/util/pgfplotscolor.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsstackedplots.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsplothandlers.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsmeshplothandler.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsmeshplotimage.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.scaling.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotscoordprocessing.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.errorbars.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.markers.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplotsticks.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/pgfplots.paths.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/modules/pgfmoduledecorations.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.
+code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex
+))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing
+.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.te
+x))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryplotmarks.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/cite/cite.sty))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/url/url.sty) (./config/colors.tex) (./config/tikz.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/pgflibraryarrows.meta.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybackgrounds.code.tex)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.misc.code.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.tex))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex))
+(./config/macros.tex) (./config/hyperref.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/hyperref.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/iftex/iftex.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/kvsetkeys/kvsetkeys.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/kvdefinekeys/kvdefinekeys.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pdfescape/pdfescape.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/ltxcmds/ltxcmds.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/pdftexcmds/pdftexcmds.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/infwarerr/infwarerr.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hycolor/hycolor.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/nameref.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/refcount/refcount.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/gettitlestring/gettitlestring.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/kvoptions/kvoptions.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/stringenc/stringenc.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/pd1enc.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/intcalc/intcalc.sty)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/puenc.def)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/bitset/bitset.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/bigintcalc/bigintcalc.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/hyperref/hpdftex.def
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/rerunfilecheck/rerunfilecheck.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/generic/uniquecounter/uniquecounter.sty)))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/bookmark/bookmark.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/bookmark/bkm-pdftex.def))))
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/l3backend/l3backend-pdftex.def) (build/main.aux)
+-- Lines per column: 56 (exact).
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-ptm.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/epstopdf-pkg/epstopdf-base.sty
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/latexconfig/epstopdf-sys.cfg))
+Package pgfplots notification 'compat/show suggested version=true': document ha
+s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
+
+
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-cmr.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/umsa.fd)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-msa.cfg)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/amsfonts/umsb.fd)
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/microtype/mt-msb.cfg) (./src/introduction.tex
+Underfull \hbox (badness 1558) in paragraph at lines 30--34
+[]\T1/ptm/m/n/10 (+20) a map-ping of element-wise, re-duc-tion and weight-
+) (./src/background.tex [1{/nix/store/gygb8llwp0gwcs8hhlmvza693jpscn7f-texlive-
+combined-2025/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/nix/store/gm
+pqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/enc/dvips/
+base/8r.enc}]) (./src/architecture.tex (./figures/pe.tex) [2]
+(./figures/array.tex)) (./src/protocol.tex
+(/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+x/latex/psnfss/t1pcr.fd) (./figures/exec.tex) [3] (./figures/fsm.tex)
+Underfull \vbox (badness 2521) has occurred while \output is active)
+(./src/dataflow.tex
+Underfull \hbox (badness 7238) in paragraph at lines 152--1
+[]\T1/ptm/m/n/10 (+20) After an un-cer-tain trans-fer the li-brary in-val-i-dat
+es
+
+Underfull \hbox (badness 1910) in paragraph at lines 152--1
+\T1/ptm/m/n/10 (+20) cached iden-tity and blocks fur-ther pro-to-col calls with
+
+[4] (./figures/systolic.tex)
+Overfull \hbox (0.5934pt too wide) in paragraph at lines 44--56
+\T1/ptm/m/n/10 (-20) each PE to forward one value \T1/ptm/m/it/10 (-20) and \T1
+/ptm/m/n/10 (-20) retain a distinct accumulator---
+) (./src/software.tex
+Underfull \vbox (badness 2884) has occurred while \output is active [5]
+(./figures/stack.tex)) (./src/analysis.tex [6]) (./src/implementation.tex
+[7] (./figures/timing.tex) [8]) (./src/results.tex [9]
+Overfull \hbox (5.47131pt too wide) in paragraph at lines 103--116
+ [][] 
+(./figures/cost.tex)) (./src/conclusion.tex [10]) (./bib/bib.tex)
+
+** Conference Paper **
+Before submitting the final camera ready copy, remember to:
+
+ 1. Manually equalize the lengths of two columns on the last page
+ of your paper;
+
+ 2. Ensure that any PostScript and/or PDF output post-processing
+ uses only Type 1 fonts and that every step in the generation
+ process uses the appropriate paper size.
+
+[11] (build/main.aux) )
+(see the transcript file for additional information)</nix/store/gmpqpifqypljn5c
+nc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/c
+mextra/cmex7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-
+2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></nix/store/gmpqpifqyp
+ljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfo
+nts/cm/cmmi5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-
+2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></nix/store/gmpqpifqypl
+jn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfon
+ts/cm/cmmi8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2
+025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></nix/store/gmpqpifqyplj
+n5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-20
+25-texmfdist/fonts/type1/public/amsfonts/cm/cmr5.pfb></nix/store/gmpqpifqypljn5
+cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/
+cm/cmr7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-
+texmfdist/fonts/type1/public/amsfonts/cm/cmr8.pfb></nix/store/gmpqpifqypljn5cnc
+419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/
+cmr9.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-tex
+mfdist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></nix/store/gmpqpifqypljn5cnc4
+19b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/c
+msy5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-tex
+mfdist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></nix/store/gmpqpifqypljn5cnc41
+9b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cm
+sy8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texm
+fdist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></nix/store/gmpqpifqypljn5cnc419
+b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/courier/ucrr8a.pfb
+></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/f
+onts/type1/urw/times/utmb8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-te
+xlive-combined-2025-texmfdist/fonts/type1/urw/times/utmbi8a.pfb></nix/store/gmp
+qpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/t
+imes/utmr8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2
+025-texmfdist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on build/main.pdf (11 pages, 323826 bytes).
+Transcript written on build/main.log.
+Latexmk: Getting log file 'build/main.log'
+Latexmk: Examining 'build/main.fls'
+Latexmk: Examining 'build/main.log'
+Latexmk: Log file says output to 'build/main.pdf'
+Latexmk: Using bibtex to make bibliography file(s).
+Latexmk: All targets (build/main.pdf) are up-to-date
+
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/doc'
+make -C sw  -f sw.mk  PROFILE=release doc
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+  lint   doc/cgra.1
+  render doc/cgra.1
+  lint   doc/cgra.5
+  render doc/cgra.5
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'
+make -C lib -f lib.mk PROFILE=release man
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+groff -man -z doc/libcgra.3
+groff -man -Tutf8 doc/libcgra.3 > build/libcgra.3.txt
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'

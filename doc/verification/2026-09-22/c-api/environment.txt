@@ -1,0 +1,11 @@
+System: Linux-6.18.52-1-lts-x86_64-with-glibc2.42
+Working tree: modified; previous work preserved; no new commit
+ASan/UBSan suite ran outside the ptrace sandbox (LeakSanitizer requirement).
+git rev-parse HEAD: 8e6b770351c7e2550cab77b4956e8873f81e291f
+gcc --version: gcc (GCC) 15.2.0
+python3 --version: Python 3.14.6
+make --version: GNU Make 4.4.1
+ghdl --version: GHDL 6.0.0 (tarball) [Dunoon edition]
+makeinfo --version: texi2any (GNU texinfo) 7.2
+groff --version: GNU groff version 1.24.1
+pkg-config --version: 0.29.2

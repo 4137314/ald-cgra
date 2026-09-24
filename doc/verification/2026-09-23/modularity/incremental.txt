@@ -1,0 +1,10 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/doc'
+python3 tools/preview.py figure pe --latexmk "latexmk"
+Rc files read:
+  NONE
+Latexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.
+Latexmk: Nothing to do for 'build/previews/figure/pe/preview.tex'.
+Latexmk: All targets (build/previews/figure/pe/preview.pdf) are up-to-date
+
+Preview: doc/build/previews/figure/pe/preview.pdf
+make: Leaving directory '/home/main/dev/git/ald-cgra/doc'

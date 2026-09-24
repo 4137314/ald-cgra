@@ -1,0 +1,4 @@
+Before: doc/build/main.pdf saved before source extraction.
+After: full rebuild from modular sources.
+PASS: pdftotext -layout output has the same text tokens; one whitespace-only difference.
+PASS: nine pages before and after.

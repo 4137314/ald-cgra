@@ -1,0 +1,653 @@
+make -C lib -f lib.mk PROFILE=asan
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/cgra.c -o build/asan/cgra.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/emu.c -o build/asan/emu.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/serve.c -o build/asan/serve.o
+ar rcs build/asan/libcgra.a build/asan/cgra.o build/asan/emu.o build/asan/serve.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/asan/cgra.pic.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/emu.c -o build/asan/emu.pic.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/serve.c -o build/asan/serve.pic.o
+gcc -shared -Wl,-soname,libcgra.so.0 -fsanitize=address,undefined -o build/asan/libcgra.so.0.1.0 build/asan/cgra.pic.o build/asan/emu.pic.o build/asan/serve.pic.o
+ln -sf libcgra.so.0.1.0 build/asan/libcgra.so.0
+ln -sf libcgra.so.0.1.0 build/asan/libcgra.so
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C lib -f lib.mk PROFILE=asan test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_cgra.c build/asan/cgra.o build/asan/emu.o build/asan/serve.o -fsanitize=address,undefined -o build/asan/test_cgra
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_transport.c build/asan/cgra.o build/asan/emu.o build/asan/serve.o -fsanitize=address,undefined -o build/asan/test_transport
+./build/asan/test_cgra
+ok 1 - open kernel validation device
+ok 2 - unsupported binary kernel op rejected
+ok 3 - unsupported immediate kernel op rejected
+ok 4 - unsupported binary kernel op rejected
+ok 5 - unsupported immediate kernel op rejected
+ok 6 - unsupported binary kernel op rejected
+ok 7 - unsupported immediate kernel op rejected
+ok 8 - unsupported binary kernel op rejected
+ok 9 - unsupported immediate kernel op rejected
+ok 10 - unsupported binary kernel op rejected
+ok 11 - unsupported immediate kernel op rejected
+ok 12 - unsupported binary kernel op rejected
+ok 13 - unsupported immediate kernel op rejected
+ok 14 - unsupported binary kernel op rejected
+ok 15 - unsupported immediate kernel op rejected
+ok 16 - unsupported binary kernel op rejected
+ok 17 - unsupported immediate kernel op rejected
+ok 18 - invalid op does not contact device or modify output
+ok 19 - open kernel validation device
+ok 20 - unsupported binary kernel op rejected
+ok 21 - unsupported immediate kernel op rejected
+ok 22 - unsupported binary kernel op rejected
+ok 23 - unsupported immediate kernel op rejected
+ok 24 - unsupported binary kernel op rejected
+ok 25 - unsupported immediate kernel op rejected
+ok 26 - unsupported binary kernel op rejected
+ok 27 - unsupported immediate kernel op rejected
+ok 28 - unsupported binary kernel op rejected
+ok 29 - unsupported immediate kernel op rejected
+ok 30 - unsupported binary kernel op rejected
+ok 31 - unsupported immediate kernel op rejected
+ok 32 - unsupported binary kernel op rejected
+ok 33 - unsupported immediate kernel op rejected
+ok 34 - unsupported binary kernel op rejected
+ok 35 - unsupported immediate kernel op rejected
+ok 36 - invalid op does not contact device or modify output
+# libcgra unit tests
+ok 37 - CFG imm field round-trips signed
+ok 38 - CFG opcode field
+ok 39 - CFG sel_a field
+ok 40 - CFG sel_b field
+ok 41 - CFG reserved bits are zero
+ok 42 - identify succeeds on sim:
+ok 43 - identify reports protocol version
+ok 44 - identify reports ROWS
+ok 45 - identify reports COLS
+ok 46 - identify reports datapath width
+ok 47 - configure ok
+ok 48 - write_inputs ok
+ok 49 - run ok
+ok 50 - read_regs ok
+ok 51 - PE(0,0)=north+west=42
+ok 52 - reset_datapath ok
+ok 53 - read after reset ok
+ok 54 - registers cleared by reset
+ok 55 - vec_add ok
+ok 56 - vec_add matches host reference
+ok 57 - vec_sub ok
+ok 58 - vec_sub matches host reference
+ok 59 - vec_mul ok
+ok 60 - vec_mul matches (16-bit wrap)
+ok 61 - vec_relu ok
+ok 62 - vec_relu = max(a,0)
+ok 63 - vec_addi ok
+ok 64 - vec_addi = a + imm
+ok 65 - vec_max (n=3, partial lane)
+ok 66 - vec_max tail chunk correct
+ok 67 - apply(shl) ok
+ok 68 - SHL of negative wraps (=-16)
+ok 69 - dot ok
+ok 70 - dot product = 35
+ok 71 - sim: advertises protocol v3 (exec)
+ok 72 - exec: configure
+ok 73 - exec: single-tap transaction
+ok 74 - exec: tapped register holds 7 + 5
+ok 75 - exec: two-tap mask
+ok 76 - exec: taps come back in PE order
+ok 77 - exec: empty mask (write+run only)
+ok 78 - exec: empty mask still stepped the array
+ok 79 - exec: rejects ntaps != popcount(mask)
+ok 80 - exec: configure ACC
+ok 81 - exec: reset then accumulate
+ok 82 - exec: three accumulates of 5 from a cleared register
+ok 83 - exec: accumulate without reset
+ok 84 - exec: without the flag the accumulator carries over
+ok 85 - exec: accumulate with fused reset
+ok 86 - exec: fused reset cleared the accumulator first
+ok 87 - configure(NULL) -> ERR_ARG
+ok 88 - vec_add(b=NULL) -> ERR_ARG
+ok 89 - dot(b=NULL) -> ERR_ARG
+ok 90 - strerror returns non-empty text
+ok 91 - strerror returns non-empty text
+ok 92 - strerror returns non-empty text
+ok 93 - strerror returns non-empty text
+ok 94 - strerror returns non-empty text
+ok 95 - strerror returns non-empty text
+ok 96 - open sim:flaky
+ok 97 - vec_add recovers through the retry path
+ok 98 - flaky result still correct
+ok 99 - exactly two retries (first CFG + first EXEC/WR NACKed)
+ok 100 - transaction counter advanced
+ok 101 - reset_stats zeroes counters
+ok 102 - open sim:v2 (legacy device)
+ok 103 - sim:v2 identifies as protocol v2
+ok 104 - sim:v2 does not advertise exec
+ok 105 - cgra_exec refuses a pre-v3 device
+ok 106 - v2 fallback: vec_add runs
+ok 107 - v2 fallback: results identical to the fused path
+ok 108 - v2 fallback: dot identical to the fused path
+ok 109 - open both protocol backends
+ok 110 - fused path uses less than half the round trips
+ok 111 - fused path also moves fewer bytes
+ok 112 - sim:1x1
+ok 113 - ID reports actual geometry
+ok 114 - cached ID succeeds
+ok 115 - short configuration rejected
+ok 116 - long configuration rejected
+ok 117 - short west edge rejected
+ok 118 - long north edge rejected
+ok 119 - short register buffer rejected
+ok 120 - unknown EXEC flags rejected
+ok 121 - NULL input with nonzero length rejected
+ok 122 - tap count mismatch rejected
+ok 123 - mask selecting absent PE rejected
+ok 124 - legacy CFG requires 4x4
+ok 125 - legacy WR requires 4x4
+ok 126 - legacy RD requires 4x4
+ok 127 - legacy EXEC requires 4x4
+ok 128 - legacy apply requires 4x4
+ok 129 - invalid buffers/geometry perform no transfers after cached ID
+ok 130 - runtime CFG succeeds
+ok 131 - runtime WR succeeds
+ok 132 - runtime RUN succeeds
+ok 133 - runtime RD succeeds with exact capacity
+ok 134 - row-major results and read buffer canary intact
+ok 135 - last PE masked read and zero inputs
+ok 136 - sim:1x16
+ok 137 - ID reports actual geometry
+ok 138 - cached ID succeeds
+ok 139 - short configuration rejected
+ok 140 - long configuration rejected
+ok 141 - short west edge rejected
+ok 142 - long north edge rejected
+ok 143 - short register buffer rejected
+ok 144 - unknown EXEC flags rejected
+ok 145 - NULL input with nonzero length rejected
+ok 146 - tap count mismatch rejected
+ok 147 - legacy CFG requires 4x4
+ok 148 - legacy WR requires 4x4
+ok 149 - legacy RD requires 4x4
+ok 150 - legacy EXEC requires 4x4
+ok 151 - legacy apply requires 4x4
+ok 152 - invalid buffers/geometry perform no transfers after cached ID
+ok 153 - runtime CFG succeeds
+ok 154 - runtime WR succeeds
+ok 155 - runtime RUN succeeds
+ok 156 - runtime RD succeeds with exact capacity
+ok 157 - row-major results and read buffer canary intact
+ok 158 - last PE masked read and zero inputs
+ok 159 - sim:16x1
+ok 160 - ID reports actual geometry
+ok 161 - cached ID succeeds
+ok 162 - short configuration rejected
+ok 163 - long configuration rejected
+ok 164 - short west edge rejected
+ok 165 - long north edge rejected
+ok 166 - short register buffer rejected
+ok 167 - unknown EXEC flags rejected
+ok 168 - NULL input with nonzero length rejected
+ok 169 - tap count mismatch rejected
+ok 170 - legacy CFG requires 4x4
+ok 171 - legacy WR requires 4x4
+ok 172 - legacy RD requires 4x4
+ok 173 - legacy EXEC requires 4x4
+ok 174 - legacy apply requires 4x4
+ok 175 - invalid buffers/geometry perform no transfers after cached ID
+ok 176 - runtime CFG succeeds
+ok 177 - runtime WR succeeds
+ok 178 - runtime RUN succeeds
+ok 179 - runtime RD succeeds with exact capacity
+ok 180 - row-major results and read buffer canary intact
+ok 181 - last PE masked read and zero inputs
+ok 182 - sim:2x3
+ok 183 - ID reports actual geometry
+ok 184 - cached ID succeeds
+ok 185 - short configuration rejected
+ok 186 - long configuration rejected
+ok 187 - short west edge rejected
+ok 188 - long north edge rejected
+ok 189 - short register buffer rejected
+ok 190 - unknown EXEC flags rejected
+ok 191 - NULL input with nonzero length rejected
+ok 192 - tap count mismatch rejected
+ok 193 - mask selecting absent PE rejected
+ok 194 - legacy CFG requires 4x4
+ok 195 - legacy WR requires 4x4
+ok 196 - legacy RD requires 4x4
+ok 197 - legacy EXEC requires 4x4
+ok 198 - legacy apply requires 4x4
+ok 199 - invalid buffers/geometry perform no transfers after cached ID
+ok 200 - runtime CFG succeeds
+ok 201 - runtime WR succeeds
+ok 202 - runtime RUN succeeds
+ok 203 - runtime RD succeeds with exact capacity
+ok 204 - row-major results and read buffer canary intact
+ok 205 - last PE masked read and zero inputs
+ok 206 - sim:3x2
+ok 207 - ID reports actual geometry
+ok 208 - cached ID succeeds
+ok 209 - short configuration rejected
+ok 210 - long configuration rejected
+ok 211 - short west edge rejected
+ok 212 - long north edge rejected
+ok 213 - short register buffer rejected
+ok 214 - unknown EXEC flags rejected
+ok 215 - NULL input with nonzero length rejected
+ok 216 - tap count mismatch rejected
+ok 217 - mask selecting absent PE rejected
+ok 218 - legacy CFG requires 4x4
+ok 219 - legacy WR requires 4x4
+ok 220 - legacy RD requires 4x4
+ok 221 - legacy EXEC requires 4x4
+ok 222 - legacy apply requires 4x4
+ok 223 - invalid buffers/geometry perform no transfers after cached ID
+ok 224 - runtime CFG succeeds
+ok 225 - runtime WR succeeds
+ok 226 - runtime RUN succeeds
+ok 227 - runtime RD succeeds with exact capacity
+ok 228 - row-major results and read buffer canary intact
+ok 229 - last PE masked read and zero inputs
+ok 230 - sim:2x8
+ok 231 - ID reports actual geometry
+ok 232 - cached ID succeeds
+ok 233 - short configuration rejected
+ok 234 - long configuration rejected
+ok 235 - short west edge rejected
+ok 236 - long north edge rejected
+ok 237 - short register buffer rejected
+ok 238 - unknown EXEC flags rejected
+ok 239 - NULL input with nonzero length rejected
+ok 240 - tap count mismatch rejected
+ok 241 - legacy CFG requires 4x4
+ok 242 - legacy WR requires 4x4
+ok 243 - legacy RD requires 4x4
+ok 244 - legacy EXEC requires 4x4
+ok 245 - legacy apply requires 4x4
+ok 246 - invalid buffers/geometry perform no transfers after cached ID
+ok 247 - runtime CFG succeeds
+ok 248 - runtime WR succeeds
+ok 249 - runtime RUN succeeds
+ok 250 - runtime RD succeeds with exact capacity
+ok 251 - row-major results and read buffer canary intact
+ok 252 - last PE masked read and zero inputs
+ok 253 - sim:8x2
+ok 254 - ID reports actual geometry
+ok 255 - cached ID succeeds
+ok 256 - short configuration rejected
+ok 257 - long configuration rejected
+ok 258 - short west edge rejected
+ok 259 - long north edge rejected
+ok 260 - short register buffer rejected
+ok 261 - unknown EXEC flags rejected
+ok 262 - NULL input with nonzero length rejected
+ok 263 - tap count mismatch rejected
+ok 264 - legacy CFG requires 4x4
+ok 265 - legacy WR requires 4x4
+ok 266 - legacy RD requires 4x4
+ok 267 - legacy EXEC requires 4x4
+ok 268 - legacy apply requires 4x4
+ok 269 - invalid buffers/geometry perform no transfers after cached ID
+ok 270 - runtime CFG succeeds
+ok 271 - runtime WR succeeds
+ok 272 - runtime RUN succeeds
+ok 273 - runtime RD succeeds with exact capacity
+ok 274 - row-major results and read buffer canary intact
+ok 275 - last PE masked read and zero inputs
+ok 276 - sim:4x4
+ok 277 - ID reports actual geometry
+ok 278 - cached ID succeeds
+ok 279 - short configuration rejected
+ok 280 - long configuration rejected
+ok 281 - short west edge rejected
+ok 282 - long north edge rejected
+ok 283 - short register buffer rejected
+ok 284 - unknown EXEC flags rejected
+ok 285 - NULL input with nonzero length rejected
+ok 286 - tap count mismatch rejected
+ok 287 - invalid buffers/geometry perform no transfers after cached ID
+ok 288 - runtime CFG succeeds
+ok 289 - runtime WR succeeds
+ok 290 - runtime RUN succeeds
+ok 291 - runtime RD succeeds with exact capacity
+ok 292 - row-major results and read buffer canary intact
+ok 293 - last PE masked read and zero inputs
+ok 294 - invalid emulator geometry rejected
+ok 295 - invalid emulator geometry rejected
+ok 296 - invalid emulator geometry rejected
+ok 297 - invalid emulator geometry rejected
+ok 298 - invalid emulator geometry rejected
+ok 299 - invalid emulator geometry rejected
+1..299
+# 299 passed, 0 failed
+./build/asan/test_transport
+ok transport 1 - create PTY
+ok transport 2 - open serial library on PTY
+ok transport 3 - silent peer times out
+ok transport 4 - silent peer contributes no received bytes
+ok transport 5 - create PTY
+ok transport 6 - open serial library on PTY
+ok transport 7 - fork delayed peer
+ok transport 8 - fragments cannot restart the whole-reply deadline
+ok transport 9 - only bytes read before timeout are counted
+ok transport 10 - delayed peer delivered the complete reply
+ok transport 11 - create PTY
+ok transport 12 - open serial library on PTY
+ok transport 13 - disconnected PTY rejects write
+ok transport 14 - failed transfer does not invent byte counts
+ok transport 15 - create PTY
+ok transport 16 - open serial library on PTY
+ok transport 17 - establish geometry before injecting reply failure
+ok transport 18 - failing command preserves its original error
+ok transport 19 - uncertain request is sent once with no recovery byte
+ok transport 20 - peer observes exactly the original request
+ok transport 21 - all protocol entry points reject a desynchronized session
+ok transport 22 - blocked calls leave wire, counters and output untouched
+ok transport 23 - create PTY
+ok transport 24 - open serial library on PTY
+ok transport 25 - establish geometry before injecting reply failure
+ok transport 26 - failing command preserves its original error
+ok transport 27 - uncertain request is sent once with no recovery byte
+ok transport 28 - peer observes exactly the original request
+ok transport 29 - all protocol entry points reject a desynchronized session
+ok transport 30 - blocked calls leave wire, counters and output untouched
+ok transport 31 - create PTY
+ok transport 32 - open serial library on PTY
+ok transport 33 - establish geometry before injecting reply failure
+ok transport 34 - failing command preserves its original error
+ok transport 35 - uncertain request is sent once with no recovery byte
+ok transport 36 - peer observes exactly the original request
+ok transport 37 - all protocol entry points reject a desynchronized session
+ok transport 38 - blocked calls leave wire, counters and output untouched
+ok transport 39 - create PTY
+ok transport 40 - open serial library on PTY
+ok transport 41 - establish geometry before injecting reply failure
+ok transport 42 - failing command preserves its original error
+ok transport 43 - uncertain request is sent once with no recovery byte
+ok transport 44 - peer observes exactly the original request
+ok transport 45 - all protocol entry points reject a desynchronized session
+ok transport 46 - blocked calls leave wire, counters and output untouched
+ok transport 47 - create PTY
+ok transport 48 - open serial library on PTY
+ok transport 49 - establish geometry before injecting reply failure
+ok transport 50 - failing command preserves its original error
+ok transport 51 - uncertain request is sent once with no recovery byte
+ok transport 52 - peer observes exactly the original request
+ok transport 53 - all protocol entry points reject a desynchronized session
+ok transport 54 - blocked calls leave wire, counters and output untouched
+ok transport 55 - create PTY
+ok transport 56 - open serial library on PTY
+ok transport 57 - establish geometry before injecting reply failure
+ok transport 58 - inject malformed reply
+ok transport 59 - failing command preserves its original error
+ok transport 60 - uncertain request is sent once with no recovery byte
+ok transport 61 - peer observes exactly the original request
+ok transport 62 - all protocol entry points reject a desynchronized session
+ok transport 63 - blocked calls leave wire, counters and output untouched
+ok transport 64 - create PTY
+ok transport 65 - open serial library on PTY
+ok transport 66 - establish geometry before injecting reply failure
+ok transport 67 - inject malformed reply
+ok transport 68 - failing command preserves its original error
+ok transport 69 - uncertain request is sent once with no recovery byte
+ok transport 70 - peer observes exactly the original request
+ok transport 71 - all protocol entry points reject a desynchronized session
+ok transport 72 - blocked calls leave wire, counters and output untouched
+ok transport 73 - reserve descriptors through FD_SETSIZE
+ok transport 74 - create PTY
+ok transport 75 - open serial library on PTY
+ok transport 76 - serial descriptor is above the select bitmap limit
+ok transport 77 - high descriptor returns error instead of aborting
+# 77 transport checks passed
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C sw  -f sw.mk  PROFILE=asan test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -c dsl.c -o build/asan/dsl.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -c compile.c -o build/asan/compile.o
+compile.c: In function ‘matvec_run’:
+compile.c:595:86: warning: conversion from ‘unsigned int’ to ‘uint16_t’ {aka ‘short unsigned int’} may change value [-Wconversion]
+  595 |                                    last ? (uint16_t)((1u << (g.rows * g.cols)) - 1u) : 0u, west, g.rows, north, g.cols,
+      |                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+make -C ../lib -f lib.mk PROFILE=asan static
+make[2]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+make[2]: Nothing to be done for 'static'.
+make[2]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -UNDEBUG test/test_sw.c build/asan/dsl.o build/asan/compile.o ../lib/build/asan/libcgra.a -fsanitize=address,undefined -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/asan/test_sw
+./build/asan/test_sw
+# cgra CLI unit tests (DSL + compiler)
+ok 1 - dsl_parse accepts a valid config
+ok 2 - device 'lab' found
+ok 3 - device port parsed
+ok 4 - device baud parsed
+ok 5 - mode 'amplify' found
+ok 6 - mode op parsed
+ok 7 - variable $GAIN expanded to 7
+ok 8 - pipeline 'chain' has two stages
+ok 9 - io profile 'hx' found
+ok 10 - unknown directive is rejected
+ok 11 - directive outside any section is rejected
+ok 12 - unknown section type is rejected
+ok 13 - built-in defaults parse
+ok 14 - core modes present in defaults
+ok 15 - sim device in defaults
+ok 16 - validation defaults
+ok 17 - malformed override rejected
+ok 18 - failed override leaves the original mode intact
+ok 19 - diagnostic counts blank lines
+ok 20 - unknown PE field rejected
+ok 21 - failed parse creates no partial mode
+ok 22 - stage immediate requires complete integer
+ok 23 - invalid step count rejected
+ok 24 - invalid step count rejected
+ok 25 - invalid step count rejected
+ok 26 - invalid step count rejected
+ok 27 - explicit zero steps is valid
+ok 28 - 255 steps is valid
+ok 29 - malformed immediate rejected
+ok 30 - malformed immediate rejected
+ok 31 - malformed immediate rejected
+ok 32 - malformed immediate rejected
+ok 33 - malformed immediate rejected
+ok 34 - two different diagonal immediates rejected
+ok 35 - override sets both constant operands
+ok 36 - two different reduction immediates rejected
+ok 37 - two different custom immediates rejected
+ok 38 - equivalent signed and unsigned immediates accepted
+ok 39 - pipeline syntax parses before semantic validation
+ok 40 - binary later pipeline stage rejected
+ok 41 - open validation device
+ok 42 - reduction capacity rejected before execution
+ok 43 - missing B rejected by the C engine
+ok 44 - convolution length overflow rejected before arithmetic
+ok 45 - unsupported scan operation rejected instead of becoming ADD
+ok 46 - invalid engine arguments leave device and output untouched
+ok 47 - binding defaults
+ok 48 - load actual arithmetic standard library
+ok 49 - parse reversed operands
+ok 50 - sim:
+ok 51 - stdlib neg uses A even in ALU operand B
+ok 52 - both north operands read A
+ok 53 - swapped subtraction reads B minus A
+ok 54 - reduction injects B into ALU operand A
+ok 55 - sim:v2
+ok 56 - stdlib neg uses A even in ALU operand B
+ok 57 - both north operands read A
+ok 58 - swapped subtraction reads B minus A
+ok 59 - reduction injects B into ALU operand A
+ok 60 - sim:2x3
+ok 61 - stdlib neg uses A even in ALU operand B
+ok 62 - both north operands read A
+ok 63 - swapped subtraction reads B minus A
+ok 64 - reduction injects B into ALU operand A
+ok 65 - sim:2x3:v2
+ok 66 - stdlib neg uses A even in ALU operand B
+ok 67 - both north operands read A
+ok 68 - swapped subtraction reads B minus A
+ok 69 - reduction injects B into ALU operand A
+ok 70 - sim:3x2
+ok 71 - stdlib neg uses A even in ALU operand B
+ok 72 - both north operands read A
+ok 73 - swapped subtraction reads B minus A
+ok 74 - reduction injects B into ALU operand A
+ok 75 - sim:1x16
+ok 76 - stdlib neg uses A even in ALU operand B
+ok 77 - both north operands read A
+ok 78 - swapped subtraction reads B minus A
+ok 79 - reduction injects B into ALU operand A
+ok 80 - compile 'add' ok
+ok 81 - PE(0,0) opcode = ADD
+ok 82 - PE(0,0) sel_a = north
+ok 83 - PE(0,0) sel_b = west
+ok 84 - cfg_decode names the opcode
+ok 85 - open sim: for engine tests
+ok 86 - matvec_run ok
+ok 87 - matvec matches host reference (6x5)
+ok 88 - scan_run returns n
+ok 89 - scan matches host reference
+ok 90 - conv_run returns n+k-1
+ok 91 - conv matches host reference
+ok 92 - open both protocol backends
+ok 93 - matvec v3 ok
+ok 94 - matvec v2 ok
+ok 95 - matvec identical across protocols
+ok 96 - scan v3 ok
+ok 97 - scan v2 ok
+ok 98 - scan identical across protocols
+ok 99 - scan: fused path uses fewer round trips
+ok 100 - scan: fused path moves fewer bytes
+ok 101 - open sim: for the sparse-skip test
+ok 102 - conv 3*48 runs
+ok 103 - conv still matches the host reference
+ok 104 - dense matvec runs
+ok 105 - conv skips the Toeplitz zero blocks (>4x fewer round trips)
+ok 106 - sim:1x1:v2
+ok 107 - rectangular kernels match scalar reference
+ok 108 - sim:1x1
+ok 109 - rectangular kernels match scalar reference
+ok 110 - sim:1x16:v2
+ok 111 - rectangular kernels match scalar reference
+ok 112 - sim:1x16
+ok 113 - rectangular kernels match scalar reference
+ok 114 - sim:16x1:v2
+ok 115 - rectangular kernels match scalar reference
+ok 116 - sim:16x1
+ok 117 - rectangular kernels match scalar reference
+ok 118 - sim:2x3:v2
+ok 119 - rectangular kernels match scalar reference
+ok 120 - sim:2x3
+ok 121 - rectangular kernels match scalar reference
+ok 122 - sim:3x2:v2
+ok 123 - rectangular kernels match scalar reference
+ok 124 - sim:3x2
+ok 125 - rectangular kernels match scalar reference
+ok 126 - sim:2x8:v2
+ok 127 - rectangular kernels match scalar reference
+ok 128 - sim:2x8
+ok 129 - rectangular kernels match scalar reference
+ok 130 - sim:8x2:v2
+ok 131 - rectangular kernels match scalar reference
+ok 132 - sim:8x2
+ok 133 - rectangular kernels match scalar reference
+ok 134 - sim:4x4:v2
+ok 135 - rectangular kernels match scalar reference
+ok 136 - sim:4x4
+ok 137 - rectangular kernels match scalar reference
+ok 138 - parse custom coordinate beyond default 4x4
+ok 139 - custom coordinate valid on 1x16
+ok 140 - custom coordinate rejected on 2x3
+ok 141 - out-of-range output tap rejected
+1..141
+# 141 passed, 0 failed
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -c main.c -o build/asan/main.o
+gcc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP build/asan/main.o build/asan/dsl.o build/asan/compile.o ../lib/build/asan/libcgra.a -fsanitize=address,undefined -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/asan/cgra
+./build/asan/cgra selftest
+-- protocol v3 (fused exec) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+-- protocol v2 (write/run/read) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+ok    retry-on-nack (retries=2)
+all tests PASSED
+--- CLI smoke tests (device sim) ---
+11 22 33 44 55 66 77 88
+0 0 0 2 5
+./build/asan/cgra run muli -d sim --imm 10 --a "1 2 3 4" --io hex
+0x000A 0x0014 0x001E 0x0028
+./build/asan/cgra pipe saxpy -d sim --a "1 2 3 4"
+10 13 16 19
+./build/asan/cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+10 26 42 58
+./build/asan/cgra scan -d sim --a "3 1 4 1 5 9 2 6"
+3 4 8 9 14 23 25 31
+./build/asan/cgra scan -d sim --op max --a "3 1 4 1 5 9 2 6"
+3 3 4 4 5 9 9 9
+./build/asan/cgra conv -d sim -m "1 2 3" --x "4 5 6 7 8"
+4 13 28 34 40 37 24
+./build/asan/cgra run add -d sim:flaky --a "1 2 3 4" --b "10 20 30 40"   # retry recovers
+11 22 33 44
+./build/asan/cgra run add -d sim:v2 --a "1 2 3 4" --b "10 20 30 40"      # pre-v3 fallback
+11 22 33 44
+./build/asan/cgra scan -d sim:v2 --a "3 1 4 1 5 9 2 6"                   # pre-v3 fallback
+3 4 8 9 14 23 25 31
+./build/asan/cgra run add -d sim --a "1 2 3" --b "10 20 30" --json
+{"count": 3, "result": [11, 22, 33]}
+CGRA_PATH=config/stdlib ./build/asan/cgra run square -d sim --a "2 3 4 5"   # stdlib via CGRA_PATH
+4 9 16 25
+./build/asan/cgra show relu -v | head -1
+mode relu (pattern diagonal):
+./build/asan/cgra show add >/dev/null && echo "show ok"
+show ok
+./build/asan/cgra probe -d sim:2x3
+device: protocol v3, 2x3 array, 16-bit datapath
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+device OK
+./build/asan/cgra show add -d sim:3x2 >/dev/null
+sh test/test_cli.sh ./build/asan/cgra
+ok CLI 1 - reject run add -d sim: --a 1 2 --b 3 4 --steps 256
+ok CLI 2 - reject run add -d sim: --a 1 2 --b 3 4 --steps -1
+ok CLI 3 - reject run add -d sim: --a 1 2 --b 3 4 --steps 1junk
+ok CLI 4 - reject run add -d sim: --a 1 2 --b 3 4 --steps 999999999999999999999999
+ok CLI 5 - reject run addi -d sim: --a 1 --imm 4junk
+ok CLI 6 - explicit zero steps
+ok CLI 7 - reject run add -d sim: --a 2 --b 3
+ok CLI 8 - reject check
+ok CLI 9 - reject check
+ok CLI 10 - reject -c /tmp/nix-shell.UsrXuE/tmp.RVGiDcLGma/pipeline.cgra pipe invalid -d sim: --a 1 2 3
+ok CLI 11 - check validates pipeline arity
+ok CLI 12 - same input and output file keeps data until read
+ok CLI 13 - hard-linked input and output
+ok CLI 14 - reject run missing -d sim: --a 1 -o /tmp/nix-shell.UsrXuE/tmp.RVGiDcLGma/result
+ok CLI 15 - failed command preserves existing output
+ok CLI 16 - reject run addi -d sim: --a 1 -o /dev/full
+# 16 CLI regression checks passed
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'

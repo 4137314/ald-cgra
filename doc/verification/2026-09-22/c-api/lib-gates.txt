@@ -1,0 +1,5 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/lib'
+mkdir -p build/analyze
+groff -man -z doc/libcgra.3
+groff -man -Tutf8 doc/libcgra.3 > build/libcgra.3.txt
+make: Leaving directory '/home/main/dev/git/ald-cgra/lib'

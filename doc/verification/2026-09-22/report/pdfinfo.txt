@@ -1,0 +1,22 @@
+Title:           A Configurable CGRA Mesh: RTL, C API and UART Protocol
+Subject:         Coarse-grained reconfigurable array; FPGA accelerator; dataflow mapping
+Keywords:        CGRA, reconfigurable computing, systolic array, FPGA, UART protocol, dataflow
+Author:          Mattia Fait
+Creator:         LaTeX with hyperref
+Producer:        pdfTeX-1.40.27
+CreationDate:    Tue Jan  1 01:00:00 1980 CET
+ModDate:         Tue Jan  1 01:00:00 1980 CET
+Custom Metadata: yes
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           9
+Encrypted:       no
+Page size:       612 x 792 pts (letter)
+Page rot:        0
+File size:       311401 bytes
+Optimized:       no
+PDF version:     1.7

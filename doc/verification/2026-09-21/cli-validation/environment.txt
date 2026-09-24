@@ -1,0 +1,6 @@
+System: Linux-6.18.51-1-lts-x86_64-with-glibc2.44
+HEAD: 8e6b770351c7e2550cab77b4956e8873f81e291f
+Working tree: modified; prior changes preserved
+gcc (GCC) 15.2.0
+Python 3.14.7
+GNU Make 4.4.1

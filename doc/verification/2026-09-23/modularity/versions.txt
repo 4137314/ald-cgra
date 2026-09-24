@@ -1,0 +1,51 @@
+Tool versions; Git HEAD is the base commit, not a clean working tree.
+
+$ git rev-parse HEAD
+8e6b770351c7e2550cab77b4956e8873f81e291f
+
+$ python3 --version
+Python 3.14.6
+
+$ make --version
+GNU Make 4.4.1
+Built for x86_64-pc-linux-gnu
+Copyright (C) 1988-2023 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+$ latexmk -version
+Latexmk, John Collins, 15 June 2025. Version 4.87
+
+$ pdflatex --version
+pdfTeX 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org)
+kpathsea version 6.4.1
+Copyright 2025 Han The Thanh (pdfTeX) et al.
+There is NO warranty.  Redistribution of this software is
+covered by the terms of both the pdfTeX copyright and
+the Lesser GNU General Public License.
+For more information about these matters, see the file
+named COPYING and the pdfTeX source.
+Primary author of pdfTeX: Han The Thanh (pdfTeX) et al.
+Compiled with libpng 1.6.58; using libpng 1.6.58
+Compiled with zlib 1.3.2; using zlib 1.3.2
+Compiled with xpdf version 4.04
+
+$ bibtex --version
+BibTeX 0.99d (TeX Live 2025/nixos.org)
+kpathsea version 6.4.1
+Copyright 2025 Oren Patashnik.
+There is NO warranty.  Redistribution of this software is
+covered by the terms of both the BibTeX copyright and
+the Lesser GNU General Public License.
+For more information about these matters, see the file
+named COPYING and the BibTeX source.
+Primary author of BibTeX: Oren Patashnik.
+
+$ nix --version
+nix (Nix) 2.35.2
+
+$ pdftotext -v
+pdftotext version 26.08.0
+Copyright 2005-2026 The Poppler Developers - http://poppler.freedesktop.org
+Copyright 1996-2011, 2022 Glyph & Cog, LLC

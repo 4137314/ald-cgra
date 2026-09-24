@@ -1,0 +1,7 @@
+Clean snapshot: exact input directories including tables/verification; no build artifacts.
+nix build --no-link --print-out-paths path:/tmp/nix-shell.KplJb2/cgra-atomic-doc-final-cztux7s_#doc
+evaluation warning: Package 'texlive-combined-2025' in /nix/store/d1qrs4cfnhmkhkripp32pyn64c8ldjzq-source/pkgs/tools/typesetting/tex/texlive/build-tex-env.nix:447 has the following problem: removal: texlive.combine is deprecated and will be removed from Nixpkgs 27.05. Please switch to texliveSmall.withPackages. See https://nixos.org/manual/nixpkgs/stable/#sec-language-texlive-user-guide. See https://nixos.org/manual/nixpkgs/unstable#sec-problems
+this derivation will be built:
+  /nix/store/6lnim6qlvldv9ffbdg6fq89d389jdw7c-cgra-doc-0.1.0.drv
+building '/nix/store/6lnim6qlvldv9ffbdg6fq89d389jdw7c-cgra-doc-0.1.0.drv'...
+/nix/store/33lsg1f3pkppwp1id07sa8r2d741jz46-cgra-doc-0.1.0
