@@ -19,7 +19,7 @@ entity uart_rx is
 end entity uart_rx;
 
 architecture rtl of uart_rx is
-  type state_t is (S_IDLE, S_START, S_DATA, S_STOP);
+  type state_t is (S_IDLE, S_START, S_DATA, S_STOP, S_BREAK);
   signal state   : state_t := S_IDLE;
   signal clk_cnt : natural range 0 to CLKS_PER_BIT - 1 := 0;
   signal bit_idx : natural range 0 to 7 := 0;
@@ -84,11 +84,22 @@ begin
           when S_STOP =>
             if clk_cnt = CLKS_PER_BIT - 1 then
               clk_cnt  <= 0;
-              rx_data  <= data_r;
-              rx_valid <= '1';
-              state    <= S_IDLE;
+              if rx_s2 = '1' then
+                rx_data  <= data_r;
+                rx_valid <= '1';
+                state    <= S_IDLE;
+              else
+                -- Framing error: discard the byte and wait for the line to
+                -- return idle, so a break cannot generate repeated commands.
+                state <= S_BREAK;
+              end if;
             else
               clk_cnt <= clk_cnt + 1;
+            end if;
+
+          when S_BREAK =>
+            if rx_s2 = '1' then
+              state <= S_IDLE;
             end if;
 
         end case;

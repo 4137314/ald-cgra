@@ -4,7 +4,7 @@
 -- bit-exact, at rx_data with a one-cycle rx_valid pulse. Exercises the framing
 -- (start/8 data LSB-first/stop) and the receiver's mid-bit sampling across a
 -- set of adversarial byte patterns. Self-checking; a watchdog fails the run if
--- the link ever stalls, so `make sim` alone certifies the UART.
+-- the link ever stalls. Also checks rejection of a break and recovery.
 
 library ieee;
 use ieee.std_logic_1164.all;
@@ -20,6 +20,8 @@ architecture sim of tb_uart is
   signal clk      : std_logic := '0';
   signal rst      : std_logic := '1';
   signal line     : std_logic;                    -- tx_serial -> rx_serial
+  signal rx_line  : std_logic;
+  signal force_break : boolean := false;
   signal tx_start : std_logic := '0';
   signal tx_data  : std_logic_vector(7 downto 0) := (others => '0');
   signal tx_busy  : std_logic;
@@ -32,6 +34,7 @@ architecture sim of tb_uart is
 begin
 
   clk <= not clk after 5 ns;                       -- 100 MHz
+  rx_line <= '0' when force_break else line;
 
   u_tx : entity work.uart_tx
     generic map (CLKS_PER_BIT => CLKS_PER_BIT)
@@ -40,7 +43,7 @@ begin
 
   u_rx : entity work.uart_rx
     generic map (CLKS_PER_BIT => CLKS_PER_BIT)
-    port map (clk => clk, rst => rst, rx_serial => line,
+    port map (clk => clk, rst => rst, rx_serial => rx_line,
               rx_valid => rx_valid, rx_data => rx_data);
 
   -- watchdog: the loopback of 10 bytes must finish well within this window.
@@ -77,7 +80,23 @@ begin
         severity failure;
     end loop;
 
-    report "tb_uart PASSED (10/10 bytes looped back bit-exact)" severity note;
+    wait for CLKS_PER_BIT * 30 ns;
+    force_break <= true;
+    for i in 1 to 30 * CLKS_PER_BIT loop
+      wait until rising_edge(clk);
+      assert rx_valid = '0' report "invalid stop bit accepted during break" severity failure;
+    end loop;
+    force_break <= false;
+    wait for CLKS_PER_BIT * 30 ns;
+    wait until rising_edge(clk);
+    tx_data <= x"A5";
+    tx_start <= '1';
+    wait until rising_edge(clk);
+    tx_start <= '0';
+    wait until rx_valid = '1';
+    assert rx_data = x"A5" report "UART failed to recover after break" severity failure;
+
+    report "tb_uart PASSED (10 loopback bytes, invalid stop/break rejected, recovery)" severity note;
     finish;
   end process;
 
