@@ -49,6 +49,7 @@ begin
     variable a, b : data_t;
     variable res  : data_t;
     variable prod : signed(2 * DATA_W - 1 downto 0);
+    variable macv : signed(2 * DATA_W - 1 downto 0);
   begin
     if rising_edge(clk) then
       if rst = '1' then
@@ -65,8 +66,15 @@ begin
           when OP_SUB   => res := a - b;
           when OP_MUL   => prod := a * b;
                            res  := prod(DATA_W - 1 downto 0);
+          -- MAC as a full-width product-plus-accumulator, truncated once at the
+          -- end. Arithmetically identical to (r + prod(15 downto 0)) because
+          -- the low DATA_W bits of a sum depend only on the low DATA_W bits of
+          -- its addends, but this is the DSP48E1's native P = A*B + C shape, so
+          -- the accumulate can stay inside the multiplier tile instead of
+          -- costing a fabric carry chain on the critical path.
           when OP_MAC   => prod := a * b;
-                           res  := r + prod(DATA_W - 1 downto 0);
+                           macv := prod + resize(r, 2 * DATA_W);
+                           res  := macv(DATA_W - 1 downto 0);
           when OP_AND   => res := a and b;
           when OP_OR    => res := a or b;
           when OP_XOR   => res := a xor b;
