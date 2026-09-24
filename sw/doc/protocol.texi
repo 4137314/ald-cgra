@@ -4,7 +4,7 @@
 @cindex protocol
 @cindex UART
 The tool and @code{libcgra} talk to the fabric with a byte-oriented UART
-protocol (version 2): 115200 baud, 8N1, little-endian payloads.  It is
+protocol (version 3): 115200 baud, 8N1, little-endian payloads.  It is
 summarised here for the curious; the authority is @file{hw/rtl/cgra_pkg.vhd},
 mirrored in @file{lib/include/cgra.h} and the emulator @file{lib/src/emu.c}.
 
@@ -12,11 +12,12 @@ mirrored in @file{lib/include/cgra.h} and the emulator @file{lib/src/emu.c}.
 @multitable @columnfractions .12 .12 .50
 @headitem Cmd @tab Byte @tab Payload @result{} reply
 @item @code{ID}  @tab @code{0x01} @tab --- @result{} @code{0xCA}, version, rows, cols, width
-@item @code{CFG} @tab @code{0x02} @tab 16 x 32-bit words + checksum @result{} ACK/NACK
-@item @code{WR}  @tab @code{0x03} @tab 8 x 16-bit (west 0--3, north 0--3) + checksum @result{} ACK/NACK
+@item @code{CFG} @tab @code{0x02} @tab R*C x 32-bit words + checksum @result{} ACK/NACK
+@item @code{WR}  @tab @code{0x03} @tab (R+C) x 16-bit (west rows, then north columns) + checksum @result{} ACK/NACK
 @item @code{RUN} @tab @code{0x04} @tab 1 byte step count @result{} ACK
-@item @code{RD}  @tab @code{0x05} @tab --- @result{} 16 x 16-bit registers + checksum
+@item @code{RD}  @tab @code{0x05} @tab --- @result{} R*C x 16-bit registers + checksum
 @item @code{RST} @tab @code{0x06} @tab --- @result{} ACK (clears registers)
+@item @code{EXEC} @tab @code{0x07} @tab steps, flags, 16-bit tap mask, (R+C) x 16-bit inputs + checksum @result{} masked registers + checksum + status
 @end multitable
 
 @noindent
@@ -25,15 +26,58 @@ carry an 8-bit additive checksum (sum of the payload bytes, mod 256); the
 device NACKs a bad @code{CFG}/@code{WR} and appends a checksum to the @code{RD}
 reply.
 
+Configuration and edge-input words latch before checksum validation.
+@code{NACK} does not roll those writes back: resend a complete valid payload
+before subsequent execution. A rejected @code{EXEC} leaves the PE registers
+unchanged but has latched its input words.
+
+@cindex EXEC
+@cindex round trips
+@section The fused EXEC transaction
+Every kernel drives the array in chunks, and under protocol v2 each chunk cost
+three round trips: write the edge inputs, run, read the registers back.
+@code{EXEC} (v3) does all three in one, and returns only the registers named by
+its 16-bit @dfn{tap mask} --- bit @math{i} selects PE register @math{i},
+row-major --- so an element-wise chunk that uses four diagonal lanes ships
+eight result bytes instead of thirty-two.  Bit 0 of the flags byte folds in an
+@code{RST}. A complete, checksum-valid NACK can then be retried under the
+fault model below.
+
+For a valid mask selecting existing PEs, the reply length is fixed, so it
+stays parseable even when the payload checksum fails; in that case the device
+returns the @emph{current} registers with a @code{NACK} status and does not
+step the array.
+
+@code{libcgra} issues @code{EXEC} only when the @code{ID} handshake reports
+supported version 3, and otherwise falls back to the @code{WR}/@code{RUN}/@code{RD}
+sequence, so an older bitstream keeps working unchanged.
+
 @cindex robustness
 @cindex retries
 @cindex watchdog
 @section Robustness
-@code{libcgra} retransmits @code{CFG}, @code{WR} and @code{RD} automatically on
-a NACK, timeout or bad checksum (@pxref{Environment}, and
-@code{cgra_set_retries} in @code{libcgra(3)}).  @code{RUN} is never retried,
-since it advances state; a failed @code{RUN} instead triggers a resync
-(flush + @code{RST}) so the device is never left hanging.  On the device side, a
-watchdog aborts a partially received command after about a second, so a
-desynchronised host always recovers.  @command{cgra selftest} exercises this
-path via the @samp{sim:flaky} device.
+@code{libcgra} retries complete NACK replies for @code{CFG}, @code{WR} and
+@code{EXEC} with fused reset (@code{cgra_set_retries}, default 3). This assumes
+intact command bytes and frame lengths. @code{RUN} and @code{RD} are never
+retried. Timeout, I/O failure or malformed reply stops the session; later
+calls return @code{CGRA_ERR_DESYNC} without sending further bytes. In
+particular, the host sends no implicit @code{RST}, which could be interpreted
+as payload by a controller still waiting for an argument.
+
+Close the handle and restore the controller parser to idle before reopening:
+reset the device out of band, or wait for its configured watchdog and all
+pending transmission/replies to finish. Reinitialize configuration, inputs
+and datapath before computing again. Reopening alone does not reset the
+remote parser; the in-process emulator has no watchdog clock.
+
+The additive checksum and watchdog do not provide reliable framing under byte
+insertion/deletion or corrupted command bytes. Some errors are undetectable;
+a failed command may already have changed device state. @samp{sim:flaky}
+exercises complete NACK retries, while @samp{sim:v2} exercises the legacy
+fallback. PTY regressions check session shutdown under timeout and malformed
+replies. These tests do not establish recovery from arbitrary link faults.
+
+@code{ID} dimensions determine transfer lengths and row-major PE indices
+@code{r*C+c}. Supported devices have positive R/C and at most 16 PEs. The EXEC
+mask always occupies two bytes: the device ignores bits beyond R*C and the
+host rejects such masks. Only selected existing registers are returned.

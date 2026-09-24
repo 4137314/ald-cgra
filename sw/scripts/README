@@ -11,14 +11,16 @@ Use it
 ------
     make bench                       # DEV=sim, sweeps 256/1024/4096
     make bench DEV=auto              # after `cgra probe` on a real board
-    make bench SIZES="1024 8192" REPEAT=100 DEV=/dev/ttyUSB1
+    make bench SIZES="1024 4096" REPEAT=100 DEV=/dev/ttyUSB1
 
     # or directly:
     DEV=sim sw/scripts/cgra-bench.sh
 
 Knobs (env or `make bench VAR=...`): DEV, SIZES, REPEAT, CGRA, STDLIB, OUT.
 With DEV=auto it discovers + correctness-checks the FPGA (`cgra probe`) before
-benchmarking, so only a trusted device is measured. Output artifact defaults to
+benchmarking. Every measured invocation is checked against its scalar reference.
+Failures propagate a nonzero status and remain in the JSON artifact; valid modes
+without a reference are reported as skipped. Output artifact defaults to
 ../build/benchmark.json.
 
 The whole-program C profiling of the CLI (gprof/perf/callgrind) lives in the

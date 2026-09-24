@@ -6,16 +6,61 @@ sw/test/ - cgra CLI unit tests
                 parsing, $variable expansion, parse-error rejection, the
                 built-in defaults, diagonal mode_compile + cfg_decode, and the
                 matvec/scan/conv engines vs. a host reference (run against the
-                sim: emulator, so no FPGA).
+                sim: emulator, so no FPGA). Two further groups guard the
+                performance work: engine results must be identical on sim: and
+                sim:v2 while costing strictly fewer round trips and bytes, and
+                conv must actually skip its Toeplitz matrix's zero tiles
+                (asserted as >4x fewer round trips than the equivalent dense
+                matvec) rather than streaming them.
+    kernel_cases.h
+                shared scalar-reference workload: vector operations, DSL modes,
+                dot, 5x7 matvec, scans and convolution, with signed overflow and
+                19-element tails. Runs on eight geometries in v2 and v3 and is
+                reused by hw/sim/gen_kernel_vectors.c for RTL replay.
+
+CAREFUL when adding a check: CHECK() evaluates its condition exactly once, on
+purpose -- see the note in lib/test/README.
 
 TAP-style output; non-zero exit on failure.
 
-Run (make -f ../sw.mk <target>)
+Run from the repository root (make -C sw -f sw.mk <target>)
 -------------------------------
     unit                 build + run the unit tests
     smoke                CLI smoke tests against the emulator
-    test                 unit + smoke
+    test                 unit + smoke + CLI shell/Python regressions
     PROFILE=asan test    same, under AddressSanitizer + UBSan
     valgrind             unit tests under valgrind
 
 Compiled -UNDEBUG so assert() fires in any PROFILE.
+CLI regressions added after the September 2026 audit:
+    test_cli.sh checks malformed/discovered configs, pipeline arity, numeric
+    options, output preservation (including hard links) and write failures.
+    It uses temporary files and sim:, and runs as part of make test.
+
+test_sw.c also checks actual stdlib negation, swapped ALU sources on multiple
+geometries/protocols, shared immediates, parser rollback, and engine argument
+validation before device commands. See ../../TASKS.md for remaining work.
+
+    test_bench.py uses Python 3's JSON parser, multiple v2/v3 geometries and
+    a fake PTY device returning checksum-valid wrong data. Covers benchmark
+    failure/skip accounting, scalar comparison, UTF-8/escaping, failure artifacts,
+    strict CLI numbers, large search lists, file capacity and embedded NUL.
+    Runs from sw/ as part of make test; needs Python 3 standard library only.
+
+Strict parser tests cover transaction rollback for invalid/oversized fields,
+section syntax, variable capacity/expansion, PE coordinates and output taps.
+
+Pattern and reset regressions in test_sw.c reject inapplicable fields before
+configuration/execution and check stateful ACC mappings with nonzero initial
+registers, repeated calls, once/each/default policies and untouched NOP cells.
+Both v2 and v3 run on 1x1, 2x3 and 3x2 meshes. Diagonals with too few steps
+exercise routing state across chunks, followed by an explicit zero-step run.
+
+    test_install.py copies the working sources to a temporary directory and
+    builds/installs them there. Checks include lookup before init, stdlib copy
+    content, a prefix with spaces/quote/ampersand, changing PREFIX without a
+    clean, DESTDIR deployment, copy failures, and an external C client using
+    the installed header/library/pkg-config. All CLI runs are outside the
+    checkout, with isolated user configuration. No system install or FPGA.
+    Run `make test-install` from the repository root; needs GNU make, a C11
+    compiler/toolchain, Python 3, makeinfo and pkg-config. Also runs in Linux CI.

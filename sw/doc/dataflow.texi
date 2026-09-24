@@ -3,7 +3,7 @@
 
 @cindex dataflow
 @cindex patterns
-A mode's @code{pattern} chooses how it is laid out on the 4x4 mesh.  The single
+A mode's @code{pattern} chooses how it is laid out on the device mesh (default 4x4).  The single
 register per PE and edge-only operand injection (north per column, west per row)
 are the constraints every pattern works within.
 
@@ -12,7 +12,7 @@ are the constraints every pattern works within.
 @cindex diagonal pattern
 Element-wise binary ops.  @var{a} enters from the north edge, @var{b} from the
 west; PEs above the diagonal @code{pass} @var{a} southward, those below
-@code{pass} @var{b} eastward, and each diagonal PE computes one result.  Four
+@code{pass} @var{b} eastward, and each diagonal PE computes one result.  @code{min(rows,cols)}
 lanes per transaction; @code{out = diag}.
 
 @item reduce
@@ -31,8 +31,8 @@ Output taps default to the diagonal, or a single @code{pe R,C} via @code{out}.
 Weight-stationary matrix--vector @code{y = A*x}, driven by @command{cgra
 matvec}.  The vector @var{x} is held stationary in the PE immediates; the
 matrix streams in one row per step as a wavefront marching south (row 0
-multiplies, rows 1--3 form a delay line).  The array is tiled over 4x4 blocks
-for any @code{M x N}; the host sums the four skewed partials per output.
+multiplies, the remaining rows form a delay line).  The array is tiled over rows x cols blocks
+for any @code{M x N}; the host sums the skewed partials per output.
 
 @item conv
 @cindex convolution
@@ -40,17 +40,24 @@ for any @code{M x N}; the host sums the four skewed partials per output.
 
 @item scan
 @cindex prefix scan
-Inclusive prefix scan on row 0 (@command{cgra scan}): the element sits in the
-immediate and is re-added each step while the running prefix flows west to
+Inclusive prefix scan on row 0 (@command{cgra scan}): the block's elements
+arrive on the north edge and the running prefix flows west to
 east, tiled over columns with the carry chained between blocks.
 @end table
 
-@cindex why weight-stationary
-@section Why weight-stationary, not a full TPU array
-A classical output-stationary systolic array fuses, in each PE, a multiply with
-the accumulation of a partial sum arriving from a neighbour, while activations
-flow orthogonally---two independent live values per PE.  This fabric gives each
-PE a single register and admits external data only at two edges, so that fusion
-is not realisable; the weight-stationary streaming dataflow above is the
-natural fit.  The consequence is visible in @command{cgra bench}: cost is set by
-serial round trips, not by the array.
+@cindex stationary data
+@section Local accumulation and forwarding limits
+Output-stationary means that a partial sum stays local while products are
+accumulated.  The MAC instruction already supports this: @command{cgra dot}
+keeps its running sum in PE(0,0).
+
+Each PE exposes only one result register to its neighbours.  It cannot retain
+a sum and simultaneously forward independent activation and weight values
+from that register.  This limits a one-MAC-per-PE-per-step schedule;
+other schedules can use routing PEs, multiple phases or extra storage.
+
+The implemented matrix mapping keeps coefficients in row 0, where C PEs
+multiply.  The remaining (R-1)*C PEs delay the products, and the host reduces
+each output row.  In the default 4x4 array that is four active multipliers
+and twelve delay cells.  Convolution skips zero tiles on the wire but still
+materialises a dense Toeplitz matrix in host memory.

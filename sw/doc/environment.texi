@@ -16,7 +16,10 @@ Colon-separated list of extra configuration roots, searched like @env{PATH}
 Project-local configuration file, loaded instead of @file{./.cgra/}.
 @item CGRA_STDLIB
 Source directory @command{cgra init} copies the standard library from (before
-the installed share dir and the in-tree @file{sw/config/stdlib}).
+the configured installed directory and the relative source directories
+@file{sw/config/stdlib}, @file{config/stdlib}). An explicit nonempty value
+that cannot supply the library is an error. This variable affects
+@command{init}; use @env{CGRA_PATH} to add include search directories.
 @item XDG_CONFIG_HOME
 Base for the user config directory (@file{$XDG_CONFIG_HOME/cgra}); falls back to
 @file{~/.config/cgra}.

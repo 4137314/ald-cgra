@@ -8,8 +8,10 @@ move vectors in and out through stdin/stdout so kernels compose in pipes.
 Files
 -----
     main.c        getopt_long parsing + every subcommand + vector I/O + shell
+    bench_ref.h .c independent scalar benchmark references (no emulator/compiler execution)
     dsl.h dsl.c   the .cgra language: model, parser, config discovery
-    compile.h .c  mode -> config words -> execution; matvec/scan/conv engines
+    compile.h .c  mode -> config words -> execution; adapters to libcgra's
+                  matvec/scan/conv engines (length returns and CLI error text)
 
 Layout
 ------

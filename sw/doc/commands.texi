@@ -29,6 +29,10 @@ non-zero if anything fails.  Run it after editing a @file{.cgra} file.
 Install the built-in defaults to @file{~/.config/cgra/config.cgra} and copy the
 bundled standard library into @file{~/.config/cgra/stdlib/}.  Refuses to
 overwrite an existing config unless @option{--force} is given.
+The source is @env{CGRA_STDLIB} when set, otherwise the configured installed
+directory or a source-tree fallback (@pxref{Environment}). Missing library
+files or copy/write failures return nonzero. Initialization is not
+transactional: a failure can leave defaults or some library files written.
 @end deffn
 
 @deffn Command show mode [--imm @var{N}] [-v]
@@ -42,7 +46,7 @@ immediate of any @code{const} operand before compiling.
 
 @deffn Command ping
 Identify the device and print its protocol version and geometry; warns if the
-geometry differs from this build's 4x4x16 assumption.
+reported geometry or protocol is unsupported.
 @end deffn
 
 @deffn Command probe
@@ -57,7 +61,7 @@ Clear the PE registers; the loaded configuration is preserved.
 @end deffn
 
 @deffn Command dump
-Read back all sixteen PE registers and print them, one array row per line.
+Read back all R x C PE registers and print them, one array row per line.
 @end deffn
 
 @section Compute
@@ -68,6 +72,8 @@ Element-wise modes read @var{a} from the north edge and (for binary ops)
 @var{b} from the west, producing one output per input.  Reduction modes
 (@code{pattern = reduce}) fold the stream into a single scalar.  @option{--imm}
 sets a @code{const} operand; @option{--steps} overrides the mode's step count.
+Step counts must be complete integer literals in 0..255 and immediates in
+-32768..65535. Invalid values are rejected rather than truncated.
 @end deffn
 
 @deffn Command pipe name [@var{nums}@dots{}] [--a @var{SRC}] [--b @var{SRC}]
@@ -79,7 +85,7 @@ come from the pipeline definition (@code{stage = muli imm=3}).
 @deffn Command matvec -m @var{SRC} --x @var{SRC} [--cols @var{N}]
 Systolic matrix--vector product @math{y = A x}.  @var{A} is row-major; its width
 defaults to the length of @var{x} (or @option{--cols}).  Uses the
-weight-stationary dataflow, tiled over 4x4 blocks for any @code{M x N}.
+weight-stationary dataflow, tiled over rows x cols blocks for any @code{M x N}.
 @end deffn
 
 @deffn Command conv -m @var{KERNEL} --x @var{SIGNAL}
@@ -93,21 +99,40 @@ over columns with the running fold carried between blocks.  Default op is
 @code{sum}.
 @end deffn
 
-@deffn Command bench [@var{mode}] [--size @var{N}] [--repeat @var{R}]
-Time @var{mode} (default @code{add}) over @var{N} elements repeated @var{R}
-times, and print the elapsed time plus the link statistics
-(transactions, retries, TX/RX bytes)---handy for seeing that serial round trips,
-not the ALU, dominate.
+@deffn Command bench [@var{mode}] [--size @var{N}] [--repeat @var{R}] [--json]
+Measure one mode (default @code{add}) and check every result against an
+independent scalar reference. Supported references cover stateless diagonal
+modes and reductions on PE(0,0). Reference generation and output comparison
+are outside the timed intervals. The measured calls include configuration
+and execution; link counters cover those calls. @var{N} must be 1..4096 and
+@var{R} 1..INT_MAX. An unsupported single benchmark returns nonzero.
 @end deffn
 
 @deffn Command benchall [--size @var{N}] [--repeat @var{R}] [--json]
-Stress-benchmark @emph{every} benchable mode currently loaded---element-wise
-and reduction modes, so the whole standard library---and print a structured
-report: an aligned table of throughput (elems/s) and link cost (TX/RX bytes,
-retries) per mode, or a JSON object with @option{--json}.  This is the
-CGRA-under-stress sweep you run once the FPGA is up; @command{make bench}
-(@pxref{Overview}) wraps it to autodiscover the board and sweep several vector
-sizes.
+Inspect every loaded mode and report @code{passed}, @code{failed} or
+@code{skipped}. Invalid configurations, transport errors and numerical
+mismatches are failures. Valid custom/stateful-diagonal mappings and dedicated
+matrix/scan/convolution patterns without a scalar benchmark reference are
+explicitly skipped. The built-in 4x4 custom template fails validation on
+smaller shapes; it is not a portable mapping.
+
+JSON schema version 1 records the resolved port/backend, device geometry,
+protocol version, configured baud/timeout, compiler and deterministic workload
+identifier. The baud value does not model emulator timing. Each entry records
+the mode's @code{mapping} fields (empty fields use documented defaults).
+Software source/build provenance still needs an accompanying source snapshot.
+The report keeps all entries in @code{results}. Each entry has
+@code{mode}, @code{pattern} and @code{status}; passed entries include
+@code{verification: "scalar"}, timings and link counters, and other entries
+include @code{reason}. @code{modes} counts successes, @code{failed} and
+@code{skipped} count the other outcomes. Totals include successful measurements
+only. Any failure, or no successful measurements, gives a nonzero exit status.
+
+A completed benchmark report is published with @option{-o} even when it
+contains failures; parse/open failures before reporting preserve the previous
+file. @command{make bench} retains the failing JSON artifact and propagates
+nonzero status. This report does not establish correctness for excluded
+mappings or inputs beyond the deterministic benchmark vectors.
 @end deffn
 
 @section Development

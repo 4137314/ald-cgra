@@ -36,6 +36,10 @@ across all loaded files (see
 .BR "FILE DISCOVERY" ),
 so a later file overrides individual fields of an entity defined earlier rather
 than replacing it wholesale.
+.PP
+Syntax errors in any discovered file stop loading and report the source.
+A failed file, including its includes, does not apply partial overrides.
+Unknown PE fields are errors.
 .SH SECTIONS
 A section header is
 .BI [ type " " name ].
@@ -62,7 +66,7 @@ Informational board tag
 .SS [mode NAME]
 An array configuration. A mode either selects a
 .I pattern
-that generates the sixteen PE words, or places PEs by hand.
+that generates the device's R x C PE words, or places PEs by hand.
 .TP
 .B doc
 One-line description, shown by
@@ -94,23 +98,25 @@ Defaults:
 .BR west .
 .TP
 .B steps
-.BR rows " (= 4), " auto ", or an integer."
+.BR rows " (device row count), " auto ", or an integer in 0..255."
+Zero means no array steps; out-of-range counts are rejected.
 .TP
 .B out
 Output tap:
 .B diag
-(the four diagonal PEs) or
+(the min(rows, cols) diagonal PEs) or
 .BI "pe " R , C
 (a single PE).
 .TP
 .B reset
-.BR each " or " once
-\(em whether to clear the PE registers between input chunks.
+.BR once " (default) or " each .
+Clear PE registers at the start of each nonempty run; each also clears
+them before every subsequent input chunk. See RESET AND STATE below.
 .TP
 .BI "pe " R , C " = op=" \fIO\fB " a=" \fISA\fB " b=" \fISB
 For
 .BR "pattern = custom" ,
-place one PE (0 \(<= R,C \(<= 3). Unlisted PEs are
+place one PE (coordinates must fit the selected geometry). Unlisted PEs are
 .BR nop .
 .SS [pipeline NAME]
 A chain of modes; the host feeds each stage's output into the next.
@@ -133,12 +139,12 @@ An output data-binding profile.
 .BR dec ", " hex ", " bin " or " json .
 .TP
 .B width
-Datapath width (informational; 16).
+Datapath width; must be 16 if supplied.
 .TP
 .B sep
 .BR ws ", " comma " or " newline .
 .SH PATTERNS
-How a mode maps onto the 4x4 mesh. The single register per PE and edge-only
+How a mode maps onto the device mesh (default 4x4). The single register per PE and edge-only
 operand injection (north per column, west per row) constrain every pattern.
 .TP
 .B diagonal
@@ -146,8 +152,8 @@ Element-wise binary op:
 .I a
 enters from the north,
 .I b
-from the west, off-diagonal PEs are PASS chains, and each of the four diagonal
-PEs computes one result. Four lanes per transaction.
+from the west, off-diagonal PEs are PASS chains, and each diagonal
+PE computes one result. min(rows,cols) lanes per transaction.
 .TP
 .B reduce
 MAC/ACC accumulation into PE(0,0); one element pair per step, giving a scalar
@@ -166,7 +172,7 @@ via
 Weight-stationary matrix-vector y = A*x, driven by
 .BR "cgra matvec" .
 The vector is held in the PE immediates; the matrix streams in one row per
-step; the array is tiled over 4x4 blocks. Not a plain vector
+step; the array is tiled over rows x cols blocks. Not a plain vector
 .BR run .
 .TP
 .B conv
@@ -176,7 +182,53 @@ step; the array is tiled over 4x4 blocks. Not a plain vector
 .B scan
 Inclusive prefix scan on row 0, driven by
 .BR "cgra scan" .
+The block's elements arrive on the north edge rather than sitting in the PE
+immediates, so the configuration does not depend on the data and is loaded once
+for the whole vector instead of once per block.
+.SH PATTERN FIELDS
+All patterns accept doc and pattern. The additional accepted fields are:
+.TP
+.B diagonal
+op, a, b, steps, out=diag, reset.
+.TP
+.B custom
+pe R,C, steps, out=diag or out=pe R,C, reset.
+Top-level op, a and b are rejected; define them on individual PE lines.
+.TP
+.B reduce
+op, a, b, steps, and optionally reset=once. The result is always PE(0,0).
+Explicit out or reset=each is rejected.
+.TP
+.BR systolic ", " conv ", " scan
+No additional fields. The dedicated matvec, conv and scan commands choose
+parameters from their command-line arguments, independently of these entries.
+.PP
+Inapplicable fields fail compilation before configuration or execution.
+Fields merge across files, so changing pattern does not discard earlier
+definitions. An empty assignment (e.g. op =) clears an ordinary field.
+Use a new mode name when an inherited custom PE layout must be discarded.
+.SH RESET AND STATE
+For diagonal and custom modes, reset=once starts each nonempty run with zero
+registers and preserves state between chunks of that run. Separate run
+commands or mode_run calls start afresh. reset=each clears before every chunk.
+An empty diagonal/custom input configures the mesh without resetting or
+stepping it. A reduction resets once per run, including an empty input
+(which returns zero), and retains its accumulator throughout the run.
+.PP
+These rules apply to v2 and v3. A stateless v3 diagonal may reset later chunks
+when enough steps settle every diagonal result, enabling NACK retries without
+changing the output. With fewer than min(rows,cols) steps, routing registers
+can carry data between chunks: once and each can give different outputs even
+for an ordinary arithmetic opcode.
 .SH OPERAND SOURCES
+.PP
+Input vector A feeds north and vector B feeds west independently of the
+ALU operand positions. For example, a=const(0), b=north computes negation
+with op=sub; a=west, b=north computes B-A with op=sub.
+A live west-edge source requires vector B. South/east sources require custom
+placement. Each PE has one shared immediate: two distinct constants are rejected.
+Immediates must fit a 16-bit signed value or unsigned bit pattern
+(-32768..65535); an override replaces both constant operands on a PE.
 Values for the
 .BR a / b
 directives and the
@@ -223,8 +275,12 @@ each
 .B CGRA_PATH
 entry, the user config dir and its
 .IR stdlib/ ,
-then the system share and
+then the configured installed standard library and
 .IR /etc/cgra .
+The installed path defaults to PREFIX/share/cgra/stdlib, normally
+/usr/local/share/cgra/stdlib; pkgdatadir can override its parent at build and
+install time. DESTDIR is only a staging directory, excluded from runtime paths.
+Installed includes work before init.
 .TP
 .BI "set " NAME " = " value
 Define a variable.
@@ -328,8 +384,11 @@ User configuration, written by
 .BR "cgra init" .
 .TP
 .I ~/.config/cgra/stdlib/
-Bundled standard library, pulled in with
+User copy of the standard library, pulled in with
 .BR include .
+.TP
+.I PREFIX/share/cgra/stdlib/
+Installed standard library (PREFIX defaults to /usr/local).
 .TP
 .I /etc/cgra/
 System-wide configuration.
@@ -342,3 +401,26 @@ The GNU info manual
 has a tutorial treatment of the same material.
 .SH AUTHOR
 Written for the Advanced Logic Design course, University of Trento.
+
+.SH GEOMETRY
+The selected device reports rows and columns through ID. Diagonal modes use
+min(rows,cols) lanes, matrix modes use rows x cols tiles, and scans use cols
+lanes. Explicit PE coordinates and output taps must fit the target device;
+parsing allows indices 0 through 15, with the actual bounds checked during
+compilation. Offline check and show without an explicit device use 4x4.
+
+.SH VALIDATION LIMITS
+Integer tokens must be complete decimal, hexadecimal or octal literals.
+Baud must be positive; timeout must be 0..INT_MAX milliseconds. Zero means
+an immediate reply poll. New device profiles default to 115200 baud and a
+2000 ms timeout. Invalid formats, separators, coordinates and trailing
+section tokens are rejected. Semantic mode validation is also performed by
+check and before execution with the selected geometry.
+.PP
+Variables must be defined before use; malformed or unknown references are
+errors. $$ emits a literal dollar sign. Variable names begin with a letter
+or underscore and continue with letters, digits or underscores.
+Names allow 47 bytes, small fields 31, values and stored paths 191.
+Oversized fields and exhausted variable/stage/PE/file capacities cause errors.
+CGRA_PATH is processed as a full list. Embedded NUL bytes are rejected.
+Parsing a failed file, including its includes, leaves the context unchanged.

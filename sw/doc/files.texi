@@ -6,7 +6,10 @@
 @item ~/.config/cgra/config.cgra
 User configuration, written by @command{cgra init}.
 @item ~/.config/cgra/stdlib/
-Bundled standard library (@pxref{Standard Library}).
+User copy of the bundled standard library (@pxref{Standard Library}).
+@item PREFIX/share/cgra/stdlib/
+Installed standard library; @code{PREFIX} defaults to @file{/usr/local}.
+The build can override the parent with @code{pkgdatadir}.
 @item ~/.config/cgra/conf.d/
 Optional drop-in directory; @file{*.cgra} here load last, alphabetically.
 @item ~/.config/cgra/.device

@@ -12,7 +12,7 @@ cgra \- command-line front end for the UART-attached CGRA accelerator
 .RI [ args ...]
 .SH DESCRIPTION
 .B cgra
-drives a Coarse-Grained Reconfigurable Array (a 4x4 mesh of 16-bit processing
+drives a Coarse-Grained Reconfigurable Array (an R x C mesh of 16-bit processing
 elements) from the host over a serial link, on top of the
 .B libcgra
 library. It reads a declarative configuration language
@@ -40,6 +40,11 @@ stage) and report errors.
 .B init " [\-\-force]"
 Install the built-in defaults and the bundled standard library into the user
 configuration directory.
+The source is CGRA_STDLIB when set, otherwise the configured installed
+directory (normally /usr/local/share/cgra/stdlib), then the relative source
+directories sw/config/stdlib and config/stdlib. Refuses to overwrite an
+existing config without --force. A missing library or copy/write failure
+returns nonzero; defaults or some library files may already have been written.
 .TP
 .B show " " \fIMODE\fR " [\-\-imm " \fIN\fR "] [\-v]"
 Print the compiled configuration words for
@@ -65,7 +70,7 @@ with a device, run the known-answer bring-up tests.
 Clear the PE registers (configuration is preserved).
 .TP
 .B dump
-Read back and print all 16 PE registers.
+Read back and print all PE registers using the reported dimensions.
 .TP
 .B emulate
 Serve the in-process emulator on a pseudo-terminal for external tools.
@@ -78,7 +83,7 @@ Run an element-wise or reduction mode over the input vector(s).
 Run a pipeline, feeding each stage's output into the next.
 .TP
 .B matvec " \-m " \fISRC\fR " \-\-x " \fISRC\fR " [\-\-cols " \fIN\fR "]"
-Systolic matrix\-vector product y = A*x (A row-major, tiled over 4x4 blocks).
+Systolic matrix\-vector product y = A*x (A row-major, tiled over rows x cols blocks).
 .TP
 .B conv " \-m " \fIKERNEL\fR " \-\-x " \fISIGNAL\fR
 1-D convolution (Toeplitz systolic).
@@ -87,19 +92,45 @@ Systolic matrix\-vector product y = A*x (A row-major, tiled over 4x4 blocks).
 Inclusive prefix scan on row 0.
 .TP
 .B bench " [" \fIMODE\fR "] [\-\-size " \fIN\fR "] [\-\-repeat " \fIR\fR "]"
-Time a mode and report link statistics (transactions, retries, bytes).
+Measure a mode and compare every invocation with an independent scalar
+reference outside the timed interval. Supports stateless diagonal modes and
+PE(0,0) reductions. Size must be 1..4096; repeat must be 1..INT_MAX.
+Supports --json and -o. Unsupported single benchmarks return nonzero.
 .TP
 .B benchall " [\-\-size " \fIN\fR "] [\-\-repeat " \fIR\fR "] [\-\-json]"
-Stress-benchmark every benchable mode currently loaded (e.g. the whole standard
-library) and print a structured report: an aligned table of throughput and link
-cost per mode, or a JSON object with
-.BR \-\-json .
+Report every loaded mode as passed, failed or skipped, in text or JSON.
+Malformed configurations, execution errors and scalar mismatches fail.
+Valid mappings without an available scalar reference are explicitly skipped.
+JSON schema_version=1 records backend/port, geometry, protocol version,
+configured baud/timeout, compiler, workload ID and mapping fields. Empty mapping
+fields mean documented defaults. Source/build provenance needs a separate
+source snapshot. The results array retains all entries, with a status and a
+reason for failures/skips; successful entries have verification="scalar".
+The modes field counts successes; failed and skipped count other outcomes.
+Timings and byte totals cover successful measurements only.
+Any failure or zero successful measurements gives a nonzero exit status.
+A completed report is written with -o even on benchmark failure.
 The bring-up pipeline
 .RB ( "make bench" )
 wraps this to sweep several vector sizes on a device.
 .TP
 .B selftest
-Run every kernel against the emulator and check the results.
+Run every kernel against the emulator and check the results. The suite runs
+twice: once against
+.B "sim:"
+(protocol v3, fused transactions) and once against
+.BR "sim:v2" ,
+which reports protocol v2 and rejects
+.BR EXEC ,
+so the fallback path used with an older bitstream is held to identical
+results.
+.SH GEOMETRY
+The default is 4x4; positive dimensions with at most 16 PEs are supported.
+The host discovers the shape through ID and adapts transfers and kernel tiling.
+Use -d sim:2x3 to emulate a rectangle, or -d sim:2x3:v2 to test the v2 fallback.
+The show command with an explicit -d validates and prints the configuration
+for that device. Without -d, show and offline check use 4x4. Custom coordinates
+and output taps outside the target mesh are rejected.
 .SH OPTIONS
 .TP
 .BR \-d ", " \-\-device " " \fINAME\fR
@@ -133,7 +164,11 @@ Immediate value for modes with a constant operand.
 .TP
 .BR \-\-io " " \fIPROFILE\fR ", " \-\-json ", " \-\-dtype " " \fIu16|s16\fR ", " \-o ", " \-\-out " " \fIFILE\fR
 Output formatting: named profile, JSON object, unsigned/signed decoding, or
-write to a file.
+write to a file. File output is staged until the command succeeds, so the
+input and output may name the same file (including hard links). Failed
+commands preserve the previous destination, except completed benchmark reports,
+which are published with their failure status. Write errors cause a nonzero
+exit status; the final copy is not atomic on filesystem failure.
 .SH CONFIGURATION
 The
 .B .cgra

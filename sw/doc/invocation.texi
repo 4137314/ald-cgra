@@ -39,7 +39,8 @@ Commands that consume vectors accept a @dfn{source} (@var{SRC}) in three forms:
 @table @asis
 @item inline
 a quoted list, @code{"1 2 3 4"} (whitespace- or comma-separated; @code{0x}/@code{0}
-prefixes give hex/octal).
+prefixes give hex/octal). Values must fit -32768..65535; malformed tokens and
+out-of-range values are rejected.
 @item @code{@@file}
 read the numbers from @file{file}.
 @item @code{-}
@@ -69,5 +70,9 @@ composes.
 interpret results as unsigned or signed 16-bit (default signed).
 @item -o FILE
 @itemx --out FILE
-write to @file{FILE} instead of standard output.
+write to @file{FILE} instead of standard output. Output is staged until the
+command succeeds, allowing the same file (or a hard link) as input and output.
+Failed commands preserve the previous destination, except completed benchmark
+reports, which are published even when they contain failures. Write errors cause a
+nonzero exit status; the final copy is not atomic on filesystem failure.
 @end table

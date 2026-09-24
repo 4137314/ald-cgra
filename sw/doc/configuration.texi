@@ -9,6 +9,8 @@ a line whose first non-blank character is @samp{;} is a whole-line comment.
 Every entity is merged @emph{by name} across all loaded files, so a later file
 overrides individual fields of an entity defined earlier.  The terse reference
 is @command{man cgra 5}; this chapter is the tutorial.
+Syntax errors in discovered files are reported and stop loading. A failed
+file, including its includes, does not apply partial overrides.
 
 @section Section types
 @cindex sections
@@ -32,7 +34,7 @@ informational board tag (@code{basys3}, @code{nexys_a7}).
 @subsection @code{[mode NAME]}
 @cindex mode
 An array configuration.  A mode either selects a @dfn{pattern} that generates
-the sixteen PE words, or places PEs by hand.
+the device's R x C PE words, or places PEs by hand.
 
 @table @code
 @item doc
@@ -48,15 +50,57 @@ xor shl shr max min abs acc const} (and @code{nop}, @code{pass}).
 operand sources: @code{north west self zero} or @code{const(K)} (a 16-bit
 immediate).  Defaults: @code{a = north}, @code{b = west}.
 @item steps
-@code{rows} (= 4), @code{auto}, or an integer.
+@code{rows} (the device row count), @code{auto}, or an integer in 0..255.
+Zero means no steps; values outside the protocol range are rejected.
 @item out
-output tap: @code{diag} (the four diagonal PEs) or @code{pe R,C} (a single PE).
+output tap: @code{diag} (the diagonal PEs) or @code{pe R,C} (a single PE).
 @item reset
-@code{each} or @code{once}---whether to clear PE registers between input chunks.
+@code{once} (default) clears PE registers at the start of each nonempty run;
+@code{each} also clears them before every subsequent input chunk.
 @item pe R,C = op=@dots{} a=@dots{} b=@dots{}
-for @code{pattern = custom}, place one PE (@math{0 \le R,C \le 3}).  Unlisted
+for @code{pattern = custom}, place one PE (coordinates must fit the selected device).  Unlisted
 PEs are @code{nop}.
 @end table
+
+@subsubsection Fields accepted by each pattern
+All patterns accept @code{doc} and @code{pattern}. Additional fields are:
+
+@table @code
+@item diagonal
+@code{op}, @code{a}, @code{b}, @code{steps}, @code{out=diag}, @code{reset}.
+@item custom
+@code{pe R,C}, @code{steps}, @code{out=diag} or @code{out=pe R,C}, @code{reset}.
+Set opcodes and sources on the individual PE lines; top-level @code{op},
+@code{a} and @code{b} are rejected.
+@item reduce
+@code{op}, @code{a}, @code{b}, @code{steps}, and optionally @code{reset=once}.
+Output is always PE(0,0); an explicit @code{out} or @code{reset=each} is rejected.
+@item systolic, conv, scan
+No additional fields. These entries describe dedicated engines; their
+commands (@command{matvec}, @command{conv}, @command{scan}) choose parameters
+from command-line arguments, independently of mode definitions.
+@end table
+
+Fields inapplicable to the selected pattern cause compilation to fail before
+configuration or execution. This includes inherited fields: changing
+@code{pattern} does not remove earlier definitions. Clear an ordinary field
+with an empty assignment (for example @code{op =}); use a new mode name when
+an inherited custom PE layout must be discarded.
+
+@subsubsection Reset and state
+For diagonal and custom modes, @code{reset=once} preserves register state
+between chunks within one run, but starts the next nonempty run from zero.
+It does not preserve an accumulator across separate @command{run} commands
+or @code{mode_run} calls. An empty diagonal/custom input configures the mesh
+without resetting or stepping it. Reductions reset once per run (including
+an empty input, whose result is zero) and retain their accumulator throughout.
+
+These rules apply to protocol v2 and v3. A v3 stateless diagonal may also
+reset between chunks when its step count fully settles all diagonal results;
+this permits NACK retries without changing the output. With fewer than
+@code{min(rows,cols)} steps, routing registers can carry data between chunks,
+so @code{once} and @code{each} can produce different outputs even for an
+ordinary arithmetic opcode.
 
 @subsection @code{[pipeline NAME]}
 @cindex pipeline
@@ -69,7 +113,15 @@ description.
 one stage.  Repeat for each stage; @code{imm=K} sets that stage's immediate.
 The first stage may be binary (consume @var{a} and @var{b}); later stages are
 unary.
+All stages and their immediate overrides are checked before configuration or
+execution. A later stage that requires the west input vector is rejected.
 @end table
+
+Input vector A always feeds north and vector B west, independently of the
+positions of the ALU operands. Thus @code{a=const(0), b=north, op=sub} negates A.
+Each PE has one shared immediate. Two different constants on one PE are
+rejected; @option{--imm} replaces both constant operands. Immediate literals
+must be in -32768..65535 (signed values or unsigned 16-bit patterns).
 
 @subsection @code{[io NAME]}
 @cindex io profile
@@ -79,7 +131,7 @@ A data-binding profile for output.
 @item format
 @code{dec}, @code{hex}, @code{bin} or @code{json}.
 @item width
-datapath width (informational; 16).
+datapath width; must be 16 if supplied.
 @item sep
 @code{ws}, @code{comma} or @code{newline}.
 @end table
@@ -90,11 +142,18 @@ datapath width (informational; 16).
 @cindex variables
 A file may pull in another with @code{include "other.cgra"}.  The include is
 searched, in order: relative to the including file, each @env{CGRA_PATH} entry,
-the user config dir and its @file{stdlib/}, then the system share and
-@file{/etc/cgra}.
+the user config dir and its @file{stdlib/}, then the installed standard library
+and @file{/etc/cgra}. The installed path is @file{PREFIX/share/cgra/stdlib}
+by default (normally @file{/usr/local/share/cgra/stdlib}); @code{pkgdatadir}
+can override its parent at build/install time. @code{DESTDIR} is a staging
+directory and is not part of the runtime path. Installed includes work
+without first running @command{init}.
 
 @code{set NAME = value} defines a variable; @code{$NAME} and @code{$@{NAME@}}
-expand it in any later value.  For example:
+expand it in any later value. Variables must be defined before use;
+malformed references and undefined names are errors. @code{$$} emits a literal
+dollar sign. Names use letters, digits and underscores, starting with a letter
+or underscore. For example:
 
 @example
 set GAIN = 7
@@ -126,3 +185,18 @@ Within each directory, @file{config.cgra} loads first, then the remaining
 alphabetically.  So @file{conf.d/99_overrides.cgra} beats
 @file{conf.d/01_base.cgra} by name---the Nginx/systemd convention.
 @command{cgra config} prints the resolved paths.
+
+@section Validation limits
+Numeric tokens must be complete decimal, hexadecimal or octal integers.
+Baud is positive; timeout is 0..INT_MAX milliseconds (zero polls immediately).
+A new device profile defaults to 115200 baud and a 2000 ms reply timeout.
+Invalid output formats, separators, coordinates and trailing section tokens
+are rejected. Partial overrides remain valid; mode semantics are checked by
+@command{check} and before execution at the selected geometry.
+
+Names are at most 47 bytes, small fields 31 bytes, values and stored file
+paths 191 bytes. Variable, stage, PE and loaded-file capacity limits are
+checked. Oversized text is rejected instead of truncated; @env{CGRA_PATH}
+is processed as a complete list. Embedded NUL bytes are rejected in config
+files and vector inputs. A failed file, including its includes, leaves the
+configuration unchanged.

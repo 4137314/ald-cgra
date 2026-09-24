@@ -51,14 +51,31 @@ fi
 "$CGRA" ping -d "$DEV" || { echo "device did not answer ID" >&2; exit 1; }
 echo
 
+failed=0
 for sz in $SIZES; do
     echo "---- size $sz x $REPEAT iters ----"
-    "$CGRA" benchall -d "$DEV" --size "$sz" --repeat "$REPEAT"
+    if ! "$CGRA" benchall -d "$DEV" --size "$sz" --repeat "$REPEAT"; then
+        failed=1
+    fi
     echo
 done
 
 # Machine-readable artifact at the largest size, for CI/plots.
 big=$(printf '%s\n' $SIZES | sort -n | tail -1)
 mkdir -p "$(dirname "$OUT")"
-"$CGRA" benchall -d "$DEV" --size "$big" --repeat "$REPEAT" --json -o "$OUT"
-echo "wrote $OUT  (size $big)"
+# A completed failing report is still useful. Stage it separately so an old
+# artifact is not accidentally advertised if the command fails before reporting.
+artifact_tmp=$(mktemp "${OUT}.XXXXXX")
+trap 'rm -f "$artifact_tmp"' 0
+trap 'exit 1' HUP INT TERM
+if ! "$CGRA" benchall -d "$DEV" --size "$big" --repeat "$REPEAT" --json -o "$artifact_tmp"; then
+    failed=1
+fi
+if [ -s "$artifact_tmp" ]; then
+    mv "$artifact_tmp" "$OUT"
+    echo "wrote $OUT  (size $big; exit status reflects benchmark failures)"
+else
+    echo "error: no benchmark report produced; previous artifact preserved" >&2
+    failed=1
+fi
+exit "$failed"

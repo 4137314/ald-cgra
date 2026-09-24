@@ -3,7 +3,7 @@
 
 @cindex overview
 @cindex CGRA
-@command{cgra} drives a Coarse-Grained Reconfigurable Array---a 4x4 mesh of
+@command{cgra} drives a Coarse-Grained Reconfigurable Array---an R x C mesh (default 4x4, at most 16 PEs) of
 16-bit signed processing elements (PEs)---from the host over a serial link, on
 top of the @code{libcgra} library.  The host reconfigures the array by loading
 one 32-bit configuration word per PE, injects operands at the array edges,
@@ -15,7 +15,7 @@ The tool sits at the top of a small stack:
 @example
    cgra  (this tool)     .cgra language, modes, pipelines, vector I/O
      |
-   libcgra              transport, v2 protocol, kernels, sim: emulator
+   libcgra              transport, v3 protocol, kernels, sim: emulator
      |
    UART  or  sim:       real FPGA, or the in-process model
 @end example
@@ -46,3 +46,12 @@ above it: it is why element-wise kernels use a @dfn{diagonal} routing, why the
 matrix--vector engine is @dfn{weight-stationary}, and why throughput on a real
 link is bounded by serial round trips rather than by the number of PEs.
 @xref{Dataflow}, for the details, and @ref{Protocol} for the wire format.
+
+The host discovers dimensions through @code{ID}; the same binary runs on all
+supported shapes. Use @code{-d sim:2x3} to try a rectangle without hardware,
+or @code{-d sim:2x3:v2} for the older protocol. Hardware dimensions are selected
+at elaboration with @code{MESH_ROWS} and @code{MESH_COLS}. Vector modes use
+@code{min(rows, cols)} diagonal lanes; matrix tiles use both dimensions and
+prefix scans use the column count. Explicit custom coordinates and output taps
+must fit the selected device. @code{show MODE -d DEVICE} checks that geometry;
+@code{show} without an explicit device and offline @code{check} use 4x4.

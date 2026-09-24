@@ -22,6 +22,8 @@
 #include <errno.h>
 #include <getopt.h>
 #include <glob.h>
+#include <limits.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -37,11 +39,14 @@
 #include "cgra.h"
 #include "dsl.h"
 #include "compile.h"
+#include "bench_ref.h"
+#include "paths.h"
 
 #define MAX_VEC 4096
 
 /* output / formatting state, set from the global options in main() */
 static FILE       *g_out = NULL;         /* NULL means stdout */
+static int         g_report_ready = 0;   /* publish complete benchmark reports even on failure */
 static int         g_unsigned = 0;       /* interpret results as unsigned */
 static const char *g_fmt_override = NULL;/* e.g. "json" from --json */
 
@@ -57,8 +62,10 @@ static int parse_ints(const char *text, int16_t *out, size_t cap, size_t *n)
         if (*p == '\0')
             break;
         char *end = NULL;
+        errno = 0;
         long v = strtol(p, &end, 0);
-        if (end == p)
+        if (errno == ERANGE || v < INT16_MIN || v > UINT16_MAX ||
+            (*end && *end != ',' && !isspace((unsigned char)*end)) || end == p)
             return -1;
         if (*n >= cap)
             return -1;
@@ -78,12 +85,14 @@ static char *slurp(FILE *f)
     while ((r = fread(buf + len, 1, cap - len, f)) > 0) {
         len += r;
         if (len == cap) {
+            if (cap > SIZE_MAX / 2) { free(buf); return NULL; }
             cap *= 2;
             char *nb = realloc(buf, cap);
             if (!nb) { free(buf); return NULL; }
             buf = nb;
         }
     }
+    if (ferror(f) || memchr(buf, 0, len)) { free(buf); return NULL; }
     buf[len] = '\0';
     return buf;
 }
@@ -102,7 +111,7 @@ static int read_vec(const char *src, int16_t *out, size_t cap, size_t *n)
         FILE *f = fopen(src + 1, "rb");
         if (!f) { fprintf(stderr, "cgra: cannot open %s: %s\n", src + 1, strerror(errno)); return -1; }
         char *buf = slurp(f);
-        fclose(f);
+        if (fclose(f) != 0) { free(buf); return -1; }
         if (!buf) return -1;
         int rc = parse_ints(buf, out, cap, n);
         free(buf);
@@ -179,7 +188,13 @@ static int read_device_state(char *buf, size_t sz)
     return buf[0] ? 0 : -1;
 }
 
-static cgra_t *open_device(dsl_ctx *d, const char *name_opt, char *err, size_t errsz)
+typedef struct {
+    char port[DSL_VAL];
+    int baud, timeout_ms;
+} connection_info;
+
+static cgra_t *open_device_resolved(dsl_ctx *d, const char *name_opt, char *err,
+                                     size_t errsz, connection_info *details)
 {
     const char *name = name_opt;
     if (!name) name = getenv("CGRA_DEVICE");
@@ -199,24 +214,48 @@ static cgra_t *open_device(dsl_ctx *d, const char *name_opt, char *err, size_t e
     int baud = 115200, timeout = 2000;
 
     if (looks_literal(name)) {
+        if (strlen(name) >= sizeof(port)) {
+            snprintf(err, errsz, "device path is too long"); return NULL;
+        }
         snprintf(port, sizeof(port), "%s", name);
     } else {
         dsl_device *dev = dsl_find_device(d, name);
         if (!dev) { snprintf(err, errsz, "unknown device profile '%.80s'", name); return NULL; }
         snprintf(port, sizeof(port), "%s", dev->port[0] ? dev->port : "/dev/ttyUSB1");
         if (dev->baud) baud = dev->baud;
-        if (dev->timeout_ms) timeout = dev->timeout_ms;
+        timeout = dev->timeout_ms;
     }
 
     const char *env_port = getenv("CGRA_PORT");
-    if (env_port && *env_port) snprintf(port, sizeof(port), "%s", env_port);
+    if (env_port && *env_port) {
+        if (strlen(env_port) >= sizeof(port)) {
+            snprintf(err, errsz, "CGRA_PORT is too long"); return NULL;
+        }
+        snprintf(port, sizeof(port), "%s", env_port);
+    }
     const char *env_baud = getenv("CGRA_BAUD");
-    if (env_baud && *env_baud) baud = atoi(env_baud);
+    if (env_baud && *env_baud) {
+        long value;
+        if (dsl_integer(env_baud, 1, INT_MAX, &value)) {
+            snprintf(err, errsz, "CGRA_BAUD requires a positive integer");
+            return NULL;
+        }
+        baud = (int)value;
+    }
 
     cgra_t *dev = cgra_open(port, (unsigned)baud);
     if (!dev) { snprintf(err, errsz, "cannot open %s at %d baud", port, baud); return NULL; }
     cgra_set_timeout(dev, (unsigned)timeout);
+    if (details) {
+        snprintf(details->port, sizeof(details->port), "%s", port);
+        details->baud = baud; details->timeout_ms = timeout;
+    }
     return dev;
+}
+
+static cgra_t *open_device(dsl_ctx *d, const char *name, char *err, size_t errsz)
+{
+    return open_device_resolved(d, name, err, errsz, NULL);
 }
 
 /* -------------------------------------------------- listing commands */
@@ -287,15 +326,10 @@ static int cmd_check(dsl_ctx *d)
     }
     for (int i = 0; i < d->npipe; i++) {
         dsl_pipeline *p = &d->pipe[i];
-        if (p->nstage == 0) {
-            printf("warning: pipeline %s has no stages\n", p->name);
-        }
-        for (int s = 0; s < p->nstage; s++) {
-            if (!dsl_find_mode(d, p->stage[s].mode)) {
-                printf("error: pipeline %s: stage '%s' is not a defined mode\n",
-                       p->name, p->stage[s].mode);
-                errors++;
-            }
+        const cgra_info_t geometry = {CGRA_PROTO_VER, CGRA_ROWS, CGRA_COLS, CGRA_DATA_W};
+        if (pipeline_validate(d, p, geometry, err, sizeof(err)) != CGRA_OK) {
+            printf("error: %s\n", err);
+            errors++;
         }
     }
     if (errors == 0)
@@ -331,50 +365,68 @@ static int copy_file(const char *src, const char *dst)
     if (!out) { fclose(in); return -1; }
     char b[4096];
     size_t n;
+    int failed = 0;
     while ((n = fread(b, 1, sizeof(b), in)) > 0)
-        fwrite(b, 1, n, out);
-    fclose(in);
-    fclose(out);
-    return 0;
+        if (fwrite(b, 1, n, out) != n) { failed = 1; break; }
+    if (ferror(in)) failed = 1;
+    if (fclose(in) != 0) failed = 1;
+    if (fclose(out) != 0) failed = 1;
+    return failed ? -1 : 0;
 }
 
 /* Copy the shipped stdlib .cgra files into <udir>/stdlib so that
  * `include "linalg.cgra"` works out of the box. Source is the first of
- * $CGRA_STDLIB, the installed share dir, or the in-tree sw/config/stdlib. */
-static void init_stdlib(const char *udir)
+ * $CGRA_STDLIB, the installed share dir, then relative sw/config/stdlib or
+ * config/stdlib (when invoked from sw/). */
+static int init_stdlib(const char *udir)
 {
-    const char *cands[3];
+    const char *cands[4];
     int nc = 0;
     const char *env = getenv("CGRA_STDLIB");
     if (env && *env) cands[nc++] = env;
-    cands[nc++] = "/usr/share/cgra/stdlib";
+    cands[nc++] = CGRA_STDLIB_DIR;
     cands[nc++] = "sw/config/stdlib";
+    cands[nc++] = "config/stdlib";
 
     for (int c = 0; c < nc; c++) {
         char pat[DSL_VAL + 16];
-        snprintf(pat, sizeof(pat), "%s/*.cgra", cands[c]);
-        glob_t g;
-        if (glob(pat, 0, NULL, &g) != 0 || g.gl_pathc == 0) {
+        int len = snprintf(pat, sizeof(pat), "%s/*.cgra", cands[c]);
+        if (len < 0 || (size_t)len >= sizeof(pat)) {
+            fprintf(stderr, "cgra: stdlib path is too long\n"); return 1;
+        }
+        glob_t g = {0};
+        int grc = glob(pat, 0, NULL, &g);
+        if (grc != 0 || g.gl_pathc == 0) {
             globfree(&g);
+            if ((grc != 0 && grc != GLOB_NOMATCH) || (c == 0 && env && *env)) {
+                fprintf(stderr, "cgra: cannot read stdlib from %s\n", cands[c]); return 1;
+            }
             continue;
         }
         char sdir[DSL_VAL + 16];
         snprintf(sdir, sizeof(sdir), "%s/stdlib", udir);
-        mkdir_p(sdir);
+        if (mkdir_p(sdir) != 0) {
+            fprintf(stderr, "cgra: cannot create %s\n", sdir);
+            globfree(&g); return 1;
+        }
         int copied = 0;
         for (size_t i = 0; i < g.gl_pathc; i++) {
             const char *base = strrchr(g.gl_pathv[i], '/');
             base = base ? base + 1 : g.gl_pathv[i];
             char dst[2 * DSL_VAL];
-            snprintf(dst, sizeof(dst), "%s/%s", sdir, base);
-            if (copy_file(g.gl_pathv[i], dst) == 0)
-                copied++;
+            len = snprintf(dst, sizeof(dst), "%s/%s", sdir, base);
+            if (len < 0 || (size_t)len >= sizeof(dst) || copy_file(g.gl_pathv[i], dst) != 0) {
+                fprintf(stderr, "cgra: failed to install stdlib file %s\n", base);
+                globfree(&g); return 1;
+            }
+            copied++;
         }
         globfree(&g);
         printf("installed %d stdlib file(s) to %s\n", copied, sdir);
-        return;
+        return 0;
     }
-    printf("note: stdlib not found; set CGRA_PATH to your .cgra library dir\n");
+    fprintf(stderr, "cgra: stdlib not found; set CGRA_STDLIB to the source library directory\n");
+    return 1;
 }
 
 static int cmd_init(int force)
@@ -398,11 +450,11 @@ static int cmd_init(int force)
     }
     FILE *f = fopen(path, "wb");
     if (!f) { fprintf(stderr, "cgra: cannot write %s: %s\n", path, strerror(errno)); return 1; }
-    fputs(dsl_default_text(), f);
-    fclose(f);
+    int failed = fputs(dsl_default_text(), f) == EOF;
+    if (fclose(f) != 0) failed = 1;
+    if (failed) { fprintf(stderr, "cgra: failed to write %s\n", path); return 1; }
     printf("wrote %s\n", path);
-    init_stdlib(udir);
-    return 0;
+    return init_stdlib(udir);
 }
 
 /* -------------------------------------------------- device commands */
@@ -417,9 +469,8 @@ static int cmd_ping(dsl_ctx *d, const char *devname)
     if (rc == CGRA_OK) {
         printf("cgra ok: protocol v%u, %ux%u array, %u-bit datapath\n",
                info.version, info.rows, info.cols, info.data_w);
-        if (info.rows != CGRA_ROWS || info.cols != CGRA_COLS || info.data_w != CGRA_DATA_W)
-            printf("warning: device geometry differs from this build "
-                   "(%dx%d, %d-bit)\n", CGRA_ROWS, CGRA_COLS, CGRA_DATA_W);
+        if (cgra_get_info(dev, NULL) != CGRA_OK)
+            printf("warning: device geometry/protocol is unsupported by this library\n");
     } else {
         fprintf(stderr, "cgra: ping failed: %s\n", cgra_strerror(rc));
     }
@@ -443,54 +494,53 @@ static int cmd_dump(dsl_ctx *d, const char *devname, const dsl_io *io)
     char err[DSL_VAL];
     cgra_t *dev = open_device(d, devname, err, sizeof(err));
     if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
-    int16_t regs[CGRA_NUM_PE];
-    int rc = cgra_read_regs(dev, regs);
+    cgra_info_t info;
+    int16_t regs[CGRA_MAX_PE];
+    int rc = cgra_get_info(dev, &info);
+    if (rc == CGRA_OK) rc = cgra_read_regs_n(dev, regs, CGRA_MAX_PE);
     cgra_close(dev);
     if (rc != CGRA_OK) { fprintf(stderr, "cgra: read failed: %s\n", cgra_strerror(rc)); return 1; }
-    for (int r = 0; r < CGRA_ROWS; r++) {
-        print_vec(&regs[r * CGRA_COLS], CGRA_COLS, io);
-    }
+    for (int r = 0; r < info.rows; r++)
+        print_vec(&regs[r * info.cols], info.cols, io);
     return 0;
 }
 
 /* -------------------------------------------------- show / run / pipe */
 
-static int cmd_show(dsl_ctx *d, const char *modename, long imm, int has_imm, int verbose)
+static int cmd_show(dsl_ctx *d, const char *devname, const char *modename, long imm, int has_imm, int verbose)
 {
     dsl_mode *m = dsl_find_mode(d, modename);
     if (!m) { fprintf(stderr, "cgra: unknown mode '%s'\n", modename); return 1; }
-    uint32_t cfg[CGRA_NUM_PE];
+    uint32_t cfg[CGRA_MAX_PE];
     char err[DSL_VAL];
-    if (mode_compile(m, imm, has_imm, cfg, err, sizeof(err)) != 0) {
+    cgra_info_t g = {CGRA_PROTO_VER, CGRA_ROWS, CGRA_COLS, CGRA_DATA_W};
+    if (devname != NULL) {
+        cgra_t *dev = open_device(d, devname, err, sizeof(err));
+        if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
+        int rc = cgra_get_info(dev, &g);
+        cgra_close(dev);
+        if (rc != CGRA_OK) { fprintf(stderr, "cgra: %s\n", cgra_strerror(rc)); return 1; }
+    }
+    if (mode_compile_for_geometry(m, imm, has_imm, g, cfg, CGRA_MAX_PE, err, sizeof(err)) != 0) {
         fprintf(stderr, "cgra: %s\n", err);
         return 1;
     }
     printf("mode %s (pattern %s):\n", m->name, m->pattern[0] ? m->pattern : "diagonal");
     if (verbose) {
-        for (int r = 0; r < CGRA_ROWS; r++)
-            for (int c = 0; c < CGRA_COLS; c++) {
+        for (int r = 0; r < g.rows; r++)
+            for (int c = 0; c < g.cols; c++) {
                 char dec[64];
-                cfg_decode(cfg[r * CGRA_COLS + c], dec, sizeof(dec));
-                printf("  PE(%d,%d) %08X  %s\n", r, c, cfg[r * CGRA_COLS + c], dec);
+                cfg_decode(cfg[r * g.cols + c], dec, sizeof(dec));
+                printf("  PE(%d,%d) %08X  %s\n", r, c, cfg[r * g.cols + c], dec);
             }
     } else {
-        for (int r = 0; r < CGRA_ROWS; r++) {
-            for (int c = 0; c < CGRA_COLS; c++)
-                printf("  %08X", cfg[r * CGRA_COLS + c]);
+        for (int r = 0; r < g.rows; r++) {
+            for (int c = 0; c < g.cols; c++)
+                printf("  %08X", cfg[r * g.cols + c]);
             putchar('\n');
         }
     }
     return 0;
-}
-
-static int mode_needs_b(const dsl_mode *m)
-{
-    /* The b[] vector is injected on the west edge, so it is only required when
-     * operand b actually reads from the west. */
-    const char *b = m->b[0] ? m->b : "west";
-    if (strcmp(m->pattern, "custom") == 0)
-        return 0;   /* user's responsibility */
-    return strcmp(b, "west") == 0;
 }
 
 /* Collect a[] and b[] from --a/--b, positionals, or stdin. */
@@ -534,7 +584,7 @@ static int cmd_run(dsl_ctx *d, const char *devname, const char *modename,
 
     static int16_t a[MAX_VEC], b[MAX_VEC], out[MAX_VEC];
     size_t na, nb;
-    if (gather_inputs(opt_a, opt_b, pos, npos, a, &na, b, &nb, mode_needs_b(m)) != 0)
+    if (gather_inputs(opt_a, opt_b, pos, npos, a, &na, b, &nb, mode_requires_b(m)) != 0)
         return 1;
 
     char err[DSL_VAL];
@@ -563,12 +613,20 @@ static int cmd_pipe(dsl_ctx *d, const char *devname, const char *pipename,
 
     static int16_t a[MAX_VEC], b[MAX_VEC], out[MAX_VEC];
     size_t na, nb;
-    if (gather_inputs(opt_a, opt_b, pos, npos, a, &na, b, &nb, mode_needs_b(m0)) != 0)
+    if (gather_inputs(opt_a, opt_b, pos, npos, a, &na, b, &nb, mode_requires_b(m0)) != 0)
         return 1;
 
     char err[DSL_VAL];
     cgra_t *dev = open_device(d, devname, err, sizeof(err));
     if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
+
+    cgra_info_t geometry;
+    int rc = cgra_get_info(dev, &geometry);
+    if (rc != CGRA_OK || pipeline_validate(d, pl, geometry, err, sizeof(err)) != CGRA_OK) {
+        fprintf(stderr, "cgra: %s\n", rc != CGRA_OK ? cgra_strerror(rc) : err);
+        cgra_close(dev);
+        return 1;
+    }
 
     for (int s = 0; s < pl->nstage; s++) {
         dsl_mode *m = dsl_find_mode(d, pl->stage[s].mode);
@@ -673,39 +731,177 @@ typedef struct {
     cgra_stats_t st;
 } bench_result;
 
-/* Only element-wise / reduction modes are plain vector ops that mode_run can
- * time directly; systolic/conv/scan have their own drivers. */
-static int mode_benchable(const dsl_mode *m)
+/* Escape controls/quotes; preserve valid UTF-8 and encode invalid bytes so
+ * even a byte-oriented configuration cannot produce malformed JSON. */
+static void json_string(FILE *out, const char *value)
 {
-    const char *p = m->pattern[0] ? m->pattern : "diagonal";
-    return !strcmp(p, "diagonal") || !strcmp(p, "custom") || !strcmp(p, "reduce");
+    fputc('"', out);
+    for (const unsigned char *p = (const unsigned char *)value; *p; p++) {
+        if (*p == '"' || *p == '\\') { fputc('\\', out); fputc(*p, out); }
+        else if (*p < 32) fprintf(out, "\\u%04x", *p);
+        else if (*p >= 128) {
+            unsigned count = *p >= 0xC2 && *p <= 0xDF ? 2u :
+                             *p >= 0xE0 && *p <= 0xEF ? 3u :
+                             *p >= 0xF0 && *p <= 0xF4 ? 4u : 0u;
+            unsigned k = 1;
+            for (; k < count; k++)
+                if (p[k] < 0x80 || p[k] > 0xBF) break;
+            int valid = count && k == count &&
+                !(*p == 0xE0 && p[1] < 0xA0) && !(*p == 0xED && p[1] >= 0xA0) &&
+                !(*p == 0xF0 && p[1] < 0x90) && !(*p == 0xF4 && p[1] >= 0x90);
+            if (valid) { fwrite(p, 1, count, out); p += count - 1; }
+            else fprintf(out, "\\u%04x", *p);
+        }
+        else fputc(*p, out);
+    }
+    fputc('"', out);
 }
 
-/* Time 'repeat' runs of a mode over 'size' elements. Returns 0 or a negative
- * CGRA_ERR_*; on error 'err' is filled. Device stats are per-call (reset here). */
+/* Validate before measurement. Reference generation and comparison are outside
+ * timed intervals; every measured invocation must produce the expected result.
+ * Return 0 success, 1 unsupported reference, -1 execution/validation failure. */
 static int bench_mode(cgra_t *dev, const dsl_mode *m, int size, int repeat,
                       const int16_t *a, const int16_t *b, int16_t *out,
                       bench_result *r, char *err, size_t errsz)
 {
+    memset(r, 0, sizeof(*r));
+    cgra_info_t geometry;
+    uint32_t cfg[CGRA_MAX_PE];
+    int16_t expected[MAX_VEC];
+    int rc = cgra_get_info(dev, &geometry);
+    if (rc != CGRA_OK) { snprintf(err, errsz, "%s", cgra_strerror(rc)); return -1; }
+    if (mode_compile_for_geometry(m, 0, 0, geometry, cfg, CGRA_MAX_PE, err, errsz)) return -1;
+    int count = bench_reference(m, geometry, a, b, (size_t)size, expected, err, errsz);
+    if (count < 0) return 1;
     cgra_reset_stats(dev);
-    struct timespec t0, t1;
-    clock_gettime(CLOCK_MONOTONIC, &t0);
+    double total_ns = 0;
     for (int i = 0; i < repeat; i++) {
-        int rc = mode_run(dev, m, a, b, (size_t)size, 0, 0, out, MAX_VEC, err, errsz);
-        if (rc < 0) return rc;
+        struct timespec t0, t1;
+        if (clock_gettime(CLOCK_MONOTONIC, &t0)) {
+            snprintf(err, errsz, "cannot read monotonic clock"); return -1;
+        }
+        rc = mode_run(dev, m, a, b, (size_t)size, 0, 0, out, MAX_VEC, err, errsz);
+        if (clock_gettime(CLOCK_MONOTONIC, &t1)) {
+            snprintf(err, errsz, "cannot read monotonic clock"); return -1;
+        }
+        if (rc < 0) return -1;
+        total_ns += (double)(t1.tv_sec - t0.tv_sec) * 1e9 + (double)(t1.tv_nsec - t0.tv_nsec);
+        if (rc != count) {
+            snprintf(err, errsz, "output count %d differs from scalar reference %d", rc, count);
+            return -1;
+        }
+        for (int j = 0; j < count; j++)
+            if (out[j] != expected[j]) {
+                snprintf(err, errsz, "iteration %d output %d: got %d, expected %d", i + 1, j, out[j], expected[j]);
+                return -1;
+            }
     }
-    clock_gettime(CLOCK_MONOTONIC, &t1);
-    double ms = (double)(t1.tv_sec - t0.tv_sec) * 1e3 + (double)(t1.tv_nsec - t0.tv_nsec) / 1e6;
-    r->ms_total    = ms;
-    r->ms_iter     = ms / repeat;
-    r->elems_per_s = (double)size * repeat / (ms / 1e3);
+    if (total_ns <= 0 || !isfinite(total_ns)) {
+        snprintf(err, errsz, "invalid measured duration"); return -1;
+    }
+    r->ms_total = total_ns / 1e6;
+    r->ms_iter = r->ms_total / repeat;
+    r->elems_per_s = (double)size * repeat / (total_ns / 1e9);
     cgra_get_stats(dev, &r->st);
     return 0;
 }
 
 static void bench_fill(int16_t *a, int16_t *b, int size)
 {
-    for (int i = 0; i < size; i++) { a[i] = (int16_t)(i * 3 + 1); b[i] = (int16_t)(i - 7); }
+    /* Deterministic signs, wraparound and shift amounts beyond 15. */
+    static const int16_t edges[] = {INT16_MIN, INT16_MAX, -1, 0, 1, -32767, 16, -17};
+    for (int i = 0; i < size; i++) {
+        a[i] = i < 8 ? edges[i] : (int16_t)(i * 3 - 19);
+        b[i] = i < 8 ? edges[7 - i] : (int16_t)(i - 7);
+    }
+}
+
+/* A completed report includes failures and skips. Opening/configuration errors
+ * before the report starts preserve an existing -o destination. */
+static int bench_report(dsl_ctx *d, const char *devname, const dsl_mode *single,
+                        int size, int repeat)
+{
+    static int16_t a[MAX_VEC], b[MAX_VEC], out[MAX_VEC];
+    bench_fill(a, b, size);
+    char err[DSL_VAL];
+    connection_info connection;
+    cgra_t *dev = open_device_resolved(d, devname, err, sizeof(err), &connection);
+    if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
+    cgra_info_t geometry;
+    int id_rc = cgra_get_info(dev, &geometry);
+    if (id_rc != CGRA_OK) {
+        fprintf(stderr, "cgra: cannot identify benchmark device: %s\n", cgra_strerror(id_rc));
+        cgra_close(dev); return 1;
+    }
+    int json = g_fmt_override && !strcmp(g_fmt_override, "json");
+    FILE *o = g_out ? g_out : stdout;
+    if (json) {
+        fprintf(o, "{\"schema_version\":1,\"size\":%d,\"repeat\":%d,\"device\":{\"port\":", size, repeat);
+        json_string(o, connection.port);
+        fputs(",\"backend\":", o);
+        json_string(o, !strcmp(connection.port, "sim") || !strncmp(connection.port, "sim:", 4) ? "emulator" : "serial");
+        fprintf(o, ",\"rows\":%u,\"cols\":%u,\"data_width\":%u,\"protocol_version\":%u,"
+                   "\"baud\":%d,\"timeout_ms\":%d},\"compiler\":",
+                geometry.rows, geometry.cols, geometry.data_w, geometry.version, connection.baud, connection.timeout_ms);
+        json_string(o, __VERSION__);
+        fputs(",\"workload\":\"deterministic-edges-v1\",\"results\":[\n", o);
+    } else fprintf(o, "# CGRA benchmark: %ux%u protocol v%u on %s; %d elems x %d iterations; scalar checks outside timing\n",
+                   geometry.rows, geometry.cols, geometry.version, connection.port, size, repeat);
+
+    int passed = 0, failed = 0, skipped = 0;
+    unsigned long tx = 0, rx = 0, retries = 0;
+    double total_ms = 0;
+    int modes = single ? 1 : d->nmode;
+    for (int i = 0; i < modes; i++) {
+        const dsl_mode *m = single ? single : &d->mode[i];
+        const char *pattern = m->pattern[0] ? m->pattern : "diagonal";
+        bench_result result;
+        err[0] = 0;
+        int rc = bench_mode(dev, m, size, repeat, a, b, out, &result, err, sizeof(err));
+        const char *status = rc == 0 ? "passed" : rc > 0 ? "skipped" : "failed";
+        if (rc == 0) {
+            passed++;
+            tx += result.st.tx_bytes; rx += result.st.rx_bytes; retries += result.st.retries;
+            total_ms += result.ms_total;
+        } else if (rc > 0) skipped++;
+        else { failed++; fprintf(stderr, "cgra: benchmark %s failed: %s\n", m->name, err); }
+        if (json) {
+            fprintf(o, "%s{\"mode\":", i ? ",\n" : ""); json_string(o, m->name);
+            fputs(",\"pattern\":", o); json_string(o, pattern);
+            fputs(",\"status\":", o); json_string(o, status);
+            fputs(",\"mapping\":{\"op\":", o); json_string(o, m->op);
+            fputs(",\"a\":", o); json_string(o, m->a);
+            fputs(",\"b\":", o); json_string(o, m->b);
+            fputs(",\"steps\":", o); json_string(o, m->steps);
+            fputs(",\"reset\":", o); json_string(o, m->reset);
+            fputs(",\"out\":", o); json_string(o, m->out);
+            fputc('}', o);
+            if (rc == 0)
+                fprintf(o, ",\"verification\":\"scalar\",\"elems\":%d,\"iters\":%d,"
+                           "\"ms_per_iter\":%.9g,\"elems_per_s\":%.9g,"
+                           "\"transactions\":%lu,\"tx_bytes\":%lu,\"rx_bytes\":%lu,\"retries\":%lu",
+                        size, repeat, result.ms_iter, result.elems_per_s, result.st.transactions,
+                        result.st.tx_bytes, result.st.rx_bytes, result.st.retries);
+            else { fputs(",\"reason\":", o); json_string(o, err); }
+            fputc('}', o);
+        } else if (rc == 0)
+            fprintf(o, "%-16s %-8s passed  %.4f ms/iter, %.0f elems/s; tx=%lu rx=%lu retries=%lu\n",
+                    m->name, pattern, result.ms_iter, result.elems_per_s,
+                    result.st.tx_bytes, result.st.rx_bytes, result.st.retries);
+        else fprintf(o, "%-16s %-8s %s: %s\n", m->name, pattern, status, err);
+    }
+    cgra_close(dev);
+    int unsuccessful = failed || !passed || (single && skipped);
+    if (single && skipped) fprintf(stderr, "cgra: requested benchmark has no scalar reference\n");
+    else if (!passed) fprintf(stderr, "cgra: no benchmark completed successfully\n");
+    if (json)
+        fprintf(o, "\n],\"modes\":%d,\"failed\":%d,\"skipped\":%d,\"ok\":%s,"
+                   "\"total_ms\":%.9g,\"total_tx\":%lu,\"total_rx\":%lu,\"total_retries\":%lu}\n",
+                passed, failed, skipped, unsuccessful ? "false" : "true", total_ms, tx, rx, retries);
+    else fprintf(o, "# %d passed, %d failed, %d skipped; successful measurements: %.4f ms, %lu tx, %lu rx, %lu retries\n",
+                 passed, failed, skipped, total_ms, tx, rx, retries);
+    g_report_ready = 1;
+    return unsuccessful ? 1 : 0;
 }
 
 static int cmd_bench(dsl_ctx *d, const char *devname, const char *modename,
@@ -714,98 +910,12 @@ static int cmd_bench(dsl_ctx *d, const char *devname, const char *modename,
     const char *name = modename ? modename : "add";
     dsl_mode *m = dsl_find_mode(d, name);
     if (!m) { fprintf(stderr, "cgra: unknown mode '%s'\n", name); return 1; }
-    if (size <= 0) size = 256;
-    if (size > MAX_VEC) size = MAX_VEC;
-    if (repeat <= 0) repeat = 100;
-
-    static int16_t a[MAX_VEC], b[MAX_VEC], out[MAX_VEC];
-    bench_fill(a, b, size);
-
-    char err[DSL_VAL];
-    cgra_t *dev = open_device(d, devname, err, sizeof(err));
-    if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
-
-    bench_result r;
-    int rc = bench_mode(dev, m, size, repeat, a, b, out, &r, err, sizeof(err));
-    cgra_close(dev);
-    if (rc < 0) { fprintf(stderr, "cgra: %s\n", err); return 1; }
-
-    printf("bench %s: %d elems x %d iters in %.2f ms (%.3f ms/iter, %.0f elems/s)\n",
-           name, size, repeat, r.ms_total, r.ms_iter, r.elems_per_s);
-    printf("  link: %lu transactions, %lu retries, %lu tx bytes, %lu rx bytes\n",
-           r.st.transactions, r.st.retries, r.st.tx_bytes, r.st.rx_bytes);
-    return 0;
+    return bench_report(d, devname, m, size ? size : 256, repeat ? repeat : 100);
 }
 
-/*
- * Stress-benchmark every benchable mode currently loaded (e.g. the whole
- * standard library) and print a structured report: an aligned table by
- * default, or a JSON object with --json. This is the CGRA-under-stress sweep
- * you run once the FPGA is up: `cgra benchall -d auto --size 4096 --json`.
- */
 static int cmd_benchall(dsl_ctx *d, const char *devname, int size, int repeat)
 {
-    if (size <= 0) size = 1024;
-    if (size > MAX_VEC) size = MAX_VEC;
-    if (repeat <= 0) repeat = 50;
-
-    static int16_t a[MAX_VEC], b[MAX_VEC], out[MAX_VEC];
-    bench_fill(a, b, size);
-
-    char err[DSL_VAL];
-    cgra_t *dev = open_device(d, devname, err, sizeof(err));
-    if (!dev) { fprintf(stderr, "cgra: %s\n", err); return 1; }
-
-    int json = g_fmt_override && !strcmp(g_fmt_override, "json");
-    FILE *o = g_out ? g_out : stdout;
-
-    if (json) fprintf(o, "{\"size\": %d, \"repeat\": %d, \"results\": [\n", size, repeat);
-    else {
-        fprintf(o, "# CGRA stress benchmark: %d elems x %d iters per mode\n", size, repeat);
-        fprintf(o, "%-16s %-8s %10s %9s %8s %8s %8s\n",
-                "mode", "pattern", "ms/iter", "elems/s", "tx", "rx", "retries");
-        fprintf(o, "%-16s %-8s %10s %9s %8s %8s %8s\n",
-                "----", "-------", "-------", "-------", "--", "--", "-------");
-    }
-
-    int n = 0, fails = 0;
-    unsigned long tot_tx = 0, tot_rx = 0, tot_ret = 0;
-    double tot_ms = 0;
-    for (int i = 0; i < d->nmode; i++) {
-        dsl_mode *m = &d->mode[i];
-        if (!mode_benchable(m)) continue;
-        bench_result r;
-        if (bench_mode(dev, m, size, repeat, a, b, out, &r, err, sizeof(err)) < 0) {
-            fails++;
-            if (!json) fprintf(o, "%-16s %-8s   (skipped: %s)\n",
-                               m->name, m->pattern[0] ? m->pattern : "diagonal", err);
-            continue;
-        }
-        const char *pat = m->pattern[0] ? m->pattern : "diagonal";
-        if (json)
-            fprintf(o, "%s  {\"mode\": \"%s\", \"pattern\": \"%s\", \"elems\": %d, "
-                       "\"iters\": %d, \"ms_per_iter\": %.4f, \"elems_per_s\": %.1f, "
-                       "\"tx_bytes\": %lu, \"rx_bytes\": %lu, \"retries\": %lu}",
-                    n ? ",\n" : "", m->name, pat, size, repeat, r.ms_iter,
-                    r.elems_per_s, r.st.tx_bytes, r.st.rx_bytes, r.st.retries);
-        else
-            fprintf(o, "%-16s %-8s %10.4f %9.0f %8lu %8lu %8lu\n",
-                    m->name, pat, r.ms_iter, r.elems_per_s,
-                    r.st.tx_bytes, r.st.rx_bytes, r.st.retries);
-        n++;
-        tot_ms += r.ms_total; tot_tx += r.st.tx_bytes; tot_rx += r.st.rx_bytes; tot_ret += r.st.retries;
-    }
-    cgra_close(dev);
-
-    if (json) fprintf(o, "\n], \"modes\": %d, \"total_ms\": %.2f, "
-                         "\"total_tx\": %lu, \"total_rx\": %lu, \"total_retries\": %lu}\n",
-                      n, tot_ms, tot_tx, tot_rx, tot_ret);
-    else {
-        fprintf(o, "# %d mode(s) benchmarked, %d skipped; "
-                   "total %.1f ms, %lu tx, %lu rx, %lu retries\n",
-                n, fails, tot_ms, tot_tx, tot_rx, tot_ret);
-    }
-    return 0;
+    return bench_report(d, devname, NULL, size ? size : 1024, repeat ? repeat : 50);
 }
 
 static void emulate_ready(const char *path, void *user)
@@ -922,17 +1032,29 @@ static int device_checks(cgra_t *dev, dsl_ctx *d)
 
 static int selftest(void)
 {
-    cgra_t *dev = cgra_open("sim:", 115200);
-    if (!dev) { fprintf(stderr, "cgra: cannot open emulator\n"); return 1; }
-
     dsl_ctx d;
     dsl_init(&d);
     char err[DSL_VAL];
     if (dsl_load_defaults(&d, err, sizeof(err)) != 0) {
-        fprintf(stderr, "cgra: %s\n", err); cgra_close(dev); return 1;
+        fprintf(stderr, "cgra: %s\n", err); return 1;
     }
-    int fails = device_checks(dev, &d);
-    cgra_close(dev);
+
+    /* Run the whole known-answer suite twice: once against a protocol v3
+     * emulator (fused EXEC transactions) and once against one that reports v2
+     * and rejects EXEC, so the pre-v3 fallback the library keeps for older
+     * bitstreams is held to exactly the same results. */
+    static const struct { const char *dev, *label; } backends[] = {
+        { "sim:",   "v3 (fused exec)" },
+        { "sim:v2", "v2 (write/run/read)" },
+    };
+    int fails = 0;
+    for (size_t i = 0; i < sizeof(backends) / sizeof(backends[0]); i++) {
+        cgra_t *dev = cgra_open(backends[i].dev, 115200);
+        if (!dev) { fprintf(stderr, "cgra: cannot open emulator\n"); return 1; }
+        printf("-- protocol %s --\n", backends[i].label);
+        fails += device_checks(dev, &d);
+        cgra_close(dev);
+    }
 
     /* auto-retry path: sim:flaky NACKs the first CFG and WR; the result must
      * still be correct and the stats must show the retries. */
@@ -1019,9 +1141,12 @@ static int cmd_probe(dsl_ctx *d, const char *devname)
     }
     printf("device: protocol v%u, %ux%u array, %u-bit datapath\n",
            info.version, info.rows, info.cols, info.data_w);
-    if (info.rows != CGRA_ROWS || info.cols != CGRA_COLS || info.data_w != CGRA_DATA_W)
-        printf("warning: geometry differs from this build (%dx%d, %d-bit)\n",
-               CGRA_ROWS, CGRA_COLS, CGRA_DATA_W);
+    int supported = cgra_get_info(dev, NULL);
+    if (supported != CGRA_OK) {
+        fprintf(stderr, "cgra: %s\n", cgra_strerror(supported));
+        cgra_close(dev);
+        return 1;
+    }
 
     int fails = device_checks(dev, d);
     cgra_close(dev);
@@ -1095,6 +1220,31 @@ static const struct option long_opts[] = {
 
 static int cmd_shell(char *opt_config);
 
+/* Compute into a temporary stream first, so --out cannot truncate an input
+ * (including a configuration file or stdin redirected from that file). */
+static int publish_output(FILE *staged, const char *path)
+{
+    if (ferror(staged) || fflush(staged) == EOF || fseek(staged, 0, SEEK_SET) != 0) {
+        fprintf(stderr, "cgra: failed to stage output\n");
+        return 1;
+    }
+    FILE *dest = fopen(path, "wb");
+    if (!dest) {
+        fprintf(stderr, "cgra: cannot write %s: %s\n", path, strerror(errno));
+        return 1;
+    }
+    char buffer[4096];
+    size_t n;
+    int failed = 0;
+    while ((n = fread(buffer, 1, sizeof(buffer), staged)) > 0) {
+        if (fwrite(buffer, 1, n, dest) != n) { failed = 1; break; }
+    }
+    if (ferror(staged) || ferror(dest)) failed = 1;
+    if (fclose(dest) != 0) failed = 1;
+    if (failed) fprintf(stderr, "cgra: failed to write %s\n", path);
+    return failed;
+}
+
 /*
  * Parse one command line (argv[0] is the program/tool name) with getopt_long
  * and run the requested command. Used for both the one-shot invocation and
@@ -1113,7 +1263,7 @@ static int dispatch(int argc, char **argv, int in_shell)
     int force = 0, verbose = 0;
 
     /* reset the formatting globals for this invocation (matters in the shell) */
-    g_out = NULL; g_unsigned = 0; g_fmt_override = NULL;
+    g_out = NULL; g_unsigned = 0; g_fmt_override = NULL; g_report_ready = 0;
 
     optind = 0;             /* glibc: full re-init, so the shell can re-parse */
     opterr = 1;
@@ -1129,15 +1279,44 @@ static int dispatch(int argc, char **argv, int in_shell)
         case OPT_A:      opt_a  = optarg;      break;
         case OPT_B:      opt_b  = optarg;      break;
         case OPT_X:      opt_x  = optarg;      break;
-        case OPT_COLS:   opt_cols   = atoi(optarg); break;
+        case OPT_COLS: case OPT_SIZE: case OPT_REPEAT: {
+            long value;
+            long max = c == OPT_REPEAT ? INT_MAX : MAX_VEC;
+            if (dsl_integer(optarg, 1, max, &value)) {
+                fprintf(stderr, "cgra: --%s needs an integer in 1..%ld\n",
+                        c == OPT_COLS ? "cols" : c == OPT_SIZE ? "size" : "repeat", max);
+                return 1;
+            }
+            if (c == OPT_COLS) opt_cols = (int)value;
+            else if (c == OPT_SIZE) opt_size = (int)value;
+            else opt_repeat = (int)value;
+            break;
+        }
         case OPT_OP:     opt_op     = optarg;  break;
         case OPT_IO:     opt_io     = optarg;  break;
         case OPT_JSON:   g_fmt_override = "json"; break;
-        case OPT_DTYPE:  g_unsigned = (optarg[0] == 'u'); break;
-        case OPT_SIZE:   opt_size   = atoi(optarg); break;
-        case OPT_REPEAT: opt_repeat = atoi(optarg); break;
-        case OPT_IMM:    opt_imm = strtol(optarg, NULL, 0); has_imm = 1; break;
-        case OPT_STEPS:  opt_steps = atoi(optarg); has_steps = 1; break;
+        case OPT_DTYPE:
+            if (strcmp(optarg, "u16") && strcmp(optarg, "s16")) {
+                fprintf(stderr, "cgra: --dtype must be u16 or s16\n"); return 1;
+            }
+            g_unsigned = !strcmp(optarg, "u16"); break;
+        case OPT_IMM:
+            if (dsl_integer(optarg, INT16_MIN, UINT16_MAX, &opt_imm) != 0) {
+                fprintf(stderr, "cgra: --imm needs an integer in -32768..65535\n");
+                return 1;
+            }
+            has_imm = 1;
+            break;
+        case OPT_STEPS: {
+            long steps;
+            if (dsl_integer(optarg, 0, UINT8_MAX, &steps) != 0) {
+                fprintf(stderr, "cgra: --steps needs an integer in 0..255\n");
+                return 1;
+            }
+            opt_steps = (int)steps;
+            has_steps = 1;
+            break;
+        }
         case OPT_FORCE:  force = 1;            break;
         case '?':        usage();              return 1;   /* getopt already complained */
         default:         usage();              return 1;
@@ -1157,8 +1336,8 @@ static int dispatch(int argc, char **argv, int in_shell)
     }
 
     if (opt_outfile) {
-        g_out = fopen(opt_outfile, "w");
-        if (!g_out) { fprintf(stderr, "cgra: cannot write %s: %s\n", opt_outfile, strerror(errno)); return 1; }
+        g_out = tmpfile();
+        if (!g_out) { fprintf(stderr, "cgra: cannot stage output: %s\n", strerror(errno)); return 1; }
     }
 
     dsl_ctx d;
@@ -1171,6 +1350,11 @@ static int dispatch(int argc, char **argv, int in_shell)
     }
     dsl_io *io = opt_io ? dsl_find_io(&d, opt_io) : dsl_find_io(&d, "dec");
 
+    if (opt_io && !io) {
+        fprintf(stderr, "cgra: unknown I/O profile '%s'\n", opt_io);
+        if (g_out) { fclose(g_out); g_out = NULL; }
+        return 1;
+    }
     int rc = 0;
     if      (!strcmp(cmd, "devices"))   rc = cmd_devices(&d);
     else if (!strcmp(cmd, "modes"))     rc = cmd_modes(&d);
@@ -1187,7 +1371,7 @@ static int dispatch(int argc, char **argv, int in_shell)
     else if (!strcmp(cmd, "emulate"))   rc = cmd_emulate();
     else if (!strcmp(cmd, "show")) {
         if (nrest < 1) { fprintf(stderr, "cgra: show needs a MODE\n"); rc = 1; }
-        else rc = cmd_show(&d, rest[0], opt_imm, has_imm, verbose);
+        else rc = cmd_show(&d, opt_device, rest[0], opt_imm, has_imm, verbose);
     }
     else if (!strcmp(cmd, "run")) {
         if (nrest < 1) { fprintf(stderr, "cgra: run needs a MODE\n"); rc = 1; }
@@ -1216,7 +1400,14 @@ static int dispatch(int argc, char **argv, int in_shell)
         rc = 1;
     }
 
-    if (g_out) { fclose(g_out); g_out = NULL; }
+    if (g_out) {
+        if ((rc == 0 || g_report_ready) && publish_output(g_out, opt_outfile) != 0) rc = 1;
+        if (fclose(g_out) != 0) rc = 1;
+        g_out = NULL;
+    } else if (fflush(stdout) == EOF || ferror(stdout)) {
+        fprintf(stderr, "cgra: failed to write standard output\n");
+        rc = 1;
+    }
     return rc;
 }
 

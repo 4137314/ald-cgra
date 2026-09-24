@@ -24,7 +24,7 @@ _cgra() {
 
     case "$prev" in
         -d|--device)
-            COMPREPLY=( $(compgen -W "auto sim $(cgra devices 2>/dev/null | awk '{print $1}')" -- "$cur") )
+            COMPREPLY=( $(compgen -W "auto sim sim:flaky sim:v2 $(cgra devices 2>/dev/null | awk '{print $1}')" -- "$cur") )
             return ;;
         --io)
             COMPREPLY=( $(compgen -W "$(cgra io 2>/dev/null | awk '{print $1}')" -- "$cur") )
