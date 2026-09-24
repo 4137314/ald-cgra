@@ -20,7 +20,7 @@ libcgra \- host library for the UART-attached CGRA accelerator
 .fi
 .SH DESCRIPTION
 .B libcgra
-is the host side of a Coarse-Grained Reconfigurable Array: a 4x4 mesh of
+is the host side of a Coarse-Grained Reconfigurable Array: an R x C mesh (default 4x4, at most 16 PEs) of
 16-bit signed processing elements (PEs) on an FPGA, driven over a serial link.
 The usage model is always the same four moves:
 .IP 1. 4
@@ -35,23 +35,67 @@ registers;
 \(em clock the whole array a chosen number of steps;
 .IP 4. 4
 .B read back
-\(em read all sixteen PE registers.
+\(em read all PE registers.
 .PP
 The higher-level entry points (\fBcgra_apply\fR, the \fBcgra_vec_*\fR kernels,
-\fBcgra_dot\fR) are compositions of those four.
+\fBcgra_dot\fR, \fBcgra_matvec\fR, \fBcgra_scan\fR and \fBcgra_conv\fR)
+are compositions of those four. All kernels are in the installed library;
+the CLI uses the same implementations for matrix, scan and convolution.
 .SS The sim: emulator
 Passing the device string
 .B "sim:"
-(or any string beginning
-.BR "sim:" )
+(or a supported variant below)
 to
 .B cgra_open
 selects an in-process emulator that speaks the identical byte protocol and
 re-implements the PE ALU, so the whole stack builds and runs with no FPGA. The
 variant
 .B "sim:flaky"
-deterministically NACKs the first CFG and the first WR to exercise the retry
-path.
+deterministically NACKs the first CFG and the first input-carrying transaction
+to exercise the retry path, and
+.B "sim:v2"
+reports protocol version 2 and rejects
+.BR EXEC ,
+which exercises the pre-v3 fallback described under
+.BR "FUSED EXECUTE" .
+.PP
+The geometry variant
+.B sim:2x3
+selects a rectangular mesh; append
+.B :v2
+or
+.B :flaky
+to combine it with a protocol or retry test. Positive dimensions with at most
+16 PEs are supported. Unknown tokens and unsupported shapes fail to open.
+.SH GEOMETRY
+.B cgra_get_info(dev, info)
+caches the ID reply and validates protocol v2/v3, 16-bit data and positive
+dimensions with at most 16 PEs. The first call may perform an ID transaction.
+All public kernels adapt to these dimensions automatically. On failure,
+the identity output remains unchanged. cgra_identify always sends ID and
+refreshes the cache, but only cgra_get_info validates support. There is no
+hot-plug detection: after reprogramming or reconnection, restore the remote
+parser, reopen and initialize again. Uncertain transfers invalidate the cache.
+.PP
+The legacy configure, write_inputs, read_regs, apply and exec functions require
+4x4. They return CGRA_ERR_GEOMETRY for other shapes. For runtime dimensions use:
+.nf
+int cgra_configure_n(cgra_t *dev, const uint32_t *cfg, size_t ncfg);
+int cgra_write_inputs_n(cgra_t *dev,
+    const int16_t *west, size_t nwest, const int16_t *north, size_t nnorth);
+int cgra_read_regs_n(cgra_t *dev, int16_t *regs, size_t capacity);
+int cgra_exec_n(cgra_t *dev, uint8_t steps, unsigned flags, uint16_t mask,
+    const int16_t *west, size_t nwest, const int16_t *north, size_t nnorth,
+    int16_t *taps, size_t ntaps);
+.fi
+.PP
+Counts are in words. CFG needs exactly rows*cols words; WR needs exactly rows
+west words and cols north words. RD needs capacity at least rows*cols and
+writes only that many words in row-major order (index r*cols+c).
+EXEC accepts NULL inputs only with count zero, which injects zeros, and needs
+exactly popcount(mask) tap slots. Absent-PE mask bits and unknown flags are
+rejected. Length errors return CGRA_ERR_ARG before the transfer, although an
+initial ID may occur. The EXEC wire mask remains 16 bits for all shapes.
 .SH CONNECTION
 .TP
 .BI "cgra_t *cgra_open(const char *" device ", unsigned " baud )
@@ -64,19 +108,24 @@ at
 .I baud
 ignored). Returns a handle or
 .BR NULL .
+On failure errno is EINVAL for invalid device/baud, ENOMEM for allocation
+failure, or the error from the failing POSIX operation.
 .TP
 .BI "void cgra_close(cgra_t *" dev )
 Close the device and free the handle.
 .TP
 .BI "void cgra_set_timeout(cgra_t *" dev ", unsigned " ms )
-Per-reply read timeout in milliseconds (default 2000).
+Deadline for one complete reply, in milliseconds (default 2000).
+Partial reads and interrupted waits do not restart the deadline.
+Each retry has its own reply deadline; blocking writes are not bounded by it.
 .TP
 .BI "void cgra_set_retries(cgra_t *" dev ", unsigned " retries )
-Automatic retransmissions on a NACK, timeout or bad checksum for the CFG, WR
-and RD transactions (default 3, 0 disables).
-.B RUN
-is never retried because it advances the datapath; a failed RUN triggers a
-resync (flush + reset) instead.
+Retransmissions after a complete NACK for CFG, WR and EXEC with RESET
+(default 3, 0 disables). RUN and RD are never retried.
+This assumes intact command bytes and frame lengths. Timeout, I/O errors and
+malformed replies stop the session without sending recovery bytes; later
+protocol calls return CGRA_ERR_DESYNC. The failing call returns its original
+error. See RECOVERY AND FAULT MODEL below.
 .TP
 .BI "int cgra_ping(cgra_t *" dev ", uint8_t *" version )
 .TQ
@@ -89,9 +138,12 @@ so a host can adapt at run time.
 .TP
 .BI "int cgra_emulate_pty(void (*" on_ready ")(const char *, void *), void *" user )
 Serve the emulator on a fresh pseudo-terminal (POSIX only); external serial
-tools can then talk to a virtual CGRA.
+tools can then talk to a virtual 4x4 CGRA.
 .I on_ready
 is called once with the slave path before the blocking serve loop.
+The path is borrowed during the callback; copy it if retaining it. The server
+retries interrupted I/O, returns CGRA_ERR_IO on an unrecoverable read/write
+error and CGRA_ERR_NOMEM on emulator allocation failure.
 .SH PRIMITIVES
 .TP
 .BI "int cgra_configure(cgra_t *" dev ", const uint32_t " cfg "[16])"
@@ -123,11 +175,9 @@ Clear all PE registers; the loaded configuration is kept.
 .BI "int cgra_apply(cgra_t *" dev ", const uint32_t " cfg "[16], const int16_t " west "[4], const int16_t " north "[4], uint8_t " steps ", int16_t " regs "[16])"
 One-shot configure + write + run + read back. Any pointer except
 .I dev
-may be
-.B NULL
-to skip that phase
-.RI ( cfg " = " NULL
-reuses the loaded configuration).
+may be NULL. cfg=NULL reuses the loaded configuration. Both edge pointers
+NULL retain the current inputs; if only one is NULL, that edge receives zeros.
+regs=NULL skips readback. RUN is always performed, even for zero steps.
 .SH KERNELS
 Element-wise kernels use the
 .I diagonal
@@ -135,7 +185,7 @@ configuration:
 .I a[]
 enters from the north edge,
 .I b[]
-from the west, PASS chains route them to the diagonal PEs, and up to four
+from the west, PASS chains route them to the diagonal PEs, and min(rows,cols)
 results are produced per transaction.
 .TP
 .BI "int cgra_vec_binop(cgra_t *" dev ", enum cgra_op " op ", const int16_t *" a ", const int16_t *" b ", int16_t *" out ", size_t " n )
@@ -144,6 +194,9 @@ results are produced per transaction.
 Generic binary map, with operand
 .I b
 either a vector or the immediate.
+Supported operations are ADD, SUB, MUL, AND, OR, XOR, SHL, SHR, MAX and MIN.
+Other opcodes return CGRA_ERR_ARG before device I/O. Stateful PE operations
+are available through the low-level interface.
 .TP
 .B cgra_vec_add, cgra_vec_sub, cgra_vec_mul, cgra_vec_min, cgra_vec_max
 .TQ
@@ -155,6 +208,98 @@ Named shortcuts: sum, difference, product, minimum, maximum,
 .TP
 .BI "int cgra_dot(cgra_t *" dev ", const int16_t *" a ", const int16_t *" b ", size_t " n ", int16_t *" result )
 Dot product accumulated on the MAC PE (16-bit wrap-around).
+.TP
+.B cgra_matvec(dev, A, rows, cols, x, y, y_capacity)
+Matrix-vector product y=A*x. A is a row-major rows*cols array, x contains cols
+elements, and y_capacity must be at least rows. Dimensions and capacity are
+size_t. Row 0 computes products, later rows delay them; the host sums partials.
+.TP
+.B cgra_scan(dev, op, a, n, out, out_capacity)
+Inclusive prefix fold out[i]=a[0] op ... op a[i]. op is CGRA_OP_ADD, MUL, MIN
+or MAX. n and out_capacity are size_t; capacity must be at least n.
+.TP
+.B cgra_conv(dev, h, k, x, n, out, out_capacity)
+Full convolution out[i]=sum_j h[j]*x[i-j] with zero extension. k and n are
+the input lengths; nonempty output has n+k-1 elements. All lengths and capacity
+are size_t. The implementation allocates a dense (n+k-1)*n Toeplitz matrix;
+zero tiles are skipped during device execution, not during allocation.
+.SS Kernel buffer and error contracts
+All public kernels return CGRA_OK or a negative CGRA_ERR_*, never a length.
+Capacities count int16_t elements. Array footprints must fit PTRDIFF_MAX bytes;
+claimed lengths cannot prove the caller's actual allocation size.
+Argument errors are rejected before device I/O or output writes.
+.PP
+Vector and scan output may equal an input exactly. Any other overlap of
+output with an input is rejected with CGRA_ERR_ARG. Matvec and convolution
+output must not overlap either input. Input arrays may overlap each other.
+Dot may store its scalar inside an input because all input has been consumed.
+.PP
+An empty vector or scan (n=0) is a no-op and buffers may be NULL. Empty dot
+stores zero through its required result pointer. Matvec with rows=0 is a
+no-op; with rows>0 and cols=0, it writes rows zeros and A/x may be NULL.
+If either convolution input is empty, output is empty and all pointers may
+be NULL. Empty operations perform no I/O and do not check remote device state;
+a non-NULL handle and valid opcode remain required.
+.PP
+Kernels replace device configuration, inputs and registers without restoring
+the previous program. After a runtime failure, vector/scan output may have a
+completed prefix; matvec/conv output may contain zeros or partial sums.
+Dot stores its scalar only on success. Discard partial output on any error;
+there is no rollback of completed device steps. Read-register and EXEC output
+buffers are only published after validating the complete reply.
+.SH FUSED EXECUTE
+Protocol v3 adds one transaction that collapses the write\-inputs / run /
+read\-back triple every kernel issues per chunk into a single round trip, and
+reads back only the registers the caller taps.
+.TP
+.BI "int cgra_has_exec(cgra_t *" dev )
+Non\-zero if the device implements supported protocol v3. The answer comes from
+one
+.B ID
+handshake and is cached, so it is cheap to ask per chunk. Kernels use it to
+fall back to
+.BR cgra_write_inputs / cgra_run / cgra_read_regs
+on an older bitstream. Zero also covers errors. To distinguish a v2 device
+from a communication error, use cgra_get_info, check its return code, then
+inspect info.version >= 3.
+.TP
+.BI "int cgra_exec(cgra_t *" dev ", uint8_t " steps ", unsigned " flags ", uint16_t " tap_mask ", const int16_t " west [] ", const int16_t " north [] ", int16_t *" taps ", size_t " ntaps )
+Write the edge inputs, optionally clear the datapath, advance the array
+.I steps
+cycles, and read back the registers selected by
+.IR tap_mask ,
+all in one transaction. Bit
+.I i
+of the mask selects register
+.I i
+(row\-major);
+.I taps
+receives them in ascending PE index and
+.I ntaps
+must equal the mask's population count. Pass
+.I tap_mask
+= 0 and
+.I taps
+=
+.B NULL
+for a pure fused write+run.
+.I west
+and
+.I north
+may be
+.B NULL
+to inject zeros.
+.IP
+The only flag is
+.BR CGRA_EXEC_RESET ,
+which clears the PE registers before stepping. Besides saving a separate
+.B RST
+round trip, it allows retransmission after a complete, checksum-valid NACK.
+Timeouts and malformed replies stop the session even with this flag set.
+.IP
+Returns
+.B CGRA_ERR_PROTO
+if the device predates v3.
 .SH CONFIG WORD
 One 32-bit word fully specifies a PE:
 .PP
@@ -197,10 +342,15 @@ Arithmetic is 16-bit signed and wraps;
 and
 .B MAC
 keep the low half of the product.
+MIN/MAX use signed ordering; shift counts use the low four bits of operand B,
+SHR sign-extends, and ABS(-32768) produces -32768.
 .SH RETURN VALUES
-Every
-.B int
-entry point returns
+Configuration and input words are latched before checksum validation.
+A failed CFG or WR does not restore their previous values; resend a complete
+valid payload before executing. A rejected EXEC does not reset or step the PE
+registers, but its input words have been latched.
+.PP
+Operation entry points return
 .B CGRA_OK
 (0) on success or a negative code:
 .B CGRA_ERR_IO
@@ -212,13 +362,46 @@ entry point returns
 .B CGRA_ERR_PROTO
 (\-4),
 .B CGRA_ERR_ARG
-(\-5).
+(\-5),
+.B CGRA_ERR_GEOMETRY
+(\-6, unsupported shape/width or fixed-size API mismatch),
+.B CGRA_ERR_DESYNC
+(\-7, session stopped after an uncertain transfer),
+.B CGRA_ERR_NOMEM
+(\-8, workspace or emulator allocation failed).
+.B cgra_has_exec
+is the boolean exception described above.
 .B cgra_strerror()
 maps a code to a string.
 .B cgra_open
 returns
 .B NULL
-on failure.
+on failure and sets errno. Diagnose other functions through their return code,
+not errno.
+.SH OWNERSHIP
+cgra_open returns an owned handle: close it exactly once and never use it
+afterwards. cgra_close(NULL) is harmless. Device strings and input/output
+buffers are borrowed for the duration of a synchronous call; no caller buffer
+is retained or freed. The caller provides aligned arrays of sufficient size.
+cgra_strerror returns immutable static storage that must not be modified or
+freed. Setters/reset_stats with NULL do nothing; get_stats with either pointer
+NULL leaves output unchanged.
+.SH RECOVERY AND FAULT MODEL
+Protocols v2/v3 have no delimiter, sequence number or protected command byte.
+Checksums cannot reliably detect dropped or inserted bytes, opcode corruption,
+or compensating payload changes. Automatic NACK retries assume that commands
+and frame lengths were preserved. A command may already have changed device
+state when an error is returned; there is no rollback or exactly-once guarantee.
+.PP
+After timeout, I/O failure or malformed reply, the library invalidates cached
+identity and blocks further protocol commands on that handle. It sends no RST:
+a controller still expecting the RUN argument could interpret RST as six steps.
+Close the handle, restore the remote parser to idle out of band (device reset),
+or allow its configured watchdog and all pending transmission/replies to finish,
+then reopen and reinitialize configuration, inputs and datapath.
+Reopening the port alone does not reset the controller. The emulator has no
+watchdog clock. No fixed host sleep can guarantee recovery for arbitrary
+bitstreams or broken links.
 .SH INSTRUMENTATION
 .B cgra_get_stats()
 copies a
@@ -226,7 +409,10 @@ copies a
 (transactions, retries, tx/rx byte counts);
 .B cgra_reset_stats()
 zeroes them. Useful for measuring the serial round trips that dominate wall
-time.
+time \(em and, since the counts are deterministic, for comparing a fused v3 run
+against the same work on
+.B "sim:v2"
+without needing an FPGA or a stopwatch.
 .SH EXAMPLE
 .nf
 .EX
@@ -251,9 +437,12 @@ int main(void)
 .SH THREAD SAFETY
 A
 .B cgra_t
-handle is not internally locked: serialise calls on one handle, or use one
-handle per thread. The protocol is strictly request/reply, so interleaving
-transactions on a shared handle corrupts the stream.
+handle is not internally locked: serialise all calls, including statistics,
+setters and close. Also serialise access to one physical device across handles
+and processes; separate handles do not isolate the device's state. Independent
+devices and in-process emulator handles may be used concurrently. The PTY
+server uses ptsname's shared storage at startup: run such servers in separate
+processes rather than alongside other ptsname users in one process.
 .SH PROTOCOL SYNC
 The protocol bytes and the config-word layout are mirrored in
 .I hw/rtl/cgra_pkg.vhd

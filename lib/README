@@ -1,7 +1,7 @@
 lib/ - libcgra, the host C library
 ==================================
 
-The host half of the CGRA. Owns the serial transport, the v2 protocol, the
+The host half of the CGRA. Owns the serial transport, the v2/v3 protocols, the
 accelerated kernels, and an in-process emulator that speaks the identical wire
 protocol so the whole stack runs with no FPGA.
 
@@ -41,6 +41,13 @@ Docs
 ----
 The API is documented in include/cgra.h (Unix-style block comments, no
 doxygen) and in doc/libcgra.3. See also the CLI: cgra(1), cgra(5).
+
+Installed kernels: cgra_vec_*, cgra_dot, cgra_matvec, cgra_scan, cgra_conv.
+All adapt to the device geometry and return CGRA_OK or a negative error.
+Matrix/scan/convolution take size_t dimensions and output capacities. They
+are shared with the CLI, without any DSL dependency in the library.
+See the header for empty inputs, exact in-place vector/scan use, rejected
+overlap, partial output on failure, ownership and synchronization contracts.
 
 Contract
 --------

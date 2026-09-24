@@ -11,7 +11,8 @@ What lives here
 - CGRA_OK / CGRA_ERR_*       return codes (0 ok, negative errors)
 - cgra_t, cgra_info_t, cgra_stats_t
 - functions: connection, primitives (configure/write/run/read/reset/apply),
-  and the vector kernels (cgra_vec_*, cgra_dot)
+  and kernels (cgra_vec_*, cgra_dot, cgra_matvec, cgra_scan, cgra_conv)
+- ownership, buffer overlap, empty inputs, partial results and concurrency
 
 Style
 -----

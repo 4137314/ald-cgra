@@ -12,6 +12,7 @@
 #include "cgra.h"
 #include "emu.h"
 
+#include <errno.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -41,24 +42,29 @@ int cgra_emulate_pty(void (*on_ready)(const char *path, void *user), void *user)
         return CGRA_ERR_IO;
     }
     struct termios tio;
-    if (tcgetattr(sfd, &tio) == 0) {
-        cfmakeraw(&tio);
-        tcsetattr(sfd, TCSANOW, &tio);
+    if (tcgetattr(sfd, &tio) != 0) {
+        close(sfd); close(mfd); return CGRA_ERR_IO;
     }
-
-    if (on_ready != NULL)
-        on_ready(sn, user);
+    cfmakeraw(&tio);
+    if (tcsetattr(sfd, TCSANOW, &tio) != 0) {
+        close(sfd); close(mfd); return CGRA_ERR_IO;
+    }
 
     cgra_emu_t *e = emu_new();
     if (e == NULL) {
         close(sfd);
         close(mfd);
-        return CGRA_ERR_IO;
+        return CGRA_ERR_NOMEM;
     }
+
+    if (on_ready != NULL)
+        on_ready(sn, user);
 
     for (;;) {
         uint8_t in[256];
         ssize_t k = read(mfd, in, sizeof(in));
+        if (k < 0 && errno == EINTR)
+            continue;
         if (k < 0)
             break;
         if (k == 0)
@@ -71,6 +77,7 @@ int cgra_emulate_pty(void (*on_ready)(const char *path, void *user), void *user)
             size_t off = 0;
             while (off < n) {
                 ssize_t w = write(mfd, out + off, n - off);
+                if (w < 0 && errno == EINTR) continue;
                 if (w <= 0) { emu_free(e); close(sfd); close(mfd); return CGRA_ERR_IO; }
                 off += (size_t)w;
             }
@@ -80,5 +87,5 @@ int cgra_emulate_pty(void (*on_ready)(const char *path, void *user), void *user)
     emu_free(e);
     close(sfd);
     close(mfd);
-    return CGRA_OK;
+    return CGRA_ERR_IO;
 }

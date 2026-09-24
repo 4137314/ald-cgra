@@ -7,7 +7,9 @@
  *
  * Usage: feed host->device bytes with emu_push(), drain device->host bytes
  * with emu_pop().  All command processing is synchronous, so every reply is
- * already queued by the time the caller reads it.
+ * already queued by the time the caller reads it. It has no clock or watchdog;
+ * timeout recovery is checked directly on the RTL. CFG and edge-input words
+ * become visible as they arrive, including when the final checksum is bad.
  */
 
 #ifndef CGRA_EMU_H
@@ -19,11 +21,20 @@
 typedef struct cgra_emu cgra_emu_t;
 
 cgra_emu_t *emu_new(void);
+cgra_emu_t *emu_new_geometry(unsigned rows, unsigned cols);
 void        emu_free(cgra_emu_t *e);
 
-/* Test hook: when enabled, the emulator NACKs the first CFG and the first WR
- * it receives (even with a valid checksum), to exercise host-side retries. */
+/* Test hook: when enabled, the emulator NACKs the first CFG and the first
+ * input-carrying transaction (CMD_WR or CMD_EXEC) it receives, even with a
+ * valid checksum, to exercise host-side retries. */
 void        emu_set_flaky(cgra_emu_t *e, int enable);
+
+/* Test hook: when enabled, the emulator pretends to be a protocol v2 device --
+ * it reports version 2 from the ID handshake and rejects CMD_EXEC as an
+ * unknown command. This is what keeps the host's v2 fallback path (used with
+ * an older bitstream) exercised, and makes the cost of the fused transaction
+ * measurable against the unfused one in a single binary. */
+void        emu_set_legacy(cgra_emu_t *e, int enable);
 
 /* Push one host->device byte; may enqueue reply bytes. */
 void emu_push(cgra_emu_t *e, uint8_t byte);

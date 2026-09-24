@@ -1,28 +1,50 @@
 lib/src/ - implementation
 =========================
 
-    cgra.c    serial transport (termios), the v2 protocol, retry/resync
+    cgra.c    serial transport (termios), the v3 protocol, retry/session error
               logic, and the accelerated kernels (diagonal element-wise,
               MAC dot product). The public entry points from cgra.h.
+              cgra_exec() is the fused transaction; cgra_has_exec() caches
+              one ID handshake so kernels can pick it per chunk and fall
+              back to WR/RUN/RD on a pre-v3 bitstream.
+    kernels.c geometry-aware matrix-vector, prefix scan and convolution;
+              installed public API, also used by the CLI adapters. Convolution
+              still allocates a dense Toeplitz matrix before skipping zero tiles.
+    buffers.h internal array-footprint and overlap validation shared by kernels.
     emu.h     internal interface to the emulator (emu_push/emu_pop + the bulk
               emu_feed/emu_drain used by the hot transport path).
     emu.c     the "sim:" device: a byte-accurate model of cgra_ctrl.vhd +
               the PE mesh. GOLDEN REFERENCE for the RTL. "sim:flaky" NACKs
-              the first CFG and WR to exercise host retries.
+              the first CFG and the first input-carrying transaction to
+              exercise host retries; "sim:v2" reports protocol v2 and
+              rejects EXEC, which keeps the fallback path tested and makes
+              the fused transaction's saving measurable side by side.
     serve.c   cgra_emulate_pty(): expose the emulator on a POSIX pseudo-
               terminal so external serial tools can drive a virtual CGRA.
 
 Notes
 -----
-- No dependencies beyond libc + POSIX (termios, select, openpty).
+- No dependencies beyond libc + POSIX (termios, poll, openpty).
 - Transport is strictly request/reply; a cgra_t handle is not locked, so
   serialise calls per handle (see THREAD SAFETY in libcgra(3)).
-- RUN is never retried (it advances state); a failed RUN resyncs instead.
+- CFG/WR and EXEC with RESET retry complete NACK replies only, assuming intact
+  command bytes and frame lengths. RUN/RD are never retried. Transport failures
+  and malformed replies stop the session (CGRA_ERR_DESYNC on later calls),
+  invalidate cached ID, and send no implicit RST. Restore the remote parser
+  before reopening; see RECOVERY AND FAULT MODEL in libcgra(3).
+- CFG/WR and EXEC input words latch as they arrive, before checksum validation.
+  A NACK does not roll those writes back; it prevents EXEC's reset/steps.
+  The model reproduces these writes for both bulk and byte-at-a-time input.
+  hw/sim/tb_protocol_diff.vhd checks the resulting replies against the RTL.
+  The model has no clock: watchdog timing is verified directly in that bench.
 - Perf: the sim: transport moves whole buffers (emu_feed/emu_drain) rather than
   one byte per library call; payload and reply copies are memcpy'd. Byte
   behaviour is identical to the per-byte path (verified by the test suite), but
   it profiles ~24% faster on the CPU-bound emulator (see `make gprof`). The
-  floor is run_command/step_array, the cycle-accurate PE model itself.
+  floor is run_command/step_array, the cycle-accurate PE model itself --
+  which is why configuration words are decoded ONCE when CMD_CFG lands
+  (emu->dec[]) instead of re-deriving four bit fields per PE per step, the
+  way the hardware likewise decodes combinationally off a held register.
 
 Editing the protocol here means editing hw/rtl/cgra_pkg.vhd and
 include/cgra.h too. emu.c and the silicon must agree byte for byte.

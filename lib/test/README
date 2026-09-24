@@ -1,17 +1,48 @@
 lib/test/ - libcgra unit tests
 ==============================
 
+    test_transport.c  Real serial code on local POSIX PTYs: whole-reply
+                      deadline under fragmentation, RX/TX counters on timeout
+                      and disconnection, and descriptors beyond FD_SETSIZE.
+                      Timeout/malformed reply cases assert no retries or RST
+                      bytes and CGRA_ERR_DESYNC from later protocol calls.
+                      The high-descriptor test reports SKIP if the process
+                      limit is too low. No physical serial port is opened.
+                      Mid-kernel failures verify partial vector/scan prefixes,
+                      matrix/conv sums, unchanged dot output, stopped-session
+                      behavior and the distinction between discovery and has_exec.
+
+    test_kernels.c    Tests only the installed cgra.h surface, linked to the
+                      static library: matvec, four scans and convolution vs.
+                      scalar arithmetic on eight shapes and v2/v3; in-place
+                      vector/scan, rejected overlap, capacities, oversized
+                      footprints, empty/NULL inputs, canaries and open errno.
+
+    test_faults.c     GNU/ELF linker wrapping injects allocation/read failures:
+                      conv workspace, open, PTY server readiness and EINTR/EIO.
+                      No production test hooks; requires a linker with --wrap.
+
     test_cgra.c   assert.h unit tests driven against the sim: emulator (no
                   FPGA). Covers config-word packing, the ID handshake, the
                   configure/write/run/read primitives, every vector kernel vs.
                   a host reference, the fixed SHL-of-negative path, the dot
-                  product, NULL-argument error codes, and the NACK retry path
-                  with its stats counters.
+                  product, NULL-argument error codes, the NACK retry path with
+                  its stats counters, and protocol v3: cgra_exec's tap masks
+                  (single, multiple, empty), the fused reset, argument
+                  validation, the sim:v2 fallback producing identical results,
+                  and the round-trip/byte saving itself asserted as a property.
+                  Eight device geometries cover runtime transfer lengths, buffer
+                  canaries, invalid masks, cached ID, and legacy API rejection.
+
+CAREFUL when adding a check: CHECK() evaluates its condition exactly once, on
+purpose. Most conditions wrap a call that talks to the device, and the earlier
+version re-evaluated the condition for its assert() -- which silently ran every
+such transaction twice. Keep it that way.
 
 Output is TAP-style ("ok N - ...", a "1..N" plan, a pass/fail summary); the
 binary exits non-zero if any check fails.
 
-Run (make -f ../lib.mk <target>)
+Run from the repository root (make -C lib -f lib.mk <target>)
 --------------------------------
     test                 build + run (assertions forced on)
     PROFILE=asan test    same, under AddressSanitizer + UBSan

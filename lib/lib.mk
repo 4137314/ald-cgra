@@ -18,7 +18,7 @@ GROFF  ?= groff
 VERSION   = 0.1.0
 SOVERSION = 0
 
-BUILD = build
+BUILD = build$(if $(filter release,$(PROFILE)),,/$(PROFILE))
 
 # --- strict, structured diagnostics: one warning philosophy everywhere ------
 WARN = -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion \
@@ -43,7 +43,7 @@ CFLAGS  ?=
 CFLAGS  += -std=c11 $(WARN) $(OPT) -Iinclude -MMD -MP
 LDFLAGS += $(filter -fsanitize=% -pg,$(OPT))
 
-SRCS    = src/cgra.c src/emu.c src/serve.c
+SRCS    = src/cgra.c src/kernels.c src/emu.c src/serve.c
 OBJS    = $(SRCS:src/%.c=$(BUILD)/%.o)
 PICOBJS = $(SRCS:src/%.c=$(BUILD)/%.pic.o)
 
@@ -82,18 +82,37 @@ $(SHARED): $(PICOBJS)
 # Force assertions on regardless of PROFILE so `make PROFILE=release test`
 # still checks invariants.
 TESTBIN = $(BUILD)/test_cgra
-test: $(TESTBIN)
+TRANSPORTBIN = $(BUILD)/test_transport
+KERNELBIN = $(BUILD)/test_kernels
+FAULTBIN = $(BUILD)/test_faults
+test: $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN)
 	./$(TESTBIN)
+	./$(TRANSPORTBIN)
+	./$(KERNELBIN)
+	./$(FAULTBIN)
 
 $(TESTBIN): test/test_cgra.c $(OBJS) | $(BUILD)
 	$(CC) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
+
+$(TRANSPORTBIN): test/test_transport.c $(OBJS) | $(BUILD)
+	$(CC) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
+
+$(KERNELBIN): test/test_kernels.c $(STATIC) | $(BUILD)
+	$(CC) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@
+
+$(FAULTBIN): test/test_faults.c $(STATIC) | $(BUILD)
+	$(CC) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk -o $@
 
 valgrind: $(TESTBIN)
 	valgrind --error-exitcode=99 --leak-check=full --track-origins=yes -q ./$(TESTBIN)
 
 # Deep static analysis (the compiler's own path-sensitive checker).
-analyze:
-	$(CC) -std=c11 -Iinclude -fanalyzer -Wall -Wextra -fsyntax-only $(SRCS)
+analyze: | $(BUILD)
+	mkdir -p $(BUILD)/analyze
+	@for src in $(SRCS); do \
+	    $(CC) -std=c11 -O1 -Iinclude -fanalyzer -Wall -Wextra -Werror \
+	        -c "$$src" -o "$(BUILD)/analyze/$$(basename "$$src" .c).o" || exit 1; \
+	done
 
 man: | $(BUILD)
 	$(GROFF) -man -z $(MAN3)
@@ -102,4 +121,4 @@ man: | $(BUILD)
 clean:
 	rm -rf $(BUILD)
 
--include $(OBJS:.o=.d) $(PICOBJS:.o=.d) $(BUILD)/test_cgra.d
+-include $(OBJS:.o=.d) $(PICOBJS:.o=.d) $(BUILD)/test_cgra.d $(BUILD)/test_transport.d $(BUILD)/test_kernels.d $(BUILD)/test_faults.d
