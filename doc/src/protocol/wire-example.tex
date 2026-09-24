@@ -1,0 +1,23 @@
+\subsection{A transaction on the wire}
+
+To make the framing concrete, consider writing the edge inputs
+$\text{west}=(1,0,0,0)$ and $\text{north}=(5,0,0,0)$ with the \cmd{WR} command.
+The host sends the command byte \byte{03} followed by the four west then four
+north values as 16-bit little-endian words, and finally the additive checksum:
+
+\begin{center}\small\ttfamily
+03\quad 0100 0000 0000 0000\quad 0500 0000 0000 0000\quad 06
+\end{center}
+
+\noindent The sixteen payload bytes sum to $1+5=6$, so the trailing checksum is
+\byte{06}; the device recomputes the same sum, finds it matches, and replies
+with a single \cmd{ACK} byte (\byte{79}). If corruption changes the sum, the
+device replies \cmd{NACK} (\byte{1F}); the host may retry under the fault model
+described below. Both \cmd{CFG} and \cmd{WR} use this request/reply shape.
+
+Configuration and input words are committed as they arrive, before checksum
+validation. A \cmd{NACK} reports a failed transfer but does not restore the
+previous words; a complete valid transfer is required before subsequent
+execution. A rejected \cmd{EXEC} similarly latches its inputs but does not
+reset or advance the PE registers. The differential tests of
+Section~\ref{sec:results} check this observable error behavior.

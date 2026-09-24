@@ -8,70 +8,14 @@
 
 \begin{document}
 
-\title{A UART-Attached Coarse-Grained Reconfigurable Array\\
-       as a Runtime-Reconfigurable Accelerator}
+\input{frontmatter/title}
 
-\author{\IEEEauthorblockN{Mattia Fait}%
-\IEEEauthorblockA{\textit{Advanced Logic Design}\\
-\textit{University of Trento}\\
-Trento, Italy}}
+\input{frontmatter/abstract}
 
-\maketitle
+\input{frontmatter/keywords}
 
-\phantomsection
-\pdfbookmark[1]{Abstract}{sec:abstract}
-\begin{abstract}
-This report presents the logical design of a coarse-grained reconfigurable
-array (CGRA) implemented on an FPGA and driven from a host computer over a
-serial link. The fabric is a $4\times4$ mesh of 16-bit processing elements
-(PEs); the host reconfigures the array by loading one configuration word per
-PE, injects operands at the array edges, advances the datapath a chosen number
-of cycles and reads back the register file. A compact, checksum-protected UART
-protocol connects a host-side software stack---a C library and a UNIX-style
-command-line tool with a small configuration language---to the fabric. We
-describe the PE datapath, the mesh interconnect, the control finite-state
-machine, and the mapping of element-wise, reduction and weight-stationary
-systolic dataflows onto the array under the architectural constraint of a
-single register per PE with edge-only operand injection.
-\end{abstract}
+\input{src/sections}
 
-\begin{IEEEkeywords}
-CGRA, reconfigurable computing, systolic array, FPGA, dataflow, UART protocol.
-\end{IEEEkeywords}
-
-\input{src/introduction}
-\input{src/background}
-\input{src/architecture}
-\input{src/protocol}
-\input{src/dataflow}
-\input{src/software}
-\input{src/analysis}
-\input{src/results}
-\input{src/conclusion}
-
-\phantomsection
-\addcontentsline{toc}{section}{References}
-\begin{thebibliography}{9}
-\bibitem{cgra-survey} L.~Liu \textit{et al.}, ``A Survey of Coarse-Grained
-Reconfigurable Architecture and Design,'' \textit{ACM Comput. Surv.}, vol.~52,
-no.~6, 2019.
-\bibitem{adres} B.~Mei, S.~Vernalde, D.~Verkest, H.~De~Man, and R.~Lauwereins,
-``ADRES: An Architecture with Tightly Coupled VLIW Processor and Coarse-Grained
-Reconfigurable Matrix,'' in \textit{Proc. FPL}, 2003, pp.~61--70.
-\bibitem{morphosys} H.~Singh \textit{et al.}, ``MorphoSys: An Integrated
-Reconfigurable System for Data-Parallel and Computation-Intensive
-Applications,'' \textit{IEEE Trans. Comput.}, vol.~49, no.~5, pp.~465--481,
-2000.
-\bibitem{tpu} N.~P.~Jouppi \textit{et al.}, ``In-Datacenter Performance
-Analysis of a Tensor Processing Unit,'' in \textit{Proc. ISCA}, 2017,
-pp.~1--12.
-\bibitem{plasticine} R.~Prabhakar \textit{et al.}, ``Plasticine: A
-Reconfigurable Architecture for Parallel Patterns,'' in \textit{Proc. ISCA},
-2017, pp.~389--402.
-\bibitem{kung} H.~T.~Kung, ``Why Systolic Architectures?,'' \textit{Computer},
-vol.~15, no.~1, pp.~37--46, 1982.
-\bibitem{ghdl} T.~Gingold, ``GHDL: a VHDL simulator,''
-\url{https://github.com/ghdl/ghdl}.
-\end{thebibliography}
+\input{backmatter/references}
 
 \end{document}

@@ -1,0 +1,9 @@
+The library is also where the fused transaction of Section~\ref{sec:exec} is
+made optional rather than mandatory. It caches the protocol version from a
+single identification handshake and selects, per chunk, either the fused
+command or the three-transaction sequence, so one binary drives both a current
+and an older bitstream. The same switch is what makes the optimisation
+measurable: because the device model can be told to report the older version
+and refuse the fused command, identical work can be run down both paths and the
+resulting transaction and byte counters compared directly
+(Section~\ref{sec:results}).

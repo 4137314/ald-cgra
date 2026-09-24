@@ -1,18 +1,18 @@
-doc/src/ - report sections
-==========================
+doc/src/ - section entry points and atomic topics
+================================================
 
-One file per section, \input by main.tex in this order:
+sections.tex owns the order of the ten report sections. Each NAME.tex owns
+its section heading/label and ordered inputs from NAME/*.tex. Those topic
+files contain the prose/subsection headings and include complete figure/table
+units. Introduction and conclusion are short standalone sections.
 
-    introduction.tex   problem, goals, the guiding constraint, contributions
-    background.tex      CGRA design space, systolic dataflow, related work
-    architecture.tex    PE datapath + the 4x4 mesh and edge injection
-    protocol.tex        UART command set, a byte-level example, the control FSM
-    dataflow.tex        element-wise / reduction / weight-stationary mappings
-    software.tex        the layered host stack (library, model, CLI, DSL)
-    analysis.tex        wire-level cost + latency model of the serial link
-    results.tex         two-level verification (RTL vs. model golden reference)
-    conclusion.tex      recap and future work
+Use ../STRUCTURE.md to find the relevant topic. Preserve complete paragraphs,
+environments and equations within a file; use doc-relative input paths.
 
-Each begins with \section{...}\label{sec:...}; cross-reference by label so
-reordering never breaks \ref. Figures live in ../figures and are pulled in
-with \input.
+Examples from the repository root:
+    make -C doc -f doc.mk section-protocol
+    make -C doc -f doc.mk part UNIT=protocol/fused-execute
+
+The preview imports external references from the last full report when it
+exists. It does not rebuild unrelated sections. Finish with make doc to
+validate global numbering, bibliography and placement.

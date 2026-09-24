@@ -1,17 +1,30 @@
-doc/figures/ - TikZ diagrams
-============================
+doc/figures/ - independently editable figure units
+=================================================
 
-Standalone TikZ pictures, one per file, \input inside a figure environment in
-the section that uses them. They share the node/edge styles and colour palette
-defined in ../config/tikz.tex and ../config/colors.tex, so they render as one
-visual system.
+Each NAME/ has two sources:
+    diagram.tex   TikZ/pgfplots geometry and drawing labels
+    figure.tex    complete figure float, scaling, caption and reference label
 
-    pe.tex         processing-element datapath (muxes, ALU, register, config)
-    array.tex      the 4x4 mesh + north/west edge operand injection
-    fsm.tex        the control finite-state machine (ID/CFG/WR/RUN/RD/RST)
-    systolic.tex   weight-stationary matrix-vector space-time skew
-    stack.tex      the layered host/device software stack
+The report and the cropped preview include the same figure.tex, so previews
+exercise the actual caption, dimensions and shared fonts/styles. No duplicate
+standalone source or manually rendered image is maintained. Shared drawing
+styles remain in ../config/{tikz,colors,macros}.tex.
 
-Style keys (see ../config/tikz.tex): blk, alu, reg, mux, pe, st, wire, lbl.
-Reuse them instead of hard-coding colours so a palette change propagates
-everywhere at once.
+    pe/           ALU, result/accumulator feedback and reset
+    array/        default 4x4 bidirectional mesh and edge operands
+    fsm/          grouped command phases, shared receiver/step engine
+    systolic/     chronological product delay and final snapshot
+    stack/        host/device software stack
+    timing/       reset guard and enabled capture edges
+    exec/         v2/v3 request/reply sequence
+    cost/         wire-cost ratios from the archived CSV
+
+From the repository root:
+    make -C doc -f doc.mk figure-pe
+    make -C doc -f doc.mk -j4 figures
+    pdftoppm -singlefile -png -r 160 doc/build/previews/figure/pe/preview.pdf /tmp/cgra-pe
+
+Inspect the preview after changing coordinates, routes or label placement.
+Then make doc checks floats and references in the complete report. A float
+preview uses local figure numbering and cached full-report reference numbers.
+See ../STRUCTURE.md and ../AGENTS.md for the complete editing workflow.

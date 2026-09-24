@@ -1,49 +1,8 @@
 \section{Background and Related Work}
 \label{sec:bg}
 
-\subsection{The CGRA design space}
+\input{src/background/related-work}
 
-Coarse-grained reconfigurable arrays trade the bit-level flexibility of an FPGA
-for word-level processing elements whose operation and interconnect are set by a
-compact configuration~\cite{cgra-survey}. The design space is broad: PEs range
-from single ALUs to tightly coupled VLIW datapaths, as in
-ADRES~\cite{adres}; interconnects vary from nearest-neighbour meshes to richer
-crossbars, as in MorphoSys~\cite{morphosys}; and configuration may be static for
-a whole kernel or streamed as a sequence of contexts. More recent fabrics such
-as Plasticine~\cite{plasticine} specialise the PEs and memories around parallel
-patterns. Across this space the recurring tension is the same: richer PEs and
-interconnect raise peak throughput but enlarge the configuration and the state
-that must be managed each cycle.
+\input{src/background/stationary-data}
 
-The fabric described here sits at the minimal end of that spectrum by design. It
-is a nearest-neighbour mesh of single-ALU, single-register PEs with a statically
-loaded, one-word-per-PE configuration. This minimality is not incidental: it is
-what lets the entire cycle-by-cycle behaviour of the array be exposed to, and
-driven from, a host over an ordinary serial link, and it is what makes an exact
-software model of the device tractable.
-
-\subsection{Systolic dataflow}
-
-The systolic principle---many identical cells, each doing a little work and
-passing data to a neighbour on every beat, so that memory bandwidth is amortised
-over a deep pipeline---dates to Kung~\cite{kung} and underpins modern matrix
-engines such as the tensor processing unit~\cite{tpu}. A canonical
-output-stationary array fuses, in each cell, a multiply with the accumulation of
-a partial sum arriving from one neighbour while activations flow orthogonally,
-so each cell holds two independent live values. Section~\ref{sec:dataflow} shows
-why the single register per PE of this fabric precludes that fusion and selects
-a \emph{weight-stationary} streaming dataflow instead---the same trade-off that
-distinguishes weight- from output-stationary accelerators in the literature,
-here forced by an explicit architectural constraint rather than chosen for
-energy.
-
-\subsection{Position of this work}
-
-This report does not propose a new microarchitecture. Its contribution is a
-complete, honest, end-to-end \emph{logical} treatment of a deliberately small
-CGRA: a fully host-controlled fabric, a self-recovering byte-level protocol, a
-byte-accurate device model that doubles as a golden reference, and a UNIX-style
-software stack---all connected by a single narrow interface and all verifiable
-without an FPGA. The value is pedagogical and methodological: it makes visible,
-in one coherent system, how an architectural constraint propagates all the way
-up to the dataflows a user can express.
+\input{src/background/scope}

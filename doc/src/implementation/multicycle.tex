@@ -1,0 +1,20 @@
+\subsection{Enabled datapath and multicycle constraints}
+\label{sec:mcp}
+
+A PE result depends combinationally on operand selection, arithmetic and the
+opcode mux. The controller spaces enabled PE captures by
+$D=\texttt{G\_STEP\_DIV}$ clocks (default 2). Figure~\ref{fig:timing} shows
+both an initial reset and subsequent captures. A PE samples \emph{step} on a
+rising clock edge; that edge captures the current ALU result and launches
+new register-to-register paths. The step signal is not a separate clock.
+
+\input{figures/timing/figure}
+
+The shared constraint procedure applies a $D$-cycle setup exception and its
+corresponding $D-1$ hold adjustment to selected datapath paths, following the
+same-clock multicycle convention~\cite{ug903,bhasker-timing}. The RTL generic
+and the exception count come from the same STEP\_DIV setting; the clock period
+is a separate input. GHDL checks spacing after reset, CFG/WR changes and
+successive steps for $D=1,2,3,4$. This verifies enable sequencing, not netlist
+selector coverage or actual setup/hold closure. Reset/control paths outside
+the exception retain their ordinary timing requirements.

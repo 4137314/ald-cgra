@@ -1,0 +1,24 @@
+\subsection{Serialization and latency}
+
+At 115200 baud with 8N1, a byte requires ten bit times:
+\begin{equation}
+  t_b=\frac{10}{115200}\simeq86.8\,\mu\mathrm{s}.
+\end{equation}
+At a 100 MHz clock this is about 868 clocks per bit and \emph{8680 clocks per
+byte}. A 56-byte chunk requires approximately 4.86 ms of serialization;
+a 32-byte chunk requires 2.78 ms. These are link-model values, not timings
+measured on a board. Configuration and other commands add their own cost.
+
+A first-order model for a call is
+\begin{equation}
+  T\simeq B_{\rm wire}t_b+J\tau+T_{\rm host}+T_{\rm device},
+\end{equation}
+where $J$ is the transaction count and $\tau$ represents additional turnaround
+latency. USB buffering and driver latency timers can delay short
+replies~\cite{ftdi-latency}; their contribution depends on the actual bridge,
+driver and settings. The device's sustained step interval is $D/f_{\rm clk}$,
+where $D=\texttt{G\_STEP\_DIV}$, plus command startup and completion overhead.
+Neither the emulator nor byte counters measure $\tau$ or physical clock timing.
+A smaller $J$ with more bytes may help a latency-dominated link but need not
+help a serialization-dominated one. A CPU baseline and board timings are
+required before claiming end-to-end acceleration.

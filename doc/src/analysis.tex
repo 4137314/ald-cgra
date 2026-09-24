@@ -1,80 +1,8 @@
-\section{Cost and Performance Model}
+\section{Wire-Cost Model}
 \label{sec:cost}
 
-Because the fabric is driven entirely over the serial link, its externally
-observed performance is set not by the number of PEs but by the number and size
-of the protocol transactions a kernel issues. This section gives a first-order,
-purely analytical model of that cost, derived from the protocol of
-Section~\ref{sec:proto}; it is a wire-level accounting, not a measurement, and
-deliberately ignores the negligible on-device compute time (a \cmd{RUN} of $N$
-steps is $N$ cycles at $100\,\mathrm{MHz}$, dwarfed by the serial exchange).
+\input{src/analysis/command-costs}
 
-\subsection{Per-command wire cost}
+\input{src/analysis/kernel-counts}
 
-Every transaction is a round trip: the host sends a command and its payload and
-waits for the reply. Table~\ref{tab:cost} lists the byte counts that follow
-directly from the payload and reply sizes of Table~\ref{tab:proto}, for the
-$4\times4$, 16-bit fabric.
-
-\begin{table}[t]
-  \centering
-  \caption{Wire cost per transaction (bytes each way).}
-  \label{tab:cost}
-  \small
-  \begin{tabular}{@{}lrrl@{}}
-    \toprule
-    Cmd & TX & RX & Note \\
-    \midrule
-    \cmd{ID}  & 1  & 5  & signature $+$ geometry \\
-    \cmd{CFG} & 66 & 1  & $16\times4$ words $+$ cmd $+$ cksum \\
-    \cmd{WR}  & 18 & 1  & $8\times2$ words $+$ cmd $+$ cksum \\
-    \cmd{RUN} & 2  & 1  & cmd $+$ step count \\
-    \cmd{RD}  & 1  & 33 & $16\times2$ regs $+$ cksum \\
-    \cmd{RST} & 1  & 1  & clears registers \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\subsection{Per-kernel transaction count}
-
-Composing these primitives as the software stack does (Section~\ref{sec:sw})
-gives the cost of each kernel. Writing $\lceil\cdot\rceil$ for the ceiling and
-$T_C=\lceil N/\Cols\rceil$, $T_R=\lceil M/\Rows\rceil$ for the number of column
-and row tiles, the transaction counts are:
-
-\begin{itemize}
-  \item \emph{Element-wise}, $n$ elements ($\Rows$ lanes per pass):
-    one \cmd{CFG}, then $\lceil n/\Rows\rceil$ rounds of
-    \cmd{WR}$+$\cmd{RUN}$+$\cmd{RD}, i.e.\ $1+3\lceil n/\Rows\rceil$
-    transactions.
-  \item \emph{Reduction} (dot product), $n$ elements: one \cmd{CFG}, one
-    \cmd{RST}, then $n$ rounds of \cmd{WR}$+$\cmd{RUN}, and one final
-    \cmd{RD}: $3+2n$ transactions.
-  \item \emph{Systolic} $M\times N$ matrix--vector: one \cmd{CFG} per column
-    tile and, per tile pair, one \cmd{RST}, $\Rows$ \cmd{WR}$+$\cmd{RUN}
-    rounds and one \cmd{RD}, i.e.\ $T_C\,(1+10\,T_R)$ transactions.
-\end{itemize}
-
-The element-wise cost is dominated by the $\cmd{RD}$ reply (33~bytes) and is
-amortised only four ways, so throughput is essentially flat in the array size:
-a wider fabric would inject and read more lanes per round but would not change
-the per-round round-trip structure.
-
-\subsection{Latency model}
-
-At $115200$~baud, 8N1, each byte occupies ten symbol times, so a byte costs
-$t_b = 10/115200 \approx 86.8\,\mu\mathrm{s}$. Modelling a transaction as
-the serial time of its two halves, an element-wise round
-(\cmd{WR}$+$\cmd{RUN}$+$\cmd{RD} $=21$~TX $+35$~RX bytes) takes about
-$56\,t_b \approx 4.9\,\mathrm{ms}$ for four results, i.e.\ roughly
-$1.2\,\mathrm{ms}$ per element, independent of what the ALU computes. The
-one-time \cmd{CFG} adds $67\,t_b \approx 5.8\,\mathrm{ms}$.
-
-Two conclusions follow, and both point away from the array and toward the link.
-First, the fixed per-round overhead---a full \cmd{RD} of all sixteen registers
-regardless of how many lanes were used, plus command and checksum bytes---means
-small transfers are latency-bound. Second, the natural optimisation is to
-\emph{batch}: coalescing the write, run and read-back of many chunks into fewer,
-larger transactions would raise the useful-payload fraction and cut the number
-of round trips, addressing the true bottleneck identified in
-Section~\ref{sec:concl} without touching the fabric.
+\input{src/analysis/latency}

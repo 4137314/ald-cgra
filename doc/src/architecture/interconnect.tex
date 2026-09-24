@@ -1,0 +1,16 @@
+\subsection{Mesh interconnect and operand injection}
+
+Figure~\ref{fig:array} shows the interconnect. Internally, each PE reads the
+\emph{registered} outputs of its four neighbours, so data advances by at most
+one hop per step. External operands enter only at two edges: the north input
+port feeds row~0 (one value per column) and the west input port feeds column~0
+(one value per row). The south and east edges read a constant zero. All $RC$
+PE registers are exposed for read-back.
+
+\input{figures/array/figure}
+
+Streamed operands reach interior PEs through their neighbours. Configuration
+can independently load an immediate for every PE, but repeated configuration
+has its own wire cost. Edge injection and one exposed result register per PE
+therefore constrain communication schedules, rather than forbidding all
+alternative ways to supply operands.

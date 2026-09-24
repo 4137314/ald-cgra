@@ -25,13 +25,26 @@
   % alu -> reg -> out
   \draw[wire] (alu.east) -- (reg.west);
   \draw[wire] (reg.east) -- node[lbl,above]{dout} ++(12mm,0);
-  % feedback self
-  \draw[wire] (reg.south) |- ([yshift=-4mm]reg.south) -| (srcs.south)
-        node[lbl, pos=0.25, below]{self};
-  % config fan-out
+
+  % step: one clean vertical arrow straight into reg from below; nothing else
+  % is routed through this column, so it cannot cross another wire or label.
+  \draw[wire] ([yshift=-10mm]reg.south) -- node[lbl,right]{step} (reg.south);
+  \draw[wire] ([xshift=8mm,yshift=-10mm]reg.south east)
+        -- node[lbl,right]{reset} (reg.south east);
+
+  % self feedback: routed OVER THE TOP on a rail comfortably above ma (and its
+  % sel_a label), well clear of the config/op/step wiring below.
+  \coordinate (railY) at ($(ma.north)+(0,4mm)$);
+  \draw[wire] (reg.north) -- (reg.north |- railY)
+        -- (srcs.north |- railY) -- (srcs.north);
+  \node[lbl, above] at ($(reg.north|-railY)!0.5!(srcs.north|-railY)$) {self};
+  \draw[wire] (alu.north |- railY) -- node[lbl,right]{acc.} (alu.north);
+
+  % config fan-out: both control wires share a trunk placed clear of mb's
+  % footprint (to its left), so sel_a's rise to the upper mux never crosses
+  % mb's body; sel_b peels off first, sel_a continues higher.
+  \coordinate (trunk) at ($(cfg.west)+(-10mm,0)$);
+  \draw[wire] (cfg.west) -| (trunk) |- (mb.south);
+  \draw[wire] (cfg.west) -| (trunk) |- (ma.south);
   \draw[wire] (cfg.north) -- node[lbl,right]{op} (alu.south);
-  \draw[wire] (cfg.west) -- ++(-6mm,0) |- (ma.south) node[lbl,pos=0.75,below]{};
-  \draw[wire] (cfg.west) -- ++(-6mm,0) |- (mb.south);
-  % step
-  \draw[wire] ([xshift=-6mm]reg.south) ++(0,-8mm) -- node[lbl,left]{step} (reg.south);
 \end{tikzpicture}

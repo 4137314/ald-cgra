@@ -1,0 +1,34 @@
+\subsection{The fused execute transaction}
+\label{sec:exec}
+
+The six commands above are complete but not economical, and the reason is
+visible in how a kernel actually uses them. Every element-wise chunk issues the
+same triple---write the edge operands, run, read the registers---so each chunk
+costs three round trips, and the read returns all sixteen registers even when
+the mapping produced four results. Section~\ref{sec:cost} shows this is where
+protocol overhead enters the cost model; physical latency remains unmeasured.
+
+\cmd{EXEC} collapses that triple into one transaction
+(Figure~\ref{fig:exec}). Its payload is the \cmd{WR} operand block preceded by
+three fields: the step count, a flags byte, and a 16-bit \emph{tap mask} in
+which bit $i$ selects PE register $i$. The device latches the operands,
+optionally clears the datapath (flags bit~0, a folded \cmd{RST}), steps the
+array, and streams back only the masked registers, a data checksum and a status
+byte. A four-lane element-wise chunk therefore ships eight result bytes instead
+of thirty-two, in one turnaround instead of three.
+
+\input{figures/exec/figure}
+
+The reply length follows the tap mask received by the controller. If the mask
+and command boundaries arrive intact, the host knows that length even when
+another payload byte fails checksum validation: the device returns current
+registers with \cmd{NACK} and does not step the array. A corrupted mask can
+instead change the reply length, so the checksum does not guarantee framing.
+The library retries a complete, checksum-valid negative reply only when the
+fused reset was requested. A timeout, I/O failure or malformed reply stops the
+session, including when reset was requested: idempotent computation does not
+repair an uncertain parser boundary.
+
+Since the identification reply carries the protocol version, a host that meets
+an older bitstream simply falls back to the unfused sequence. Both paths are
+held to the same known-answer suite (Section~\ref{sec:results}).

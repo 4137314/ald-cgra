@@ -1,0 +1,13 @@
+\subsection{Convolution and prefix scan}
+
+Full convolution is expressed as a Toeplitz matrix--vector
+product~\cite{golub-vanloan}. The current implementation materialises the dense
+matrix on the host, then skips all-zero tiles when driving the device. This
+saves transfers but retains quadratic workspace in the signal length for a
+fixed filter; implicit tile generation remains future work.
+
+Inclusive scan~\cite{blelloch} uses row~0. PE$(0,c)$ combines its west value
+with the element on north input $c$; the previous block's last result enters
+west input~0 as a carry. After $C$ steps all $C$ prefix results have settled.
+The configuration is independent of the input values and is loaded once per
+call. Supported folds are ADD, MUL, MIN and MAX, with 16-bit arithmetic.

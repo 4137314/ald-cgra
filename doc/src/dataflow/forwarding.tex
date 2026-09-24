@@ -1,0 +1,11 @@
+\subsection{Forwarding limits and alternative schedules}
+
+Consider an interior PE expected to retain a sum $s_t$, forward activation
+$a_t$ east, and forward weight $b_t$ south during the same step. After a MAC,
+its only exposed register contains $s_{t+1}=s_t+a_tb_t$; both neighbours see
+that value, not two independently forwarded operands. The intended one-MAC-per
+PE-per-step schedule therefore needs additional communication or storage.
+This is a throughput/resource conflict, not an impossibility proof for all
+output-stationary mappings. Dedicated routing PEs, time multiplexing,
+reconfiguration between phases, or extra registers could implement other
+schedules at different area and communication costs.

@@ -1,0 +1,19 @@
+\begin{table}[t]
+  \centering
+  \caption{Request and reply sizes in bytes; checksums are included.}
+  \label{tab:cost}
+  \small
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    Command & TX & RX & Total, $4\times4$ \\
+    \midrule
+    \cmd{ID} & 1 & 5 & 6 \\
+    \cmd{CFG} & $4P+2$ & 1 & 67 \\
+    \cmd{WR} & $2E+2$ & 1 & 19 \\
+    \cmd{RUN} & 2 & 1 & 3 \\
+    \cmd{RD} & 1 & $2P+1$ & 34 \\
+    \cmd{RST} & 1 & 1 & 2 \\
+    \cmd{EXEC} & $2E+6$ & $2t+2$ & $24+2t$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}

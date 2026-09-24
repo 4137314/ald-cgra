@@ -1,0 +1,22 @@
+\subsection{Recorded Vivado validation}
+\label{sec:vivado-validation}
+
+On 23 September 2026 the real Vivado 2026.1 CLI completed the repository's
+synthesis and STA gates for \texttt{xc7a100tcsg324-1}, a $4\times4$ mesh,
+$D=2$ and a 10 ns constraint, without floorplanning. The synthesis gate
+reported zero errors and zero critical warnings. Its separate, unflattened
+netlist used 5,016 LUTs, 1,034 registers and 16 DSP48E1s; these are post-synthesis
+counts, not routed utilisation or a measured optimisation delta.
+
+The STA flow resynthesised with its default hierarchy setting, then ran
+optimisation, placement, physical optimisation and routing. The final reports
+show setup WNS $+1.635$ ns, hold WHS $+0.138$ ns and no unconstrained internal
+endpoints. The worst setup path is reset distribution to a PE register, with
+a single-cycle 10 ns requirement. Asynchronous UART/button inputs and the
+LED/UART outputs remain under the explicit I/O false-path assumptions.
+
+Commands, tool version, source hashes and raw reports are archived in
+\path{doc/verification/2026-09-23/vivado}. This establishes one passing
+constrained operating point. It does not establish a global Fmax, complete
+exception correctness, other geometry/part results, power or board operation.
+The Fmax search and physical UART acceptance remain separate checks.

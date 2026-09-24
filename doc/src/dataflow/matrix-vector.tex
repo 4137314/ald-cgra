@@ -1,0 +1,23 @@
+\subsection{Stationary coefficients with host reduction}
+
+For $y=Ax$, the engine tiles $A$ into $R\times C$ blocks. For each column tile,
+row~0 holds the corresponding coefficients of $x$ in its configuration
+immediates. Each step injects one matrix row from the north: row~0 multiplies,
+and rows~1 through $R-1$ pass the preceding products southward.
+After $R$ steps, the snapshot satisfies
+\begin{equation}
+  q_{R-1-i,c}=A_{i,c}x_c,\qquad
+  y_i\mathrel{+}=\sum_{c=0}^{C-1}q_{R-1-i,c},
+\end{equation}
+with local tile indices and zero padding outside the matrix. The host performs
+the sum and accumulates across column tiles; it is part of the algorithm.
+
+\input{figures/systolic/figure}
+
+On a full tile, $C$ PEs perform useful multiplications per step and
+$(R-1)C$ serve as product storage/forwarding. Thus a $4\times4$ mesh has four
+active multipliers and twelve delay cells in this mapping, not sixteen useful
+MACs per step. The steady full-tile multiplier utilisation is $1/R$;
+padding and skipped tiles change the effective utilisation for a workload.
+The term weight-stationary refers here specifically to $x$ held in row~0's
+immediates; the complete computation includes host reduction.

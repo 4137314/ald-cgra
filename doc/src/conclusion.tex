@@ -1,23 +1,24 @@
 \section{Conclusion}
-\label{sec:concl}
+\label{sec:conclusion}
 
-We have described the logical design of a UART-attached CGRA: a $4\times4$ mesh
-of 16-bit processing elements, a checksum-protected control protocol with a
-compact finite-state machine, and a layered host stack that reconfigures the
-fabric declaratively and verifies it end to end without hardware. The recurring
-theme is a single architectural constraint---one register per PE with edge-only
-operand injection---which rules out fused spatial accumulation and thereby
-selects weight-stationary streaming as the natural systolic dataflow for the
-fabric.
+The project connects a configurable 16-bit mesh, a UART controller and a
+reusable host API, with functional verification across eight device shapes.
+The mapping analysis identifies distinct uses of PE resources: diagonal
+computation, local MAC accumulation, product forwarding and host reduction.
+A single result register limits simultaneous independent forwarding but does
+not forbid local output-stationary accumulation.
 
-The clearest avenue for future work follows from that same constraint. Adding a
-second per-PE register (a dedicated partial-sum path) or widening the operand
-injection would unlock output-stationary systolic mappings and, with them,
-in-fabric matrix--matrix products and spatial finite-impulse-response filters.
-On the host side, the wire-level model of Section~\ref{sec:cost} shows the true
-bottleneck of the real link to be serial round trips rather than the number of
-processing elements; batching the write, run and read-back of many chunks into
-fewer, larger transactions is therefore the highest-leverage optimisation, and
-one that needs no change to the fabric. Together these directions preserve the
-report's guiding principle---that a single, explicit architectural constraint
-should account for the system's behaviour at every layer.
+Current v2/v3 experiments isolate protocol fusion while keeping mappings and
+inputs fixed. They measure transactions and bytes after checking scalar
+results; reductions in these quantities are not board timings or CPU speedups.
+A Vivado 2026.1 run passes synthesis and routed setup/hold checks for the
+default mesh at a 10 ns constraint. Other configurations, comparative area
+and timing benefits, and physical board acceptance remain to be evaluated.
+
+The next software improvement is implicit convolution tile generation to
+avoid the dense Toeplitz workspace. Architectural experiments can compare
+extra routing/storage resources and alternative schedules on matched
+workloads. Burst commands or more than sixteen PEs require an explicit
+protocol extension, buffering and stronger framing/recovery. These extensions
+should preserve the independent kernel references and record both host and
+device costs.

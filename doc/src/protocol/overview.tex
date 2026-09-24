@@ -1,0 +1,6 @@
+The host drives the fabric through a byte-oriented UART protocol interpreted by
+a control finite-state machine (FSM). The protocol is deliberately minimal:
+single-byte commands with lengths determined by geometry and the tap mask,
+so that the same
+message stream can be produced and checked by both the hardware and a software
+model.

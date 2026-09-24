@@ -1,0 +1,24 @@
+\subsection{Timing gates and period search}
+\label{sec:fmax}
+
+The Tcl flow checks that expected register/port selections and setup/hold
+path collections are nonempty. Bitstream generation requires finite,
+nonnegative setup and hold slack after implementation. Offline tests exercise
+success and failure branches with synthetic tool replies; The recorded Vivado run below also
+passes these gates on one actual netlist. Implementation directives are
+choices to evaluate, not guarantees of improvement~\cite{ug949}.
+
+The frequency search synthesises once, reopens that checkpoint for candidate
+periods and performs placement/routing. The chosen candidate is then rerun
+with the final implementation recipe, including physical optimisation, and
+must pass both timing checks again. Only then is $1000/T$ MHz reported for a
+constrained period $T$ in ns, with a row appended to the validated-history CSV.
+Placement heuristics need not be monotonic in $T$, so this establishes a
+passing candidate rather than a proof of a global maximum. It also does not
+justify deriving frequency from $T-\mathrm{WNS}$ on a multicycle path.
+
+Changing \texttt{create\_clock} changes a constraint, not the board oscillator.
+Operating at another clock needs an actual clock source or clock-management
+configuration and consistent UART divisors. Even after STA, a physical UART
+and board acceptance run remain necessary. For sustained computation,
+$f_{\rm clk}/D$ is the step-rate ceiling before protocol overhead.

@@ -1,0 +1,13 @@
+The public header and manual define buffer capacities, ownership, errors and
+aliasing. Handles own their transport; callers retain ownership of data
+buffers. Vector and scan kernels allow exact in-place operation but reject
+partial overlap; matrix--vector and convolution require disjoint outputs.
+Dot product may store its scalar over consumed input. Empty public kernels
+perform no device I/O. A failure after computation starts can leave partial
+output; preflight validation does not make an entire kernel transactional.
+
+Calls sharing a handle or the same physical device require caller
+synchronization. Independent handles do not serialize a common UART target.
+The command-line front end publishes output only after successful computation,
+although a final filesystem write can itself fail. Its strict parser validates
+fields, geometry and pipeline input requirements before executing commands.

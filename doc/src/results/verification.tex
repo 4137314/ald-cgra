@@ -1,0 +1,38 @@
+\subsection{Evidence and limits}
+
+Functional evidence combines independent scalar references, an in-process
+protocol model, POSIX pseudo-terminal transport tests and VHDL simulation
+with GHDL~\cite{ghdl}. These methods check different boundaries; agreement
+between the model and RTL alone cannot exclude a shared conceptual error.
+Scalar references therefore check the numerical kernel results separately.
+
+A protocol bench replays 504 model-generated transactions against the RTL,
+comparing every response byte under transmit backpressure at multicycle
+factors 1--4. It covers zero and 255 steps, sparse/empty masks, checksum
+rejections and subsequent computation. This exposed an earlier model error:
+CFG/WR words take effect as they arrive, even if their checksum is rejected.
+The model now agrees with that RTL behaviour. Watchdog timing is checked
+separately in RTL because the synchronous model has no clock.
+
+An array differential bench compares 1,024 PE results, covering every opcode
+and operand-selector pair. Independent wiring tests include seven standalone
+array shapes through $8\times8$. These larger standalone arrays do not imply
+support by the full device protocol. End-to-end host workloads exercise eight
+supported shapes: $1\times1$, $1\times16$, $16\times1$, $2\times3$,
+$3\times2$, $2\times8$, $8\times2$ and $4\times4$.
+They cover both protocol versions, signed wraparound, partial vector chunks,
+rectangular tiles and all four scan operators. Actual host requests captured
+through a pseudo-terminal are also replayed against the RTL controller and
+array. Full UART-top replays cover $2\times3$ (233 transactions) and
+$3\times2$ (259 transactions).
+
+\input{tables/verification/table}
+
+The latest software validation records 1,019 checks in the C API, transport,
+CLI and benchmark suites, plus nine isolated install tests. The count
+describes the recorded suite, not exhaustive path coverage.
+Address/undefined-behaviour sanitizer runs and compiler analysis complement
+functional checks. Transport tests inject truncated and malformed replies;
+uncertain sessions must stop without issuing an implicit reset. These functional checks do not establish physical timing, power or board
+reliability. The separate Vivado evidence is recorded in
+Section~\ref{sec:vivado-validation}.

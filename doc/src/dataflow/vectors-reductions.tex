@@ -1,0 +1,13 @@
+\subsection{Element-wise operations and reductions}
+
+The diagonal mapping injects vector $a$ from the north and $b$ from the west.
+Cells above the diagonal pass north values southward; those below pass west
+values eastward. After $L$ steps each of the $L$ diagonal PEs holds one
+independent result. Immediate operations replace an operand at the computing
+PE, rather than requiring a second vector transfer. Incomplete chunks are
+zero-padded and only valid outputs are returned.
+
+For dot product, PE$(0,0)$ performs $r\leftarrow r+a_i b_i$. The host clears
+its register once, supplies one pair per step and reads the scalar at the end.
+The partial sum remains local throughout: this is a concrete example of local
+output-stationary accumulation supported by the existing ISA.

@@ -1,0 +1,11 @@
+CGRAs configure word-level operations and communication rather than individual
+logic gates~\cite{cgra-survey}. Published designs explore different balances:
+ADRES couples a VLIW processor to a reconfigurable matrix~\cite{adres};
+MorphoSys provides richer communication resources~\cite{morphosys}; HyCUBE
+supports reconfigurable multi-hop paths~\cite{hycube}; PipeRench virtualises
+pipelined computations~\cite{piperench}; and DySER integrates specialised
+datapaths with a processor~\cite{dyser}. Plasticine organises compute and
+memory around parallel patterns~\cite{plasticine}, while CGRA-ME supplies a
+framework for architecture and mapping exploration~\cite{cgra-me}.
+The present design uses a smaller resource set: nearest-neighbour links,
+one result register per PE and one configuration context at a time.

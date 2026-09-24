@@ -1,0 +1,9 @@
+The batch Vivado flows target two Artix-7 devices~\cite{artix7}:
+\begin{itemize}
+  \item Nexys 4 DDR: \texttt{xc7a100tcsg324-1};
+  \item Basys 3: \texttt{xc7a35tcpg236-1}.
+\end{itemize}
+A Vivado 2026.1 run now provides synthesis and routed timing evidence for the
+default Nexys A7 target; other geometries and physical board operation remain
+unmeasured. Historical frequencies in \texttt{hw/perf/PERFLOG} predate the
+current timing fixes and are not used to establish this revision's Fmax.

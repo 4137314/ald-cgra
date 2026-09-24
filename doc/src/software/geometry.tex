@@ -1,0 +1,12 @@
+The cached identity also carries geometry. Transfers with explicit word counts
+validate configuration, edge-input and read-back buffer lengths before sending
+the corresponding command. The original fixed-size API remains a checked
+$4\times4$ interface; vector, dot-product, matrix--vector, scan and convolution kernels adapt
+automatically.
+The compiler uses $\min(R,C)$ diagonal lanes, the matrix engine uses
+$R\times C$ tiles and scans use $C$ columns. Explicit placement and output taps
+are rejected when they do not fit the selected device. The emulator accepts
+geometries such as \texttt{sim:2x3}, allowing the same host binary to exercise
+rectangular variants without hardware.
+
+\input{figures/stack/figure}

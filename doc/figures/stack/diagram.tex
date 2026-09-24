@@ -11,7 +11,7 @@
   % ---- fpga side ----
   \node[blk, minimum width=34mm, right=34mm of cli] (uart) {\cmd{uart\_rx} / \cmd{uart\_tx}\\{\scriptsize 8N1}};
   \node[blk, minimum width=34mm, below=of uart] (ctrl) {\cmd{cgra\_ctrl}\\{\scriptsize protocol FSM $\cdot$ watchdog}};
-  \node[blk, minimum width=34mm, below=of ctrl] (arr) {$4\times4$ PE array};
+  \node[blk, minimum width=34mm, below=of ctrl] (arr) {$R\times C$ PE array};
   \begin{scope}[on background layer]
     \node[draw=cBlockE, dashed, rounded corners, fit=(uart)(ctrl)(arr),
           inner sep=3mm, label=above:{\small FPGA}] (fpga) {};
@@ -21,5 +21,5 @@
   \draw[wireb] (lib.east) -- node[lbl, above]{UART}
                                 node[lbl, below]{115200} (uart.west);
   \draw[wire] (uart) -- (ctrl);
-  \draw[wireb] (ctrl) -- node[lbl,right]{cfg / inputs / step / regs} (arr);
+  \draw[wireb] (ctrl) -- node[lbl,right,xshift=1.5mm]{cfg / inputs / step / regs} (arr);
 \end{tikzpicture}

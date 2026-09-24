@@ -1,0 +1,10 @@
+\begin{figure*}[t]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/fsm/diagram}}
+  \caption{Logical command phases; byte loops, settling states and transmit
+  handshakes are grouped for readability. CFG receives $RC$ configuration
+  words; WR/EXEC share the receiver for $R+C$ input words. EXEC reuses the
+  RUN step engine and bypasses reset/steps on checksum rejection. Replies
+  return to idle; a watchdog aborts stalled input reception.}
+  \label{fig:fsm}
+\end{figure*}

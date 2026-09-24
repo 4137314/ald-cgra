@@ -1,0 +1,17 @@
+doc/tables/ - complete table units
+==================================
+
+Each NAME/table.tex owns its environment, caption, label and table layout.
+Sections include that unit; previews render it directly with shared styling.
+
+    commands/       UART command payload/reply shapes
+    wire-sizes/     byte-cost formulae
+    kernel-counts/  per-kernel transaction formulae
+    verification/   evidence and limits
+    measured/       measured v2/v3 counters; body generated from data/wire-cost.csv
+
+    make -C doc -f doc.mk table-wire-sizes
+    make -C doc -f doc.mk tables
+
+Do not hand-edit build/wire-table.tex; regenerate the experiment explicitly
+with make -C doc -f doc.mk measure when measured input/source data changes.

@@ -1,0 +1,11 @@
+The model separates byte serialization, request/reply count and array steps.
+Let $P=RC$, $E=R+C$, and let $t$ be the number of selected registers. Counts
+assume complete successful transactions, no retries and no other port traffic.
+
+\input{tables/wire-sizes/table}
+
+The EXEC request adds four bytes to WR: step count, flags and a two-byte tap
+mask. For a $4\times4$ diagonal chunk, WR+RUN+RD costs 56 bytes and three
+transactions; EXEC with four taps costs 32 bytes and one transaction.
+Untapped cells can contain routing data: the saving comes from omitting
+registers that the caller does not need, not from assuming they were unwritten.

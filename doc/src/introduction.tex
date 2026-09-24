@@ -1,51 +1,27 @@
 \section{Introduction}
 \label{sec:intro}
 
-Coarse-grained reconfigurable arrays (CGRAs) occupy the middle ground between
-the flexibility of software and the efficiency of fixed-function
-hardware~\cite{cgra-survey}. Rather than reconfiguring at the bit level, as an
-FPGA does, a CGRA exposes a grid of word-level processing elements (PEs) whose
-operations and interconnect are set by a compact configuration, allowing the
-same silicon to be re-purposed at run time for different kernels.
+A coarse-grained reconfigurable array (CGRA) selects word-level operations and
+communication paths at runtime~\cite{cgra-survey}. This project implements
+such a fabric in VHDL and drives it from a host through a UART interface.
+The default geometry is $4\times4$; the integrated controller, protocol and
+host support positive $R\times C$ meshes with $RC\leq16$ and 16-bit data.
+Reconfiguration changes the program, not the physical mesh dimensions.
 
-This project implements such a fabric on an FPGA and uses it as a
-\emph{runtime-reconfigurable accelerator} attached to a host computer over a
-serial link. The design goals are threefold: (i)~a small but expressive fabric
-whose behaviour is fully controlled, cycle by cycle, from the host; (ii)~a
-robust host/device protocol that can be exercised and verified without the
-board; and (iii)~a UNIX-style software stack that lets a user describe and run
-accelerated kernels declaratively.
-
-A single architectural decision runs through the whole system and gives the
-report its narrative spine: each PE owns exactly \emph{one} register and
-external operands enter the mesh \emph{only} at two edges. We trace the
-consequences of that decision from the datapath up to the dataflows a user can
-express and down to the bytes on the wire.
-
-Concretely, this report contributes:
+The project provides four connected components:
 \begin{itemize}
-  \item a fully host-controlled $4\times4$ CGRA fabric whose every step is
-        gated by a compact, checksum-protected UART protocol
-        (Sections~\ref{sec:arch}--\ref{sec:proto});
-  \item a mapping of element-wise, reduction and weight-stationary systolic
-        dataflows onto the array, with an explicit argument for \emph{why} the
-        single-register/edge-injection constraint admits some and excludes
-        others (Section~\ref{sec:dataflow});
-  \item a layered host stack---a thin C library, a byte-accurate device model
-        that serves as a golden reference, and a declarative command-line
-        front end---that runs and is verified end to end without an FPGA
-        (Sections~\ref{sec:sw},~\ref{sec:results});
-  \item a wire-level cost model that shows the accelerator's observed speed is
-        bounded by serial round trips rather than by the array
-        (Section~\ref{sec:cost}).
+  \item a step-controlled mesh with one result register per PE and north/west
+        edge injection;
+  \item a versioned request/reply protocol with fused execution and an explicit
+        contract for detected transfer failures;
+  \item an installed C kernel API, emulator and declarative command-line tool;
+  \item functional regression suites, a reproducible wire-cost experiment and
+        scripts for a subsequent FPGA implementation campaign.
 \end{itemize}
 
-The remainder of this report is organised around the logical model of the
-system. Section~\ref{sec:bg} places the fabric in the CGRA and systolic
-literature. Section~\ref{sec:arch} describes the processing element and the mesh
-interconnect. Section~\ref{sec:proto} presents the control finite-state machine
-and the UART protocol. Section~\ref{sec:dataflow} discusses how element-wise,
-reduction and systolic dataflows map onto the array, including the
-architectural constraint that shapes those mappings. Section~\ref{sec:sw}
-outlines the host software stack, Section~\ref{sec:cost} models its wire-level
-cost, and Section~\ref{sec:results} summarises the verification methodology.
+The report distinguishes local accumulation from independent operand
+forwarding, counts computing and routing PEs separately, and includes host
+reduction in the matrix algorithm. It reports current software byte/command
+counts, not a speedup over a CPU. A real Vivado run verifies synthesis and routed timing for one default
+configuration. Simulated enable spacing and the archived netlist reports
+provide complementary evidence; physical board tests remain outstanding.

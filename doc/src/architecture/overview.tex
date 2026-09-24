@@ -1,0 +1,6 @@
+The fabric is an $R\times C$ mesh (default $4\times4$) of identical
+processing elements operating on 16-bit signed words. The complete device
+supports positive dimensions with $RC\leq16$. All PEs share a single
+clock domain and advance synchronously; a global \emph{step} enable, asserted
+by the controller, gates every PE register so that the host advances the whole
+array a deterministic number of cycles per command.

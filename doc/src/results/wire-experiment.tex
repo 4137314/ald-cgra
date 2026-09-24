@@ -1,0 +1,35 @@
+\subsection{Reproducible protocol comparison}
+
+Table~\ref{tab:measured} compares the \emph{current} kernels on v2 and v3 of
+the in-process emulator, using the same default $4\times4$ geometry and
+inputs. Each row counts one successful public C API call after identification;
+CFG and computation are included, the initial ID transaction is excluded,
+and no retry occurs. The vector and scan operators are ADD. The dense matrix
+contains only nonzero entries; convolution uses the full-output convention
+with filter $(1,-2,3,-4,5)$ and 64 input samples, producing 68 outputs.
+
+The runner checks each result against an independent scalar implementation
+and checks an output canary before emitting counters. The CSV, compiler,
+base commit and hashes of the measured sources are stored under
+\texttt{doc/data}. Transaction formulae in Section~\ref{sec:cost} are checked
+by the recording script. The table and chart are generated from that CSV;
+\texttt{make -C doc -f doc.mk measure} explicitly regenerates the experiment.
+An ordinary PDF build consumes the archived data without changing it.
+
+\input{tables/measured/table}
+
+\input{figures/cost/figure}
+
+Fusion reduces transactions for all five workloads, but dot product, dense
+matrix--vector and convolution transmit slightly more total bytes. For these
+cases the larger EXEC request outweighs reply savings. Whether fewer
+turnarounds compensate for those bytes depends on the actual link and host
+latency. Wire counters alone do not determine elapsed time.
+
+Both versions already reuse scan configuration and skip zero matrix tiles;
+this experiment does not isolate those optimisations. Historical before/after
+figures without a source revision and matching raw outputs cannot establish
+their speedup and are excluded from this comparison. A physical evaluation
+must add link settings, board clock, warm-up/repetition policy and a timed
+CPU baseline. The emulator has no serial-time model, so its wall clock is not
+an estimate of hardware acceleration.

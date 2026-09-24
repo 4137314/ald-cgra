@@ -1,0 +1,9 @@
+Above the library, a command-line tool provides high-level, UNIX-style access.
+A small declarative configuration language describes named \emph{devices},
+\emph{modes} (array configurations, expressed either as a high-level pattern or
+as explicit per-PE placement), \emph{pipelines} that chain modes, and
+input/output profiles. Configuration is discovered from standard locations and
+merged by name, following the drop-in convention used by system daemons, so
+that a user's library of kernels can be organised across files and overridden
+selectively. Vectors flow through the tool via standard input and output,
+allowing kernels to compose in pipelines with ordinary UNIX utilities.

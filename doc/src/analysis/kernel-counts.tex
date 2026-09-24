@@ -1,0 +1,25 @@
+\subsection{Per-kernel transaction counts}
+
+Table~\ref{tab:kernel-counts} describes the current public C kernels for
+nonempty input and a cached, validated identity. Every call configures its
+mapping; no cross-call configuration cache is assumed. For vector length $n$,
+write $K=\lceil n/\min(R,C)\rceil$ and $Q=\lceil n/C\rceil$.
+For dense $M\times N$ matvec, let $T_R=\lceil M/R\rceil$ and
+$T_C=\lceil N/C\rceil$, with no skipped tile.
+
+\input{tables/kernel-counts/table}
+
+Dot performs CFG, RST, $n$ iterations and a final RD: fusion replaces each
+WR+RUN pair with EXEC, leaving all three surrounding commands. Scan resets
+before each block in v2; v3 folds that reset into EXEC. Matvec resets per tile;
+v3's first EXEC folds in the reset and its last reads the full array.
+The DSL mode runner has a separate reset contract: a nonempty diagonal/custom
+call resets initially, adding one RST to the v2 vector expression for default
+\texttt{reset=once}. Public empty kernels have host-defined zero/no-op results
+and issue no commands. An uncached identity adds one transaction and six bytes.
+
+For sparse matvec, if $B$ tile pairs actually execute and $C_a$ column tiles
+contain at least one executed pair, the counts become
+$C_a+(2R+2)B$ in v2 and $C_a+RB$ in v3. Zero-weight column tiles and zero matrix
+tiles can be omitted exactly. The scan for zeros still consumes host work.
+Convolution uses the same rules after constructing its Toeplitz matrix.

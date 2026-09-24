@@ -1,0 +1,21 @@
+% Render the actual float source, including its caption, on a cropped PDF page.
+% Native pdfTeX primitives avoid adding standalone/preview/ghostscript deps.
+% The caller supplies previewWidth, previewKind and previewUnit.
+\newbox\previewBox
+\makeatletter
+\setbox\previewBox=\vbox{%
+  \hsize=\previewWidth\relax
+  \linewidth=\hsize
+  \let\@captype\previewKind
+  \renewenvironment{figure}[1][]{}{}
+  \renewenvironment{figure*}[1][]{}{}
+  \renewenvironment{table}[1][]{}{}
+  \input{\previewUnit}%
+  \par
+}
+\makeatother
+\pdfpagewidth=\dimexpr\wd\previewBox+8pt\relax
+\pdfpageheight=\dimexpr\ht\previewBox+\dp\previewBox+8pt\relax
+\pdfhorigin=0pt
+\pdfvorigin=0pt
+\shipout\vbox{\kern4pt\hbox{\kern4pt\box\previewBox\kern4pt}\kern4pt}

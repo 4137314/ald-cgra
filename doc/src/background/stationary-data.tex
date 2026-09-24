@@ -1,0 +1,19 @@
+\subsection{Systolic computation and stationary data}
+
+Systolic computation coordinates local operations and communication over
+successive steps~\cite{kung-leiserson,kung}; modern matrix engines such as the
+TPU use this principle at a much larger scale~\cite{tpu}. A stationary-data
+label describes which value remains local while others move. In an
+\emph{output-stationary} mapping, an output's partial sum stays in local
+storage as its products accumulate. In a \emph{weight-stationary} mapping,
+weights remain local for reuse~\cite{sze-survey}. Eyeriss's row-stationary
+organisation exploits several kinds of reuse~\cite{eyeriss}.
+These labels describe data movement; they do not by themselves specify a
+particular number of registers or an interconnect.
+
+Our MAC instruction already supports local output accumulation. The limiting
+resource is independent forwarding: a PE exposes only its result register to
+neighbours. Section~\ref{sec:dataflow} explains why the implemented matrix
+mapping uses stationary vector coefficients, product delay lines and host
+reduction. It does not establish that every output-stationary schedule is
+impossible on the mesh.

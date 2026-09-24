@@ -6,16 +6,16 @@
       \node[pe] (p\r\c) at (\c, -\r) {\scriptsize$\r,\c$};
     }
   }
-  % horizontal neighbour links (west->east)
+  % Horizontal registered neighbour links in both directions.
   \foreach \r in {0,1,2,3} {
     \foreach \c/\cn in {0/1,1/2,2/3} {
-      \draw[wire] (p\r\c) -- (p\r\cn);
+      \draw[wireb] (p\r\c) -- (p\r\cn);
     }
   }
-  % vertical neighbour links (north->south)
+  % Vertical registered neighbour links in both directions.
   \foreach \c in {0,1,2,3} {
     \foreach \r/\rn in {0/1,1/2,2/3} {
-      \draw[wire] (p\r\c) -- (p\rn\c);
+      \draw[wireb] (p\r\c) -- (p\rn\c);
     }
   }
   % north injection into row 0 (per column)
@@ -26,13 +26,13 @@
   \foreach \r in {0,1,2,3} {
     \draw[wire] (-0.9, -\r) node[lbl, left]{$\mathrm{west}_\r$} -- (p\r0);
   }
-  % south / east edges read zero
+  % Missing neighbours supply zero to the south/east boundary PEs.
   \foreach \c in {0,1,2,3} {
     \node[lbl, below] at (\c, -3.6) {$0$};
-    \draw[wire, dashed] (p3\c) -- (\c, -3.55);
+    \draw[wire, dashed] (\c, -3.55) -- (p3\c);
   }
   \foreach \r in {0,1,2,3} {
     \node[lbl, right] at (3.55, -\r) {$0$};
-    \draw[wire, dashed] (p\r3) -- (3.5, -\r);
+    \draw[wire, dashed] (3.5, -\r) -- (p\r3);
   }
 \end{tikzpicture}

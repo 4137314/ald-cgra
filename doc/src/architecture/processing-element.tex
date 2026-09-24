@@ -1,0 +1,23 @@
+\subsection{Processing element}
+
+Figure~\ref{fig:pe} shows the PE datapath. Each PE has two operand multiplexers
+that independently select one of seven sources: the registered output of a
+north, south, east or west neighbour; a 16-bit immediate carried in the
+configuration word; the PE's own register (a feedback path); or a constant
+zero. The selected operands drive an arithmetic-logic unit; its result is
+latched into the single output register when \emph{step} is asserted.
+
+\input{figures/pe/figure}
+
+The ALU implements sixteen operations selected by a 4-bit opcode: a no-op that
+holds the register; a pass-through; addition, subtraction and multiplication
+(the low 16 bits of the product); a multiply-accumulate and a simple
+accumulate, both folding into the register; the bitwise \textsc{and}/\textsc{or}
+/\textsc{xor}; logical/arithmetic shifts; signed maximum, minimum and absolute
+value; and a constant load. Multiplication and multiply-accumulate keep the low
+half of the result, so arithmetic wraps modulo $2^{16}$, consistent with a
+16-bit datapath.
+
+A single 32-bit configuration word fully specifies a PE: the low sixteen bits
+are the immediate, followed by the 4-bit opcode and the two 3-bit operand
+selects. One such word per PE constitutes a complete array configuration.

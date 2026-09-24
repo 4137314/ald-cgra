@@ -1,25 +1,74 @@
 doc/ - LaTeX report
 ===================
 
-An IEEE-conference write-up of the *logical* design: PE datapath, mesh, control
-FSM, dataflow mappings and a wire-level cost model - diagrams, no code dumps.
+IEEE-conference report of the configurable mesh, protocol, C API, dataflow
+mappings, timing requirements and reproducible wire-cost experiments.
+Functional verification, wire counters and a real Vivado 2026.1 synthesis/STA
+run are available (verification/2026-09-23/vivado). The default 4x4 Nexys A7
+passes a 10 ns constraint with STEP_DIV=2. Other configurations, physical-link
+latency, power and board acceptance remain to be evaluated.
 
 Layout
 ------
-    main.tex        document root: title, abstract, \input of each section
-    config/         modular preamble (packages, colours, tikz, macros, hyperref)
-    src/            one .tex per section (see src/README)
-    figures/        standalone TikZ pictures (see figures/README)
-    IEEEtran.cls    vendored, so it builds without a full TeX Live
+    main.tex        minimal assembly of front matter, sections and references
+    frontmatter/    title/author, abstract, keywords
+    backmatter/     bibliography placement and final-page balancing
+    config/         packages, colours, TikZ styles and PDF links
+    src/            section entry points + one topic per nested file
+    figures/        one directory per figure: diagram.tex + figure.tex
+    tables/         one directory per table: table.tex
+    bib/bib.bib     sole bibliography source
+    IEEEtran.cls    existing vendored document class
+    IEEEtran.bst    unmodified vendored BibTeX style (THIRD_PARTY.md)
+    tools/          workload runner, CSV renderer and isolated preview builder
+    data/           measured CSV plus source/compiler provenance
+    verification/   archived commands, logs and bibliography checks
+    build/main.pdf  canonical rebuilt report; build/ is generated
+    main.pdf        historical tracked copy; not updated by the build
+    mesh-generalization.md  supported shapes, scope and remaining work
 
-Build (make -f doc.mk)
-----------------------
-    make -f doc.mk          latexmk -> build/main.pdf
-    make -f doc.mk clean
+Bibliography
+------------
+Edit bib/bib.bib only. main.tex uses BibTeX with the vendored IEEEtran.bst;
+latexmk regenerates build/main.bbl when citations or entries change. The old
+hand-maintained bib.tex duplicate has been removed. Only cited entries are
+printed; unused database entries are allowed. DOI URLs make references
+clickable with this style. Verification notes and remaining source caveats:
+verification/2026-09-22/report/bibliography.md.
 
-The PDF ships a hyperlinked outline: it opens with the bookmark pane (the side
-"table of contents") visible, one entry per section/subsection, plus PDF
-metadata. That is configured in config/hyperref.tex.
+Build (from the repository root)
+--------------------------------
+    make doc                         -> doc/build/main.pdf
+    make -C doc -f doc.mk measure     -> explicitly replace data/wire-cost.*
+    make -C doc -f doc.mk clean       -> remove generated build/
 
-nix: `nix develop` provides texliveSmall; the report uses only widely available
-packages (hyperref, bookmark, tikz, booktabs, microtype).
+An ordinary PDF build renders its table and chart from the archived CSV,
+checks its provenance hash, and does not rerun the experiment. The measurement
+runner compares each kernel with a scalar reference before emitting counts;
+the Python script checks analytical transaction/byte totals. Counts exclude
+initial ID and include one successful call per workload, with CFG and compute.
+The report and metadata describe this scope; there is no serial-time model.
+The metadata identifies the measured source snapshot by hashes even in a dirty
+tree. Later source changes require a deliberate rerun to claim current data.
+
+Atomic editing: see STRUCTURE.md for the topic/asset map and AGENTS.md for the
+focused editing workflow. For example:
+
+    make -C doc -f doc.mk figure-pe
+    make -C doc -f doc.mk section-protocol
+    make -C doc -f doc.mk part UNIT=protocol/fused-execute
+
+Artifacts are under build/previews/KIND/NAME/preview.pdf. Previews use the
+report's fonts and styles; figures/tables include captions. Cross-section
+reference numbers use the last full build when available. Run make doc after
+editing labels/order and before treating the complete PDF as final.
+
+Dependencies: GNU make 4.3+, Python 3, latexmk, BibTeX and TeX Live with hyperref, bookmark,
+TikZ, pgfplots, booktabs, array, microtype and xr (TeX Live tools bundle). Measurement also needs a C11
+compiler and make. `nix develop` and `nix build .#doc` provide the report
+packages. Nix's Git flake source includes tracked files only; newly added
+sources must be included in the source snapshot for a packaged build.
+
+Figures stay as source. The report has PDF bookmarks and clickable citations.
+Review the final log for missing references, BibTeX warnings and overfull boxes,
+and inspect rendered pages after changing diagrams or column layout.

@@ -1,0 +1,21 @@
+\begin{table}[t]
+  \centering
+  \caption{UART command set. \cmd{EXEC} is the version-3 addition analysed in
+  Section~\ref{sec:exec}; the rest are version 2.}
+  \label{tab:proto}
+  \footnotesize
+  \begin{tabular}{@{}lp{2.35cm}p{2.75cm}@{}}
+    \toprule
+    Cmd & Payload & Reply \\
+    \midrule
+    \cmd{ID}  & ---                & signature, version, geometry \\
+    \cmd{CFG} & $R C$ words $+$ ck    & ACK / NACK \\
+    \cmd{WR}  & $(R+C)$ words $+$ ck     & ACK / NACK \\
+    \cmd{RUN} & step count $N$     & ACK (after $N$ steps) \\
+    \cmd{RD}  & ---                & $R C$ registers $+$ ck \\
+    \cmd{RST} & ---                & ACK (clears registers) \\
+    \cmd{EXEC}& $N$, flags, tap mask, $(R+C)$ words $+$ ck
+              & masked registers $+$ ck $+$ status \\
+    \bottomrule
+  \end{tabular}
+\end{table}

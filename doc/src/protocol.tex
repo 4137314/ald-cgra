@@ -1,81 +1,12 @@
 \section{Control and Protocol}
 \label{sec:proto}
 
-The host drives the fabric through a byte-oriented UART protocol interpreted by
-a control finite-state machine (FSM). The protocol is deliberately minimal: six
-single-byte commands, each with a fixed payload and reply, so that the same
-message stream can be produced and checked by both the hardware and a software
-model.
+\input{src/protocol/overview}
 
-\subsection{Command set}
+\input{src/protocol/commands}
 
-Table~\ref{tab:proto} lists the commands. Configuration and input transfers
-carry an 8-bit additive checksum; the device rejects a corrupted transfer with
-a negative acknowledgement, and appends a checksum to the register read-back.
-The identification reply reports the array geometry, so the host can adapt at
-run time rather than assuming fixed dimensions.
+\input{src/protocol/wire-example}
 
-\begin{table}[t]
-  \centering
-  \caption{UART command set (protocol version 2).}
-  \label{tab:proto}
-  \small
-  \begin{tabular}{@{}llp{4.6cm}@{}}
-    \toprule
-    Cmd & Payload & Reply \\
-    \midrule
-    \cmd{ID}  & --- & signature, version, ROWS, COLS, width \\
-    \cmd{CFG} & 16 words $+$ cksum & ACK / NACK \\
-    \cmd{WR}  & 8 words $+$ cksum  & ACK / NACK \\
-    \cmd{RUN} & step count $N$     & ACK (after $N$ steps) \\
-    \cmd{RD}  & ---                & 16 registers $+$ cksum \\
-    \cmd{RST} & ---                & ACK (clears registers) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\input{src/protocol/fused-execute}
 
-\subsection{A transaction on the wire}
-
-To make the framing concrete, consider writing the edge inputs
-$\text{west}=(1,0,0,0)$ and $\text{north}=(5,0,0,0)$ with the \cmd{WR} command.
-The host sends the command byte \byte{03} followed by the four west then four
-north values as 16-bit little-endian words, and finally the additive checksum:
-
-\begin{center}\small\ttfamily
-03\quad 0100 0000 0000 0000\quad 0500 0000 0000 0000\quad 06
-\end{center}
-
-\noindent The sixteen payload bytes sum to $1+5=6$, so the trailing checksum is
-\byte{06}; the device recomputes the same sum, finds it matches, and replies
-with a single \cmd{ACK} byte (\byte{79}). A corrupted payload would sum
-differently and draw a \cmd{NACK} (\byte{1F}) instead, on which the host
-retransmits. Every multi-byte transfer follows this shape---command, fixed
-payload, one checksum byte, one-byte acknowledgement---which is what lets the
-same stream be produced and checked identically by the hardware FSM and the
-software model.
-
-\subsection{Controller state machine}
-
-Figure~\ref{fig:fsm} shows the control FSM. From the idle state the first
-received byte selects a branch. The short transactions (\cmd{ID}, \cmd{RST} and
-the rejection of an unknown command) reply immediately through a shared
-transmit handshake. The bulk transfers accumulate their payload, verify (or
-emit) a checksum in a dedicated check state, and then reply. The \cmd{RUN}
-branch asserts \emph{step} once per remaining cycle before acknowledging.
-
-\begin{figure*}[t]
-  \centering
-  \input{figures/fsm}
-  \caption{Control finite-state machine. Payload-bearing commands (\cmd{CFG},
-  \cmd{WR}, \cmd{RD}) pass through a checksum state before the shared send
-  handshake; \cmd{RUN} pulses \emph{step} $N$ times. A watchdog (dashed)
-  returns the machine to idle if a payload stalls, so a desynchronised host
-  always recovers.}
-  \label{fig:fsm}
-\end{figure*}
-
-A watchdog timer guards every state that waits for payload bytes: if no byte
-arrives within a bounded interval the machine aborts back to idle. Together with
-the checksum, this makes the link self-recovering---a property the host side
-mirrors by retransmitting rejected transfers and resynchronising after a failed
-run.
+\input{src/protocol/controller}

@@ -1,0 +1,10 @@
+\begin{figure}[t]
+  \centering
+  \resizebox{\columnwidth}{!}{\input{figures/exec/diagram}}
+  \caption{One element-wise chunk on the wire. The unfused sequence (left)
+  spends three turnarounds and returns all sixteen registers; \cmd{EXEC}
+  (right) spends one and returns only the four registers the tap mask names.
+  The optional datapath clear is folded into the flags byte. Reply framing
+  assumes that the command boundary and tap mask arrive intact.}
+  \label{fig:exec}
+\end{figure}

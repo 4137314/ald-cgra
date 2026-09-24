@@ -1,0 +1,18 @@
+\subsection{Implemented changes and comparison limits}
+\label{sec:walls}
+
+The MAC expression adds the accumulator to the full-width product before
+truncating. This preserves the low 16 bits and exposes a multiply-add form
+compatible with DSP48E1 arithmetic~\cite{ug479}; it does not prove that Vivado
+uses the DSP post-adder or that timing improves. The registered read-back mux
+separates PE selection from later checksum logic. Masked skips include a
+settling state, and protocol replay verifies the resulting bytes. The recorded run evaluates the combined current design; isolating the
+resource and timing effects of either change requires matched baselines.
+
+\label{sec:floorplan}
+An optional floorplan script selects a DSP-rich region. Historical notes
+report a regression in one experiment, but lack sufficient provenance for a
+quantitative comparison here. A new comparison must hold part, source,
+generics, period and implementation recipe fixed and archive timing and
+utilisation reports for both cases. EXEC changes controller logic; unchanged
+PE arithmetic therefore does not imply unchanged total fabric area.

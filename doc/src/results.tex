@@ -1,41 +1,6 @@
-\section{Verification}
+\section{Verification and Measured Wire Cost}
 \label{sec:results}
 
-The design is verified at two levels that meet in the middle at the byte-level
-protocol. On the hardware side, VHDL testbenches driven through the UART
-interface exercise the processing element in isolation, the full protocol
-(including checksum rejection and register read-back), and the systolic
-matrix--vector mapping end to end. On the host side, the software model is used
-as a golden reference: it re-implements the PE arithmetic and the protocol FSM,
-so a discrepancy between the two implementations surfaces immediately.
+\input{src/results/verification}
 
-Because the model is byte-accurate, every accelerated kernel is checked against
-an independent host computation without any hardware: element-wise arithmetic,
-the dot-product reduction, the tiled systolic matrix--vector product, prefix
-scans and convolution. The robustness features are exercised too---a fault-
-injecting variant of the model forces the retransmission path, confirming that a
-rejected transfer is recovered transparently. The same known-answer suite is
-reused as a bring-up check on real hardware once the board is programmed.
-
-Table~\ref{tab:verif} summarises the verification surface. The bitstream flow
-itself is scripted for batch synthesis but is out of the scope of this logical
-report.
-
-\begin{table}[t]
-  \centering
-  \caption{Verification surface.}
-  \label{tab:verif}
-  \small
-  \begin{tabular}{@{}lp{5.4cm}@{}}
-    \toprule
-    Level & Coverage \\
-    \midrule
-    RTL (simulation) & PE ALU; full protocol with checksum; systolic
-                       matrix--vector \\
-    Model (host)     & Protocol framing; PE arithmetic; all kernels vs.
-                       reference; retransmission \\
-    Cross-check      & Model is the golden reference for the RTL (shared
-                       semantics) \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\input{src/results/wire-experiment}

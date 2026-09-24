@@ -1,34 +1,12 @@
 \section{Host Software Stack}
 \label{sec:sw}
 
-The host side (Figure~\ref{fig:stack}) is layered. A C library owns the
-transport and protocol: it exposes primitives to identify the device, load a
-configuration, write the edge inputs, advance the array and read the registers,
-and it implements the checksum, automatic retransmission of rejected transfers,
-and resynchronisation after a failed run. Crucially, the library also contains
-an in-process model of the device that speaks the identical byte-level
-protocol, so the entire stack runs and is verified without an FPGA; the same
-model can be exposed on a pseudo-terminal to serve external tools.
+\input{src/software/transport}
 
-\begin{figure}[t]
-  \centering
-  \resizebox{\columnwidth}{!}{\input{figures/stack}}
-  \caption{Layered host/device architecture. The command-line tool compiles a
-  declarative configuration language into per-PE words and drives the library,
-  which reaches the fabric over UART or an in-process emulator.}
-  \label{fig:stack}
-\end{figure}
+\input{src/software/dispatch}
 
-Above the library, a command-line tool provides high-level, UNIX-style access.
-A small declarative configuration language describes named \emph{devices},
-\emph{modes} (array configurations, expressed either as a high-level pattern or
-as explicit per-PE placement), \emph{pipelines} that chain modes, and
-input/output profiles. Configuration is discovered from standard locations and
-merged by name, following the drop-in convention used by system daemons, so
-that a user's library of kernels can be organised across files and overridden
-selectively. Vectors flow through the tool via standard input and output,
-allowing kernels to compose in pipelines with ordinary UNIX utilities.
+\input{src/software/geometry}
 
-This separation---a thin, robust library and a declarative front end---keeps the
-protocol in one place while making the fabric approachable: a user reconfigures
-the accelerator by naming a mode, not by hand-assembling configuration words.
+\input{src/software/cli}
+
+\input{src/software/contracts}

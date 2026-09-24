@@ -1,0 +1,16 @@
+\begin{table}[t]
+  \centering
+  \caption{Current-kernel transactions, excluding initial ID.}
+  \label{tab:kernel-counts}
+  \small
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    Kernel & v2 & v3 \\
+    \midrule
+    Vector & $1+3K$ & $1+K$ \\
+    Dot & $3+2n$ & $3+n$ \\
+    Scan & $1+4Q$ & $1+Q$ \\
+    Dense matvec & $T_C[1+(2R+2)T_R]$ & $T_C[1+RT_R]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}

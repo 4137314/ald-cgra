@@ -1,0 +1,9 @@
+The host side (Figure~\ref{fig:stack}) is layered. A C library owns the
+transport and protocol: it exposes primitives to identify the device, load a
+configuration, write the edge inputs, advance the array and read the registers,
+and it implements the checksum, retransmission after complete negative replies,
+and session shutdown after uncertain transfers. The library also contains
+an in-process model of the device that speaks the identical byte-level
+protocol, so the entire stack runs and is verified without an FPGA; the same
+model can be exposed on a pseudo-terminal~\cite{stevens-apue} to serve external
+tools.

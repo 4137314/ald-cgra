@@ -1,0 +1,28 @@
+\begin{table}[t]
+  \centering
+  \caption{Evidence available for the current sources. Logs and commands are
+  archived under \texttt{doc/verification/2026-09-20},
+  \texttt{2026-09-21}, \texttt{2026-09-22} and \texttt{2026-09-23}.}
+  \label{tab:verif}
+  \footnotesize
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.4cm}
+    >{\raggedright\arraybackslash}p{3cm}
+    >{\raggedright\arraybackslash}p{3.15cm}@{}}
+    \toprule
+    Property & Evidence & Limit \\
+    \midrule
+    Kernel values & Independent scalar references, eight shapes, v2/v3
+      & Tested cases; no general proof \\
+    Protocol & Model/RTL byte replay and real PTY transport
+      & No physical serial bridge \\
+    C API & Release and sanitizer suites; allocation/read fault injection
+      & Caller must respect buffer lifetimes and synchronization \\
+    Step spacing & RTL assertions for $D=1,2,3,4$ including reset
+      & Enable checks alone do not prove timing or selector coverage \\
+    Wire counts & Fixed workloads, counters, source hashes
+      & No elapsed-time or CPU speedup result \\
+    FPGA timing & Real Vivado synthesis and routed STA, default $4\times4$
+      & One 10 ns point; no board validation \\
+    \bottomrule
+  \end{tabular}
+\end{table}

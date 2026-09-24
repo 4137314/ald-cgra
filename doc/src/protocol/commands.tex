@@ -1,0 +1,16 @@
+\subsection{Command set}
+
+Table~\ref{tab:proto} lists the commands. Configuration and input transfers
+carry an 8-bit additive checksum; a mismatch produces a negative
+acknowledgement. Register read-back also carries a checksum. These checks do
+not detect every possible corruption.
+The identification reply reports the array geometry, so the host can adapt at
+run time rather than assuming fixed dimensions.
+
+The full device supports positive $R$ and $C$ with $RC\leq16$ and a 16-bit
+datapath. The fused command retains a two-byte tap mask for every geometry.
+Bits beyond the PE count are ignored by the controller and rejected by the
+host API. Configuration and read-back use row-major indices $rC+c$; input
+payloads contain all $R$ west words followed by all $C$ north words.
+
+\input{tables/commands/table}

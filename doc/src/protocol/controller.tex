@@ -1,0 +1,35 @@
+\subsection{Controller state machine}
+
+Figure~\ref{fig:fsm} groups the controller states into command phases.
+From the idle state the first
+received byte selects a branch. The short transactions (\cmd{ID}, \cmd{RST} and
+the rejection of an unknown command) reply immediately through a shared
+transmit handshake. The bulk transfers accumulate their payload, verify (or
+emit) a checksum in a dedicated check state, and then reply. The \cmd{RUN}
+branch produces $N$ enabled PE captures at the configured cadence before
+acknowledging.
+
+The \cmd{EXEC} path shares existing controller logic. Its header state falls through into
+the \emph{same} operand-payload state \cmd{WR} uses and the \emph{same} step
+engine \cmd{RUN} uses; only the return targets differ, held in two small
+registers. The fused command is thus a different path through the existing
+states rather than a parallel implementation of them---which is what keeps one
+byte-accurate software model able to mirror both.
+
+\input{figures/fsm/figure}
+
+A watchdog timer guards states waiting for payload bytes: if no byte arrives
+within its configured interval the machine returns to idle. This does not
+provide reliable framing under byte insertion, deletion or command corruption.
+The protocol has no delimiter or sequence number, and its additive checksum
+also misses compensating payload changes. Retry assumes intact commands and
+frame lengths; it provides no general exactly-once guarantee.
+
+After an uncertain transfer the library clears cached identity. Further
+protocol calls return a desynchronization error
+(\texttt{CGRA\_ERR\_DESYNC}). It sends no implicit
+\cmd{RST}: a controller waiting for a \cmd{RUN} argument could interpret that
+byte as six steps. The caller must close the handle, restore the parser to idle
+by an out-of-band device reset or its watchdog after pending traffic has ended,
+and reopen. Configuration, inputs and datapath must then be reinitialized.
+Reopening a serial port alone does not reset the remote controller.

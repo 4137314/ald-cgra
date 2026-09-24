@@ -1,0 +1,38 @@
+% Logical command phases, not a one-to-one diagram of RTL enum states.
+% The shared input receiver and step engine occur on the v2 and EXEC paths.
+\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize,
+    phase/.style={draw=cStateE,fill=cState,rounded corners=2pt,
+      minimum width=24mm,minimum height=8mm,align=center},
+    shared/.style={phase,draw=cBlockE,fill=cBlock}]
+  \node[phase] (wr) at (0,24) {CFG / WR};
+  \node[phase] (payload) at (32,24) {receive words};
+  \node[phase] (check) at (64,24) {check sum};
+  \node[phase] (ack) at (96,24) {ACK / NACK};
+  \draw[wire] (wr)--(payload); \draw[wire] (payload)--(check);
+  \draw[wire] (check)--(ack);
+  \node[phase] (rd) at (128,24) {RD};
+  \node[phase] (regs) at (160,24) {all registers\\$+$ checksum};
+  \draw[wire] (rd)--(regs);
+
+  \node[phase] (run) at (0,9) {RUN};
+  \node[phase] (arg) at (32,9) {receive $N$};
+  \node[shared] (steps) at (64,9) {step engine};
+  \node[phase] (done) at (96,9) {ACK};
+  \draw[wire] (run)--(arg); \draw[wire] (arg)--(steps);
+  \draw[wire] (steps)--(done);
+  \node[lbl,align=center] at (144,9) {ID / RST / bad opcode:\\direct reply};
+
+  \node[phase,draw=cRegE,fill=cReg] (hdr) at (0,-16) {EXEC header};
+  \node[shared] (exin) at (32,-16) {input receiver};
+  \node[phase,draw=cRegE,fill=cReg] (exck) at (64,-16) {check sum};
+  \node[shared] (exrun) at (96,-16) {optional reset\\$+$ step engine};
+  \node[phase,draw=cRegE,fill=cReg] (exrd) at (128,-16) {masked registers\\$+$ checksum};
+  \node[phase,draw=cRegE,fill=cReg] (status) at (160,-16) {ACK / NACK};
+  \draw[wire] (hdr)--(exin); \draw[wire] (exin)--(exck);
+  \draw[wire] (exck)--node[lbl,below]{valid}(exrun);
+  \draw[wire] (exrun)--(exrd); \draw[wire] (exrd)--(status);
+  \draw[wire,cRegE] (exck.north) -- (64,-5) -- node[lbl,above]{bad checksum: no reset or steps}
+    (128,-5) -- (exrd.north);
+  \node[lbl,align=center] at (80,-29)
+    {WR/EXEC share input reception; RUN/EXEC share stepping. Each transmit uses the shared send handshake.};
+\end{tikzpicture}

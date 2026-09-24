@@ -1,0 +1,21 @@
+% One column: products enter at row 0, move south, and are read together.
+\begin{tikzpicture}[font=\scriptsize]
+  \matrix (m) [matrix of nodes,
+    nodes={draw=cWire!40, minimum width=10mm, minimum height=7mm},
+    column sep=-\pgflinewidth, row sep=-\pgflinewidth] {
+      $p_0$ & $p_1$ & $p_2$ & $p_3$ \\
+      $0$   & $p_0$ & $p_1$ & $p_2$ \\
+      $0$   & $0$   & $p_0$ & $p_1$ \\
+      $0$   & $0$   & $0$   & $p_0$ \\
+  };
+  \foreach \c in {1,2,3,4} {
+    \node[lbl, above=1mm of m-1-\c] {$t=\c$};
+  }
+  \foreach \r/\role in {1/{row 0: MUL},2/{row 1: PASS},3/{row 2: PASS},4/{row 3: PASS}} {
+    \node[lbl, left=2mm of m-\r-1] {\role};
+  }
+  \draw[cRegE, thick] (m-1-4.north west) rectangle (m-4-4.south east);
+  \node[lbl, below=2mm of m, align=center]
+    {Initial registers zero; $p_i=A_{i,c}x_c$.\\
+     Final column: one simultaneous read-back.};
+\end{tikzpicture}

@@ -1,0 +1,19 @@
+\phantomsection
+\pdfbookmark[1]{Abstract}{sec:abstract}
+\begin{abstract}
+This report describes a UART-controlled coarse-grained reconfigurable array
+with a default $4\times4$ mesh and configurable rectangular geometries up to
+sixteen 16-bit processing elements. Each element has one result register;
+the host configures operations, supplies edge operands and requests a count
+of logical steps. We describe diagonal operations, local MAC reductions,
+matrix products with stationary coefficients and host reduction, and prefix
+scans. A public C API and declarative front end share the kernel engines.
+Independent scalar references, emulator/RTL protocol comparison and UART
+simulation verify functional behaviour across eight geometries. A reproducible
+experiment compares current protocol v2 and v3 using byte and transaction
+counters with fixed workloads. These counts isolate fused execution without
+claiming physical latency or CPU speedup. The report also specifies enabled
+capture spacing and the Vivado timing gates. A real synthesis and post-route
+STA run passes at a 10 ns constraint for the default mesh; physical board
+operation and end-to-end acceleration remain unmeasured.
+\end{abstract}
