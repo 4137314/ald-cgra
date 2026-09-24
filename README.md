@@ -5,6 +5,10 @@ accelerator driven by a host PC over UART.
 
 Project for the *Advanced Logic Design* course, University of Trento.
 
+The [correction tracker](TASKS.md) records open issues, completed fixes and
+verification results from the [September 2026 audit](doc/audit-2026-09-19.md).
+The audit is a historical snapshot; consult the tracker for current status.
+
 ## Overview
 
 ```
@@ -39,6 +43,7 @@ same protocol, so the whole stack runs and is tested without an FPGA.
 | `hw/sim/` | GHDL testbenches (`tb_pe`, `tb_cgra_top`, `tb_matvec`) |
 | `hw/con/` | Constraint files (`basys3.xdc`, `nexys_a7.xdc`) |
 | `hw/scr/` | Vivado batch scripts (`synth`/`fmax`/`build`/`timing`/`program`.tcl + sourced `constraints`/`floorplan`.tcl) |
+| `hw/perf/` | Historical Fmax notes (`PERFLOG`), pending new measurements after the audit fixes |
 | `lib/` | Host C library `libcgra` (static + shared; transport, kernels, `sim:` emulator, `test/`, `libcgra.3`, `cgra.pc.in`) |
 | `sw/` | `cgra` CLI: DSL parser, config discovery, mode compiler, vector I/O, `test/` |
 | `sw/config/` | Reference `.cgra` config files |
@@ -53,7 +58,7 @@ the whole toolchain (`nix develop`) and a package build (`nix build`).
 ```sh
 make            # build libcgra.a (+ .so) and the cgra CLI, optimized (-O3)
 make test       # unit tests (assert.h) + CLI smoke tests on the sim: emulator
-make sim        # GHDL testbenches (tb_pe, tb_uart, tb_cgra_top, tb_matvec)
+make sim        # GHDL benches, C/RTL differential checks and mesh shape sweep
 make check-deps # report which build/runtime deps are present
 ```
 
@@ -92,16 +97,18 @@ make prog-ofl              # alternative: openFPGALoader, no Vivado needed
 ```
 
 `BOARD` defaults to `nexys_a7` (Digilent **Nexys 4 DDR** / Nexys A7-100T,
-xc7a100t); pass `BOARD=basys3` for the Basys 3. `make bit`/`make sta` **refuse
-to emit a bitstream unless timing is met** (WNS and WHS ≥ 0 at the constrained
-clock, default 100 MHz — override with `PERIOD=<ns>`), so a bitstream that
-exists is one that runs on the board — certified by STA, not by reading a
-waveform. `make fmax` and `hw/perf/PERFLOG` track how high the clock can go and
-what limits it.
+xc7a100t); pass `BOARD=basys3` for the Basys 3. `make bit` requires nonempty
+setup/hold paths and nonnegative slack before writing a new bitstream;
+`make sta` runs the timing check without writing one. Results depend on the
+applied constraints. The default target is 10 ns; `PERIOD=<ns>` changes the
+constraint, not the board oscillator. A previous build's files may remain
+after a failed run. New physical measurements are still needed after the RTL
+and constraint corrections. `make fmax` reports `1000 / period` only after a
+successful final run and records it in `fmax_validated_history.csv`.
 
 ## Install
 
-Standard `make install`, relocatable with the usual `PREFIX`/`DESTDIR`:
+Standard `make install` with a configured `PREFIX` and optional `DESTDIR` staging:
 
 ```sh
 sudo make install                      # -> /usr/local (optimized -O3 build)
@@ -113,6 +120,13 @@ make uninstall                         # same PREFIX/DESTDIR
 It installs the CLI, the static **and** shared library (with soname symlinks),
 the `cgra.h` header, a **pkg-config** file, the man pages (`cgra.1`, `cgra.5`,
 `libcgra.3`), the GNU info manual, the bash completion, and the `.cgra` stdlib.
+The CLI records `PREFIX/share/cgra/stdlib` at build time; `pkgdatadir` can
+override the parent directory. Changing the prefix rebuilds the affected
+objects without a clean. `DESTDIR` is excluded from runtime paths: deploy
+the staged files to the configured prefix. Moving an installed tree to a
+different prefix requires rebuilding, or setting `CGRA_PATH` for includes
+and `CGRA_STDLIB` for `init`.
+
 Downstream builds then use pkg-config:
 
 ```sh
@@ -147,6 +161,7 @@ The C build is strict (`-Wall -Wextra -Wpedantic -Wconversion -Wshadow
 ```sh
 make test                     # unit (assert.h) + smoke, release
 make PROFILE=asan test        # everything under ASan + UBSan
+make test-install             # isolated install + CLI and external C client
 make -C lib -f lib.mk valgrind   # unit tests under valgrind
 make -C lib -f lib.mk analyze    # gcc -fanalyzer
 make -C hw  -f hw.mk  lint       # GHDL RTL syntax/elaboration check
@@ -155,6 +170,42 @@ make -C hw  -f hw.mk  lint       # GHDL RTL syntax/elaboration check
 Unit tests use `assert.h` with TAP-style output (`ok N …`, a `1..N` plan) and a
 non-zero exit on failure; assertions stay live even in release builds. Builds
 are parallel-safe (`make -j`).
+
+Release outputs remain in `lib/build/` and `sw/build/`; other profiles use
+`build/<profile>/` in each component. Switching to ASan therefore builds
+instrumented objects without reusing release objects.
+
+`make sim` also needs a C11 compiler and POSIX pseudo-terminals. It compares
+504 byte-level protocol transactions per geometry between `emu.c` and the RTL,
+checks 1,024 PE results and seven standalone array shapes through 8x8, and
+replays real host kernel traffic on eight device geometries. Full UART replay
+covers 2x3 and 3x2; the 4x4 cadence sweep uses `STEP_DIV=1..4`.
+
+### Rectangular meshes
+
+The full stack supports positive **R x C geometries with at most 16 PEs** and a
+16-bit datapath. The default is 4x4. Hardware dimensions are fixed at elaboration;
+the host discovers them through ID and adapts transfers and kernel tiling.
+
+```sh
+./sw/build/cgra probe -d sim:2x3
+./sw/build/cgra run add -d sim:2x3 --a "1 2 3 4 5" --b "10 20 30 40 50"
+./sw/build/cgra show add -d sim:3x2
+make synth MESH_ROWS=2 MESH_COLS=3  # requires Vivado
+make bit MESH_ROWS=2 MESH_COLS=3
+make prog-ofl MESH_ROWS=2 MESH_COLS=3
+```
+
+Nondefault Vivado outputs use `hw/build/vivado/RxC/`. C callers use
+`cgra_get_info` and the `_n` transfer functions with explicit buffer counts;
+legacy fixed-size primitives require 4x4. All public kernels adapt:
+`cgra_vec_*`, `cgra_dot`, `cgra_matvec`, `cgra_scan` and `cgra_conv`.
+The last three use `size_t` dimensions and explicit output capacities and
+share their implementation with the CLI. Vector/scan operations support
+exact in-place output; matrix/convolution output must not overlap inputs.
+See `libcgra(3)` for empty inputs and partial results on failure.
+`sim:2x3:v2` exercises the older protocol on a rectangle.
+See [supported geometries, API contract and verification](doc/mesh-generalization.md).
 
 `clangd` reads a generated compilation database (there is no `compile_flags.txt`):
 
@@ -165,18 +216,24 @@ make compdb        # -> ./compile_commands.json (git-ignored; or `bear -- make`)
 ### Stress benchmark (the FPGA bring-up pipeline)
 
 Once the board is programmed with the synthesized RTL, one command sweeps the
-**entire `.cgra` standard library** under stress and prints a structured report
-— throughput and serial link cost (tx/rx bytes, retries) per mode, at growing
-vector sizes — plus a JSON artifact:
+loaded `.cgra` modes and prints a structured report with scalar verification,
+throughput and serial link cost per supported mode, plus a JSON artifact:
 
 ```sh
 make bench DEV=auto                       # discovers + checks the FPGA, then benchmarks
-make bench DEV=sim SIZES="1024 8192" REPEAT=100   # dry-run on the emulator
+make bench DEV=sim SIZES="1024 4096" REPEAT=100   # dry-run on the emulator
 cgra benchall -d auto --size 4096 --json  # the underlying structured command
 ```
 
 `DEV=auto` first runs `cgra probe` (autodiscover + known-answer correctness), so
-only a trusted device is measured. See [sw/scripts/cgra-bench.sh](sw/scripts/cgra-bench.sh).
+the initial checks run before the sweep. Each measured invocation is then
+compared with an independent scalar reference outside the timing interval.
+JSON includes every mode as `passed`, `failed` or `skipped`. Failures cause a
+nonzero exit status and remain in the saved artifact. Custom/stateful-diagonal
+mappings without a scalar reference are explicitly skipped after validation;
+the built-in 4×4 custom template is invalid on smaller shapes. Supported sizes
+are 1..4096; larger requests are rejected. See
+[sw/scripts/cgra-bench.sh](sw/scripts/cgra-bench.sh) and `cgra(1)`.
 
 ### Profiling the C code
 
@@ -184,13 +241,13 @@ Whole-program profiles of the CLI driving the emulator (CPU-bound, so the
 hotspots are the protocol framing, checksums and the PE model):
 
 ```sh
-make gprof       # -pg build -> sw/build/gprof.txt
-make perf        # perf record/report -> sw/build/perf.txt
-make callgrind   # valgrind callgrind -> sw/build/callgrind.txt (+ kcachegrind)
+make gprof       # -pg build -> sw/build/gprof/gprof.txt
+make perf        # perf record/report -> sw/build/perf/perf.txt
+make callgrind   # valgrind -> sw/build/perf/callgrind.txt (+ kcachegrind)
 make profile     # all three
 ```
 
-Override the workload with `WORKLOAD='benchall -d sim --size 8192 --repeat 500'`.
+Override the workload with `WORKLOAD='benchall -d sim --size 4096 --repeat 500'`.
 
 ## The `cgra` CLI
 
@@ -254,12 +311,16 @@ Structured output composes with `jq`: `--json` prints
 `{"count": N, "result": [...]}`, so `cgra run … --json | jq '.result'` works.
 Bash completion lives in `sw/completions/cgra.bash`.
 
-**Robustness.** The library retransmits CFG/WR/RD automatically on a NACK,
-timeout or bad checksum (`cgra_set_retries`, default 3). RUN is never retried
-because it advances state; instead a failed RUN triggers a resync (flush + reset)
-so the device is never left hanging. `cgra_get_stats` exposes
-transaction/retry/byte counters — `cgra bench` prints them. The `sim:flaky`
-device deterministically NACKs the first CFG and WR to exercise the retry path.
+**Robustness.** CFG/WR and EXEC with fused reset retry complete NACK replies
+(`cgra_set_retries`, default 3), assuming intact command bytes and frame
+lengths. RUN/RD are never retried. Timeout, I/O failure or malformed reply
+stops the session; subsequent protocol calls return `CGRA_ERR_DESYNC` without
+sending bytes. Restore the remote parser before reopening and reinitializing
+the device; reopening alone does not reset it. See the recovery contract in
+`libcgra(3)`. Protocol v2/v3 cannot reliably detect arbitrary byte loss,
+insertion or corrupted commands. `sim:flaky` exercises NACK retries, `sim:v2`
+the legacy fallback, and PTY tests verify that uncertain transfers stop without
+an implicit reset. `cgra_get_stats` exposes transaction/retry/byte counters.
 
 ## The `.cgra` configuration language
 
@@ -285,7 +346,7 @@ steps   = rows            # rows | auto | <int>
 [mode my_kernel]          # hand-placed PEs (pattern = custom)
 pattern = custom
 out     = diag            # diag | pe R,C
-reset   = each            # each | once — clear PE regs between chunks
+reset   = each            # each chunk; once (default) starts each run from zero
 pe 0,0  = op=mac a=north b=west
 pe 1,1  = op=add a=self  b=const(1)
 
@@ -306,30 +367,52 @@ including file), so you can split devices, modes and pipelines across files.
 value, e.g. `set GAIN = 7` then `b = const($GAIN)`.
 
 **Patterns** (how a mode maps onto the array):
+
 * `diagonal` — element-wise; `a[]` enters from the north, `b[]` (or a
-  `const`) from the west, off-diagonal PEs are PASS chains, the four diagonal
-  PEs each compute one element. 4 lanes per transaction, `out = diag`.
+  `const`) from the west, off-diagonal PEs are PASS chains, the diagonal
+  PEs each compute one element. `min(R,C)` lanes per transaction, `out = diag`.
 * `reduce` — MAC/ACC accumulation into PE(0,0); one element per step, scalar
   result (e.g. `dot`).
 * `custom` — you place each PE with `pe R,C = op=.. a=.. b=..`; unlisted PEs
   are NOP. Output taps default to the diagonal (`out = diag`) or a single PE.
-* `scan` — inclusive prefix sum on row 0: the element sits in the immediate and
-  is re-added each step while the running prefix flows west→east; tiled over
-  columns with the carry chained. Driven by `cgra scan`.
+* `scan` — inclusive prefix fold on row 0: the block's elements arrive on the
+  north edge, the running fold flows west→east, and the previous block's result
+  is injected as the carry on the west edge; tiled over columns. Because the
+  elements ride the edge rather than the PE immediates, the configuration is
+  data-independent and loaded once for the whole vector. Driven by `cgra scan`.
 * `conv` — 1-D convolution as a Toeplitz matrix–vector, driven by `cgra conv`.
+  The matrix is banded, and the engine skips its all-zero R×C tiles.
 * `systolic` — weight-stationary matrix–vector `y = A·x`, driven by
   `cgra matvec` (matrix-shaped input, so it is not a plain vector `run`).
   The vector `x` is held stationary in the PE immediates; the matrix streams
   in one row per step as a wavefront that marches south (row 0 multiplies,
-  rows 1–3 form a delay line), and the array is tiled over 4×4 blocks for any
-  `M×N`. All 16 PEs are used for the products and data movement; the host adds
-  the four skewed partials per output. See `matvec_run` in `sw/compile.c`.
+  remaining rows form a delay line), and the array is tiled over R×C blocks for any
+  `M×N`. PEs are used for products and data movement; the host adds
+  the skewed partials per output. See `cgra_matvec` in `lib/src/kernels.c`.
 
-Why weight-stationary and not a full TPU-style array: each PE here has a
-*single* output register and external data enters only on the north (row 0)
-and west (column 0) edges, so a PE cannot both forward an activation and carry
-a partial sum. That rules out fused spatial accumulation, and makes the
-weight-stationary streaming dataflow above the natural systolic fit.
+**Applicable fields.** Diagonal modes accept `op/a/b`, `steps`, `out=diag`
+and `reset`. Custom modes accept PE lines, `steps`, `out` and `reset`; their
+opcodes and operands belong on the PE lines. Reductions accept `op/a/b`,
+`steps` and optionally `reset=once`; output is implicitly PE(0,0).
+Dedicated `systolic`/`conv`/`scan` entries accept only `doc` and `pattern`:
+the dedicated commands choose their parameters from CLI arguments.
+Inapplicable fields are rejected, including fields inherited through merging.
+Clear ordinary fields with an empty assignment, or use a new mode name to
+discard an inherited custom layout.
+
+**Reset.** Each nonempty diagonal/custom run starts with zero PE registers.
+The default `reset=once` preserves state between chunks within that run;
+`reset=each` clears before each chunk. Reductions reset once per run and reject
+`each`. State does not carry between separate mode invocations. These rules
+apply on v2 and v3; see `cgra(5)` for empty inputs and step counts too short
+to settle all diagonal results.
+
+The MAC instruction supports local output-stationary accumulation, as used by
+`cgra dot`. A PE exposes only one result register, so retaining a sum and
+forwarding independent activation/weight values in the same step requires
+additional routing, phases or storage. The implemented matrix mapping uses
+C multipliers in row 0 and (R−1)C delay cells, followed by a host reduction:
+four multipliers and twelve delay cells on the default 4×4 mesh.
 
 **Config discovery** (low → high precedence):
 built-in defaults → `/etc/cgra` → `$XDG_CONFIG_HOME/cgra` (or `~/.config/cgra`)
@@ -344,7 +427,12 @@ roots (like `PATH`). `cgra config` prints the resolved paths.
 *and* installs a small stdlib (`arithmetic`, `linalg`, `dsp`, `crypto`) to
 `~/.config/cgra/stdlib/`. Pull pieces in with `include "linalg.cgra"`; the
 `include` search order is: the including file's dir, each `$CGRA_PATH` entry,
-`~/.config/cgra` and its `stdlib/`, then the system share dir.
+the user config directory and its `stdlib/`, then the configured installed
+stdlib and `/etc/cgra`. Installed includes work before `init`. The copy source
+for `init` is `CGRA_STDLIB`, then the installed directory, then the relative
+source directories `sw/config/stdlib` and `config/stdlib`. An invalid explicit
+`CGRA_STDLIB`, missing library or copy/write error returns nonzero; a failure
+can leave defaults or some copied files in the user directory.
 
 ## Documentation
 
@@ -363,15 +451,17 @@ the VHDL is commented per module; the `.cgra` language has its own `cgra(5)`
 page; and every source subdirectory carries a plain-text `README`. The `doc/`
 report is an IEEE-style write-up of the *logical* design — PE datapath, mesh,
 control FSM, dataflow mappings and a wire-level cost model as diagrams, no code
-listings. It is modular (`doc/config/*.tex`, `doc/src/*.tex`,
-`doc/figures/*.tex`) and its PDF opens with a hyperlinked bookmark outline;
+listings. It uses atomic topic files, separate TikZ/caption units and individual table
+files; see the [editing map](doc/STRUCTURE.md). For example,
+`make -C doc -f doc.mk figure-pe` builds just that figure and its caption.
+The PDF opens with a hyperlinked bookmark outline;
 `IEEEtran.cls` is vendored so it builds without a full TeX Live.
 
 Install the pages system-wide with, e.g., `install -Dm644 sw/doc/cgra.1
 /usr/local/share/man/man1/cgra.1` (and `cgra.5` → `man5/`, `libcgra.3` →
 `man3/`).
 
-## UART protocol (v2)
+## UART protocol (v3)
 
 115200 baud, 8N1, little-endian payloads. Single-byte commands, `ACK = 0x79`,
 `NACK = 0x1F`. Multi-byte payloads carry an 8-bit additive checksum (sum mod
@@ -382,15 +472,71 @@ emulator `lib/src/emu.c` — **keep the three in sync**.
 | Cmd | Byte | Payload → reply |
 |-----|------|-----------------|
 | `ID`  | `0x01` | — → `0xCA`, version, ROWS, COLS, DATA_W |
-| `CFG` | `0x02` | 16 × 32-bit config words + checksum → ACK / NACK |
-| `WR`  | `0x03` | 8 × 16-bit (west 0–3, north 0–3) + checksum → ACK / NACK |
+| `CFG` | `0x02` | R*C × 32-bit config words + checksum → ACK / NACK |
+| `WR`  | `0x03` | (R+C) × 16-bit (west rows, then north columns) + checksum → ACK / NACK |
 | `RUN` | `0x04` | 1 byte step count N (array clocked N cycles) → ACK |
-| `RD`  | `0x05` | — → 16 × 16-bit PE registers + checksum |
+| `RD`  | `0x05` | — → R*C × 16-bit PE registers + checksum |
 | `RST` | `0x06` | — (clears PE registers, keeps config) → ACK |
+| `EXEC`| `0x07` | steps, flags, 16-bit tap mask, (R+C) × 16-bit inputs + checksum → masked registers + checksum + status |
 
-The `ID` reply reports the array geometry, so the host adapts at runtime
-(`cgra ping` / `cgra probe`). A watchdog in `cgra_ctrl` aborts partially
-received commands after ~1 s so a desynchronised host can always recover.
+`EXEC` (**v3**) is the fused transaction: it does the work of `WR` + `RUN` +
+`RD` in **one round trip** and returns only the registers named by the tap
+mask (bit *i* = PE *i*, row-major), so a 4-lane element-wise chunk ships 8
+result bytes instead of 32. Flags bit 0 folds in an `RST`, allowing retry of a
+complete, checksum-valid NACK under the fault model above. Reply length follows
+the mask received by the controller: it is predictable only if the mask and
+command boundaries arrive intact. On checksum failure the device returns the
+*current* selected registers and a `NACK` without stepping the array.
+
+The `ID` reply reports the array geometry and the protocol version
+(`cgra ping` / `cgra probe`). Geometry and protocol selection adapt at runtime;
+`libcgra` uses `EXEC` only
+when the device reports v3 and otherwise falls back to the v2 `WR`/`RUN`/`RD`
+sequence, which keeps an older bitstream working. Both paths are held to the
+same known-answer suite (`cgra selftest` runs it twice, once against `sim:` and
+once against the deliberately v2-only `sim:v2`). A watchdog in `cgra_ctrl`
+aborts a stalled payload after its configured interval (~1 s by default).
+Host recovery also requires pending traffic to finish; neither the watchdog
+nor reopening the port alone guarantees synchronization under arbitrary faults.
+
+`CFG` and edge-input words are written as they arrive, before their checksum
+is validated. A NACK does not restore the old configuration or inputs; after
+a complete NACK, resend a valid payload before executing. An uncertain transfer
+requires the session recovery described above. A rejected
+`EXEC` does not reset or step the PE registers, but its inputs have been latched.
+
+### Cost of the fused transaction
+
+The current public kernels can be compared on v2 and v3 with fixed inputs:
+
+```sh
+make -C doc -f doc.mk measure
+```
+
+Each row counts one successful call on a 4×4 emulator after identification:
+CFG and computation are included, initial ID is excluded, no retries occur.
+The runner verifies independent scalar results before recording counters.
+
+| Workload | Transactions v2 → v3 | TX+RX bytes v2 → v3 |
+|---|---:|---:|
+| vector ADD, 256 elements | 193 → 65 | 3 651 → 2 115 |
+| dot, 256 elements | 515 → 259 | 5 735 → 6 247 |
+| scan ADD, 256 elements | 257 → 65 | 3 779 → 2 115 |
+| dense matvec, 32×32 | 648 → 264 | 8 472 → 8 728 |
+| full conv, k=5, n=64 | 336 → 144 | 5 040 → 5 168 |
+
+The [CSV](doc/data/wire-cost.csv) and [provenance](doc/data/wire-cost.json)
+record the workloads and source hashes. The report's table and chart are
+both generated from this CSV. The versions share the current mappings,
+including scan configuration reuse and zero-tile skipping, so this experiment
+isolates the protocol paths without measuring those earlier optimisations.
+
+`EXEC` reduces transactions in every row, but increases bytes for dot,
+dense matvec and convolution. Elapsed-time benefit depends on link latency
+and throughput; neither these counters nor the emulator's wall clock establish
+a hardware speedup over the CPU. Physical link timings and a CPU baseline
+remain to be measured. Convolution still constructs a dense Toeplitz matrix
+in host memory; skipping its zero tiles saves transfers, not workspace.
 
 ## PE configuration word
 
@@ -406,15 +552,29 @@ that row (S/E edges read zero).
 ## Notes
 
 * Datapath is 16-bit signed with wrap-around; `MUL`/`MAC` keep the low 16 bits.
-* Array geometry and data width are constants in `cgra_pkg.vhd`; the C header
-  assumes 4×4×16-bit — change both sides together.
+* Array geometry uses `G_ROWS` / `G_COLS` (default 4×4); the datapath is 16-bit.
+  The complete stack supports up to 16 PEs; larger devices need a protocol
+  extension. See [the geometry contract](doc/mesh-generalization.md).
 * The `sim:` emulator (`lib/src/emu.c`) is the golden reference for the RTL:
   it re-implements the PE ALU and the protocol FSM, so `make test` validates
   the host stack against the same semantics the hardware must have.
-* Timing: everything runs in one 100 MHz clock domain; UART I/O and buttons are
-  false-pathed in the XDC. The PE ALU (operand mux → DSP multiply → accumulate →
-  op mux) is too deep for 10 ns on a −1 Artix-7, so the controller pulses `step`
-  every second cycle and the XDC marks the datapath a two-cycle multicycle path:
-  100 MHz closes without pipelining the DSP, and one step is still one result
-  (bit-identical to `emu.c`). Verified end-to-end — `make sta` reports WNS ≈
-  +2.6 ns; removing either half re-opens a ≈ −1.8 ns setup violation.
+* Timing uses one clock domain, with UART/button exceptions in
+  `hw/scr/constraints.tcl`. The controller spaces PE captures by `G_STEP_DIV`
+  clocks (default 2), including a guard after reset/configuration changes.
+  Matching setup/hold multicycle constraints express that schedule to Vivado.
+  GHDL verifies enable spacing at factors 1–4. The actual Vivado 2026.1 run
+  below separately checks one implemented design.
+* `make fmax [STEP_DIV=N] [FLOORPLAN=1]` searches candidate constraint periods,
+  reruns the selected candidate with the final implementation recipe, and
+  requires finite, nonnegative setup and hold slack before reporting `1000/T`.
+  This is a passing candidate, not a proof of a global optimum. Changing the
+  constraint does not change the physical board clock or UART divisors.
+  Historical frequencies in `hw/perf/PERFLOG` lack archived raw reports and
+  predate current timing fixes; they are not validated results for this tree.
+* The [Vivado 2026.1 CLI run](doc/verification/2026-09-23/vivado/README.md)
+  passes synthesis and routed STA on Nexys A7, 4×4, `STEP_DIV=2`, 10 ns:
+  setup WNS **+1.635 ns**, hold WHS **+0.138 ns**, zero unconstrained internal
+  endpoints. The separate unflattened synthesis reports 5 016 LUTs, 1 034
+  registers and 16 DSP48E1s. These are tool results for the archived sources,
+  not a board measurement, a Fmax sweep or a comparison against the old RTL.
+  Physical board tests and isolation of optimisation benefits remain pending.
