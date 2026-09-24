@@ -21,10 +21,14 @@ TOP      ?= cgra_top
 GHDL     ?= ghdl
 VIVADO   ?= vivado
 OFL      ?= openFPGALoader
+TCLSH    ?= tclsh
 PERIOD   ?= 10.000
 # Datapath multicycle factor (clocks per array step). Drives BOTH the RTL
 # generic G_STEP_DIV and the XDC multicycle number, so they can never disagree.
 STEP_DIV ?= 2
+# Device geometry is fixed at elaboration; host kernels discover it via ID.
+MESH_ROWS ?= 4
+MESH_COLS ?= 4
 # Fmax search window (ns) and iteration count.
 FMAX_LO  ?= 5.0
 FMAX_HI  ?= 10.0
@@ -93,11 +97,16 @@ build/kernels_%.vec: $(GHDL_DIR)/gen_kernel_vectors
 	./$(GHDL_DIR)/gen_kernel_vectors $@.tmp $(word 1,$(subst x, ,$*)) $(word 2,$(subst x, ,$*))
 	mv $@.tmp $@
 
-BIT = build/vivado/$(TOP)_$(BOARD).bit
+VIVADO_DIR = build/vivado$(if $(filter 4x4,$(MESH_ROWS)x$(MESH_COLS)),,/$(MESH_ROWS)x$(MESH_COLS))
+BIT = $(VIVADO_DIR)/$(TOP)_$(BOARD).bit
 
-.PHONY: all sim lint wave synth fmax bit sta prog prog-ofl clean
+.PHONY: all sim test-scripts lint wave synth fmax bit sta prog prog-ofl clean
 
 all: sim
+
+# Offline checks of timing gates with synthetic Vivado replies.
+test-scripts:
+	$(TCLSH) test/test_timing.tcl
 
 $(GHDL_DIR):
 	mkdir -p $(GHDL_DIR)
@@ -148,21 +157,21 @@ wave: | $(GHDL_DIR)
 # faster than `bit`/`sta` (~seconds of tool work) -- the first Vivado check to
 # run after editing the RTL. Reports land in build/vivado/*_synth_$(BOARD).rpt.
 synth:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/synth.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV)
+	$(VIVADO) -mode batch -nolog -nojournal -source scr/synth.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
 
 # Binary-search the maximum frequency the design closes at and print the
 # limiting path (the thing to optimise next). Appends the result to
-# build/vivado/fmax_history.csv so successive runs show the improvement trail.
+# build/vivado/fmax_validated_history.csv for comparison of checked periods.
 fmax:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/fmax.tcl -tclargs $(BOARD) $(FMAX_LO) $(FMAX_HI) $(FMAX_IT) $(STEP_DIV)
+	$(VIVADO) -mode batch -nolog -nojournal -source scr/fmax.tcl -tclargs $(BOARD) $(FMAX_LO) $(FMAX_HI) $(FMAX_IT) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
 
 bit:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/build.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV)
+	$(VIVADO) -mode batch -nolog -nojournal -source scr/build.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
 
 # Static timing analysis gate: exits non-zero unless setup+hold timing is met,
-# so `make sta` passing means the bitstream will meet timing on the board.
+# under the applied constraints. Physical board validation is separate.
 sta:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/timing.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV)
+	$(VIVADO) -mode batch -nolog -nojournal -source scr/timing.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
 
 prog:
 	$(VIVADO) -mode batch -nolog -nojournal -source scr/program.tcl -tclargs $(BIT)

@@ -1,7 +1,7 @@
 # timing.tcl - static timing analysis gate for the CGRA on a Xilinx target.
 #
 # Usage (from hw/):
-#   vivado -mode batch -nolog -nojournal -source scr/timing.tcl -tclargs [board] [period_ns]
+#   vivado -mode batch -nolog -nojournal -source scr/timing.tcl -tclargs [board] [period_ns] [step_div] [rows] [cols]
 # or simply:  make sta BOARD=nexys_a7
 #
 # Runs synth + implementation at the given clock period (default 10 ns = 100 MHz)
@@ -30,14 +30,16 @@ if { ![info exists board_parts($board)] } {
 
 set part   $board_parts($board)
 set top    cgra_top
-set outdir build/vivado
+source scr/geometry.tcl
+lassign [cgra_geometry $argv 3] mesh_rows mesh_cols outdir
 file mkdir $outdir
+puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 
 # ---------------------------------------------------------------- build
 read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
-synth_design -top $top -part $part -generic G_STEP_DIV=$step_div
+synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols]
 cgra_timing_constraints $period $step_div
 if { [info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0" } {
     source scr/floorplan.tcl
@@ -56,10 +58,7 @@ report_clock_interaction     -file $outdir/clock_interaction_${board}.rpt
 check_timing -verbose        -file $outdir/check_timing_${board}.rpt
 
 # ---------------------------------------------------------------- gate
-set setup_paths [get_timing_paths -max_paths 1 -nworst 1 -setup]
-set hold_paths  [get_timing_paths -max_paths 1 -nworst 1 -hold]
-set wns [expr {[llength $setup_paths] ? [get_property SLACK $setup_paths] : 0}]
-set whs [expr {[llength $hold_paths]  ? [get_property SLACK $hold_paths]  : 0}]
+lassign [cgra_timing_slacks] wns whs
 
 puts "======================================================================"
 puts "  STA gate: $top on $board ($part) @ ${period} ns"
@@ -71,7 +70,7 @@ if { $wns < 0 } { puts "    FAIL: setup timing violated"; set ok 0 }
 if { $whs < 0 } { puts "    FAIL: hold timing violated";  set ok 0 }
 
 if { $ok } {
-    puts "    PASS: timing met at the constrained clock -- safe to program."
+    puts "    PASS: setup and hold met under the applied constraints."
     puts "======================================================================"
     exit 0
 } else {
