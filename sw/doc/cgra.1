@@ -164,7 +164,13 @@ Immediate value for modes with a constant operand.
 .TP
 .BR \-\-io " " \fIPROFILE\fR ", " \-\-json ", " \-\-dtype " " \fIu16|s16\fR ", " \-o ", " \-\-out " " \fIFILE\fR
 Output formatting: named profile, JSON object, unsigned/signed decoding, or
-write to a file. File output is staged until the command succeeds, so the
+write to a file. Vector commands (dump, run, pipe, matvec, scan, conv) accept
+all these options; bench and benchall accept --json and --out. Other commands
+reject formatting options. File output is also supported for devices, modes,
+pipelines, io, config, check, ping and show. The operational/interactive
+commands init, reset, probe, emulate, selftest and shell reject --out before
+execution. Diagnostics, including failed check validation, go to stderr.
+File output is staged until the command succeeds, so the
 input and output may name the same file (including hard links). Failed
 commands preserve the previous destination, except completed benchmark reports,
 which are published with their failure status. Write errors cause a nonzero

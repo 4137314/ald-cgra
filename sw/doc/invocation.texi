@@ -57,7 +57,10 @@ if there are none, the vector is read from standard input---so
 @cindex output formatting
 @cindex --io
 @cindex --json
-Results are printed one line per vector, formatted by:
+Vector commands (@code{dump}, @code{run}, @code{pipe}, @code{matvec},
+@code{scan}, @code{conv}) accept the formatting options below. Benchmarks
+accept @option{--json}; their JSON contains a benchmark report rather than
+a vector. Other commands reject formatting options.
 
 @table @code
 @item --io PROFILE
@@ -76,3 +79,10 @@ Failed commands preserve the previous destination, except completed benchmark
 reports, which are published even when they contain failures. Write errors cause a
 nonzero exit status; the final copy is not atomic on filesystem failure.
 @end table
+
+File output is supported for vector commands, @code{bench}/@code{benchall},
+@code{devices}, @code{modes}, @code{pipelines}, @code{io}, @code{config},
+@code{check}, @code{ping} and @code{show}. Operational and interactive commands
+(@code{init}, @code{reset}, @code{probe}, @code{emulate}, @code{selftest},
+@code{shell}) reject @option{--out} before executing. Diagnostics go to standard
+error, including validation failures from @code{check}.

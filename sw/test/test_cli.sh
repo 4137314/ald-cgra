@@ -66,4 +66,51 @@ ok 'failed command preserves existing output'
 if [ -e /dev/full ]; then
     reject run addi -d sim: --a 1 -o /dev/full
 fi
+
+# Every finite command that supports --out must produce the same result as
+# stdout, with no leakage to stdout and no empty publication by accident.
+file_output() {
+    "$CGRA" "$@" > "$test_dir/expected"
+    printf 'previous contents\n' > "$test_dir/result"
+    "$CGRA" "$@" -o "$test_dir/result" > "$test_dir/stdout"
+    cmp "$test_dir/expected" "$test_dir/result"
+    test ! -s "$test_dir/stdout"
+    ok "file output matches stdout: $*"
+}
+file_output ping -d sim:
+file_output show add -d sim:2x3
+file_output show add -d sim:3x2 -v
+for cmd in modes devices pipelines io config check; do
+    file_output "$cmd"
+done
+file_output dump -d sim:2x3
+file_output run add -d sim: --a '1 2' --b '3 4' --json
+file_output pipe saxpy -d sim: --a '1 2'
+file_output matvec -d sim: -m '1 2 3 4' --x '1 2'
+file_output conv -d sim: -m '1 2' --x '3 4'
+file_output scan -d sim: --a '1 2' --dtype u16
+
+# Reject output options before init/probe/reset/server/shell side effects.
+for cmd in init reset probe emulate selftest shell; do
+    printf 'preserve\n' > "$test_dir/result"
+    reject "$cmd" -o "$test_dir/result"
+    grep -q 'does not support --out' "$test_dir/stderr"
+    test "$(cat "$test_dir/result")" = preserve
+    test ! -e "$XDG_CONFIG_HOME/cgra/config.cgra"
+done
+for args in 'ping --json' 'show --dtype s16' 'modes --io hex' \
+            'bench --dtype s16' 'benchall --io hex'; do
+    # Intentional splitting of fixed test arguments (no user input).
+    reject $args -o "$test_dir/result"
+    grep -q 'does not support' "$test_dir/stderr"
+    test "$(cat "$test_dir/result")" = preserve
+done
+reject -c "$test_dir/pipeline.cgra" check -o "$test_dir/result"
+test "$(cat "$test_dir/result")" = preserve
+test ! -s "$test_dir/stdout"
+ok 'failed check preserves file and diagnoses on stderr'
+if [ -e /dev/full ]; then
+    reject ping -d sim: -o /dev/full
+    reject show add -d sim: -o /dev/full
+fi
 printf '# %s CLI regression checks passed\n' "$checks"

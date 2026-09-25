@@ -260,59 +260,59 @@ static cgra_t *open_device(dsl_ctx *d, const char *name, char *err, size_t errsz
 
 /* -------------------------------------------------- listing commands */
 
-static int cmd_devices(dsl_ctx *d)
+static int cmd_devices(dsl_ctx *d, FILE *out)
 {
     for (int i = 0; i < d->ndev; i++)
-        printf("%-12s %s\n", d->dev[i].name, d->dev[i].port);
+        fprintf(out, "%-12s %s\n", d->dev[i].name, d->dev[i].port);
     return 0;
 }
 
-static int cmd_modes(dsl_ctx *d)
+static int cmd_modes(dsl_ctx *d, FILE *out)
 {
     for (int i = 0; i < d->nmode; i++) {
         const dsl_mode *m = &d->mode[i];
-        printf("%-16s %-9s %s\n", m->name,
+        fprintf(out, "%-16s %-9s %s\n", m->name,
                m->pattern[0] ? m->pattern : "diagonal", m->doc);
     }
     return 0;
 }
 
-static int cmd_pipelines(dsl_ctx *d)
+static int cmd_pipelines(dsl_ctx *d, FILE *out)
 {
     for (int i = 0; i < d->npipe; i++) {
         const dsl_pipeline *p = &d->pipe[i];
-        printf("%-16s %s\n", p->name, p->doc);
+        fprintf(out, "%-16s %s\n", p->name, p->doc);
         for (int s = 0; s < p->nstage; s++) {
             if (p->stage[s].has_imm)
-                printf("    -> %s imm=%ld\n", p->stage[s].mode, p->stage[s].imm);
+                fprintf(out, "    -> %s imm=%ld\n", p->stage[s].mode, p->stage[s].imm);
             else
-                printf("    -> %s\n", p->stage[s].mode);
+                fprintf(out, "    -> %s\n", p->stage[s].mode);
         }
     }
     return 0;
 }
 
-static int cmd_io(dsl_ctx *d)
+static int cmd_io(dsl_ctx *d, FILE *out)
 {
     for (int i = 0; i < d->nio; i++)
-        printf("%-10s format=%s width=%d sep=%s\n", d->io[i].name,
+        fprintf(out, "%-10s format=%s width=%d sep=%s\n", d->io[i].name,
                d->io[i].format, d->io[i].width, d->io[i].sep);
     return 0;
 }
 
-static int cmd_config(dsl_ctx *d)
+static int cmd_config(dsl_ctx *d, FILE *out)
 {
     char udir[DSL_VAL];
-    printf("user config dir : %s\n", dsl_user_dir(udir, sizeof(udir)) == 0 ? udir : "(HOME unset)");
-    printf("loaded files    : %s\n", d->npath ? "" : "(built-in defaults only)");
+    fprintf(out, "user config dir : %s\n", dsl_user_dir(udir, sizeof(udir)) == 0 ? udir : "(HOME unset)");
+    fprintf(out, "loaded files    : %s\n", d->npath ? "" : "(built-in defaults only)");
     for (int i = 0; i < d->npath; i++)
-        printf("                  %s\n", d->paths[i]);
-    printf("devices=%d modes=%d pipelines=%d io=%d\n",
+        fprintf(out, "                  %s\n", d->paths[i]);
+    fprintf(out, "devices=%d modes=%d pipelines=%d io=%d\n",
            d->ndev, d->nmode, d->npipe, d->nio);
     return 0;
 }
 
-static int cmd_check(dsl_ctx *d)
+static int cmd_check(dsl_ctx *d, FILE *out)
 {
     int errors = 0;
     char err[DSL_VAL];
@@ -320,7 +320,7 @@ static int cmd_check(dsl_ctx *d)
 
     for (int i = 0; i < d->nmode; i++) {
         if (mode_compile(&d->mode[i], 0, 0, cfg, err, sizeof(err)) != 0) {
-            printf("error: mode %s: %s\n", d->mode[i].name, err);
+            fprintf(stderr, "error: mode %s: %s\n", d->mode[i].name, err);
             errors++;
         }
     }
@@ -328,15 +328,15 @@ static int cmd_check(dsl_ctx *d)
         dsl_pipeline *p = &d->pipe[i];
         const cgra_info_t geometry = {CGRA_PROTO_VER, CGRA_ROWS, CGRA_COLS, CGRA_DATA_W};
         if (pipeline_validate(d, p, geometry, err, sizeof(err)) != CGRA_OK) {
-            printf("error: %s\n", err);
+            fprintf(stderr, "error: %s\n", err);
             errors++;
         }
     }
     if (errors == 0)
-        printf("ok: %d modes, %d pipelines, %d devices, %d io profiles\n",
+        fprintf(out, "ok: %d modes, %d pipelines, %d devices, %d io profiles\n",
                d->nmode, d->npipe, d->ndev, d->nio);
     else
-        printf("%d error(s)\n", errors);
+        fprintf(stderr, "%d error(s)\n", errors);
     return errors ? 1 : 0;
 }
 
@@ -459,7 +459,7 @@ static int cmd_init(int force)
 
 /* -------------------------------------------------- device commands */
 
-static int cmd_ping(dsl_ctx *d, const char *devname)
+static int cmd_ping(dsl_ctx *d, const char *devname, FILE *out)
 {
     char err[DSL_VAL];
     cgra_t *dev = open_device(d, devname, err, sizeof(err));
@@ -467,10 +467,10 @@ static int cmd_ping(dsl_ctx *d, const char *devname)
     cgra_info_t info;
     int rc = cgra_identify(dev, &info);
     if (rc == CGRA_OK) {
-        printf("cgra ok: protocol v%u, %ux%u array, %u-bit datapath\n",
+        fprintf(out, "cgra ok: protocol v%u, %ux%u array, %u-bit datapath\n",
                info.version, info.rows, info.cols, info.data_w);
         if (cgra_get_info(dev, NULL) != CGRA_OK)
-            printf("warning: device geometry/protocol is unsupported by this library\n");
+            fprintf(stderr, "warning: device geometry/protocol is unsupported by this library\n");
     } else {
         fprintf(stderr, "cgra: ping failed: %s\n", cgra_strerror(rc));
     }
@@ -507,7 +507,7 @@ static int cmd_dump(dsl_ctx *d, const char *devname, const dsl_io *io)
 
 /* -------------------------------------------------- show / run / pipe */
 
-static int cmd_show(dsl_ctx *d, const char *devname, const char *modename, long imm, int has_imm, int verbose)
+static int cmd_show(dsl_ctx *d, const char *devname, const char *modename, long imm, int has_imm, int verbose, FILE *out)
 {
     dsl_mode *m = dsl_find_mode(d, modename);
     if (!m) { fprintf(stderr, "cgra: unknown mode '%s'\n", modename); return 1; }
@@ -525,19 +525,19 @@ static int cmd_show(dsl_ctx *d, const char *devname, const char *modename, long 
         fprintf(stderr, "cgra: %s\n", err);
         return 1;
     }
-    printf("mode %s (pattern %s):\n", m->name, m->pattern[0] ? m->pattern : "diagonal");
+    fprintf(out, "mode %s (pattern %s):\n", m->name, m->pattern[0] ? m->pattern : "diagonal");
     if (verbose) {
         for (int r = 0; r < g.rows; r++)
             for (int c = 0; c < g.cols; c++) {
                 char dec[64];
                 cfg_decode(cfg[r * g.cols + c], dec, sizeof(dec));
-                printf("  PE(%d,%d) %08X  %s\n", r, c, cfg[r * g.cols + c], dec);
+                fprintf(out, "  PE(%d,%d) %08X  %s\n", r, c, cfg[r * g.cols + c], dec);
             }
     } else {
         for (int r = 0; r < g.rows; r++) {
             for (int c = 0; c < g.cols; c++)
-                printf("  %08X", cfg[r * g.cols + c]);
-            putchar('\n');
+                fprintf(out, "  %08X", cfg[r * g.cols + c]);
+            fputc('\n', out);
         }
     }
     return 0;
@@ -1180,7 +1180,8 @@ static void usage(void)
         "\n"
         "input SRC: inline \"1 2 3\", \"@file\", or \"-\" for stdin.\n"
         "device: a profile name, a serial path, or \"sim:\" for the emulator.\n"
-        "output: --io PROFILE, --json, --dtype u16|s16, -o/--out FILE.\n"
+        "output: vectors accept --io PROFILE, --json, --dtype u16|s16.\n"
+        "        benchmarks accept --json; finite results accept -o/--out FILE.\n"
         "note: options may appear anywhere; put bare negative numbers after \"--\"\n"
         "      (or pass them via --a/--b/stdin), e.g. cgra run relu -- -3 -1 0 5.\n",
         stderr);
@@ -1219,6 +1220,44 @@ static const struct option long_opts[] = {
 };
 
 static int cmd_shell(char *opt_config);
+
+enum output_option {
+    OUTPUT_FILE = 1u, OUTPUT_IO = 2u, OUTPUT_JSON = 4u, OUTPUT_DTYPE = 8u
+};
+
+/* Only finite result-producing commands may stage file output. Validate before
+ * config loading, opening a device, or entering the interactive/server paths. */
+static int validate_output_options(const char *cmd, unsigned requested)
+{
+    static const struct { const char *name; unsigned allowed; } commands[] = {
+        {"devices", OUTPUT_FILE}, {"modes", OUTPUT_FILE},
+        {"pipelines", OUTPUT_FILE}, {"io", OUTPUT_FILE},
+        {"config", OUTPUT_FILE}, {"check", OUTPUT_FILE},
+        {"ping", OUTPUT_FILE}, {"show", OUTPUT_FILE},
+        {"dump", OUTPUT_FILE | OUTPUT_IO | OUTPUT_JSON | OUTPUT_DTYPE},
+        {"run", OUTPUT_FILE | OUTPUT_IO | OUTPUT_JSON | OUTPUT_DTYPE},
+        {"pipe", OUTPUT_FILE | OUTPUT_IO | OUTPUT_JSON | OUTPUT_DTYPE},
+        {"matvec", OUTPUT_FILE | OUTPUT_IO | OUTPUT_JSON | OUTPUT_DTYPE},
+        {"scan", OUTPUT_FILE | OUTPUT_IO | OUTPUT_JSON | OUTPUT_DTYPE},
+        {"conv", OUTPUT_FILE | OUTPUT_IO | OUTPUT_JSON | OUTPUT_DTYPE},
+        {"bench", OUTPUT_FILE | OUTPUT_JSON},
+        {"benchall", OUTPUT_FILE | OUTPUT_JSON}
+    };
+    static const struct { unsigned bit; const char *name; } options[] = {
+        {OUTPUT_FILE, "--out"}, {OUTPUT_IO, "--io"},
+        {OUTPUT_JSON, "--json"}, {OUTPUT_DTYPE, "--dtype"}
+    };
+    unsigned allowed = 0;
+    for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); ++i)
+        if (!strcmp(cmd, commands[i].name)) { allowed = commands[i].allowed; break; }
+    for (size_t i = 0; i < sizeof(options) / sizeof(options[0]); ++i) {
+        if (requested & ~allowed & options[i].bit) {
+            fprintf(stderr, "cgra: %s does not support %s\n", cmd, options[i].name);
+            return 1;
+        }
+    }
+    return 0;
+}
 
 /* Compute into a temporary stream first, so --out cannot truncate an input
  * (including a configuration file or stdin redirected from that file). */
@@ -1260,7 +1299,7 @@ static int dispatch(int argc, char **argv, int in_shell)
     long opt_imm = 0; int has_imm = 0;
     int opt_steps = 0, has_steps = 0;
     int opt_cols = 0, opt_size = 0, opt_repeat = 0;
-    int force = 0, verbose = 0;
+    int force = 0, verbose = 0, has_dtype = 0;
 
     /* reset the formatting globals for this invocation (matters in the shell) */
     g_out = NULL; g_unsigned = 0; g_fmt_override = NULL; g_report_ready = 0;
@@ -1299,7 +1338,7 @@ static int dispatch(int argc, char **argv, int in_shell)
             if (strcmp(optarg, "u16") && strcmp(optarg, "s16")) {
                 fprintf(stderr, "cgra: --dtype must be u16 or s16\n"); return 1;
             }
-            g_unsigned = !strcmp(optarg, "u16"); break;
+            g_unsigned = !strcmp(optarg, "u16"); has_dtype = 1; break;
         case OPT_IMM:
             if (dsl_integer(optarg, INT16_MIN, UINT16_MAX, &opt_imm) != 0) {
                 fprintf(stderr, "cgra: --imm needs an integer in -32768..65535\n");
@@ -1330,6 +1369,12 @@ static int dispatch(int argc, char **argv, int in_shell)
     char **rest = pos + 1;
     int nrest = npos - 1;
 
+    unsigned output_options = (opt_outfile ? OUTPUT_FILE : 0u) |
+                              (opt_io ? OUTPUT_IO : 0u) |
+                              (g_fmt_override ? OUTPUT_JSON : 0u) |
+                              (has_dtype ? OUTPUT_DTYPE : 0u);
+    if (validate_output_options(cmd, output_options)) return 1;
+
     if (!strcmp(cmd, "shell")) {
         if (in_shell) { fprintf(stderr, "cgra: already in a shell\n"); return 1; }
         return cmd_shell(opt_config);
@@ -1355,15 +1400,16 @@ static int dispatch(int argc, char **argv, int in_shell)
         if (g_out) { fclose(g_out); g_out = NULL; }
         return 1;
     }
+    FILE *out = g_out ? g_out : stdout;
     int rc = 0;
-    if      (!strcmp(cmd, "devices"))   rc = cmd_devices(&d);
-    else if (!strcmp(cmd, "modes"))     rc = cmd_modes(&d);
-    else if (!strcmp(cmd, "pipelines")) rc = cmd_pipelines(&d);
-    else if (!strcmp(cmd, "io"))        rc = cmd_io(&d);
-    else if (!strcmp(cmd, "config"))    rc = cmd_config(&d);
-    else if (!strcmp(cmd, "check"))     rc = cmd_check(&d);
+    if      (!strcmp(cmd, "devices"))   rc = cmd_devices(&d, out);
+    else if (!strcmp(cmd, "modes"))     rc = cmd_modes(&d, out);
+    else if (!strcmp(cmd, "pipelines")) rc = cmd_pipelines(&d, out);
+    else if (!strcmp(cmd, "io"))        rc = cmd_io(&d, out);
+    else if (!strcmp(cmd, "config"))    rc = cmd_config(&d, out);
+    else if (!strcmp(cmd, "check"))     rc = cmd_check(&d, out);
     else if (!strcmp(cmd, "init"))      rc = cmd_init(force);
-    else if (!strcmp(cmd, "ping"))      rc = cmd_ping(&d, opt_device);
+    else if (!strcmp(cmd, "ping"))      rc = cmd_ping(&d, opt_device, out);
     else if (!strcmp(cmd, "reset"))     rc = cmd_reset(&d, opt_device);
     else if (!strcmp(cmd, "dump"))      rc = cmd_dump(&d, opt_device, io);
     else if (!strcmp(cmd, "selftest"))  rc = selftest();
@@ -1371,7 +1417,7 @@ static int dispatch(int argc, char **argv, int in_shell)
     else if (!strcmp(cmd, "emulate"))   rc = cmd_emulate();
     else if (!strcmp(cmd, "show")) {
         if (nrest < 1) { fprintf(stderr, "cgra: show needs a MODE\n"); rc = 1; }
-        else rc = cmd_show(&d, opt_device, rest[0], opt_imm, has_imm, verbose);
+        else rc = cmd_show(&d, opt_device, rest[0], opt_imm, has_imm, verbose, out);
     }
     else if (!strcmp(cmd, "run")) {
         if (nrest < 1) { fprintf(stderr, "cgra: run needs a MODE\n"); rc = 1; }
