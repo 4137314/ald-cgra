@@ -1,15 +1,25 @@
 scripts/ - repo-level helper scripts
 ====================================
 
-    gen-compdb.sh   generate compile_commands.json for clangd, with per-file
-                    flags matching lib/lib.mk and sw/sw.mk (incl. the optional
-                    readline path). Replaces the old static compile_flags.txt.
+    gen-compdb.sh   compatibility entry point for make compdb
+    gen-compdb.py   serialize/merge JSON from the makefiles' CC/CFLAGS
+    test_compdb.py  isolated path, profile, flag and compiler checks
 
 Use it
 ------
     make compdb                    # -> ./compile_commands.json (git-ignored)
-    sh scripts/gen-compdb.sh       # same, directly
+    make compdb PROFILE=asan CC=clang
+    sh scripts/gen-compdb.sh       # same target; forwards make arguments
+    make test-compdb               # regression, also run by CI
 
-Regenerate after adding a C source or changing include flags. The file holds
-absolute paths (machine-specific), so it is git-ignored; `bear -- make` is an
-equivalent if you prefer (bear is in the nix dev shell).
+Requires Python 3. The makefiles export their actual CC/CFLAGS, including
+optimization, optional readline and the profile's generated install-path header.
+Test sources also receive -UNDEBUG. Static-library and CLI translation units
+are included; link commands and RTL test-vector generators are not included.
+Generating the database prepares the header but does not compile the software.
+
+The database uses JSON argument arrays: spaces/quotes in paths and compiler
+arguments are preserved. Publication replaces the file only after successful
+generation. Regenerate after changing profile, compiler, flags or source lists.
+Absolute paths make it machine-specific and git-ignored. `bear -- make` is an
+alternative for capturing an actual build (bear is in the Nix dev shell).

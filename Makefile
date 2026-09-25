@@ -64,14 +64,20 @@ SOFILE        = libcgra.so.$(VERSION)
 
 .PHONY: all release sim wave lib sw test bench gprof perf callgrind profile \
         synth fmax bit sta prog prog-ofl doc docs \
-        install uninstall install-strip test-install check-deps dist compdb clean
+        install uninstall install-strip test-install test-compdb check-deps dist compdb clean
 
 all: lib sw
 
-# clangd compilation database (replaces compile_flags.txt). Regenerate after
-# adding a source or changing include flags. Git-ignored (absolute paths).
+# Host compilation database, using each component's real compiler/profile flags.
+COMPDB_BUILD = build$(if $(filter release,$(PROFILE)),,/$(PROFILE))
 compdb:
-	sh scripts/gen-compdb.sh
+	$(MAKE_LIB) compdb
+	$(MAKE_SW) compdb
+	python3 scripts/gen-compdb.py merge compile_commands.json \
+	    lib/$(COMPDB_BUILD)/compile_commands.json sw/$(COMPDB_BUILD)/compile_commands.json
+
+test-compdb:
+	python3 scripts/test_compdb.py
 
 # Optimised build used by `install` (PROFILE=release => -O3 -DNDEBUG).
 release:

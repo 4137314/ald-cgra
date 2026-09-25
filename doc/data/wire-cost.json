@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "experiment": "current-kernels-wire-v1",
-  "recorded_at_utc": "2026-09-24T10:01:48.542093+00:00",
+  "recorded_at_utc": "2026-09-25T16:19:37.390582+00:00",
   "system": "Linux-6.18.52-1-lts-x86_64-with-glibc2.42",
-  "base_commit": "a422826529056305098a69035c4beb919d553ed4",
+  "base_commit": "8437afdeaa3e0370e32786fee7603251694db261",
   "working_tree": "source hashes identify the measured code; HEAD alone is insufficient",
   "compiler_command": "gcc",
   "compiler": "gcc (GCC) 15.2.0",
@@ -15,7 +15,7 @@
   "sha256": {
     "doc/tools/measure_wire.c": "fcf747128d2c21a724c3ff7352836f6af3b2926a0b24abb0a25e3295c31b7c33",
     "doc/tools/wire_data.py": "8c8443726883c153939d486edaac9441f712c89c4360ed7c3d1ff29bfa8826e8",
-    "lib/lib.mk": "f24883cda5ba4b1bf668d94c0d69028ed5b840963b60dfa0c343fec6e23f16bc",
+    "lib/lib.mk": "3f2df105a6ced554d45f829f1ddbcde1296d2ac9ef871e186b1658c8e73658d1",
     "lib/include/cgra.h": "ec5df13410eab48ac5cb9e9ccd29e4d2ddd198a703deee94c2310ab94d52ff08",
     "lib/src/cgra.c": "a713fe220060d2721d8e2664d63cd3d1db9a1257320c91bca3baf19ca1e03299",
     "lib/src/kernels.c": "c3e7e39eb9e5da4fe6a52ffe6d3d666912a572ac854f8eb7d2b7649948fe986a",

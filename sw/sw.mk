@@ -109,6 +109,13 @@ $(BIN): $(OBJS) $(LIB)
 
 # --- unit tests (assert.h): DSL parser + mode compiler + engines -----------
 UNITBIN = $(BUILD)/test_sw
+
+.PHONY: compdb
+compdb: $(BUILD)/install_paths.h
+	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CFLAGS))
+	python3 ../scripts/gen-compdb.py fragment $(BUILD)/compile_commands.json \
+	    $(BUILD)/compdb-flags.txt $(patsubst $(BUILD)/%.o,%.c,$(OBJS)) --tests test/test_sw.c
+
 unit: $(UNITBIN)
 	./$(UNITBIN)
 

@@ -30,6 +30,9 @@ jobs:
       - name: Isolated installation and external C client
         run: make test-install
 
+      - name: Compilation database and quoted source paths
+        run: make test-compdb
+
       - name: Address and undefined behavior sanitizers
         env:
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
