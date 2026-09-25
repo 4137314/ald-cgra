@@ -1,0 +1,13 @@
+{
+  "make_doc_exit": 0,
+  "main.log": [],
+  "main.blg": [],
+  "doc/build/main.pdf": {
+    "sha256": "b67acda9c5463d829c095506580305cc35ce9d8c0aab7990841f1e08d5c70146",
+    "pages": "Pages:           9"
+  },
+  "doc/main.pdf": {
+    "sha256": "a483029d732f5bf2f078f36f6cf6d6f3c3a78637469883b5c2c3809627942adc",
+    "pages": "Pages:           11"
+  }
+}

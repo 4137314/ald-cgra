@@ -1,0 +1,152 @@
+{
+  "head": "c8a3c412d62e2f71a7cf2929c3d30cad9cc1a979",
+  "binary_sha256": "fe472fcb3ca9a114a2737f7869c7de1920423fee60aa5811e24132ae06e2373d",
+  "cli": [
+    {
+      "argv": [
+        "/home/main/dev/git/ald-cgra/sw/build/cgra",
+        "-c",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/empty.cgra",
+        "--help"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "usage: cgra [-d DEVICE] [-c FILE] <command> [args]\n\n  modes | devices | pipelines | io | config   list configuration\n  check                                        validate the loaded configuration\n  init [--force]                               install defaults to ~/.config/cgra\n  ping | reset | dump              [-d DEVICE] talk to the device\n  show MODE [--imm N] [-v]                     print compiled config words\n  run  MODE [nums...] [--a SRC] [--b SRC] [--imm N] [--steps N] [--io P]\n  pipe NAME [nums...] [--a SRC] [--b SRC] [--io P]\n  matvec -m SRC --x SRC [--cols N] [--io P]    systolic y = A * x\n  conv -m KERNEL --x SIGNAL [--io P]           1-D convolution\n  scan [nums...] [--a SRC] [--op sum|max|min|prod] [--io P]  prefix scan\n  bench [MODE] [--size N] [--repeat R]         time a mode on the device\n  benchall [--size N] [--repeat R] [--json]    stress-bench every mode (structured)\n  emulate                                      serve a virtual CGRA on a pty\n  probe                            [-d DEVICE]  no -d: scan ports; with -d: known-answer tests\n  selftest                                     run kernels on the sim: emulator\n  shell                                        interactive prompt (readline)\n\ninput SRC: inline \"1 2 3\", \"@file\", or \"-\" for stdin.\ndevice: a profile name, a serial path, or \"sim:\" for the emulator.\noutput: --io PROFILE, --json, --dtype u16|s16, -o/--out FILE.\nnote: options may appear anywhere; put bare negative numbers after \"--\"\n      (or pass them via --a/--b/stdin), e.g. cgra run relu -- -3 -1 0 5.\n"
+    },
+    {
+      "argv": [
+        "/home/main/dev/git/ald-cgra/sw/build/cgra",
+        "-c",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/empty.cgra",
+        "--version"
+      ],
+      "exit": 1,
+      "stdout": "",
+      "stderr": "/home/main/dev/git/ald-cgra/sw/build/cgra: unrecognized option '--version'\nusage: cgra [-d DEVICE] [-c FILE] <command> [args]\n\n  modes | devices | pipelines | io | config   list configuration\n  check                                        validate the loaded configuration\n  init [--force]                               install defaults to ~/.config/cgra\n  ping | reset | dump              [-d DEVICE] talk to the device\n  show MODE [--imm N] [-v]                     print compiled config words\n  run  MODE [nums...] [--a SRC] [--b SRC] [--imm N] [--steps N] [--io P]\n  pipe NAME [nums...] [--a SRC] [--b SRC] [--io P]\n  matvec -m SRC --x SRC [--cols N] [--io P]    systolic y = A * x\n  conv -m KERNEL --x SIGNAL [--io P]           1-D convolution\n  scan [nums...] [--a SRC] [--op sum|max|min|prod] [--io P]  prefix scan\n  bench [MODE] [--size N] [--repeat R]         time a mode on the device\n  benchall [--size N] [--repeat R] [--json]    stress-bench every mode (structured)\n  emulate                                      serve a virtual CGRA on a pty\n  probe                            [-d DEVICE]  no -d: scan ports; with -d: known-answer tests\n  selftest                                     run kernels on the sim: emulator\n  shell                                        interactive prompt (readline)\n\ninput SRC: inline \"1 2 3\", \"@file\", or \"-\" for stdin.\ndevice: a profile name, a serial path, or \"sim:\" for the emulator.\noutput: --io PROFILE, --json, --dtype u16|s16, -o/--out FILE.\nnote: options may appear anywhere; put bare negative numbers after \"--\"\n      (or pass them via --a/--b/stdin), e.g. cgra run relu -- -3 -1 0 5.\n"
+    },
+    {
+      "argv": [
+        "/home/main/dev/git/ald-cgra/sw/build/cgra",
+        "-c",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/empty.cgra",
+        "ping",
+        "-d",
+        "sim",
+        "unexpected"
+      ],
+      "exit": 0,
+      "stdout": "cgra ok: protocol v3, 4x4 array, 16-bit datapath\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/main/dev/git/ald-cgra/sw/build/cgra",
+        "-c",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/empty.cgra",
+        "run",
+        "add",
+        "--a",
+        "1",
+        "--b",
+        "2",
+        "-d",
+        "sim",
+        "--cols",
+        "4"
+      ],
+      "exit": 0,
+      "stdout": "3\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "/home/main/dev/git/ald-cgra/sw/build/cgra",
+        "-c",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/empty.cgra",
+        "ping",
+        "-d",
+        "sim",
+        "-o",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/ping.txt"
+      ],
+      "exit": 0,
+      "stdout": "cgra ok: protocol v3, 4x4 array, 16-bit datapath\n",
+      "stderr": "",
+      "before": "existing content to preserve or replace with command output\n",
+      "after": ""
+    },
+    {
+      "argv": [
+        "/home/main/dev/git/ald-cgra/sw/build/cgra",
+        "-c",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/empty.cgra",
+        "show",
+        "add",
+        "-d",
+        "sim",
+        "-o",
+        "/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/show.txt"
+      ],
+      "exit": 0,
+      "stdout": "mode add (pattern diagonal):\n  01820000  03010000  03010000  03010000\n  03310000  01820000  03010000  03010000\n  03310000  03310000  01820000  03010000\n  03310000  03310000  03310000  01820000\n",
+      "stderr": "",
+      "before": "existing content to preserve or replace with command output\n",
+      "after": ""
+    }
+  ],
+  "compdb": {
+    "argv": [
+      "sh",
+      "scripts/gen-compdb.sh"
+    ],
+    "exit": 0,
+    "stdout": "wrote /tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/checkout-with-\"quote/compile_commands.json\n",
+    "stderr": "",
+    "json_valid": false,
+    "parse_error": "Expecting ',' delimiter: line 3 column 77 (char 82)"
+  },
+  "install": {
+    "argv": [
+      "make",
+      "install",
+      "PREFIX=/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/installed",
+      "libdir=/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/installed/lib64",
+      "includedir=/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/installed/include-custom"
+    ],
+    "exit": 0,
+    "library_installed": true,
+    "header_installed": true,
+    "pkg_config_file": "prefix=/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/installed\nexec_prefix=${prefix}\nlibdir=${exec_prefix}/lib\nincludedir=${prefix}/include\n\nName: cgra\nDescription: Host library for the UART-attached CGRA accelerator\nVersion: 0.1.0\nCflags: -I\"${includedir}\"\nLibs: -L\"${libdir}\" -lcgra\n",
+    "pkg_config": {
+      "argv": [
+        "pkg-config",
+        "--cflags",
+        "--libs",
+        "cgra"
+      ],
+      "exit": 0,
+      "stdout": "-I/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/installed/include -L/tmp/nix-shell.e39nRy/cgra-review-h3p5f7v9/installed/lib -lcgra\n",
+      "stderr": ""
+    }
+  },
+  "tools": {
+    "codex": {
+      "argv": [
+        "codex",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "codex-cli 0.157.0\n",
+      "stderr": "WARNING: proceeding, even though we could not create PATH aliases: Read-only file system (os error 30)\n"
+    },
+    "claude": {
+      "argv": [
+        "claude",
+        "--version"
+      ],
+      "exit": 0,
+      "stdout": "2.1.282 (Claude Code)\n",
+      "stderr": ""
+    }
+  }
+}

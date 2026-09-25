@@ -42,6 +42,41 @@ Le verifiche in simulazione non attestano timing/area della FPGA.
 | R6 | P3 | Migliorare leggibilità del PDF e ridurre ripetizioni | VERIFICATO |
 | R7 | P2/P3 | Report in unità atomiche con anteprime isolate per agenti e revisione | VERIFICATO |
 
+## Revisione generale del 25 settembre 2026
+
+[Report completo](doc/review-2026-09-25.md) sul commit `c8a3c41`;
+[prove aggiuntive](doc/verification/2026-09-25/review/README.md).
+La CI di questo commit è verde. La revisione ha trovato casi non coperti
+dalle suite precedenti e definisce i seguenti interventi, ancora **DA FARE**.
+Le verifiche storiche sopra restano riferite al loro perimetro; per esempio
+A01 estende S6 alla matrice comando/opzione, A10 estende gli oracoli di S7.
+
+| ID | Priorità | Intervento / criterio di chiusura | Stato |
+|---|---|---|---|
+| A01 | P1 | `--out` coerente per tutti i comandi ammessi; nessun file svuotato da uno stream inutilizzato; regressioni | DA FARE |
+| A02 | P2 | `.pc` coerente con `libdir`/`includedir`; client esterno con directory custom e DESTDIR | DA FARE |
+| A03 | P1 | README/commenti hardware coerenti con protocollo, geometria e prove; nessuna garanzia di funzionamento derivata dalla sola STA | DA FARE |
+| A04 | P1 | `ASYNC_REG`, verifica netlist/placement e copertura dei vincoli con Vivado reale; estensione H5 | DA FARE |
+| A05 | P1/P2 | Manifest e pubblicazione per run Vivado; programmazione associata all'artefatto verificato | DA FARE |
+| A06 | P2/P3 | PDF di consegna unico, commit/manifest e bibliografia ribilanciata dopo layout finale; estensione T4/R6 | DA FARE |
+| A07 | P2 | Arity/opzioni CLI, help/version, completion e limiti shell verificati | DA FARE |
+| A08 | P2 | Separazione dei domini CLI e contesto di invocazione; definire estensioni diagnostica/deadline mantenendo ABI | DA FARE |
+| A09 | P2 | Convoluzione senza Toeplitz densa; oracoli/guasti e confronto memoria/tempo host | DA FARE |
+| A10 | P1/P2 | Benchmark dei kernel mancanti, artifact per tutto lo sweep, baseline e metadati | DA FARE |
+| A11 | P2 | Matrice requisiti/test, confini ALU/UART e guasti protocollo sistematici; estensione H3/T3 | DA FARE |
+| A12 | P2 | CI per domini, GCC/Clang, artifact e `checks` Nix; supporto piattaforme esplicito | DA FARE |
+| A13 | P2/P3 | Manuali/esempi coerenti, claim→fonte, integrità CSV distinta da attualità dei sorgenti | DA FARE |
+| A14 | P2 | Guida AGENTS nella radice, caricamento verificato in Codex/Claude e indice operativo breve | DA FARE |
+| A15 | P2 | Confronto forme a 16 PE con workload/risorse comparabili e run Vivado selezionati | DA FARE |
+| A16 | P2 | Licenza scelta dall'autore e metadati Nix coerenti; estensione T4 | DA FARE |
+| A17 | P2 | Compilation database JSON valido con percorsi speciali e flag coerenti con la build | DA FARE |
+| A18 | P2 | Oggetti invalidati quando cambiano compiler/flag nello stesso profilo | DA FARE |
+
+Questo ciclo produce analisi, task ed evidenze; non include correzioni al codice
+di produzione o nuovi risultati Vivado. I probe hanno riprodotto A01, A02,
+A17 e parte di A07 in percorsi temporanei. Il report distingue difetti,
+limiti già dichiarati e proposte sperimentali.
+
 ## Lavoro già presente e verificato prima di questo ciclo
 
 - Geometria runtime R×C fino a 16 PE, wrapper legacy 4×4 e API con capacità.
@@ -363,14 +398,22 @@ Run, riproduzione e log in
 
 ## Prossime correzioni senza scheda
 
-1. **H3/T3:** completare la matrice di corruzione header/opcode, byte
+1. **A01/A07:** correggere `--out` e la matrice comando/opzione, aggiungendo
+   regressioni per file preesistenti, argomenti ignorati e contratto CLI.
+2. **A02/A17:** correggere pkg-config con directory personalizzate e JSON
+   del compilation database; verificare in copie temporanee.
+3. **A03/A06/A14:** allineare README/commenti alle evidenze, definire il PDF
+   di consegna e le istruzioni comuni per gli agenti.
+4. **A04/A05/H5:** dichiarare i sincronizzatori, controllare il netlist reale
+   e rendere gli artefatti Vivado identificabili per run.
+5. **H3/T3/A10/A11/A12:** completare la matrice di corruzione header/opcode, byte
    inseriti/persi e le verifiche sulle altre piattaforme; aggiungere
    oracoli benchmark per i mapping attualmente esclusi.
-2. **Convoluzione:** generare tile implicite senza allocare Toeplitz densa,
+6. **A09, convoluzione:** generare tile implicite senza allocare Toeplitz densa,
    preservando ABI, semantica v2/v3, overflow, errori e confronti scalari.
-3. **T4:** un solo PDF distribuito e licenza del progetto da definire con
+7. **T4/A16:** licenza del progetto da definire con
    l'autore; non dedurre una licenza dai soli metadati Nix.
-4. **Toolchain:** il Nixpkgs fissato segnala `texlive.combine` come deprecato
+8. **Toolchain:** il Nixpkgs fissato segnala `texlive.combine` come deprecato
    verso 27.05; migrare prima di aggiornare il lock file. La build corrente
    riesce. H5: estendere i run Vivado oltre il punto 4×4/10 ns appena verificato,
    controllando eccezioni, generici e sweep Fmax finale.
