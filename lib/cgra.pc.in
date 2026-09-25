@@ -1,7 +1,7 @@
 prefix=@PREFIX@
 exec_prefix=${prefix}
-libdir=${exec_prefix}/lib
-includedir=${prefix}/include
+libdir=@LIBDIR@
+includedir=@INCLUDEDIR@
 
 Name: cgra
 Description: Host library for the UART-attached CGRA accelerator

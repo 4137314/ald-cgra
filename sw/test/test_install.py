@@ -88,13 +88,27 @@ int main(void) {
 
     # Rebuild the SAME object directory for a different PREFIX with DESTDIR.
     # Deploy the staging tree afterwards: the binary must not embed DESTDIR.
-    second = root / "second"
+    second = root / "second 'two&"
+    second_lib = second / "lib64 custom"
+    second_include = second / "include custom"
     stage = root / "staging"
-    invoke(["make", "install", f"PREFIX={second}", f"DESTDIR={stage}"], cwd=source)
+    invoke(["make", "install", f"PREFIX={second}", f"DESTDIR={stage}",
+            f"libdir={second_lib}", f"includedir={second_include}"], cwd=source)
     header = (source / "sw/build/install_paths.h").read_text()
     check(str(second / "share/cgra/stdlib") in header and str(stage) not in header,
           "changing PREFIX refreshes runtime paths; DESTDIR stays out of the binary configuration")
     shutil.copytree(stage / second.relative_to("/"), second, symlinks=True)
+    pc = second_lib / "pkgconfig/cgra.pc"
+    check((second_lib / "libcgra.so").is_file() and
+          (second_include / "cgra.h").is_file() and str(stage) not in pc.read_text(),
+          "custom library/header directories install through DESTDIR without embedding it")
+    pc_env = dict(env, PKG_CONFIG_PATH=str(pc.parent))
+    flags = shlex.split(invoke(["pkg-config", "--cflags", "--libs", "cgra"], custom_env=pc_env).stdout)
+    check(f"-I{second_include}" in flags and f"-L{second_lib}" in flags,
+          "pkg-config describes the actual custom directories, including spaces/quote/ampersand")
+    invoke(["cc", client, *flags, "-o", executable])
+    invoke([executable], custom_env=dict(env, LD_LIBRARY_PATH=str(second_lib)))
+    check(True, "external C client links/runs using only the custom installation's pkg-config flags")
     shutil.rmtree(first)
     shutil.rmtree(user_stdlib)
     # Remove source fallbacks too; execution is still outside the source tree.

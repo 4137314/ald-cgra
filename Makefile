@@ -41,6 +41,17 @@ completiondir  = $(datarootdir)/bash-completion/completions
 pkgdatadir     = $(datarootdir)/cgra
 export pkgdatadir
 
+# Keep conventional paths prefix-relative, but honour explicit directory
+# overrides in the installed pkg-config file. DESTDIR is staging only.
+pc_libdir = $(libdir)
+ifeq ($(libdir),$(PREFIX)/lib)
+pc_libdir = $${exec_prefix}/lib
+endif
+pc_includedir = $(includedir)
+ifeq ($(includedir),$(PREFIX)/include)
+pc_includedir = $${prefix}/include
+endif
+
 # POSIX shell quoting for installation paths (including spaces/apostrophes).
 sh_quote = '$(subst ','"'"',$(1))'
 escape_sed = $(subst |,\|,$(subst &,\&,$(subst \,\\,$(1))))
@@ -143,9 +154,11 @@ install: release
 	# header
 	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(includedir))
 	$(INSTALL_DATA) lib/include/cgra.h $(call sh_quote,$(DESTDIR)$(includedir)/cgra.h)
-	# pkg-config file (prefix/version substituted in)
+	# pkg-config file (actual install directories; no DESTDIR)
 	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(pkgconfigdir))
 	sed -e $(call sh_quote,s|@PREFIX@|$(call escape_sed,$(PREFIX))|g) -e $(call sh_quote,s|@VERSION@|$(VERSION)|g) \
+	    -e $(call sh_quote,s|@LIBDIR@|$(call escape_sed,$(pc_libdir))|g) \
+	    -e $(call sh_quote,s|@INCLUDEDIR@|$(call escape_sed,$(pc_includedir))|g) \
 	    lib/cgra.pc.in > $(call sh_quote,$(DESTDIR)$(pkgconfigdir)/cgra.pc)
 	# man pages (1 = CLI, 3 = library, 5 = config format)
 	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(mandir)/man1) $(call sh_quote,$(DESTDIR)$(mandir)/man3) $(call sh_quote,$(DESTDIR)$(mandir)/man5)
