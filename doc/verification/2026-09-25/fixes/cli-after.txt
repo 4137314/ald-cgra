@@ -1,0 +1,49 @@
+ok CLI 1 - reject run add -d sim: --a 1 2 --b 3 4 --steps 256
+ok CLI 2 - reject run add -d sim: --a 1 2 --b 3 4 --steps -1
+ok CLI 3 - reject run add -d sim: --a 1 2 --b 3 4 --steps 1junk
+ok CLI 4 - reject run add -d sim: --a 1 2 --b 3 4 --steps 999999999999999999999999
+ok CLI 5 - reject run addi -d sim: --a 1 --imm 4junk
+ok CLI 6 - explicit zero steps
+ok CLI 7 - reject run add -d sim: --a 2 --b 3
+ok CLI 8 - reject check
+ok CLI 9 - reject check
+ok CLI 10 - reject -c /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/pipeline.cgra pipe invalid -d sim: --a 1 2 3
+ok CLI 11 - check validates pipeline arity
+ok CLI 12 - same input and output file keeps data until read
+ok CLI 13 - hard-linked input and output
+ok CLI 14 - reject run missing -d sim: --a 1 -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 15 - failed command preserves existing output
+ok CLI 16 - reject run addi -d sim: --a 1 -o /dev/full
+ok CLI 17 - file output matches stdout: ping -d sim:
+ok CLI 18 - file output matches stdout: show add -d sim:2x3
+ok CLI 19 - file output matches stdout: show add -d sim:3x2 -v
+ok CLI 20 - file output matches stdout: modes
+ok CLI 21 - file output matches stdout: devices
+ok CLI 22 - file output matches stdout: pipelines
+ok CLI 23 - file output matches stdout: io
+ok CLI 24 - file output matches stdout: config
+ok CLI 25 - file output matches stdout: check
+ok CLI 26 - file output matches stdout: dump -d sim:2x3
+ok CLI 27 - file output matches stdout: run add -d sim: --a 1 2 --b 3 4 --json
+ok CLI 28 - file output matches stdout: pipe saxpy -d sim: --a 1 2
+ok CLI 29 - file output matches stdout: matvec -d sim: -m 1 2 3 4 --x 1 2
+ok CLI 30 - file output matches stdout: conv -d sim: -m 1 2 --x 3 4
+ok CLI 31 - file output matches stdout: scan -d sim: --a 1 2 --dtype u16
+ok CLI 32 - reject init -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 33 - reject reset -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 34 - reject probe -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 35 - reject emulate -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 36 - reject selftest -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 37 - reject shell -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 38 - reject ping --json -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 39 - reject show --dtype s16 -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 40 - reject modes --io hex -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 41 - reject bench --dtype s16 -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 42 - reject benchall --io hex -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 43 - reject -c /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/pipeline.cgra check -o /tmp/nix-shell.e39nRy/tmp.NJr2PprLrC/result
+ok CLI 44 - failed check preserves file and diagnoses on stderr
+ok CLI 45 - reject ping -d sim: -o /dev/full
+ok CLI 46 - reject show add -d sim: -o /dev/full
+# 46 CLI regression checks passed
+error: pipeline invalid: stage mul requires unavailable vector B
+1 error(s)

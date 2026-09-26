@@ -47,19 +47,20 @@ Le verifiche in simulazione non attestano timing/area della FPGA.
 [Report completo](doc/review-2026-09-25.md) sul commit `c8a3c41`;
 [prove aggiuntive](doc/verification/2026-09-25/review/README.md).
 La CI di questo commit è verde. La revisione ha trovato casi non coperti
-dalle suite precedenti e definisce i seguenti interventi, ancora **DA FARE**.
+dalle suite precedenti e definisce i seguenti interventi; gli stati sotto
+seguono le successive correzioni e le evidenze del diario.
 Le verifiche storiche sopra restano riferite al loro perimetro; per esempio
 A01 estende S6 alla matrice comando/opzione, A10 estende gli oracoli di S7.
 
 | ID | Priorità | Intervento / criterio di chiusura | Stato |
 |---|---|---|---|
-| A01 | P1 | `--out` coerente per tutti i comandi ammessi; nessun file svuotato da uno stream inutilizzato; regressioni | DA FARE |
-| A02 | P2 | `.pc` coerente con `libdir`/`includedir`; client esterno con directory custom e DESTDIR | DA FARE |
+| A01 | P1 | `--out` coerente per tutti i comandi ammessi; nessun file svuotato da uno stream inutilizzato; regressioni | VERIFICATO |
+| A02 | P2 | `.pc` coerente con `libdir`/`includedir`; client esterno con directory custom e DESTDIR | VERIFICATO |
 | A03 | P1 | README/commenti hardware coerenti con protocollo, geometria e prove; nessuna garanzia di funzionamento derivata dalla sola STA | DA FARE |
 | A04 | P1 | `ASYNC_REG`, verifica netlist/placement e copertura dei vincoli con Vivado reale; estensione H5 | DA FARE |
 | A05 | P1/P2 | Manifest e pubblicazione per run Vivado; programmazione associata all'artefatto verificato | DA FARE |
 | A06 | P2/P3 | PDF di consegna unico, commit/manifest e bibliografia ribilanciata dopo layout finale; estensione T4/R6 | DA FARE |
-| A07 | P2 | Arity/opzioni CLI, help/version, completion e limiti shell verificati | DA FARE |
+| A07 | P2 | Arity/opzioni CLI, help/version, completion e limiti shell verificati; opzioni output completate | PARZIALE |
 | A08 | P2 | Separazione dei domini CLI e contesto di invocazione; definire estensioni diagnostica/deadline mantenendo ABI | DA FARE |
 | A09 | P2 | Convoluzione senza Toeplitz densa; oracoli/guasti e confronto memoria/tempo host | DA FARE |
 | A10 | P1/P2 | Benchmark dei kernel mancanti, artifact per tutto lo sweep, baseline e metadati | DA FARE |
@@ -69,10 +70,10 @@ A01 estende S6 alla matrice comando/opzione, A10 estende gli oracoli di S7.
 | A14 | P2 | Guida AGENTS nella radice, caricamento verificato in Codex/Claude e indice operativo breve | DA FARE |
 | A15 | P2 | Confronto forme a 16 PE con workload/risorse comparabili e run Vivado selezionati | DA FARE |
 | A16 | P2 | Licenza scelta dall'autore e metadati Nix coerenti; estensione T4 | DA FARE |
-| A17 | P2 | Compilation database JSON valido con percorsi speciali e flag coerenti con la build | DA FARE |
+| A17 | P2 | Compilation database JSON valido con percorsi speciali e flag coerenti con la build | VERIFICATO |
 | A18 | P2 | Oggetti invalidati quando cambiano compiler/flag nello stesso profilo | DA FARE |
 
-Questo ciclo produce analisi, task ed evidenze; non include correzioni al codice
+Il ciclo di revisione ha prodotto analisi, task ed evidenze, senza correzioni al codice
 di produzione o nuovi risultati Vivado. I probe hanno riprodotto A01, A02,
 A17 e parte di A07 in percorsi temporanei. Il report distingue difetti,
 limiti già dichiarati e proposte sperimentali.
@@ -396,24 +397,51 @@ versione Vivado, comandi, hash e sette report grezzi in
 Run, riproduzione e log in
 [`doc/verification/2026-09-24/ci/`](doc/verification/2026-09-24/ci/README.md).
 
+### 2026-09-25 — Output CLI, installazione e compilation database
+
+- **A01 verificato, A07 parziale:** i comandi di consultazione scrivono sullo
+  stream scelto da `--out`; gli operativi/interattivi rifiutano l'opzione prima
+  dell'esecuzione. Validata la compatibilità di `--io`, `--json`, `--dtype`;
+  errori di `check` su stderr. Restano arità, altre opzioni, help/version,
+  completion e limiti shell in A07. Manuali aggiornati.
+- **A02 verificato:** pkg-config segue `libdir`/`includedir` personalizzati,
+  mantenendo i default relativi al prefisso ed escludendo DESTDIR. Client C
+  esterno compilato/eseguito con soli flag pkg-config, anche con spazi,
+  apostrofi e ampersand nei percorsi.
+- **A17 verificato:** JSON con array di argomenti, flag esportati dai Makefile,
+  header coerente col profilo e pubblicazione solo dopo generazione riuscita.
+  Verificate 13 unità host in release/ASan, eseguendo tutti i comandi in
+  syntax-only; preservato il database precedente su merge fallito. Nuovo
+  target `test-compdb` incluso nella CI. A18 resta da fare: questo intervento
+  non invalida gli oggetti di build al cambio di compiler/flag.
+- Riprodotti i tre difetti con nuove regressioni **prima** delle correzioni;
+  dopo, **1049** controlli software release e ASan/UBSan, **12** installazione,
+  **121** compilation database superati. LSan nella sandbox fallisce per
+  ptrace: conservato il log e ripetuta l'intera suite fuori sandbox con i
+  controlli attivi, esito 0.
+- Manuali man/Info e PDF costruiti; ripetuta la misura wire, **CSV identico**,
+  metadati aggiornati per il Makefile libreria modificato. Nessuna modifica
+  RTL o nuovo run Vivado.
+
+Commit delle correzioni: `25c01d1`, `7491f55`, `8d1e5c8`.
+Evidenze in [`doc/verification/2026-09-25/fixes/`](doc/verification/2026-09-25/fixes/README.md).
+
 ## Prossime correzioni senza scheda
 
-1. **A01/A07:** correggere `--out` e la matrice comando/opzione, aggiungendo
-   regressioni per file preesistenti, argomenti ignorati e contratto CLI.
-2. **A02/A17:** correggere pkg-config con directory personalizzate e JSON
-   del compilation database; verificare in copie temporanee.
-3. **A03/A06/A14:** allineare README/commenti alle evidenze, definire il PDF
+1. **A07:** completare la matrice delle opzioni non relative all'output,
+   arità dei comandi, help/version, completion e gestione dei limiti della shell.
+2. **A03/A06/A14:** allineare README/commenti alle evidenze, definire il PDF
    di consegna e le istruzioni comuni per gli agenti.
-4. **A04/A05/H5:** dichiarare i sincronizzatori, controllare il netlist reale
+3. **A04/A05/H5:** dichiarare i sincronizzatori, controllare il netlist reale
    e rendere gli artefatti Vivado identificabili per run.
-5. **H3/T3/A10/A11/A12:** completare la matrice di corruzione header/opcode, byte
+4. **H3/T3/A10/A11/A12:** completare la matrice di corruzione header/opcode, byte
    inseriti/persi e le verifiche sulle altre piattaforme; aggiungere
    oracoli benchmark per i mapping attualmente esclusi.
-6. **A09, convoluzione:** generare tile implicite senza allocare Toeplitz densa,
+5. **A09, convoluzione:** generare tile implicite senza allocare Toeplitz densa,
    preservando ABI, semantica v2/v3, overflow, errori e confronti scalari.
-7. **T4/A16:** licenza del progetto da definire con
+6. **T4/A16:** licenza del progetto da definire con
    l'autore; non dedurre una licenza dai soli metadati Nix.
-8. **Toolchain:** il Nixpkgs fissato segnala `texlive.combine` come deprecato
+7. **Toolchain:** il Nixpkgs fissato segnala `texlive.combine` come deprecato
    verso 27.05; migrare prima di aggiornare il lock file. La build corrente
    riesce. H5: estendere i run Vivado oltre il punto 4×4/10 ns appena verificato,
    controllando eccezioni, generici e sweep Fmax finale.

@@ -1,0 +1,13 @@
+make -C lib -f lib.mk PROFILE=release compdb
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+python3 ../scripts/gen-compdb.py fragment build/compile_commands.json \
+    build/compdb-flags.txt src/cgra.c src/kernels.c src/emu.c src/serve.c --tests \
+    test/test_cgra.c test/test_transport.c test/test_kernels.c test/test_faults.c
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C sw  -f sw.mk  PROFILE=release compdb
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+python3 ../scripts/gen-compdb.py fragment build/compile_commands.json \
+    build/compdb-flags.txt main.c dsl.c compile.c bench_ref.c --tests test/test_sw.c
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'
+python3 scripts/gen-compdb.py merge compile_commands.json \
+    lib/build/compile_commands.json sw/build/compile_commands.json

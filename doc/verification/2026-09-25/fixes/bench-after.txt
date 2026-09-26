@@ -1,0 +1,62 @@
+ok benchmark 1 - benchmark metadata describes the actual backend and geometry
+ok benchmark 2 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 3 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 4 - benchmark metadata describes the actual backend and geometry
+ok benchmark 5 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 6 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 7 - benchmark metadata describes the actual backend and geometry
+ok benchmark 8 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 9 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 10 - benchmark metadata describes the actual backend and geometry
+ok benchmark 11 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 12 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 13 - benchmark metadata describes the actual backend and geometry
+ok benchmark 14 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 15 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 16 - benchmark metadata describes the actual backend and geometry
+ok benchmark 17 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 18 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 19 - benchmark metadata describes the actual backend and geometry
+ok benchmark 20 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 21 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 22 - benchmark metadata describes the actual backend and geometry
+ok benchmark 23 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 24 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 25 - benchmark metadata describes the actual backend and geometry
+ok benchmark 26 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4: b''
+ok benchmark 27 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 28 - benchmark metadata describes the actual backend and geometry
+ok benchmark 29 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4:v2: b''
+ok benchmark 30 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 31 - reject --size=0
+ok benchmark 32 - reject --size=-1
+ok benchmark 33 - reject --size=4097
+ok benchmark 34 - reject --size=2junk
+ok benchmark 35 - reject --repeat=0
+ok benchmark 36 - reject --repeat=-1
+ok benchmark 37 - reject --repeat=2junk
+ok benchmark 38 - reject --repeat=999999999999999999999
+ok benchmark 39 - reject --cols=0
+ok benchmark 40 - reject --cols=4097
+ok benchmark 41 - reject --cols=2junk
+ok benchmark 42 - reject malformed/out-of-range vector 32768junk
+ok benchmark 43 - reject malformed/out-of-range vector 65536
+ok benchmark 44 - reject malformed/out-of-range vector -32769
+ok benchmark 45 - reject malformed/out-of-range vector 1-2
+ok benchmark 46 - reject malformed/out-of-range vector 999999999999999999999999999
+ok benchmark 47 - reject unknown formatting ('--dtype', 'u8')
+ok benchmark 48 - reject unknown formatting ('--io', 'missing')
+ok benchmark 49 - failed sweep returns nonzero and publishes its complete JSON artifact
+ok benchmark 50 - escaped names round-trip; invalid modes and patterns are never omitted
+ok benchmark 51 - a single unsupported benchmark does not claim success
+ok benchmark 52 - valid single benchmark JSON
+ok benchmark 53 - invalid UTF-8 bytes cannot invalidate JSON
+ok benchmark 54 - embedded NUL in configuration rejected
+ok benchmark 55 - embedded NUL in vector input rejected
+ok benchmark 56 - CGRA_PATH longer than the old fixed buffer is fully searched
+ok benchmark 57 - CGRA_BAUD requires a complete integer
+ok benchmark 58 - oversized configuration path is rejected instead of truncated
+ok benchmark 59 - configuration file capacity overflow is explicit
+ok benchmark 60 - sweep script preserves failing JSON and propagates nonzero status
+ok benchmark 61 - checksum-valid wrong hardware output fails scalar validation: []
+# 61 benchmark/CLI checks passed

@@ -1,0 +1,17 @@
+ok install 1 - install uses release artifacts despite PROFILE=asan; prefix has spaces/quote/ampersand
+ok install 2 - installed include lookup works before init, outside checkout
+ok install 3 - init copies every bundled stdlib file from the installed prefix
+ok install 4 - installed stdlib is byte-identical to sources
+ok install 5 - installed API links/runs external C matrix, scan and convolution kernels on v2/v3
+ok install 6 - changing PREFIX refreshes runtime paths; DESTDIR stays out of the binary configuration
+ok install 7 - custom library/header directories install through DESTDIR without embedding it
+Traceback (most recent call last):
+  File "/home/main/dev/git/ald-cgra/sw/test/test_install.py", line 107, in <module>
+    check(f"-I{second_include}" in flags and f"-L{second_lib}" in flags,
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          "pkg-config describes the actual custom directories, including spaces/quote/ampersand")
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/main/dev/git/ald-cgra/sw/test/test_install.py", line 16, in check
+    assert condition, message
+           ^^^^^^^^^
+AssertionError: pkg-config describes the actual custom directories, including spaces/quote/ampersand

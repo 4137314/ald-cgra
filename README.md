@@ -127,6 +127,11 @@ the staged files to the configured prefix. Moving an installed tree to a
 different prefix requires rebuilding, or setting `CGRA_PATH` for includes
 and `CGRA_STDLIB` for `init`.
 
+`libdir` and `includedir` overrides are reflected in the installed pkg-config
+file, including when `DESTDIR` is used. For example, `make install PREFIX=/usr
+libdir=/usr/lib64 includedir=/usr/include/cgra DESTDIR=/tmp/stage` stages those
+directories while keeping `/tmp/stage` out of the runtime metadata.
+
 Downstream builds then use pkg-config:
 
 ```sh
@@ -162,6 +167,7 @@ The C build is strict (`-Wall -Wextra -Wpedantic -Wconversion -Wshadow
 make test                     # unit (assert.h) + smoke, release
 make PROFILE=asan test        # everything under ASan + UBSan
 make test-install             # isolated install + CLI and external C client
+make test-compdb              # compiler database, profiles and quoted paths
 make -C lib -f lib.mk valgrind   # unit tests under valgrind
 make -C lib -f lib.mk analyze    # gcc -fanalyzer
 make -C hw  -f hw.mk  lint       # GHDL RTL syntax/elaboration check
@@ -211,7 +217,14 @@ See [supported geometries, API contract and verification](doc/mesh-generalizatio
 
 ```sh
 make compdb        # -> ./compile_commands.json (git-ignored; or `bear -- make`)
+make compdb PROFILE=asan CC=clang
 ```
+
+The database uses the makefiles' compiler and flags, with the selected profile's
+generated header and optional readline settings. It includes host implementation
+and C unit-test sources; generation does not compile them. Regenerate when those
+settings change. Python 3 is required; paths and flags are serialized as JSON
+argument arrays to preserve spaces and quotes.
 
 ### Stress benchmark (the FPGA bring-up pipeline)
 

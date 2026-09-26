@@ -1,0 +1,17 @@
+ok CLI 1 - reject run add -d sim: --a 1 2 --b 3 4 --steps 256
+ok CLI 2 - reject run add -d sim: --a 1 2 --b 3 4 --steps -1
+ok CLI 3 - reject run add -d sim: --a 1 2 --b 3 4 --steps 1junk
+ok CLI 4 - reject run add -d sim: --a 1 2 --b 3 4 --steps 999999999999999999999999
+ok CLI 5 - reject run addi -d sim: --a 1 --imm 4junk
+ok CLI 6 - explicit zero steps
+ok CLI 7 - reject run add -d sim: --a 2 --b 3
+ok CLI 8 - reject check
+ok CLI 9 - reject check
+ok CLI 10 - reject -c /tmp/nix-shell.e39nRy/tmp.8bsWnOwdRB/pipeline.cgra pipe invalid -d sim: --a 1 2 3
+ok CLI 11 - check validates pipeline arity
+ok CLI 12 - same input and output file keeps data until read
+ok CLI 13 - hard-linked input and output
+ok CLI 14 - reject run missing -d sim: --a 1 -o /tmp/nix-shell.e39nRy/tmp.8bsWnOwdRB/result
+ok CLI 15 - failed command preserves existing output
+ok CLI 16 - reject run addi -d sim: --a 1 -o /dev/full
+cmp: EOF on ‘/tmp/nix-shell.e39nRy/tmp.8bsWnOwdRB/result’ which is empty
