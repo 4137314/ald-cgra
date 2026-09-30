@@ -11,13 +11,42 @@ _cgra() {
     }
 
     local cmds="modes devices pipelines io config check init ping reset dump \
-                probe show run pipe matvec conv scan bench emulate selftest"
-    local opts="-d --device -c --config --a --b -m --matrix --x --cols --io \
-                -o --out --json --dtype --op --size --repeat --imm --steps \
-                -v --verbose --force -h --help"
+                probe show run pipe matvec conv scan bench benchall emulate selftest shell"
+    local opts="-h --help --version" cmd="" word skip=0
+    # Find the command even when global options precede it. Option values are
+    # not commands (a device profile may itself be named 'run', for example).
+    for word in "${COMP_WORDS[@]:1:COMP_CWORD-1}"; do
+        if (( skip )); then skip=0; continue; fi
+        case "$word" in
+            -d|--device|-c|--config|-m|--matrix|-o|--out|--a|--b|--x|--rows|--protocol|--cols|--io|--dtype|--op|--size|--repeat|--imm|--steps)
+                skip=1 ;;
+            -*) ;;
+            *) cmd="$word"; break ;;
+        esac
+    done
+    case "$cmd" in
+        modes|devices|pipelines|io|config|check) opts+=" -c --config -o --out" ;;
+        ping) opts+=" -c --config -d --device -o --out" ;;
+        reset|probe) opts+=" -c --config -d --device" ;;
+        dump|run|pipe|matvec|conv|scan)
+            opts+=" -c --config -d --device -o --out --io --json --dtype"
+            case "$cmd" in
+                run) opts+=" --a --b --imm --steps" ;;
+                pipe) opts+=" --a --b" ;;
+                matvec) opts+=" --a --b -m --matrix --x --cols" ;;
+                conv) opts+=" --a --b -m --matrix --x" ;;
+                scan) opts+=" --a --op" ;;
+            esac ;;
+        show) opts+=" -c --config -d --device -o --out --imm -v --verbose" ;;
+        bench|benchall) opts+=" -c --config -d --device -o --out --json --size --repeat" ;;
+        init) opts+=" --force" ;;
+        emulate) opts+=" --rows --cols --protocol" ;;
+        shell) opts+=" -c --config" ;;
+        "") opts+=" -c --config -d --device" ;;
+    esac
 
     # first word: the subcommand
-    if [[ $COMP_CWORD -eq 1 ]]; then
+    if [[ -z "$cmd" && $cur != -* && $prev != -c && $prev != --config && $prev != -d && $prev != --device ]]; then
         COMPREPLY=( $(compgen -W "$cmds" -- "$cur") )
         return
     fi
@@ -28,6 +57,9 @@ _cgra() {
             return ;;
         --io)
             COMPREPLY=( $(compgen -W "$(cgra io 2>/dev/null | awk '{print $1}')" -- "$cur") )
+            return ;;
+        --protocol)
+            COMPREPLY=( $(compgen -W "2 3" -- "$cur") )
             return ;;
         --dtype)
             COMPREPLY=( $(compgen -W "s16 u16" -- "$cur") )

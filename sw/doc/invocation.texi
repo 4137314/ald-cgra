@@ -9,8 +9,19 @@ The general form is:
 cgra [-d DEVICE] [-c FILE] COMMAND [ARGS...] [OUTPUT OPTIONS]
 @end example
 
-Global options (@option{-d}, @option{-c}) and output options may appear
-anywhere on the line; the first non-option word is the command.
+Options may appear anywhere on the line; the first non-option word is the
+command. Every command checks its positional arity and allowed options before
+loading configuration, opening output files or accessing a device. For example,
+@code{ping unexpected} and @code{run add --cols 4} are errors. Device options
+apply to device commands; @option{--cols} applies to @code{matvec} and
+@code{emulate}.
+@option{-h}/@option{--help} and @option{--version} print to standard output
+and succeed without loading configuration. Diagnostics use standard error.
+
+@code{cgra emulate --rows 2 --cols 3 --protocol 2} serves a rectangular v2
+device on a pseudo-terminal (defaults: 4x4, v3; at most 16 PEs). SIGINT and
+SIGTERM stop the service cleanly, including while output is backpressured.
+The clockless model does not simulate the RTL parser watchdog.
 
 @section Device resolution
 @cindex device resolution
@@ -52,6 +63,23 @@ Sources are given with @option{--a} and @option{--b} (and @option{-m}/@option{--
 for matrix commands).  If @option{--a} is omitted, positional numbers are used;
 if there are none, the vector is read from standard input---so
 @code{seq 0 255 | cgra run relu -d sim} works.
+
+Positional input and @option{--a} are mutually exclusive. Matrix/convolution
+aliases (@option{-m}/@option{--a}, @option{--x}/@option{--b}) cannot both be
+specified for the same input. Unary modes reject an unused @option{--b}.
+Put bare negative positional values after @code{--}, for example
+@code{cgra run relu -d sim -- -3 -1 0 5}.
+
+@section Interactive shell
+
+@code{cgra shell} accepts commands without the leading @code{cgra}.
+Single and double quotes group a vector into one argument. Unclosed quotes,
+more than 126 command arguments, tokens exceeding 32768 bytes, or lines
+exceeding 65536 bytes reject the entire line. The fallback without readline
+has the same limits and drains an oversized line before reading another;
+no truncated prefix is executed. Embedded NUL is rejected in stream input.
+An inherited @option{-c} consumes two argument slots. A per-line config option
+overrides the inherited one. @code{help} prints to stdout; @code{quit} exits.
 
 @section Output formatting
 @cindex output formatting

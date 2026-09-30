@@ -72,8 +72,11 @@ Clear the PE registers (configuration is preserved).
 .B dump
 Read back and print all PE registers using the reported dimensions.
 .TP
-.B emulate
+.B emulate [--rows R --cols C --protocol 2|3]
 Serve the in-process emulator on a pseudo-terminal for external tools.
+Defaults are 4x4 and protocol v3, with at most 16 PEs. SIGINT/SIGTERM stop
+cleanly even during transmit backpressure. This model has no clock and does
+not simulate the RTL watchdog.
 .SS Compute
 .TP
 .B run " " \fIMODE\fR " [" \fInums\fR "...] [\-\-a " \fISRC\fR "] [\-\-b " \fISRC\fR "] [\-\-imm " \fIN\fR "] [\-\-steps " \fIN\fR "]"
@@ -132,6 +135,18 @@ The show command with an explicit -d validates and prints the configuration
 for that device. Without -d, show and offline check use 4x4. Custom coordinates
 and output taps outside the target mesh are rejected.
 .SH OPTIONS
+.PP
+Each command rejects extra positional arguments and options it does not use
+before loading configuration or accessing a device. For example, ping takes
+no positional operands and --cols is accepted only by matvec. Positional
+vector input and --a are mutually exclusive; negative positional numbers
+follow --. Do not specify both aliases for a matrix/vector input.
+.TP
+.BR \-h ", " \-\-help
+Print help to stdout and exit successfully without loading configuration.
+.TP
+.B \-\-version
+Print the program version to stdout and exit successfully.
 .TP
 .BR \-d ", " \-\-device " " \fINAME\fR
 Device profile name, a serial path, the emulator

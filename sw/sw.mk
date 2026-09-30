@@ -64,7 +64,7 @@ LDFLAGS += $(filter -fsanitize=% -pg,$(OPT))
 LDLIBS  += $(RL_LIBS)
 
 BIN  = $(BUILD)/cgra
-SRCS = main.c dsl.c compile.c bench_ref.c
+SRCS = main.c cli.c vector_io.c bench.c device.c shell.c dsl.c compile.c bench_ref.c
 OBJS = $(SRCS:%.c=$(BUILD)/%.o)
 
 BUILD_CONFIG_EXTRA = HAVE_READLINE=$(HAVE_READLINE) RL_CFLAGS=$(RL_CFLAGS) RL_LIBS=$(RL_LIBS) pkgdatadir=$(pkgdatadir) LIB=$(LIB)
@@ -163,6 +163,7 @@ smoke: $(BIN)
 
 test: unit smoke
 	sh test/test_cli.sh ./$(BIN)
+	python3 test/test_contract.py ./$(BIN)
 	python3 test/test_bench.py ./$(BIN)
 
 # --- stress-benchmark the whole .cgra standard library on a device ----------

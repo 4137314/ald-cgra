@@ -7,7 +7,12 @@ move vectors in and out through stdin/stdout so kernels compose in pipes.
 
 Files
 -----
-    main.c        getopt_long parsing + every subcommand + vector I/O + shell
+    main.c        process entry point
+    cli.h cli.c   invocation context, command contracts, parsing and dispatch
+    vector_io.c   vector input/output, using the explicit invocation context
+    bench.c       measured execution and report generation
+    device.c      device resolution, discovery, known-answer checks and PTY command
+    shell.c       complete-line input, tokenization and interactive dispatch
     bench_ref.h .c independent scalar benchmark references (no emulator/compiler execution)
     dsl.h dsl.c   the .cgra language: model, parser, config discovery
     compile.h .c  mode -> config words -> execution; adapters to libcgra's
@@ -24,7 +29,11 @@ Layout
 Options are parsed with getopt_long (they may appear anywhere; bare negative
 numbers go after "--" or via --a/--b/stdin). `cgra shell` is an interactive
 prompt with readline line-editing + history when readline is present (detected
-by pkg-config), else it falls back to fgets.
+by pkg-config), else it uses a bounded stream reader. Unclosed quotes, excess
+arguments, oversized tokens/lines and embedded NUL in stream input reject the
+whole line. Limits and configuration inheritance are in the invocation manual.
+Each command rejects irrelevant options/extra operands before external effects.
+Help and version use stdout; diagnostics use stderr.
 
 Build (make -f sw.mk <target>)
 ------------------------------
