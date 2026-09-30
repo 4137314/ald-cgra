@@ -23,7 +23,7 @@ with tempfile.TemporaryDirectory(prefix="cgra-install-") as temp:
     source = root / "source"
     source.mkdir()
     shutil.copy2(repo / "Makefile", source / "Makefile")
-    for part in ("sw", "lib"):
+    for part in ("sw", "lib", "scripts"):
         shutil.copytree(repo / part, source / part,
                         ignore=shutil.ignore_patterns("build", "__pycache__", "*.o"))
     env = dict(os.environ)

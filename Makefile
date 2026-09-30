@@ -64,41 +64,44 @@ SOFILE        = libcgra.so.$(VERSION)
 
 .PHONY: all release sim wave lib sw test bench gprof perf callgrind profile \
         synth fmax bit sta prog prog-ofl doc docs \
-        install uninstall install-strip test-install test-compdb check-deps dist compdb clean
+        install uninstall install-strip test-install test-compdb test-build check-deps dist compdb clean
 
 all: lib sw
 
 # Host compilation database, using each component's real compiler/profile flags.
 COMPDB_BUILD = build$(if $(filter release,$(PROFILE)),,/$(PROFILE))
 compdb:
-	$(MAKE_LIB) compdb
-	$(MAKE_SW) compdb
+	+$(MAKE_LIB) compdb
+	+$(MAKE_SW) compdb
 	python3 scripts/gen-compdb.py merge compile_commands.json \
 	    lib/$(COMPDB_BUILD)/compile_commands.json sw/$(COMPDB_BUILD)/compile_commands.json
 
 test-compdb:
 	python3 scripts/test_compdb.py
 
+test-build:
+	python3 scripts/test_build.py
+
 # Optimised build used by `install` (PROFILE=release => -O3 -DNDEBUG).
 release:
 	$(MAKE) all PROFILE=release
 
 sim:
-	$(MAKE_HW) sim
+	+$(MAKE_HW) sim
 
 wave:
-	$(MAKE_HW) wave
+	+$(MAKE_HW) wave
 
 lib:
-	$(MAKE_LIB)
+	+$(MAKE_LIB)
 
 sw: lib
-	$(MAKE_SW)
+	+$(MAKE_SW)
 
 # All C tests: library unit tests + CLI unit + smoke, in the chosen profile.
 test: lib
-	$(MAKE_LIB) test
-	$(MAKE_SW) test
+	+$(MAKE_LIB) test
+	+$(MAKE_SW) test
 
 # Copies working sources to a temporary directory; never installs system-wide.
 test-install:
@@ -111,43 +114,43 @@ DEV    ?= sim
 SIZES  ?= 256 1024 4096
 REPEAT ?= 50
 bench: sw
-	$(MAKE_SW) bench DEV="$(DEV)" SIZES="$(SIZES)" REPEAT="$(REPEAT)"
+	+$(MAKE_SW) bench DEV="$(DEV)" SIZES="$(SIZES)" REPEAT="$(REPEAT)"
 
 # C performance analysis of the CLI driving the emulator (CPU-bound): pick one.
 gprof perf callgrind profile: lib
-	$(MAKE_SW) $@
+	+$(MAKE_SW) $@
 
 synth:
-	$(MAKE_HW) synth BOARD=$(BOARD)
+	+$(MAKE_HW) synth BOARD=$(BOARD)
 
 fmax:
-	$(MAKE_HW) fmax BOARD=$(BOARD)
+	+$(MAKE_HW) fmax BOARD=$(BOARD)
 
 bit:
-	$(MAKE_HW) bit BOARD=$(BOARD)
+	+$(MAKE_HW) bit BOARD=$(BOARD)
 
 sta:
-	$(MAKE_HW) sta BOARD=$(BOARD)
+	+$(MAKE_HW) sta BOARD=$(BOARD)
 
 prog:
-	$(MAKE_HW) prog BOARD=$(BOARD)
+	+$(MAKE_HW) prog BOARD=$(BOARD)
 
 prog-ofl:
-	$(MAKE_HW) prog-ofl BOARD=$(BOARD)
+	+$(MAKE_HW) prog-ofl BOARD=$(BOARD)
 
 doc:
-	$(MAKE_DOC)
+	+$(MAKE_DOC)
 
 # All documentation: LaTeX report, CLI man/info, library man page.
 docs: doc
-	$(MAKE_SW) doc
-	$(MAKE_LIB) man
+	+$(MAKE_SW) doc
+	+$(MAKE_LIB) man
 
 # ---- installation ---------------------------------------------------------
 # Builds the optimised binaries and the info manual, then lays everything out
 # under $(DESTDIR)$(PREFIX) following the FHS. Man page sources install as-is.
 install: release
-	$(MAKE_SW) PROFILE=release info
+	+$(MAKE_SW) PROFILE=release info
 	# binary
 	$(INSTALL) -d $(call sh_quote,$(DESTDIR)$(bindir))
 	$(INSTALL_PROG) sw/build/cgra $(call sh_quote,$(DESTDIR)$(bindir)/cgra)
@@ -221,7 +224,7 @@ dist:
 	@echo "wrote cgra-$(VERSION).tar.gz"
 
 clean:
-	$(MAKE_HW) clean
-	$(MAKE_LIB) clean
-	$(MAKE_SW) clean
-	$(MAKE_DOC) clean
+	+$(MAKE_HW) clean
+	+$(MAKE_LIB) clean
+	+$(MAKE_SW) clean
+	+$(MAKE_DOC) clean

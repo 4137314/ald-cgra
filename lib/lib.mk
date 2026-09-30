@@ -12,6 +12,7 @@
 # Parallel-safe: build with `make -f lib.mk -j`.
 
 CC     ?= cc
+.DEFAULT_GOAL := all
 AR     ?= ar
 GROFF  ?= groff
 
@@ -54,6 +55,10 @@ SHARED  = $(BUILD)/$(SOFILE)
 
 MAN3    = doc/libcgra.3
 
+BUILD_CONFIG_EXTRA = VERSION=$(VERSION) SOVERSION=$(SOVERSION) SONAME=$(SONAME)
+include ../scripts/build-config.mk
+$(OBJS) $(PICOBJS): $(BUILD_CONFIG)
+
 .PHONY: all static shared test valgrind analyze man clean
 all: static shared
 
@@ -64,10 +69,10 @@ $(BUILD):
 	mkdir -p $(BUILD)
 
 $(BUILD)/%.o: src/%.c | $(BUILD)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 $(BUILD)/%.pic.o: src/%.c | $(BUILD)
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -fPIC -c $< -o $@
 
 $(STATIC): $(OBJS)
 	$(AR) rcs $@ $^
@@ -89,7 +94,7 @@ FAULTBIN = $(BUILD)/test_faults
 # Export the same CC/CFLAGS as compilation, without building the library.
 .PHONY: compdb
 compdb: | $(BUILD)
-	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CFLAGS))
+	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CPPFLAGS) $(CFLAGS))
 	python3 ../scripts/gen-compdb.py fragment $(BUILD)/compile_commands.json \
 	    $(BUILD)/compdb-flags.txt $(SRCS) --tests \
 	    $(addprefix test/,$(addsuffix .c,$(notdir $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN))))
@@ -101,16 +106,16 @@ test: $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN)
 	./$(FAULTBIN)
 
 $(TESTBIN): test/test_cgra.c $(OBJS) | $(BUILD)
-	$(CC) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
 
 $(TRANSPORTBIN): test/test_transport.c $(OBJS) | $(BUILD)
-	$(CC) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
 
 $(KERNELBIN): test/test_kernels.c $(STATIC) | $(BUILD)
-	$(CC) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@
 
 $(FAULTBIN): test/test_faults.c $(STATIC) | $(BUILD)
-	$(CC) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk -o $@
 
 valgrind: $(TESTBIN)
 	valgrind --error-exitcode=99 --leak-check=full --track-origins=yes -q ./$(TESTBIN)

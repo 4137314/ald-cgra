@@ -48,6 +48,15 @@ ifeq ($(HAVE_READLINE),1)
   RL_LIBS   := $(shell pkg-config --libs readline)
 endif
 
+# Preserve caller flags before adding CLI-only include paths and readline.
+# Exported environment flags otherwise propagate these additions into libcgra
+# on a recursive invocation (e.g. -include build/install_paths.h in lib/).
+CALLER_CFLAGS := $(CFLAGS)
+CALLER_LDFLAGS := $(LDFLAGS)
+CALLER_LDLIBS := $(LDLIBS)
+sh_quote = '$(subst ','"'"',$(1))'
+MAKE_CALLER = CFLAGS=$(call sh_quote,$(CALLER_CFLAGS)) LDFLAGS=$(call sh_quote,$(CALLER_LDFLAGS)) LDLIBS=$(call sh_quote,$(CALLER_LDLIBS)) $(MAKE)
+
 CFLAGS  ?=
 CFLAGS  += -std=c11 $(WARN) $(OPT) -I. -I$(LIBDIR)/include $(RL_CFLAGS) -MMD -MP
 CFLAGS  += -include $(BUILD)/install_paths.h
@@ -55,7 +64,12 @@ LDFLAGS += $(filter -fsanitize=% -pg,$(OPT))
 LDLIBS  += $(RL_LIBS)
 
 BIN  = $(BUILD)/cgra
-OBJS = $(BUILD)/main.o $(BUILD)/dsl.o $(BUILD)/compile.o $(BUILD)/bench_ref.o
+SRCS = main.c dsl.c compile.c bench_ref.c
+OBJS = $(SRCS:%.c=$(BUILD)/%.o)
+
+BUILD_CONFIG_EXTRA = HAVE_READLINE=$(HAVE_READLINE) RL_CFLAGS=$(RL_CFLAGS) RL_LIBS=$(RL_LIBS) pkgdatadir=$(pkgdatadir) LIB=$(LIB)
+include ../scripts/build-config.mk
+$(OBJS): $(BUILD_CONFIG)
 
 # Generate through make's file function: prefix text never becomes shell code.
 # Compare before replacement so only a changed runtime path rebuilds objects.
@@ -94,7 +108,7 @@ all: $(BIN)
 
 # Build libcgra with the SAME profile, so objects and sanitizers match.
 lib:
-	$(MAKE) -C $(LIBDIR) -f lib.mk PROFILE=$(PROFILE) static
+	+$(MAKE_CALLER) -C $(LIBDIR) -f lib.mk PROFILE=$(PROFILE) static
 
 $(LIB): lib
 
@@ -102,17 +116,17 @@ $(BUILD):
 	mkdir -p $(BUILD)
 
 $(BUILD)/%.o: %.c | $(BUILD)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
 
 $(BIN): $(OBJS) $(LIB)
-	$(CC) $(CFLAGS) $(OBJS) $(LIB) $(LDFLAGS) $(LDLIBS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(OBJS) $(LIB) $(LDFLAGS) $(LDLIBS) -o $@
 
 # --- unit tests (assert.h): DSL parser + mode compiler + engines -----------
 UNITBIN = $(BUILD)/test_sw
 
 .PHONY: compdb
 compdb: $(BUILD)/install_paths.h
-	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CFLAGS))
+	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CPPFLAGS) $(CFLAGS))
 	python3 ../scripts/gen-compdb.py fragment $(BUILD)/compile_commands.json \
 	    $(BUILD)/compdb-flags.txt $(patsubst $(BUILD)/%.o,%.c,$(OBJS)) --tests test/test_sw.c
 
@@ -120,7 +134,7 @@ unit: $(UNITBIN)
 	./$(UNITBIN)
 
 $(UNITBIN): test/test_sw.c $(BUILD)/dsl.o $(BUILD)/compile.o $(LIB) | $(BUILD)
-	$(CC) $(CFLAGS) -UNDEBUG $< $(BUILD)/dsl.o $(BUILD)/compile.o $(LIB) $(LDFLAGS) $(LDLIBS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(BUILD)/dsl.o $(BUILD)/compile.o $(LIB) $(LDFLAGS) $(LDLIBS) -o $@
 
 # --- CLI smoke tests: exercise the whole stack (DSL->compiler->lib->emu) ----
 smoke: $(BIN)
@@ -161,7 +175,7 @@ valgrind: $(UNITBIN)
 
 analyze: $(BUILD)/install_paths.h | $(BUILD)
 	mkdir -p $(BUILD)/analyze
-	@for src in main.c dsl.c compile.c bench_ref.c; do \
+	@for src in $(SRCS); do \
 	    $(CC) -std=c11 -O1 -I$(LIBDIR)/include $(RL_CFLAGS) -include $(BUILD)/install_paths.h \
 	        -fanalyzer -Wall -Wextra -Werror -c "$$src" \
 	        -o "$(BUILD)/analyze/$$(basename "$$src" .c).o" || exit 1; \
@@ -174,7 +188,7 @@ analyze: $(BUILD)/install_paths.h | $(BUILD)
 WORKLOAD ?= benchall -d sim --size 4096 --repeat 200
 
 gprof:
-	$(MAKE) -f sw.mk PROFILE=gprof profile-gprof
+	+$(MAKE_CALLER) -f sw.mk PROFILE=gprof profile-gprof
 
 profile-gprof: $(BIN)
 	./$(BIN) $(WORKLOAD) >/dev/null
@@ -182,7 +196,7 @@ profile-gprof: $(BIN)
 	@echo "wrote $(BUILD)/gprof.txt"; head -12 $(BUILD)/gprof.txt
 
 perf:
-	$(MAKE) -f sw.mk PROFILE=perf profile-perf
+	+$(MAKE_CALLER) -f sw.mk PROFILE=perf profile-perf
 
 profile-perf: $(BIN)
 	perf stat -- ./$(BIN) $(WORKLOAD) >/dev/null
@@ -191,7 +205,7 @@ profile-perf: $(BIN)
 	@echo "wrote $(BUILD)/perf.txt (perf report -i $(BUILD)/perf.data for TUI)"
 
 callgrind:
-	$(MAKE) -f sw.mk PROFILE=perf profile-callgrind
+	+$(MAKE_CALLER) -f sw.mk PROFILE=perf profile-callgrind
 
 profile-callgrind: $(BIN)
 	valgrind --tool=callgrind --callgrind-out-file=$(BUILD)/callgrind.out \
