@@ -4,59 +4,125 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  software:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        compiler: [gcc-13, clang-18]
+    env:
+      CC: ${{ matrix.compiler }}
+      ASAN_OPTIONS: detect_leaks=1:halt_on_error=1
+      UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install toolchain
+      - name: Install compiler and software dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y ghdl gcc make tcl python3 texinfo pkg-config
-
-      - name: Offline timing script gates
-        run: make -C hw -f hw.mk test-scripts
-
-      - name: HDL simulation (GHDL)
-        run: make sim
-
-      - name: Build library and CLI
-        run: make lib sw
-
-      - name: Software tests (CLI + kernels on the emulator)
-        run: make test
-
-      - name: Isolated installation and external C client
-        run: make test-install
-
-      - name: Compilation database and quoted source paths
-        run: make test-compdb
-
-      - name: Address and undefined behavior sanitizers
-        env:
-          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: make PROFILE=asan test
-
-      - name: Probe the virtual device over a pty
+          sudo apt-get install -y gcc-13 clang-18 libclang-rt-18-dev make python3 texinfo pkg-config libreadline-dev
+      - name: Release
+        run: python3 scripts/record-check.py build/ci/release -- make -j4 test
+      - name: ASan, UBSan and LSan
+        run: python3 scripts/record-check.py build/ci/sanitizers -- make -j4 PROFILE=asan test
+      - name: Installation, compilation database and incremental build
+        run: python3 scripts/record-check.py build/ci/packaging -- make test-install test-compdb test-build
+      - name: Shell fallback without readline
+        run: python3 scripts/record-check.py build/ci/no-readline -- make -C sw -f sw.mk HAVE_READLINE=0 test
+      - name: GCC analyzer
+        if: matrix.compiler == 'gcc-13'
         run: |
-          ./sw/build/cgra emulate > /tmp/emu.log 2>&1 &
-          EMU=$!
-          for i in $(seq 1 100); do grep -q "serving on" /tmp/emu.log && break; sleep 0.05; done
-          PTS=$(grep "serving on" /tmp/emu.log | awk '{print $NF}')
-          ./sw/build/cgra -d "$PTS" probe
-          kill $EMU || true
+          python3 scripts/record-check.py build/ci/analyzer-lib -- make -C lib -f lib.mk analyze
+          python3 scripts/record-check.py build/ci/analyzer-cli -- make -C sw -f sw.mk analyze
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: software-${{ matrix.compiler }}
+          path: build/ci/
 
-  nix:
-    runs-on: ubuntu-latest
+  hdl:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install GHDL and script dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ghdl gcc make tcl python3
+      - name: Production RTL simulations
+        run: python3 scripts/record-check.py --timeout 1200 build/ci/hdl -- make sim
+      - name: Offline Tcl regressions
+        run: python3 scripts/record-check.py build/ci/tcl -- make -C hw -f hw.mk test-scripts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hdl-scripts
+          path: |
+            build/ci/
+            hw/build/*.txt
+
+  formal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: "experimental-features = nix-command flakes"
-      - name: nix build
-        run: nix build .
-      - name: Build the report
-        run: nix build .#doc
-      - name: nix flake check
-        run: nix flake check
+      - name: Pinned frontend, solver and required proofs
+        run: |
+          mkdir -p build/ci
+          nix develop .#formal -c make formal-check-deps formal-fast 2>&1 | tee build/ci/formal.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: formal-models-logs-counterexamples
+          path: |
+            build/ci/
+            hw/build/formal/
+
+  documents:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: "experimental-features = nix-command flakes"
+      - name: PDF, man pages and Info
+        run: |
+          mkdir -p build/ci
+          nix develop -c make docs 2>&1 | tee build/ci/documents.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: documents
+          path: |
+            build/ci/
+            doc/build/main.pdf
+            doc/build/main.log
+            doc/build/main.blg
+            sw/build/cgra.info
+
+  nix:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: "experimental-features = nix-command flakes"
+      - name: Package and executable checks
+        run: |
+          mkdir -p build/ci
+          nix build . --print-build-logs 2>&1 | tee build/ci/package.txt
+          nix flake check --print-build-logs --keep-failed 2>&1 | tee build/ci/checks.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nix-build-logs
+          path: build/ci/

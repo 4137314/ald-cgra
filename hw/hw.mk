@@ -53,7 +53,8 @@ TBS  = sim/tb_pe.vhd \
        sim/tb_array_diff.vhd \
        sim/tb_protocol_diff.vhd \
        sim/tb_kernel_uart.vhd \
-       sim/tb_array_geometry.vhd
+       sim/tb_array_geometry.vhd \
+       sim/tb_uart_async.vhd
 
 # Self-checking testbench top-levels, run in order of increasing scope.
 TB_UNITS = tb_pe tb_uart tb_cgra_top tb_matvec tb_array_diff
@@ -104,6 +105,12 @@ BIT = $(VIVADO_DIR)/$(TOP)_$(BOARD).bit
 
 all: sim
 
+.PHONY: formal-check-deps formal-smoke formal-fast formal-full formal-cover
+formal-check-deps:
+	python3 formal/run.py --check-deps
+formal-smoke formal-fast formal-full formal-cover:
+	python3 formal/run.py --suite $(patsubst formal-%,%,$@)
+
 # Offline checks of timing gates with synthetic Vivado replies.
 test-scripts:
 	$(TCLSH) test/test_timing.tcl
@@ -119,6 +126,9 @@ sim: build/array_diff.vec build/protocol_diff.vec $(PROTOCOL_VECTORS) $(KERNEL_V
 	    $(GHDL) -r $(GHDL_FLAGS) $$tb --assert-level=error || exit 1; \
 	done
 	$(GHDL) -e $(GHDL_FLAGS) tb_protocol_diff
+	$(GHDL) -e $(GHDL_FLAGS) tb_uart_async
+	$(GHDL) -r $(GHDL_FLAGS) tb_uart_async --assert-level=error
+	$(GHDL) -r $(GHDL_FLAGS) tb_uart_async -gG_CLKS_PER_BIT=868 --assert-level=error
 	@for div in $(STEP_DIVS); do \
 	    $(GHDL) -r $(GHDL_FLAGS) tb_protocol_diff -gG_STEP_DIV=$$div --assert-level=error || exit 1; \
 	done

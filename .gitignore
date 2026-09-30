@@ -51,6 +51,8 @@ result
 result-*
 
 # editor / OS
+__pycache__/
+*.pyc
 .vscode/
 *.swp
 .DS_Store

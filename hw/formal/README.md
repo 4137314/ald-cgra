@@ -1,0 +1,196 @@
+# Formal RTL contracts
+
+This directory proves selected properties of **production VHDL**. It does not
+certify the complete system, C software, CDC metastability, analog UART timing
+or place and route. Remaining properties are tracked in F03/B03 in `TASKS.md`.
+
+## Run
+
+From the repository root:
+
+```
+nix develop .#formal -c make formal-check-deps
+nix develop .#formal -c make formal-fast
+nix develop .#formal -c make formal-full
+nix develop .#formal -c make formal-cover
+```
+
+Standalone Make targets also work when GHDL, Yosys **with the GHDL plugin**,
+SBY and Yices are on PATH (`make -C hw -f hw.mk formal-fast`). A missing tool
+is an error. `formal-smoke` isolates the initial frontend and negative probe.
+`python3 hw/formal/run.py --suite fast --out NEW_DIRECTORY` selects a new
+output directory; an existing directory is never silently overwritten.
+
+`flake.lock` fixes nixpkgs; `toolchain.json` lists the tested packages:
+GHDL 6.0.0, plugin revision `1b97dc7`, Yosys 0.67, SBY 0.61, Yices 2.7.0.
+The packaged SBY executable reports `unknown version`; the package version
+and actual reported string are both recorded. Z3 is available as an alternate
+solver but the acceptance suites use Yices. No floating tool download occurs.
+
+## Actual frontend and property preservation
+
+The plugin imports `hw/rtl/pe.vhd` or `hw/rtl/cgra_ctrl.vhd` and the shared
+package. `pe_ports.vhd` only adapts record ports; it contains no ALU. The
+SystemVerilog PE harness specifies independent unsigned low-half arithmetic
+against the production signed VHDL ALU. Controller PSL binds to the production
+architecture and observes its internal registers, with separate capture/age
+monitors. There is no replacement controller implementation.
+
+Two compatibility details were found by execution:
+
+- GHDL synthesis generic overrides must precede source filenames in this
+  invocation syntax. Putting them after sources silently uses default values.
+  The runner checks flattened port widths and inserts a constant assertion for
+  **every** selected generic into the existing PSL unit.
+- This pinned frontend uses the last `vunit` bound to an architecture; it does
+  not combine two units as initially expected. Generated instance assertions
+  therefore belong to the same unit as the behavioral assertions. The original
+  property file and effective generated file are both saved and hashed.
+
+`--task ID` selects an explicitly labelled subset for investigation; it never
+claims that the whole named suite ran. Array composition automatically adds
+the required universal PE proof, even in the cover suite. Prepared source
+copies and the exact runner are retained in each new run directory.
+
+After preparation, the runner checks expected assertion/assumption/cover cell
+counts and counts again in the **SMT model actually given to the solver**.
+User assumptions are distinguished from Yosys initialization constraints.
+`--no-assert-cover` suppresses GHDL's automatic assertion-activation covers;
+explicit covers remain. Neither `--no-formal` nor `--assert-assumes` is used.
+Constants and identical trivially true parameter-specific lemmas may merge;
+the expected counts account for the enumerated instance. A mismatch fails.
+
+For the full PE arithmetic proof, flattening, width reduction, techmap and
+common-expression optimization make equivalent arithmetic visible to the
+solver. They preserve the full 16-bit operands and opcode/selector domains.
+The first hierarchical formulation timed out at 120 s; that is not a proof.
+
+## Current suites and limits
+
+All tasks use one rising-edge clock and the RTL's production initial values.
+Inputs are symbolic two-state bit vectors. A sampled synchronous reset can
+occur subsequently at any cycle. Hardware power-on behavior outside that
+initialization/reset model is not a claim of these proofs.
+
+| Task / requirement | Inputs and assumptions | Acceptance |
+|---|---|---|
+| F-PE-SMOKE: reset priority, hold, NOP, CONST | Initial reset only; later reset/step/config/neighbors unrestricted | BMC base and temporal induction; depth 8 |
+| F-PE-ALU-MUX: all 16 opcodes, all 8 selectors per mux | Same; all 16 operand bits, reserved selector 7 is zero | BMC base and temporal induction; depth 4 |
+| F-PE-NEGATIVE | Same; deliberately false post-reset assertion | Must FAIL with a reachable trace |
+| F-CTRL-1x1-DIV1/2/3/4 | All RX bytes/valid, TX busy, reset and PE inputs unrestricted; watchdog 3 | BMC base and temporal induction; depth 16 |
+| Full controller: 2x3, 3x2, 4x4, 1x16, 16x1 | Same; STEP_DIV=2, production watchdog 100000000 | Same proof criterion |
+| F-ARRAY-1x1 | Initial reset, otherwise all inputs unrestricted; complete production RTL | BMC base and induction, depth 4 |
+| F-ARRAY-2x3 (fast); 1x2, 2x1, 3x2, 4x4, 1x16, 16x1 (full) | Initial reset; imported production array wiring; proved PE transitions as component guarantees | BMC base and induction, depth 4, assume-guarantee composition |
+| F-UART-TX/RX-C3 (fast), C868 (full) | All sampled digital inputs and resets unrestricted; production initial registers | BMC base and induction, depth 16 |
+| M-PE-ADD, M-CTRL-STEP, M-ARRAY-NORTH, M-UART-TX/RX | Temporary DUT copies with targeted mutations | Must FAIL with trace; original RTL unchanged |
+| Cover suite | PE, four 1x1 controllers, 1x1/2x3 arrays, C3 UARTs | All explicit covers within 32 cycles (UART: 80); includes the universal PE obligation |
+
+The PE contract includes modulo wraparound, low-half MUL/MAC, ABS(-32768),
+signed MIN/MAX, arithmetic right shift and four-bit masked shift amounts.
+Covers include each opcode, nonzero output, wraparound, ABS(-32768), signed
+shift and self feedback. The single all-opcode assertion is universal over
+the opcode, not a selection of example operand values.
+
+Controller requirements have stable `F_CTRL_*` names in `ctrl_contract.psl`:
+reset; legal indices; step context and progress; independent pending capture
+count; RUN/EXEC completion with zero remaining captures; reset/first-capture
+guard and minimum capture spacing; checksum-rejected EXEC without step/reset;
+parser timeout; TX launch context and data stability during the handshake.
+DIV=1 permits consecutive captures. Reachable-state lemmas about return states,
+indices, phases and pending count are **asserted and proved**, never assumed.
+The capture budget covers the whole 8-bit request domain, including 0 and 255;
+the current 32-cycle cover does not demonstrate completion of a 255-step run.
+
+No unconditional liveness claim is made: TX busy may stay high or low forever.
+The parser timeout assertion is a next-state safety property once the timeout
+condition holds. The production timeout counter is present in full tasks;
+reaching 100000000 timeout cycles is not attempted by the short cover suite.
+The enumerated geometric instances are not a parameterized theorem.
+
+## Array composition
+
+`array_ports.vhd` only flattens ports, with word i in the low-first row-major
+slice. Each assertion compares a PE output against its previous-cycle
+transition, with neighbors selected independently from that register vector.
+Every opcode, both selectors, config word and 16-bit edge input remain symbolic.
+This checks all four directions, border injection/zeros, simultaneous capture,
+hold/reset and isolation from other PEs' configuration at the same capture.
+
+A monolithic 2x3 proof timed out at 90 seconds. The larger array tasks therefore
+replace only the imported `pe_Brtl` cells by `pe_assume.sv` component contracts;
+they **do not constitute a monolithic solver proof of the complete netlist**.
+`F-PE-ALU-MUX` proves that very transition on production `pe.vhd` first. The
+runner refuses composition if the obligation fails or RTL/spec hashes differ,
+and checks the full PE interface and exact instance count before substitution.
+An N-PE task has N transition assumptions plus one initial-reset assumption.
+Abstract initial PE outputs are unconstrained (an overapproximation); the
+first reset makes their next outputs zero. No operand/opcode narrowing occurs.
+
+The north-to-self mutation uses distinct CONST values followed by PASS-north
+as a **negative-only stimulus**, not as a restriction on the universal proofs.
+Its BMC depth is 6: depth 4 did not reach the registered assertion after reset,
+seeding and routing, and was correctly rejected as a failed negative control.
+The reached failure is also covered by the existing GHDL `tb_array_geometry`
+distinct-seed/all-neighbor regression, so no duplicate testbench was added.
+
+## UART digital contract
+
+TX properties cover reset, captured-data stability, idle/start/eight data bits/
+stop, exact bit periods, LSB-first order and return to idle. Start during busy
+is unrestricted in the safety proof; external callers still obey the RTL port
+contract (start/data while idle). RX properties check the two sampled delays,
+start confirmation/glitch rejection, bit periods/index, one-cycle valid,
+stop rejection, break suppression and recovery. An independent monitor stores
+samples by increasing bit index, rather than duplicating the DUT shift register.
+Its partial-word invariants and the START counter bound are asserted and proved.
+`prev` comparisons are guarded until the first sample exists.
+
+Both CLKS_PER_BIT=3 and the production value 868 have universal induction
+proofs. Covers use only the reduced instance: all completion/error/reset paths
+must be reached within 80 cycles. Separate GHDL `tb_uart_async` drives the line
+without the DUT transmitter at divisors 16 and 868, with 12 phase/bit-period
+combinations (nominal and ±2%), adjacent frames, glitch, invalid stop, break
+and reset. Neither proof nor digital simulation certifies metastability.
+
+**Still to implement under F03:** complete EXEC tap ordering/response
+checksum properties, composition for transaction completion under explicit
+delivery/transmitter progress obligations.
+The dedicated formal CI job runs the pinned dependency check and fast suite,
+retaining models, logs and counterexamples on failure. Software, HDL/scripts,
+documents and Nix packaging have separate jobs.
+The Nix `checks.x86_64-linux.formal-fast` derivation executes the fast suite;
+it has also been built successfully, independently of the development shell.
+The current `full` target expands the PE/array/controller/UART contracts; it
+does not pretend these remaining properties have been executed.
+
+## Artifacts and status
+
+Each run lives in `hw/build/formal/SUITE-UTC-PID/`. Its manifest contains source,
+property, adapter, runner and solver-model hashes; actual commands/versions;
+parameters; assumptions; depth; durations; logs and trace paths. Source files
+are copied before execution so later edits do not change the evidence.
+Completed historical evidence is archived under `doc/verification/` separately.
+
+- `PROVED`: base case and temporal induction both pass; not merely depth N.
+- `BOUNDED_PASS`: finite BMC, or finite cover reachability (mode distinguishes).
+- `FAIL`: a reachable assertion counterexample, including expected controls.
+- `UNKNOWN`: e.g. induction does not close although the finite base case passes.
+- `TIMEOUT`, `ERROR`: solver budget or tool/property-preservation error.
+- `NOT_RUN`: use for an explicitly unexecuted requirement, never as a PASS.
+
+Expected negative tasks retain result `FAIL` and separately set
+`acceptance_passed`; a missing counterexample is an acceptance failure. Normal
+mandatory tasks require PROVED, cover tasks require all covers reached. The
+default per-task solver budget is 90 seconds; fast has eleven tasks, so budget
+20 minutes for CI including frontend overhead and dependency startup. Actual
+durations belong to individual manifests, not timing guarantees.
+
+## Primary documentation
+
+- [GHDL synthesis and formal switches](https://ghdl.github.io/ghdl/using/Synthesis.html)
+- [GHDL PSL subset and vunit](https://ghdl.github.io/ghdl/using/ImplementationOfVHDL.html)
+- [GHDL Yosys plugin](https://github.com/ghdl/ghdl-yosys-plugin)
+- [SymbiYosys](https://yosyshq.readthedocs.io/projects/sby/en/latest/)
+
+The online GHDL pages described 7.0.0-dev when consulted. Compatibility claims
+here come from the executed pinned 6.0.0 flow, including negative probes.

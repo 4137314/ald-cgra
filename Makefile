@@ -89,6 +89,10 @@ release:
 sim:
 	+$(MAKE_HW) sim
 
+.PHONY: formal-check-deps formal-smoke formal-fast formal-full formal-cover
+formal-check-deps formal-smoke formal-fast formal-full formal-cover:
+	+$(MAKE_HW) $@
+
 wave:
 	+$(MAKE_HW) wave
 
