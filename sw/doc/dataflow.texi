@@ -59,5 +59,7 @@ other schedules can use routing PEs, multiple phases or extra storage.
 The implemented matrix mapping keeps coefficients in row 0, where C PEs
 multiply.  The remaining (R-1)*C PEs delay the products, and the host reduces
 each output row.  In the default 4x4 array that is four active multipliers
-and twelve delay cells.  Convolution skips zero tiles on the wire but still
-materialises a dense Toeplitz matrix in host memory.
+and twelve delay cells. Convolution generates only the tiles that intersect
+the implicit Toeplitz band, using bounded stack storage and no dense host
+matrix. Structurally zero row ranges are skipped before element generation;
+zero-weight and all-zero tiles also avoid device transfers.

@@ -361,8 +361,10 @@ int cgra_scan(cgra_t *dev, enum cgra_op op, const int16_t *a, size_t n,
 /* Full convolution: out[i] = sum_j h[j]*x[i-j], with zero extension.
  * k/n are lengths of h/x. Nonempty output has n+k-1 elements; out_capacity
  * must hold them. If either input is empty, output is empty and all pointers
- * may be NULL. Uses a dense (n+k-1)*n Toeplitz workspace; CGRA_ERR_NOMEM if
- * allocation fails, CGRA_ERR_ARG if dimensions/footprint cannot fit. */
+ * may be NULL. Generates only tiles intersecting the implicit Toeplitz band;
+ * uses bounded stack workspace and no heap allocation after opening a handle.
+ * The legacy virtual-matrix dimension bound is retained for compatibility;
+ * CGRA_ERR_ARG if dimensions/footprint cannot fit. */
 int cgra_conv(cgra_t *dev, const int16_t *h, size_t k,
               const int16_t *x, size_t n, int16_t *out, size_t out_capacity);
 

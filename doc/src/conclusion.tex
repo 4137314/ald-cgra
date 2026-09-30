@@ -15,8 +15,8 @@ A Vivado 2026.1 run passes synthesis and routed setup/hold checks for the
 default mesh at a 10 ns constraint. Other configurations, comparative area
 and timing benefits, and physical board acceptance remain to be evaluated.
 
-The next software improvement is implicit convolution tile generation to
-avoid the dense Toeplitz workspace. Architectural experiments can compare
+Implicit convolution tiles now avoid the dense Toeplitz workspace while
+preserving the measured legacy wire traffic. Architectural experiments can compare
 extra routing/storage resources and alternative schedules on matched
 workloads. Burst commands or more than sixteen PEs require an explicit
 protocol extension, buffering and stronger framing/recovery. These extensions

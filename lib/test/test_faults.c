@@ -2,6 +2,7 @@
  * test hooks. Real PTYs and termios are used during server startup. */
 #include "cgra.h"
 #include <assert.h>
+#include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
@@ -43,6 +44,11 @@ static void ready(const char *path, void *user)
 {
     (void)user;
     if (path && path[0]) ready_calls++;
+    if (fail_read) {
+        int fd = open(path, O_WRONLY | O_NOCTTY);
+        assert(fd >= 0 && write(fd, "x", 1) == 1);
+        close(fd);
+    }
 }
 
 int main(void)
@@ -52,11 +58,11 @@ int main(void)
     CHECK(dev != NULL, "open before injecting allocation failures");
     int16_t h = 2, x = 3, out = 1234;
     fail_allocation = 1;
-    CHECK(cgra_conv(dev, &h, 1, &x, 1, &out, 1) == CGRA_ERR_NOMEM && out == 1234,
-          "workspace failure is distinct from invalid arguments and preserves output");
+    CHECK(cgra_conv(dev, &h, 1, &x, 1, &out, 1) == CGRA_OK && out == 6,
+          "implicit convolution needs no heap allocation after open");
     cgra_stats_t stats;
     cgra_get_stats(dev, &stats);
-    CHECK(stats.transactions == 0 && stats.tx_bytes == 0, "workspace failure performs no device I/O");
+    CHECK(stats.transactions > 0 && stats.tx_bytes > 0, "allocation-free convolution executes on the device");
     errno = 0;
     CHECK(cgra_open("sim:", 115200) == NULL && errno == ENOMEM,
           "open allocation failure reports ENOMEM");

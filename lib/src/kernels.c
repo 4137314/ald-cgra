@@ -1,21 +1,40 @@
 /* Geometry-aware matrix, scan and convolution engines. No CLI/DSL dependency. */
 #include "cgra.h"
 #include "buffers.h"
-#include <stdlib.h>
+#include "bitvec.h"
 #include <string.h>
 
-int cgra_matvec(cgra_t *dev, const int16_t *A, size_t rows, size_t cols,
-                const int16_t *x, int16_t *y, size_t y_capacity)
-{
-    if (!dev) return CGRA_ERR_ARG;
-    if (!rows) return CGRA_OK;
-    if (!cgra_buffer_valid(y, rows) || y_capacity < rows) return CGRA_ERR_ARG;
-    if (!cols) { memset(y, 0, rows * sizeof(*y)); return CGRA_OK; }
-    if (cols > CGRA_MAX_ELEMENTS || rows > CGRA_MAX_ELEMENTS / cols ||
-        !cgra_buffer_valid(A, rows * cols) || !cgra_buffer_valid(x, cols) ||
-        cgra_buffers_overlap(y, rows, A, rows * cols) ||
-        cgra_buffers_overlap(y, rows, x, cols)) return CGRA_ERR_ARG;
+/* A zero bandwidth means a dense row-major matrix. Otherwise values holds
+ * the convolution kernel and A[i,j] is generated as h[i-j] within its band.
+ * The device engine consumes one bounded tile in either case. */
+typedef struct {
+    const int16_t *values;
+    size_t rows, cols, bandwidth;
+} tile_source;
 
+static int fill_tile(const tile_source *source, size_t ri, size_t cj,
+                     cgra_info_t geometry, int16_t tile[CGRA_MAX_PE])
+{
+    int nonzero = 0;
+    for (size_t r = 0; r < geometry.rows; ++r)
+        for (size_t c = 0; c < geometry.cols; ++c) {
+            size_t i = ri + r, j = cj + c;
+            int16_t value = 0;
+            if (i < source->rows && j < source->cols) {
+                if (!source->bandwidth) value = source->values[i * source->cols + j];
+                else if (i >= j && i - j < source->bandwidth) value = source->values[i - j];
+            }
+            tile[r * geometry.cols + c] = value;
+            nonzero |= value != 0;
+        }
+    return nonzero;
+}
+
+/* Callers have already checked dimensions, capacity and aliasing. */
+static int matvec_tiles(cgra_t *dev, const tile_source *source,
+                        const int16_t *x, int16_t *y)
+{
+    const size_t rows = source->rows, cols = source->cols;
     cgra_info_t g;
     int rc = cgra_get_info(dev, &g);
     if (rc != CGRA_OK) return rc;
@@ -52,19 +71,20 @@ int cgra_matvec(cgra_t *dev, const int16_t *A, size_t rows, size_t cols,
          * zero costs not even a configuration. */
         int cfg_loaded = 0;
 
-        for (size_t ri = 0; ri < rows; ri += g.rows) {
+        size_t first_row = 0, end_row = rows;
+        if (source->bandwidth) {
+            /* Only this interval intersects the Toeplitz band. Jump directly
+             * to it instead of scanning the quadratic virtual matrix. The
+             * last interval endpoint is at most cols+bandwidth-1 == rows. */
+            size_t width = cols - cj < g.cols ? cols - cj : g.cols;
+            first_row = cj - cj % g.rows;
+            end_row = cj + width + source->bandwidth - 1;
+        }
+        for (size_t ri = first_row; ri < end_row; ri += g.rows) {
             int16_t regs[CGRA_MAX_PE];
+            int16_t tile[CGRA_MAX_PE];
 
-            /* An all-zero rows x cols block of A adds zero to y, whatever x is, so the
-             * rows wavefront steps that would stream it are pure wire cost.
-             * Dense matrices pay one rows*cols-element scan per tile for this; banded
-             * ones -- notably the Toeplitz matrix cgra_conv builds, which is
-             * nearly all zeros -- save most of the transfer. */
-            int a_nz = 0;
-            for (size_t k = 0; k < g.rows && ri + k < rows && !a_nz; k++)
-                for (size_t c = 0; c < g.cols && cj + c < cols; c++)
-                    if (A[(ri + k) * cols + cj + c] != 0) { a_nz = 1; break; }
-            if (!a_nz)
+            if (!fill_tile(source, ri, cj, g, tile))
                 continue;
 
             if (!cfg_loaded) {
@@ -81,10 +101,8 @@ int cgra_matvec(cgra_t *dev, const int16_t *A, size_t rows, size_t cols,
             for (size_t k = 0; k < g.rows; k++) {
                 int16_t north[CGRA_MAX_EDGE] = {0};
                 int16_t west[CGRA_MAX_EDGE] = {0};
-                size_t row = ri + k;
-                if (row < rows)
-                    for (size_t c = 0; c < g.cols && cj + c < cols; c++)
-                        north[c] = A[row * cols + cj + c];
+                for (size_t c = 0; c < g.cols; c++)
+                    north[c] = tile[k * g.cols + c];
                 if (exec) {
                     /* The first wavefront step folds in the datapath clear that
                      * flushes the previous tile's delay line; the last one also
@@ -113,11 +131,26 @@ int cgra_matvec(cgra_t *dev, const int16_t *A, size_t rows, size_t cols,
                 int32_t acc = 0;
                 for (size_t c = 0; c < g.cols; c++)
                     acc += regs[((size_t)g.rows - 1 - i) * g.cols + c];
-                y[ri + i] = (int16_t)(y[ri + i] + acc);
+                y[ri + i] = cgra_i16_from_bits((uint16_t)(y[ri + i] + acc));
             }
         }
     }
     return CGRA_OK;
+}
+
+int cgra_matvec(cgra_t *dev, const int16_t *A, size_t rows, size_t cols,
+                const int16_t *x, int16_t *y, size_t y_capacity)
+{
+    if (!dev) return CGRA_ERR_ARG;
+    if (!rows) return CGRA_OK;
+    if (!cgra_buffer_valid(y, rows) || y_capacity < rows) return CGRA_ERR_ARG;
+    if (!cols) { memset(y, 0, rows * sizeof(*y)); return CGRA_OK; }
+    if (cols > CGRA_MAX_ELEMENTS || rows > CGRA_MAX_ELEMENTS / cols ||
+        !cgra_buffer_valid(A, rows * cols) || !cgra_buffer_valid(x, cols) ||
+        cgra_buffers_overlap(y, rows, A, rows * cols) ||
+        cgra_buffers_overlap(y, rows, x, cols)) return CGRA_ERR_ARG;
+    const tile_source source = {A, rows, cols, 0};
+    return matvec_tiles(dev, &source, x, y);
 }
 
 int cgra_scan(cgra_t *dev, enum cgra_op op, const int16_t *a, size_t n,
@@ -213,13 +246,8 @@ int cgra_conv(cgra_t *dev, const int16_t *h, size_t k,
         cgra_buffers_overlap(out, m, h, k) ||
         cgra_buffers_overlap(out, m, x, n)) return CGRA_ERR_ARG;
 
-    /* Dense Toeplitz workspace; only the device engine skips zero tiles. */
-    int16_t *A = calloc(m * n, sizeof(*A));
-    if (!A) return CGRA_ERR_NOMEM;
-    for (size_t i = 0; i < m; i++)
-        for (size_t j = 0; j < n; j++)
-            if (i >= j && i - j < k) A[i * n + j] = h[i - j];
-    int rc = cgra_matvec(dev, A, m, n, x, out, out_capacity);
-    free(A);
-    return rc;
+    /* Preserve the legacy virtual-matrix dimension limit above, but allocate
+     * no matrix or heap workspace. Only tiles intersecting the band exist. */
+    const tile_source source = {h, m, n, k};
+    return matvec_tiles(dev, &source, x, out);
 }

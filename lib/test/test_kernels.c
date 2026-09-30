@@ -157,6 +157,43 @@ static void test_results(const char *path)
     cgra_close(dev);
 }
 
+static void test_convolution_tiles(const char *path)
+{
+    /* The oracle accumulates products by signal/tap, independently of tiles.
+     * Cases include k>n, tile tails, interior zeros and zero operands. */
+    const size_t cases[][2] = {{1,1},{1,19},{19,1},{2,3},{3,2},{5,19},{31,7},{37,5}};
+    cgra_t *dev = cgra_open(path, 115200);
+    CHECK(dev != NULL, "open convolution tile regression device");
+    uint32_t seed = UINT32_C(0x15372491);
+    for (size_t t = 0; t < sizeof(cases)/sizeof(cases[0]); ++t) {
+        size_t n = cases[t][0], k = cases[t][1], length = n + k - 1;
+        int16_t x[37], h[19], out[56];
+        uint16_t reference[55] = {0};
+        for (size_t i = 0; i < n + k; ++i) {
+            seed = seed * UINT32_C(1664525) + UINT32_C(1013904223);
+            uint16_t bits = (uint16_t)(seed >> 8);
+            int16_t value = (int16_t)(bits <= INT16_MAX ? (int32_t)bits : (int32_t)bits - 65536);
+            if (i < n) x[i] = value;
+            else h[i - n] = value;
+        }
+        if (t == 4) memset(x, 0, n * sizeof(*x));
+        if (t == 5) memset(h, 0, k * sizeof(*h));
+        if (t == 6) {
+            for (size_t j = 1; j < k - 1; ++j) h[j] = 0;
+            for (size_t j = 2; j < n; j += 3) x[j] = 0;
+        }
+        for (size_t i = 0; i < n; ++i)
+            for (size_t j = 0; j < k; ++j)
+                reference[i+j] = (uint16_t)(reference[i+j] + (uint32_t)(uint16_t)x[i] * (uint16_t)h[j]);
+        out[length] = 12345;
+        int rc = cgra_conv(dev, h, k, x, n, out, length);
+        int matches = rc == CGRA_OK && out[length] == 12345;
+        for (size_t i = 0; i < length; ++i) matches &= (uint16_t)out[i] == reference[i];
+        CHECK(matches, "implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros");
+    }
+    cgra_close(dev);
+}
+
 int main(void)
 {
     test_contracts();
@@ -166,6 +203,7 @@ int main(void)
             char path[32];
             snprintf(path, sizeof(path), "sim:%s%s", shapes[i], version == 2 ? ":v2" : "");
             test_results(path);
+            test_convolution_tiles(path);
         }
     printf("# %d public kernel checks passed\n", checks);
     return 0;
