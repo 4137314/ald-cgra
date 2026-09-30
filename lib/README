@@ -8,7 +8,7 @@ protocol so the whole stack runs with no FPGA.
 Layout
 ------
     include/    public API - cgra.h (the only header you include)
-    src/        implementation: transport+kernels, emulator, pty server
+    src/        transport, vector/tiled kernels, emulator and PTY server
     test/       assert.h unit tests (TAP output), run against sim:
     doc/        man page (libcgra.3), hand-written, groff -man
     cgra.pc.in  pkg-config template (installed as cgra.pc, see root `make install`)
@@ -54,3 +54,15 @@ Contract
 The protocol bytes and config-word layout are shared with hw/rtl/cgra_pkg.vhd.
 src/emu.c is the golden reference the RTL testbenches are checked against -
 keep header, emulator and VHDL package in lockstep.
+
+Serial descriptors are close-on-exec; cgra_open_ex optionally requests
+exclusive access. cgra_set_timeout retains its response-only contract;
+cgra_set_transaction_timeout adds a shared write/reply/retry budget per wire
+command. cgra_get_diagnostic copies the last failed command's phase, errno
+and partial progress without borrowed data. See the header for exact scope.
+cgra_emulate_pty_ex selects geometry/version and a borrowed cancellation fd.
+The model has no clock and does not model the RTL parser watchdog.
+
+Bit-vector arithmetic uses unsigned intermediates and explicit in-range
+conversion to int16_t. Arithmetic right shifts use explicit sign extension;
+they do not depend on the C compiler's treatment of negative signed shifts.

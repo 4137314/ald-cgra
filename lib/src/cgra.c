@@ -1,12 +1,12 @@
 /*
- * cgra.c — serial transport, protocol and accelerated kernels.
+ * cgra.c — serial transport and protocol primitives.
  * See hw/rtl/cgra_ctrl.vhd for the device-side protocol FSM.
  */
 
 #define _DEFAULT_SOURCE
 
 #include "cgra.h"
-#include "buffers.h"
+#include "bitvec.h"
 #include "emu.h"
 
 #include <errno.h>
@@ -16,6 +16,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <termios.h>
+#include <sys/ioctl.h>
 #include <time.h>
 #include <unistd.h>
 
@@ -35,9 +36,15 @@
 /* CMD_EXEC request: cmd, steps, flags, mask (2), edge inputs, checksum. */
 #define EXEC_HDR     4
 #define EXEC_REQ_MAX (1 + EXEC_HDR + 4 * CGRA_MAX_EDGE + 1)
+/* For positive R,C with RC <= MAX_PE, R+C <= MAX_PE+1. */
+#define MAX_EDGE_WORDS (CGRA_MAX_PE + 1)
 
 struct cgra {
     int          fd;           /* -1 for the sim: emulator backend */
+    unsigned     transaction_ms;
+    int64_t      transaction_deadline; /* -1: no whole-transaction budget */
+    int          exclusive;
+    cgra_diagnostic_t diagnostic, active;
     unsigned     timeout_ms;
     unsigned     retries;      /* retransmissions on complete NACK */
     int          desynced;     /* no further commands until close */
@@ -102,7 +109,22 @@ static int parse_sim(const char *device, unsigned *rows, unsigned *cols,
 
 cgra_t *cgra_open(const char *device, unsigned baud)
 {
-    if (device == NULL) {
+    return cgra_open_ex(device, baud, 0);
+}
+
+static void close_port(int fd, int exclusive)
+{
+#ifdef TIOCNXCL
+    if (exclusive) (void)ioctl(fd, TIOCNXCL);
+#else
+    (void)exclusive;
+#endif
+    close(fd);
+}
+
+cgra_t *cgra_open_ex(const char *device, unsigned baud, unsigned flags)
+{
+    if (device == NULL || (flags & ~CGRA_OPEN_EXCLUSIVE)) {
         errno = EINVAL;
         return NULL;
     }
@@ -110,6 +132,7 @@ cgra_t *cgra_open(const char *device, unsigned baud)
     /* In-process emulator: device string "sim" or "sim:...". No real port,
      * baud is irrelevant. Lets the whole stack run without an FPGA. */
     if (strcmp(device, "sim") == 0 || strncmp(device, "sim:", 4) == 0) {
+        if (flags) { errno = EINVAL; return NULL; }
         unsigned rows, cols;
         int legacy, flaky;
         if (!parse_sim(device, &rows, &cols, &legacy, &flaky)) { errno = EINVAL; return NULL; }
@@ -143,14 +166,29 @@ cgra_t *cgra_open(const char *device, unsigned baud)
         return NULL;
     }
 
-    int fd = open(device, O_RDWR | O_NOCTTY);
+    int fd = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK | O_CLOEXEC);
     if (fd < 0)
         return NULL;
 
+    int exclusive = (flags & CGRA_OPEN_EXCLUSIVE) != 0;
+    if (exclusive) {
+#ifdef TIOCEXCL
+        if (ioctl(fd, TIOCEXCL) != 0) {
+            int saved_errno = errno;
+            close(fd);
+            errno = saved_errno;
+            return NULL;
+        }
+#else
+        close(fd);
+        errno = ENOTSUP;
+        return NULL;
+#endif
+    }
     struct termios tio;
     if (tcgetattr(fd, &tio) != 0) {
         int saved_errno = errno;
-        close(fd);
+        close_port(fd, exclusive);
         errno = saved_errno;
         return NULL;
     }
@@ -162,18 +200,19 @@ cgra_t *cgra_open(const char *device, unsigned baud)
     if (cfsetispeed(&tio, speed) != 0 || cfsetospeed(&tio, speed) != 0 ||
         tcsetattr(fd, TCSANOW, &tio) != 0 || tcflush(fd, TCIOFLUSH) != 0) {
         int saved_errno = errno;
-        close(fd);
+        close_port(fd, exclusive);
         errno = saved_errno;
         return NULL;
     }
 
     cgra_t *dev = calloc(1, sizeof(*dev));
     if (dev == NULL) {
-        close(fd);
+        close_port(fd, exclusive);
         errno = ENOMEM;
         return NULL;
     }
     dev->fd = fd;
+    dev->exclusive = exclusive;
     dev->timeout_ms = 2000;
     dev->retries = 3;
     dev->proto_ver = -1;
@@ -186,7 +225,7 @@ void cgra_close(cgra_t *dev)
         if (dev->emu != NULL)
             emu_free(dev->emu);
         else
-            close(dev->fd);
+            close_port(dev->fd, dev->exclusive);
         free(dev);
     }
 }
@@ -195,6 +234,21 @@ void cgra_set_timeout(cgra_t *dev, unsigned ms)
 {
     if (dev != NULL)
         dev->timeout_ms = ms;
+}
+
+void cgra_set_transaction_timeout(cgra_t *dev, unsigned ms)
+{
+    if (dev != NULL) dev->transaction_ms = ms;
+}
+
+void cgra_get_diagnostic(const cgra_t *dev, cgra_diagnostic_t *diagnostic)
+{
+    if (dev != NULL && diagnostic != NULL) *diagnostic = dev->diagnostic;
+}
+
+void cgra_clear_diagnostic(cgra_t *dev)
+{
+    if (dev != NULL) memset(&dev->diagnostic, 0, sizeof(dev->diagnostic));
 }
 
 void cgra_set_retries(cgra_t *dev, unsigned retries)
@@ -231,80 +285,146 @@ const char *cgra_strerror(int err)
     }
 }
 
-/* A transport failure leaves both the parser boundary and datapath state
- * uncertain. Sending RST here is unsafe: it can be a missing RUN argument.
- * Keep the original error for this call; later calls fail without sending. */
+static int failed(cgra_t *dev, int rc, enum cgra_error_phase phase, int cause)
+{
+    dev->diagnostic = dev->active;
+    dev->diagnostic.code = rc;
+    dev->diagnostic.phase = phase;
+    dev->diagnostic.system_errno = cause;
+    return rc;
+}
+
+static int monotonic_ns(int64_t *value)
+{
+    struct timespec now;
+    if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) return -1;
+    *value = (int64_t)now.tv_sec * INT64_C(1000000000) + now.tv_nsec;
+    return 0;
+}
+
+static int begin_transaction(cgra_t *dev, uint8_t command)
+{
+    dev->active = (cgra_diagnostic_t){.command = command, .attempt = 1};
+    dev->transaction_deadline = -1;
+    if (dev->transaction_ms && dev->emu == NULL) {
+        int64_t now;
+        if (monotonic_ns(&now) != 0)
+            return failed(dev, CGRA_ERR_IO, CGRA_PHASE_PREPARE, errno);
+        dev->transaction_deadline = now + (int64_t)dev->transaction_ms * 1000000;
+    }
+    dev->stats.transactions++;
+    return CGRA_OK;
+}
+
+/* A transfer failure leaves parser boundary and datapath state uncertain.
+ * Never send an automatic RST or retry after such a failure. */
 static int uncertain(cgra_t *dev, int rc)
 {
+    if (rc == CGRA_ERR_PROTO || rc == CGRA_ERR_NACK)
+        failed(dev, rc, CGRA_PHASE_VALIDATE, 0);
     dev->desynced = 1;
     dev->proto_ver = -1;
     memset(&dev->info, 0, sizeof(dev->info));
     return rc;
 }
 
+/* -1 means an unlimited write wait. Reply timeout 0 still permits its first
+ * immediate readiness check, as in the original API. All descriptors are
+ * nonblocking: poll readiness cannot lead to an unbounded read/write race. */
+static int wait_ready(cgra_t *dev, short events, int64_t deadline,
+                       int immediate, enum cgra_error_phase phase)
+{
+    for (;;) {
+        int timeout = -1;
+        if (deadline >= 0) {
+            int64_t now;
+            if (monotonic_ns(&now) != 0)
+                return failed(dev, CGRA_ERR_IO, phase, errno);
+            int64_t remaining = deadline - now;
+            if (remaining <= 0 && !immediate)
+                return failed(dev, CGRA_ERR_TIMEOUT, phase, ETIMEDOUT);
+            int64_t ms = remaining > 0 ? (remaining + 999999) / 1000000 : 0;
+            timeout = ms > INT_MAX ? INT_MAX : (int)ms;
+        }
+        int allow_ready_now = immediate;
+        immediate = 0;
+        struct pollfd pfd = {.fd = dev->fd, .events = events};
+        int rc = poll(&pfd, 1, timeout);
+        if (rc < 0) {
+            if (errno == EINTR) continue;
+            return failed(dev, CGRA_ERR_IO, phase, errno);
+        }
+        if (rc == 0) continue;
+        if (pfd.revents & events) {
+            if (deadline >= 0 && !allow_ready_now) {
+                int64_t now;
+                if (monotonic_ns(&now) != 0)
+                    return failed(dev, CGRA_ERR_IO, phase, errno);
+                if (now >= deadline)
+                    return failed(dev, CGRA_ERR_TIMEOUT, phase, ETIMEDOUT);
+            }
+            return CGRA_OK;
+        }
+        return failed(dev, CGRA_ERR_IO, phase, (pfd.revents & POLLNVAL) ? EBADF : EIO);
+    }
+}
+
 static int write_exact(cgra_t *dev, const uint8_t *buf, size_t n)
 {
     if (dev->emu != NULL) {
-        emu_feed(dev->emu, buf, n);   /* one call: FSM stays inlined in emu.c */
+        emu_feed(dev->emu, buf, n);
         dev->stats.tx_bytes += n;
+        dev->active.tx_bytes += n;
         return CGRA_OK;
     }
-
     size_t sent = 0;
     while (sent < n) {
+        int rc = wait_ready(dev, POLLOUT, dev->transaction_deadline, 0, CGRA_PHASE_WRITE);
+        if (rc != CGRA_OK) return rc;
         ssize_t k = write(dev->fd, buf + sent, n - sent);
         if (k < 0) {
-            if (errno == EINTR)
-                continue;
-            return CGRA_ERR_IO;
+            if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK) continue;
+            return failed(dev, CGRA_ERR_IO, CGRA_PHASE_WRITE, errno);
         }
-        if (k == 0) return CGRA_ERR_IO;
+        if (k == 0) return failed(dev, CGRA_ERR_IO, CGRA_PHASE_WRITE, EIO);
         sent += (size_t)k;
         dev->stats.tx_bytes += (size_t)k;
+        dev->active.tx_bytes += (size_t)k;
     }
     return CGRA_OK;
 }
 
 static int read_exact(cgra_t *dev, uint8_t *buf, size_t n)
 {
-    size_t got = 0;
-
     if (dev->emu != NULL) {
-        got = emu_drain(dev->emu, buf, n);
+        size_t got = emu_drain(dev->emu, buf, n);
         dev->stats.rx_bytes += got;
-        if (got != n)
-            return CGRA_ERR_TIMEOUT;       /* replies are synchronous: means a bug */
-        return CGRA_OK;
+        dev->active.rx_bytes += got;
+        return got == n ? CGRA_OK : failed(dev, CGRA_ERR_TIMEOUT, CGRA_PHASE_READ, 0);
     }
-
-    struct timespec now;
-    if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) return CGRA_ERR_IO;
-    const int64_t deadline = (int64_t)now.tv_sec * 1000000000 + now.tv_nsec +
-                             (int64_t)dev->timeout_ms * 1000000;
-    int first_poll = 1;
+    int64_t now;
+    if (monotonic_ns(&now) != 0)
+        return failed(dev, CGRA_ERR_IO, CGRA_PHASE_READ, errno);
+    int64_t deadline = now + (int64_t)dev->timeout_ms * 1000000;
+    int immediate = dev->timeout_ms == 0;
+    if (dev->transaction_deadline >= 0 && dev->transaction_deadline <= deadline) {
+        deadline = dev->transaction_deadline;
+        immediate = 0;
+    }
+    size_t got = 0;
     while (got < n) {
-        if (clock_gettime(CLOCK_MONOTONIC, &now) != 0) return CGRA_ERR_IO;
-        int64_t remaining = deadline - ((int64_t)now.tv_sec * 1000000000 + now.tv_nsec);
-        if (!first_poll && remaining <= 0) return CGRA_ERR_TIMEOUT;
-        first_poll = 0;
-        /* Round up to poll's millisecond resolution, without overflowing its
-         * signed timeout argument. A zero timeout still gets one ready check. */
-        int64_t ms = remaining > 0 ? (remaining + 999999) / 1000000 : 0;
-        struct pollfd pfd = {.fd = dev->fd, .events = POLLIN};
-        int r = poll(&pfd, 1, ms > INT_MAX ? INT_MAX : (int)ms);
-        if (r < 0) {
-            if (errno == EINTR)
-                continue;
-            return CGRA_ERR_IO;
-        }
-        if (r == 0) continue;   /* re-check the deadline, including very long waits */
-        if (!(pfd.revents & POLLIN)) return CGRA_ERR_IO;
+        int rc = wait_ready(dev, POLLIN, deadline, immediate, CGRA_PHASE_READ);
+        immediate = 0;
+        if (rc != CGRA_OK) return rc;
         ssize_t k = read(dev->fd, buf + got, n - got);
-        if (k < 0 && errno == EINTR) continue;
-        if (k <= 0)
-            return CGRA_ERR_IO;
+        if (k < 0) {
+            if (errno == EINTR || errno == EAGAIN || errno == EWOULDBLOCK) continue;
+            return failed(dev, CGRA_ERR_IO, CGRA_PHASE_READ, errno);
+        }
+        if (k == 0) return failed(dev, CGRA_ERR_IO, CGRA_PHASE_READ, EIO);
         got += (size_t)k;
         dev->stats.rx_bytes += (size_t)k;
+        dev->active.rx_bytes += (size_t)k;
     }
     return CGRA_OK;
 }
@@ -328,16 +448,18 @@ static int expect_ack(cgra_t *dev)
 static int send_expect_ack(cgra_t *dev, const uint8_t *buf, size_t n)
 {
     if (dev->desynced) return CGRA_ERR_DESYNC;
-    dev->stats.transactions++;
+    int rc = begin_transaction(dev, buf[0]);
+    if (rc != CGRA_OK) return rc;
     unsigned att = 0;
     for (;;) {
         if (att > 0) dev->stats.retries++;
-        int rc = write_exact(dev, buf, n);
+        dev->active.attempt = (uint64_t)att + 1;
+        rc = write_exact(dev, buf, n);
         if (rc != CGRA_OK) return uncertain(dev, rc);
         rc = expect_ack(dev);
         if (rc == CGRA_OK) return rc;
         if (rc != CGRA_ERR_NACK) return uncertain(dev, rc);
-        if (att == dev->retries) return rc;
+        if (att == dev->retries) return failed(dev, rc, CGRA_PHASE_VALIDATE, 0);
         ++att;
     }
 }
@@ -358,10 +480,11 @@ int cgra_identify(cgra_t *dev, cgra_info_t *info)
     if (dev == NULL)
         return CGRA_ERR_ARG;
     if (dev->desynced) return CGRA_ERR_DESYNC;
-    dev->stats.transactions++;
+    int rc = begin_transaction(dev, CMD_ID);
+    if (rc != CGRA_OK) return rc;
     uint8_t cmd = CMD_ID;
     uint8_t rsp[5];
-    int rc = write_exact(dev, &cmd, 1);
+    rc = write_exact(dev, &cmd, 1);
     if (rc != CGRA_OK)
         return uncertain(dev, rc);
     rc = read_exact(dev, rsp, sizeof(rsp));
@@ -385,7 +508,8 @@ int cgra_get_info(cgra_t *dev, cgra_info_t *info)
     }
     const cgra_info_t *g = &dev->info;
     if (g->version < 2 || g->version > CGRA_PROTO_VER) return CGRA_ERR_PROTO;
-    if (g->rows == 0 || g->cols == 0 || g->data_w != CGRA_DATA_W ||
+    if (g->rows == 0 || g->rows > CGRA_MAX_EDGE ||
+        g->cols == 0 || g->cols > CGRA_MAX_EDGE || g->data_w != CGRA_DATA_W ||
         g->rows * g->cols > CGRA_MAX_PE) return CGRA_ERR_GEOMETRY;
     if (info != NULL) *info = *g;
     return CGRA_OK;
@@ -411,7 +535,7 @@ int cgra_ping(cgra_t *dev, uint8_t *version)
 
 int cgra_configure_n(cgra_t *dev, const uint32_t *cfg, size_t ncfg)
 {
-    if (dev == NULL || cfg == NULL) return CGRA_ERR_ARG;
+    if (dev == NULL || cfg == NULL || ncfg > CGRA_MAX_PE) return CGRA_ERR_ARG;
     cgra_info_t g;
     int rc = cgra_get_info(dev, &g);
     if (rc != CGRA_OK) return rc;
@@ -436,18 +560,22 @@ int cgra_configure(cgra_t *dev, const uint32_t cfg[CGRA_NUM_PE])
 int cgra_write_inputs_n(cgra_t *dev, const int16_t *west, size_t nwest,
                         const int16_t *north, size_t nnorth)
 {
-    if (dev == NULL || west == NULL || north == NULL) return CGRA_ERR_ARG;
+    if (dev == NULL || west == NULL || north == NULL ||
+        nwest > CGRA_MAX_EDGE || nnorth > CGRA_MAX_EDGE) return CGRA_ERR_ARG;
     cgra_info_t g;
     int rc = cgra_get_info(dev, &g);
     if (rc != CGRA_OK) return rc;
     if (nwest != g.rows || nnorth != g.cols) return CGRA_ERR_ARG;
+    size_t edges = nwest + nnorth;
+    if (edges > MAX_EDGE_WORDS) return CGRA_ERR_GEOMETRY;
     uint8_t buf[1 + 4 * CGRA_MAX_EDGE + 1];
-    size_t len = 1 + 2 * (nwest + nnorth) + 1;
+    size_t len = 1 + 2 * edges + 1;
     buf[0] = CMD_WR;
-    for (size_t i = 0; i < nwest + nnorth; ++i) {
+    for (size_t i = 0; i < edges; ++i) {
         uint16_t value = (uint16_t)(i < nwest ? west[i] : north[i - nwest]);
-        buf[1 + 2 * i] = (uint8_t)value;
-        buf[2 + 2 * i] = (uint8_t)(value >> 8);
+        size_t offset = 1 + 2 * i;
+        buf[offset] = (uint8_t)value;
+        buf[offset + 1] = (uint8_t)(value >> 8);
     }
     buf[len - 1] = checksum(buf + 1, len - 2);
     return send_expect_ack(dev, buf, len);
@@ -467,9 +595,10 @@ int cgra_run(cgra_t *dev, uint8_t steps)
         return CGRA_ERR_ARG;
     if (dev->desynced) return CGRA_ERR_DESYNC;
     /* RUN advances state and is never retried, even on a NACK. */
-    dev->stats.transactions++;
+    int rc = begin_transaction(dev, CMD_RUN);
+    if (rc != CGRA_OK) return rc;
     uint8_t buf[2] = { CMD_RUN, steps };
-    int rc = write_exact(dev, buf, sizeof(buf));
+    rc = write_exact(dev, buf, sizeof(buf));
     if (rc != CGRA_OK) return uncertain(dev, rc);
     rc = expect_ack(dev);
     return rc == CGRA_OK ? rc : uncertain(dev, rc);
@@ -486,7 +615,8 @@ int cgra_read_regs_n(cgra_t *dev, int16_t *regs, size_t capacity)
     if (capacity < count) return CGRA_ERR_ARG;
     uint8_t cmd = CMD_RD;
     uint8_t buf[2 * CGRA_MAX_PE + 1];   /* payload + checksum */
-    dev->stats.transactions++;
+    rc = begin_transaction(dev, CMD_RD);
+    if (rc != CGRA_OK) return rc;
     rc = write_exact(dev, &cmd, 1);
     if (rc != CGRA_OK) return uncertain(dev, rc);
     rc = read_exact(dev, buf, 2 * count + 1);
@@ -494,7 +624,7 @@ int cgra_read_regs_n(cgra_t *dev, int16_t *regs, size_t capacity)
     if (checksum(buf, 2 * count) != buf[2 * count])
         return uncertain(dev, CGRA_ERR_PROTO);
     for (size_t i = 0; i < count; i++)
-        regs[i] = (int16_t)((uint16_t)buf[2 * i] | ((uint16_t)buf[2 * i + 1] << 8));
+        regs[i] = cgra_i16_from_bits((uint16_t)((uint16_t)buf[2 * i] | ((uint16_t)buf[2 * i + 1] << 8)));
     return CGRA_OK;
 }
 
@@ -510,9 +640,10 @@ int cgra_reset_datapath(cgra_t *dev)
     if (dev == NULL)
         return CGRA_ERR_ARG;
     if (dev->desynced) return CGRA_ERR_DESYNC;
-    dev->stats.transactions++;
+    int rc = begin_transaction(dev, CMD_RST);
+    if (rc != CGRA_OK) return rc;
     uint8_t cmd = CMD_RST;
-    int rc = write_exact(dev, &cmd, 1);
+    rc = write_exact(dev, &cmd, 1);
     if (rc != CGRA_OK)
         return uncertain(dev, rc);
     rc = expect_ack(dev);
@@ -559,16 +690,17 @@ int cgra_exec_n(cgra_t *dev, uint8_t steps, unsigned flags, uint16_t tap_mask,
     req[2] = (uint8_t)(flags & 0xFFu);
     req[3] = (uint8_t)(tap_mask & 0xFFu);
     req[4] = (uint8_t)(tap_mask >> 8);
-    for (int i = 0; i < g.rows; i++) {
-        uint16_t v = west != NULL ? (uint16_t)west[i] : 0u;
-        req[1 + EXEC_HDR + 2 * i + 0] = (uint8_t)(v & 0xFFu);
-        req[1 + EXEC_HDR + 2 * i + 1] = (uint8_t)(v >> 8);
-    }
-    for (int i = 0; i < g.cols; i++) {
-        uint16_t v = north != NULL ? (uint16_t)north[i] : 0u;
-        int j = g.rows + i;
-        req[1 + EXEC_HDR + 2 * j + 0] = (uint8_t)(v & 0xFFu);
-        req[1 + EXEC_HDR + 2 * j + 1] = (uint8_t)(v >> 8);
+    /* Keep the serialization bound visible locally, including to compilers
+     * that do not carry get_info's geometry invariant across calls. */
+    size_t edges = (size_t)g.rows + g.cols;
+    if (g.rows == 0 || g.cols == 0 || g.rows > CGRA_MAX_EDGE ||
+        g.cols > CGRA_MAX_EDGE || edges > MAX_EDGE_WORDS)
+        return CGRA_ERR_GEOMETRY;
+    for (size_t i = 0; i < edges; i++) {
+        uint16_t v = i < g.rows ? (west ? (uint16_t)west[i] : 0u)
+                               : (north ? (uint16_t)north[i - g.rows] : 0u);
+        req[1 + EXEC_HDR + 2 * i] = (uint8_t)v;
+        req[2 + EXEC_HDR + 2 * i] = (uint8_t)(v >> 8);
     }
     req[req_len - 1] = checksum(req + 1, req_len - 2);
 
@@ -579,9 +711,11 @@ int cgra_exec_n(cgra_t *dev, uint8_t steps, unsigned flags, uint16_t tap_mask,
      * repair an unknown parser boundary, so a timeout always stops the session. */
     unsigned attempts = (flags & CGRA_EXEC_RESET) ? dev->retries : 0;
     unsigned att = 0;
-    dev->stats.transactions++;
+    rc = begin_transaction(dev, CMD_EXEC);
+    if (rc != CGRA_OK) return rc;
     for (;;) {
         if (att > 0) dev->stats.retries++;
+        dev->active.attempt = (uint64_t)att + 1;
         rc = write_exact(dev, req, req_len);
         if (rc != CGRA_OK) return uncertain(dev, rc);
         rc = read_exact(dev, rsp, dlen + 2);
@@ -590,13 +724,13 @@ int cgra_exec_n(cgra_t *dev, uint8_t steps, unsigned flags, uint16_t tap_mask,
             return uncertain(dev, CGRA_ERR_PROTO);
         if (rsp[dlen + 1] == RSP_ACK) {
             for (size_t i = 0; i < ntaps; i++)
-                taps[i] = (int16_t)((uint16_t)rsp[2 * i]
-                                    | ((uint16_t)rsp[2 * i + 1] << 8));
+                taps[i] = cgra_i16_from_bits((uint16_t)((uint16_t)rsp[2 * i]
+                                    | ((uint16_t)rsp[2 * i + 1] << 8)));
             return CGRA_OK;
         }
         if (rsp[dlen + 1] != RSP_NACK)
             return uncertain(dev, CGRA_ERR_PROTO);
-        if (att == attempts) return CGRA_ERR_NACK;
+        if (att == attempts) return failed(dev, CGRA_ERR_NACK, CGRA_PHASE_VALIDATE, 0);
         ++att;
     }
 }
@@ -638,228 +772,5 @@ int cgra_apply(cgra_t *dev, const uint32_t cfg[CGRA_NUM_PE],
         rc = cgra_read_regs(dev, regs);
         if (rc != CGRA_OK) return rc;
     }
-    return CGRA_OK;
-}
-
-/* -------------------------------------------------- accelerated kernels */
-
-/*
- * Diagonal element-wise configuration:
- *   - a[] enters from the north edge (one element per column),
- *   - b[] enters from the west edge (one element per row),
- *   - PEs above the diagonal PASS the a value southwards,
- *   - PEs below the diagonal PASS the b value eastwards,
- *   - the diagonal PE(k,k) computes a[k] <op> b[k].
- * After min(rows, cols) steps every diagonal register holds its result.
- */
-static void diag_cfg(uint32_t cfg[CGRA_MAX_PE], enum cgra_op op,
-                     int b_is_imm, int16_t imm, cgra_info_t g)
-{
-    for (int r = 0; r < g.rows; r++) {
-        for (int c = 0; c < g.cols; c++) {
-            uint32_t w;
-            if (r == c)
-                w = CGRA_CFG(op, CGRA_SEL_N,
-                             b_is_imm ? CGRA_SEL_CONST : CGRA_SEL_W, imm);
-            else if (r < c)
-                w = CGRA_CFG(CGRA_OP_PASS, CGRA_SEL_N, CGRA_SEL_ZERO, 0);
-            else
-                w = CGRA_CFG(CGRA_OP_PASS, CGRA_SEL_W, CGRA_SEL_ZERO, 0);
-            cfg[r * g.cols + c] = w;
-        }
-    }
-}
-
-/* Tap mask selecting the diagonal PEs (0, 5, 10, 15 on a 4x4 fabric):
- * exactly the registers a diagonal element-wise chunk produces. */
-static uint16_t diag_mask(cgra_info_t g)
-{
-    uint16_t m = 0;
-    int lanes = g.rows < g.cols ? g.rows : g.cols;
-    for (int k = 0; k < lanes; k++)
-        m = (uint16_t)(m | (1u << (k * g.cols + k)));
-    return m;
-}
-
-static int diag_vec_op(cgra_t *dev, enum cgra_op op,
-                       const int16_t *a, const int16_t *b, int16_t imm,
-                       int16_t *out, size_t n)
-{
-    if (dev == NULL || !cgra_buffer_valid(a, n) || !cgra_buffer_valid(out, n) ||
-        (b && !cgra_buffer_valid(b, n)) ||
-        (out != a && cgra_buffers_overlap(out, n, a, n)) ||
-        (b && out != b && cgra_buffers_overlap(out, n, b, n)))
-        return CGRA_ERR_ARG;
-    switch (op) {
-    case CGRA_OP_ADD: case CGRA_OP_SUB: case CGRA_OP_MUL:
-    case CGRA_OP_AND: case CGRA_OP_OR: case CGRA_OP_XOR:
-    case CGRA_OP_SHL: case CGRA_OP_SHR: case CGRA_OP_MAX: case CGRA_OP_MIN:
-        break;
-    default:
-        return CGRA_ERR_ARG;  /* these kernels require stateless binary ops */
-    }
-    if (!n) return CGRA_OK;
-
-    cgra_info_t g;
-    int rc = cgra_get_info(dev, &g);
-    if (rc != CGRA_OK) return rc;
-    size_t lanes = g.rows < g.cols ? g.rows : g.cols;
-    uint32_t cfg[CGRA_MAX_PE] = {0};
-    diag_cfg(cfg, op, b == NULL, imm, g);
-    rc = cgra_configure_n(dev, cfg, (size_t)g.rows * g.cols);
-    if (rc != CGRA_OK)
-        return rc;
-
-    /* One fused transaction per chunk when the device speaks v3, reading back
-     * only the diagonal taps instead of all PE registers. The fused
-     * reset costs nothing here (the diagonal mapping is stateless) and buys
-     * idempotence, so the transaction can be retransmitted after a NACK. */
-    const int exec = cgra_has_exec(dev);
-    const uint16_t mask = diag_mask(g);
-
-    for (size_t i = 0; i < n; i += lanes) {
-        int16_t north[CGRA_MAX_EDGE] = { 0 };
-        int16_t west[CGRA_MAX_EDGE]  = { 0 };
-        int16_t regs[CGRA_MAX_PE];
-        size_t m = n - i < lanes ? n - i : lanes;
-
-        for (size_t j = 0; j < m; j++) {
-            north[j] = a[i + j];
-            if (b != NULL)
-                west[j] = b[i + j];
-        }
-        if (exec) {
-            int16_t taps[CGRA_MAX_PE];
-            rc = cgra_exec_n(dev, (uint8_t)lanes, CGRA_EXEC_RESET, mask,
-                             west, g.rows, north, g.cols, taps, lanes);
-            if (rc != CGRA_OK)
-                return rc;
-            for (size_t j = 0; j < m; j++)
-                out[i + j] = taps[j];
-            continue;
-        }
-        rc = cgra_write_inputs_n(dev, west, g.rows, north, g.cols);
-        if (rc != CGRA_OK)
-            return rc;
-        rc = cgra_run(dev, (uint8_t)lanes);
-        if (rc != CGRA_OK)
-            return rc;
-        rc = cgra_read_regs_n(dev, regs, CGRA_MAX_PE);
-        if (rc != CGRA_OK)
-            return rc;
-        for (size_t j = 0; j < m; j++)
-            out[i + j] = regs[j * g.cols + j];
-    }
-    return CGRA_OK;
-}
-
-int cgra_vec_binop(cgra_t *dev, enum cgra_op op,
-                   const int16_t *a, const int16_t *b, int16_t *out, size_t n)
-{
-    if (b == NULL && n != 0)
-        return CGRA_ERR_ARG;
-    return diag_vec_op(dev, op, a, b, 0, out, n);
-}
-
-int cgra_vec_binop_imm(cgra_t *dev, enum cgra_op op,
-                       const int16_t *a, int16_t imm, int16_t *out, size_t n)
-{
-    return diag_vec_op(dev, op, a, NULL, imm, out, n);
-}
-
-int cgra_vec_add(cgra_t *dev, const int16_t *a, const int16_t *b, int16_t *out, size_t n)
-{
-    return cgra_vec_binop(dev, CGRA_OP_ADD, a, b, out, n);
-}
-
-int cgra_vec_sub(cgra_t *dev, const int16_t *a, const int16_t *b, int16_t *out, size_t n)
-{
-    return cgra_vec_binop(dev, CGRA_OP_SUB, a, b, out, n);
-}
-
-int cgra_vec_mul(cgra_t *dev, const int16_t *a, const int16_t *b, int16_t *out, size_t n)
-{
-    return cgra_vec_binop(dev, CGRA_OP_MUL, a, b, out, n);
-}
-
-int cgra_vec_min(cgra_t *dev, const int16_t *a, const int16_t *b, int16_t *out, size_t n)
-{
-    return cgra_vec_binop(dev, CGRA_OP_MIN, a, b, out, n);
-}
-
-int cgra_vec_max(cgra_t *dev, const int16_t *a, const int16_t *b, int16_t *out, size_t n)
-{
-    return cgra_vec_binop(dev, CGRA_OP_MAX, a, b, out, n);
-}
-
-int cgra_vec_relu(cgra_t *dev, const int16_t *a, int16_t *out, size_t n)
-{
-    return cgra_vec_binop_imm(dev, CGRA_OP_MAX, a, 0, out, n);
-}
-
-int cgra_vec_addi(cgra_t *dev, const int16_t *a, int16_t imm, int16_t *out, size_t n)
-{
-    return cgra_vec_binop_imm(dev, CGRA_OP_ADD, a, imm, out, n);
-}
-
-int cgra_vec_muli(cgra_t *dev, const int16_t *a, int16_t imm, int16_t *out, size_t n)
-{
-    return cgra_vec_binop_imm(dev, CGRA_OP_MUL, a, imm, out, n);
-}
-
-int cgra_dot(cgra_t *dev, const int16_t *a, const int16_t *b, size_t n,
-             int16_t *result)
-{
-    if (dev == NULL || !cgra_buffer_valid(a, n) || !cgra_buffer_valid(b, n) || result == NULL)
-        return CGRA_ERR_ARG;
-    if (!n) { *result = 0; return CGRA_OK; }
-
-    cgra_info_t g;
-    int rc = cgra_get_info(dev, &g);
-    if (rc != CGRA_OK) return rc;
-
-    /* PE(0,0) reads the north and west input ports directly: one MAC per
-     * element, accumulated on the device. */
-    uint32_t cfg[CGRA_MAX_PE];
-    for (int i = 0; i < (g.rows * g.cols); i++)
-        cfg[i] = CGRA_CFG(CGRA_OP_NOP, CGRA_SEL_ZERO, CGRA_SEL_ZERO, 0);
-    cfg[0] = CGRA_CFG(CGRA_OP_MAC, CGRA_SEL_N, CGRA_SEL_W, 0);
-
-    rc = cgra_configure_n(dev, cfg, (size_t)g.rows * g.cols);
-    if (rc != CGRA_OK)
-        return rc;
-    rc = cgra_reset_datapath(dev);
-    if (rc != CGRA_OK)
-        return rc;
-
-    /* The accumulator lives in PE(0,0)'s register, so this loop is inherently
-     * one element per round trip -- the reduction mapping trades throughput for
-     * on-device accumulation. v3 at least halves the round trips by fusing the
-     * operand write and the step; the fused reset must stay off, since that is
-     * precisely the state being accumulated. */
-    const int exec = cgra_has_exec(dev);
-
-    for (size_t i = 0; i < n; i++) {
-        int16_t north[CGRA_MAX_EDGE] = { a[i], 0, 0, 0 };
-        int16_t west[CGRA_MAX_EDGE]  = { b[i], 0, 0, 0 };
-        if (exec) {
-            rc = cgra_exec_n(dev, 1, 0u, 0u, west, g.rows, north, g.cols, NULL, 0);
-            if (rc != CGRA_OK)
-                return rc;
-            continue;
-        }
-        rc = cgra_write_inputs_n(dev, west, g.rows, north, g.cols);
-        if (rc != CGRA_OK)
-            return rc;
-        rc = cgra_run(dev, 1);
-        if (rc != CGRA_OK)
-            return rc;
-    }
-
-    int16_t regs[CGRA_MAX_PE];
-    rc = cgra_read_regs_n(dev, regs, CGRA_MAX_PE);
-    if (rc != CGRA_OK)
-        return rc;
-    *result = regs[0];
     return CGRA_OK;
 }

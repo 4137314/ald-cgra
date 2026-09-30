@@ -42,8 +42,15 @@ with tempfile.TemporaryDirectory(prefix="cgra-compdb-") as temporary:
         # The shell entry point is kept compatible and forwards make overrides.
         run(["sh", "scripts/gen-compdb.sh", f"PROFILE={profile}", "CC=cc"])
         entries = json.loads((root / "compile_commands.json").read_text())
-        check(len(entries) == 13, "all host implementation and C unit-test sources are represented")
-        check(len({(row["directory"], row["file"]) for row in entries}) == 13,
+        expected = {("lib", str(p.relative_to(root / "lib")))
+                    for p in (root / "lib/src").glob("*.c")}
+        expected.update(("sw", p.name) for p in (root / "sw").glob("*.c"))
+        expected.update(("lib", f"test/{name}.c") for name in
+                        ("test_cgra", "test_transport", "test_kernels", "test_faults"))
+        expected.add(("sw", "test/test_sw.c"))
+        check({(Path(row["directory"]).name, row["file"]) for row in entries} == expected,
+              "all host implementation and C unit-test sources are represented")
+        check(len({(row["directory"], row["file"]) for row in entries}) == len(entries),
               "no duplicate translation units")
         for row in entries:
             directory = Path(row["directory"])

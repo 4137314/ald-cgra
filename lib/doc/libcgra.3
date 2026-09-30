@@ -111,6 +111,14 @@ ignored). Returns a handle or
 On failure errno is EINVAL for invalid device/baud, ENOMEM for allocation
 failure, or the error from the failing POSIX operation.
 .TP
+.BI "cgra_t *cgra_open_ex(const char *" device ", unsigned " baud ", unsigned " flags )
+flags=0 is equivalent to cgra_open. Serial descriptors are nonblocking
+internally and close-on-exec. CGRA_OPEN_EXCLUSIVE requests TIOCEXCL and releases
+it on close. This prevents subsequent ordinary opens; existing descriptors
+and privileged bypass still require application-level ownership discipline.
+Unsupported exclusion returns NULL/ENOTSUP. Unknown flags and exclusion on
+the emulator return NULL/EINVAL.
+.TP
 .BI "void cgra_close(cgra_t *" dev )
 Close the device and free the handle.
 .TP
@@ -118,6 +126,26 @@ Close the device and free the handle.
 Deadline for one complete reply, in milliseconds (default 2000).
 Partial reads and interrupted waits do not restart the deadline.
 Each retry has its own reply deadline; blocking writes are not bounded by it.
+.TP
+.BI "void cgra_set_transaction_timeout(cgra_t *" dev ", unsigned " ms )
+Optional whole-wire-transaction budget (0 disables, the default), including
+writes, backpressure, the response and all NACK retries. CLOCK_MONOTONIC
+deadlines do not restart on partial transfers or EINTR. The earlier of this
+deadline and the existing reply deadline wins. Each kernel command and an
+initial lazy ID have separate budgets; this is not an overall kernel deadline.
+Expiry stops the session conservatively, even with zero bytes sent.
+Open/close, process suspension and synchronous emulator computation are not
+bounded by this setting.
+.TP
+.B cgra_get_diagnostic(dev, diagnostic), cgra_clear_diagnostic(dev)
+Copy or clear the last failed wire transaction. cgra_diagnostic_t contains
+the return code, phase (PREPARE/WRITE/READ/VALIDATE), saved system errno,
+command, one-based attempt and cumulative TX/RX bytes. Protocol failures
+have system_errno=0; deadline expiration uses ETIMEDOUT on serial devices.
+The copy owns all its values, contains no pointers, and survives closing the
+handle. Success, argument errors and later DESYNC rejections retain the
+original diagnostic. Initial/cleared diagnostics have code=CGRA_OK and
+phase=NONE. NULL getters/setters are no-ops. Open failures still use errno.
 .TP
 .BI "void cgra_set_retries(cgra_t *" dev ", unsigned " retries )
 Retransmissions after a complete NACK for CFG, WR and EXEC with RESET
@@ -144,6 +172,17 @@ is called once with the slave path before the blocking serve loop.
 The path is borrowed during the callback; copy it if retaining it. The server
 retries interrupted I/O, returns CGRA_ERR_IO on an unrecoverable read/write
 error and CGRA_ERR_NOMEM on emulator allocation failure.
+.TP
+.B cgra_emulate_pty_ex(options, on_ready, user)
+cgra_pty_options_t selects rows, cols, version (2 or 3) and stop_fd.
+At most 16 PEs are supported. stop_fd=-1 disables cancellation; otherwise
+the caller keeps this borrowed descriptor open for the whole call. Readability
+or hangup requests clean shutdown (CGRA_OK), even during TX backpressure;
+the service neither consumes the stop byte nor closes the descriptor.
+The original wrapper selects 4x4/v3 with no cancellation. Both variants drain
+responses as commands are consumed, preserving consecutive frames under
+backpressure. This functional model has no clock and does not implement the
+RTL parser watchdog; controlled service shutdown is a different operation.
 .SH PRIMITIVES
 .TP
 .BI "int cgra_configure(cgra_t *" dev ", const uint32_t " cfg "[16])"
@@ -221,8 +260,13 @@ or MAX. n and out_capacity are size_t; capacity must be at least n.
 .B cgra_conv(dev, h, k, x, n, out, out_capacity)
 Full convolution out[i]=sum_j h[j]*x[i-j] with zero extension. k and n are
 the input lengths; nonempty output has n+k-1 elements. All lengths and capacity
-are size_t. The implementation allocates a dense (n+k-1)*n Toeplitz matrix;
-zero tiles are skipped during device execution, not during allocation.
+are size_t. The implementation generates bounded tiles of the implicit
+Toeplitz band, jumping over structurally zero row ranges. There is no heap
+workspace after opening a handle. The legacy virtual-matrix dimension bound
+is retained; dimensions/footprints that cannot fit return CGRA_ERR_ARG.
+For tile shape R by C, at most ceil(n/C)*(ceil((k+C-1)/R)+1) candidate tiles
+are visited; each costs O(R*C) host work and storage is O(R*C+R+C), with at
+most 16 PEs. Zero weights and all-zero tiles still avoid device transactions.
 .SS Kernel buffer and error contracts
 All public kernels return CGRA_OK or a negative CGRA_ERR_*, never a length.
 Capacities count int16_t elements. Array footprints must fit PTRDIFF_MAX bytes;

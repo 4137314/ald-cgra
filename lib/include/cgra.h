@@ -122,6 +122,15 @@ typedef struct cgra cgra_t;
  */
 cgra_t     *cgra_open(const char *device, unsigned baud);
 
+/* Additive open variant. flags=0 is cgra_open(). Serial descriptors are
+ * close-on-exec and nonblocking internally. EXCLUSIVE requests TIOCEXCL;
+ * unsupported platforms return NULL/ENOTSUP. It prevents subsequent ordinary
+ * opens, not access through existing descriptors or privileged bypass. The
+ * exclusion is released on close; serialize ownership at application level.
+ * Unknown flags and EXCLUSIVE for sim return NULL/EINVAL. */
+#define CGRA_OPEN_EXCLUSIVE 0x01u
+cgra_t     *cgra_open_ex(const char *device, unsigned baud, unsigned flags);
+
 /* Close a device and free the handle. After a transport/protocol failure,
  * first restore the controller to idle before reopening: reset the device
  * out of band, or wait for its configured parser watchdog and pending TX/RX
@@ -133,6 +142,38 @@ void        cgra_close(cgra_t *dev);
  * Partial reads and interrupted waits do not restart it. Each retry has its
  * own reply deadline; this setting does not bound blocking writes. */
 void        cgra_set_timeout(cgra_t *dev, unsigned ms);
+
+/* Optional budget for one wire transaction, from before its first write
+ * through its reply and all permitted NACK retries. CLOCK_MONOTONIC; EINTR,
+ * partial transfers and backpressure do not restart it. 0 disables (default).
+ * The reply timeout above still applies independently; the earlier deadline
+ * wins. Lazy ID and each command in a multi-command kernel have separate
+ * budgets. This is not an overall kernel deadline or a real-time guarantee
+ * against process suspension. It does not bound open/close or computation in
+ * the synchronous in-process model. Expiry stops the session conservatively,
+ * even if no request byte was sent. NULL setters are harmless. */
+void        cgra_set_transaction_timeout(cgra_t *dev, unsigned ms);
+
+enum cgra_error_phase {
+    CGRA_PHASE_NONE, CGRA_PHASE_PREPARE, CGRA_PHASE_WRITE,
+    CGRA_PHASE_READ, CGRA_PHASE_VALIDATE
+};
+typedef struct {
+    int code;                       /* CGRA_* result */
+    enum cgra_error_phase phase;
+    int system_errno;               /* saved syscall errno, 0 for protocol */
+    uint8_t command;
+    uint64_t attempt;               /* 1-based, including NACK retries */
+    size_t tx_bytes, rx_bytes;       /* accepted bytes across all attempts */
+} cgra_diagnostic_t;
+
+/* Copy the last failed wire transaction. Owned value, no borrowed pointers;
+ * remains valid after further calls or close. Successful calls and argument
+ * errors leave it unchanged. Initial/cleared value has code=CGRA_OK and
+ * phase=NONE. Later DESYNC calls retain the original failure. NULL is a no-op.
+ * Device opening reports errno directly, because no handle exists on error. */
+void cgra_get_diagnostic(const cgra_t *dev, cgra_diagnostic_t *diagnostic);
+void cgra_clear_diagnostic(cgra_t *dev);
 
 /* Borrowed immutable static text for a CGRA_* code; never free or modify it.
  * Except for cgra_open(), use return codes, not errno, to diagnose errors. */
@@ -205,6 +246,20 @@ int cgra_get_info(cgra_t *dev, cgra_info_t *info);
  * POSIX only. Returns a negative CGRA_ERR_* on error.
  */
 int cgra_emulate_pty(void (*on_ready)(const char *path, void *user), void *user);
+
+/* Configurable server. Positive geometry, at most 16 PEs; version is 2 or 3.
+ * stop_fd=-1 disables cancellation; otherwise it is a caller-owned descriptor
+ * kept open throughout the call. Readability or hangup requests clean stop,
+ * returning CGRA_OK, including while TX is backpressured. No stop byte is
+ * consumed. The wrapper above selects 4x4/v3/no cancellation. Startup and
+ * callback path ownership follow the wrapper contract. No clock/watchdog is
+ * simulated; cancellation is host service control, not parser timeout. */
+typedef struct {
+    unsigned rows, cols, version;
+    int stop_fd;
+} cgra_pty_options_t;
+int cgra_emulate_pty_ex(const cgra_pty_options_t *options,
+                       void (*on_ready)(const char *path, void *user), void *user);
 
 /* ---- low-level primitives ----------------------------------------------- */
 

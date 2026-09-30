@@ -127,6 +127,30 @@ static void test_shift(cgra_t *dev)
     int16_t west[CGRA_ROWS] = {0}, north[CGRA_COLS] = { -4, 0, 0, 0 }, regs[CGRA_NUM_PE];
     CHECK(cgra_apply(dev, cfg, west, north, 1, regs) == CGRA_OK, "apply(shl) ok");
     CHECK(regs[0] == (int16_t)((uint16_t)(-4) << 2), "SHL of negative wraps (=-16)");
+    const int16_t values[] = {INT16_MIN, -32767, -1, 0, 1, 32766, INT16_MAX};
+    int16_t output[7];
+    int left_ok = 1, right_ok = 1;
+    for (int amount = -32; amount < 32; amount++) {
+        int32_t scale = INT32_C(1) << ((unsigned)amount & 15u);
+        if (cgra_vec_binop_imm(dev, CGRA_OP_SHL, values, (int16_t)amount, output, 7)) left_ok = 0;
+        for (size_t i = 0; i < 7; i++) {
+            int64_t product = (int64_t)values[i] * scale;
+            int32_t residue = (int32_t)(product % 65536);
+            if (residue < -32768) residue += 65536;
+            if (residue > 32767) residue -= 65536;
+            if (output[i] != residue) left_ok = 0;
+        }
+        if (cgra_vec_binop_imm(dev, CGRA_OP_SHR, values, (int16_t)amount, output, 7)) right_ok = 0;
+        for (size_t i = 0; i < 7; i++) {
+            /* Division rounds to zero in C11; subtracting scale-1 gives floor
+             * for negative inputs, independently of the model's bit shifts. */
+            int32_t expected = values[i] < 0 ? ((int32_t)values[i] - scale + 1) / scale
+                                           : values[i] / scale;
+            if (output[i] != expected) right_ok = 0;
+        }
+    }
+    CHECK(left_ok, "SHL uses modulo arithmetic for boundaries and all masked shift counts");
+    CHECK(right_ok, "SHR matches floor division for boundaries and all masked shift counts");
 }
 
 /* -------------------------------------------------- reduction */

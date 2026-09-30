@@ -44,7 +44,7 @@ CFLAGS  ?=
 CFLAGS  += -std=c11 $(WARN) $(OPT) -Iinclude -MMD -MP
 LDFLAGS += $(filter -fsanitize=% -pg,$(OPT))
 
-SRCS    = src/cgra.c src/kernels.c src/emu.c src/serve.c
+SRCS    = src/cgra.c src/vector.c src/kernels.c src/emu.c src/serve.c
 OBJS    = $(SRCS:src/%.c=$(BUILD)/%.o)
 PICOBJS = $(SRCS:src/%.c=$(BUILD)/%.pic.o)
 
@@ -109,7 +109,7 @@ $(TESTBIN): test/test_cgra.c $(OBJS) | $(BUILD)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
 
 $(TRANSPORTBIN): test/test_transport.c $(OBJS) | $(BUILD)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -Wl,--wrap=write -o $@
 
 $(KERNELBIN): test/test_kernels.c $(STATIC) | $(BUILD)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@

@@ -65,8 +65,8 @@ KERNEL_VECTORS = $(addprefix build/kernels_,$(addsuffix .vec,$(DEVICE_SHAPES)))
 PROTOCOL_VECTORS = $(addprefix build/protocol_,$(addsuffix .vec,$(DEVICE_SHAPES)))
 
 DIFF_GEN = $(GHDL_DIR)/gen_diff_vectors
-MODEL_SRCS = ../lib/src/cgra.c ../lib/src/kernels.c ../lib/src/emu.c
-MODEL_HEADERS = ../lib/include/cgra.h ../lib/src/emu.h ../lib/src/buffers.h
+MODEL_SRCS = ../lib/src/cgra.c ../lib/src/vector.c ../lib/src/kernels.c ../lib/src/emu.c
+MODEL_HEADERS = ../lib/include/cgra.h ../lib/src/emu.h ../lib/src/buffers.h ../lib/src/bitvec.h
 SIM_CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Werror
 
 # Build the reference from source in the simulation directory. Standalone HDL

@@ -8,6 +8,7 @@
 
 #include "emu.h"
 #include "cgra.h"
+#include "bitvec.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -143,31 +144,40 @@ static int16_t operand(int sel, int16_t n, int16_t s, int16_t e,
 
 static int16_t alu(int op, int16_t a, int16_t b, int16_t r, int16_t imm)
 {
+    /* Unsigned arithmetic specifies the bit-vector independently of signed
+     * narrowing and implementation-defined right shift of negative integers. */
+    uint32_t x = (uint16_t)a, y = (uint16_t)b, self = (uint16_t)r;
+    unsigned shift = y & 15u;
+    uint32_t bits;
     switch (op) {
     case CGRA_OP_NOP:   return r;
     case CGRA_OP_PASS:  return a;
-    case CGRA_OP_ADD:   return (int16_t)(a + b);
-    case CGRA_OP_SUB:   return (int16_t)(a - b);
-    case CGRA_OP_MUL:   return (int16_t)(a * b);
-    case CGRA_OP_MAC:   return (int16_t)(r + (int16_t)(a * b));
-    case CGRA_OP_AND:   return (int16_t)(a & b);
-    case CGRA_OP_OR:    return (int16_t)(a | b);
-    case CGRA_OP_XOR:   return (int16_t)(a ^ b);
-    case CGRA_OP_SHL:   return (int16_t)((uint16_t)a << (b & 0xF)); /* shift in unsigned: defined 2's-complement wrap */
-    case CGRA_OP_SHR:   return (int16_t)(a >> (b & 0xF));   /* arithmetic: a is signed */
+    case CGRA_OP_ADD:   bits = x + y; break;
+    case CGRA_OP_SUB:   bits = x - y; break;
+    case CGRA_OP_MUL:   bits = x * y; break;
+    case CGRA_OP_MAC:   bits = self + x * y; break;
+    case CGRA_OP_AND:   bits = x & y; break;
+    case CGRA_OP_OR:    bits = x | y; break;
+    case CGRA_OP_XOR:   bits = x ^ y; break;
+    case CGRA_OP_SHL:   bits = x << shift; break;
+    case CGRA_OP_SHR:
+        bits = x >> shift;
+        if (a < 0 && shift) bits |= UINT32_C(0xffff) << (16u - shift);
+        break;
     case CGRA_OP_MAX:   return a >= b ? a : b;
     case CGRA_OP_MIN:   return a <= b ? a : b;
-    case CGRA_OP_ABS:   return (int16_t)(a < 0 ? -a : a);
-    case CGRA_OP_ACC:   return (int16_t)(r + a);
+    case CGRA_OP_ABS:   bits = a < 0 ? 0u - x : x; break;
+    case CGRA_OP_ACC:   bits = self + x; break;
     case CGRA_OP_CONST: return imm;
     default:            return r;
     }
+    return cgra_i16_from_bits((uint16_t)bits);
 }
 
 /* Split one configuration word into the fields step_array() consumes. */
 static void decode_cfg(pe_cfg_t *d, uint32_t cw)
 {
-    d->imm  = (int16_t)(cw & 0xFFFF);
+    d->imm  = cgra_i16_from_bits((uint16_t)cw);
     d->op   = (uint8_t)((cw >> 16) & 0xF);
     d->sela = (uint8_t)((cw >> 20) & 0x7);
     d->selb = (uint8_t)((cw >> 23) & 0x7);
@@ -229,7 +239,7 @@ static void latch_payload(cgra_emu_t *e, int previous)
         if (end > e->rows + e->cols) end = e->rows + e->cols;
         for (int i = begin; i < end; ++i) {
             const uint8_t *p = e->buf + offset + 2 * i;
-            int16_t value = (int16_t)((uint16_t)p[0] | ((uint16_t)p[1] << 8));
+            int16_t value = cgra_i16_from_bits((uint16_t)((uint16_t)p[0] | ((uint16_t)p[1] << 8)));
             if (i < e->rows) e->west[i] = value;
             else e->north[i - e->rows] = value;
         }

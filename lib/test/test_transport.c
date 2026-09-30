@@ -11,12 +11,22 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/resource.h>
+#include <sys/stat.h>
 #include <sys/select.h>   /* FD_SETSIZE: regression threshold, not transport I/O */
 #include <sys/wait.h>
 #include <time.h>
 #include <unistd.h>
 
 static int checks;
+static int fragment_writes, inject_interrupt, inject_again;
+ssize_t __real_write(int fd, const void *buf, size_t n);
+ssize_t __wrap_write(int fd, const void *buf, size_t n);
+ssize_t __wrap_write(int fd, const void *buf, size_t n)
+{
+    if (inject_interrupt) { inject_interrupt = 0; errno = EINTR; return -1; }
+    if (inject_again) { inject_again = 0; errno = EAGAIN; return -1; }
+    return __real_write(fd, buf, fragment_writes && n > 1 ? 1 : n);
+}
 #define CHECK(cond, message) do { \
     int passed = (cond); \
     printf("%s transport %d - %s\n", passed ? "ok" : "not ok", ++checks, message); \
@@ -241,8 +251,278 @@ static void test_kernel_partial_output(void)
     }
 }
 
-int main(void)
+static double milliseconds(void)
 {
+    struct timespec t;
+    assert(clock_gettime(CLOCK_MONOTONIC, &t) == 0);
+    return (double)t.tv_sec * 1000.0 + (double)t.tv_nsec / 1000000.0;
+}
+
+static volatile sig_atomic_t signals;
+static void interrupted(int sig) { (void)sig; signals++; }
+
+static void test_write_budget(void)
+{
+    int master;
+    cgra_t *dev = open_peer(&master);
+    int filler = open(ptsname(master), O_RDWR | O_NOCTTY | O_NONBLOCK);
+    CHECK(filler >= 0, "open same PTY to fill its transmit queue");
+    char bytes[4096] = {0};
+    size_t queued = 0;
+    for (;;) {
+        ssize_t n = write(filler, bytes, sizeof(bytes));
+        if (n < 0) {
+            assert(errno == EAGAIN);
+            /* PTY input delivery runs asynchronously in the kernel. A first
+             * EAGAIN can clear while bytes move to the unread master queue. */
+            struct pollfd pfd = {.fd = filler, .events = POLLOUT};
+            if (poll(&pfd, 1, 50) == 0) break;
+            continue;
+        }
+        queued += (size_t)n;
+    }
+    CHECK(queued > 0, "real PTY backpressure before the library write");
+    struct sigaction sa = {0}, old;
+    sa.sa_handler = interrupted;
+    sigemptyset(&sa.sa_mask);
+    CHECK(sigaction(SIGUSR1, &sa, &old) == 0, "install interrupted-wait handler");
+    fflush(stdout);
+    pid_t child = fork();
+    if (child == 0) {
+        pid_t parent = getppid();
+        for (int i = 0; i < 40; i++) { pause_ms(2); kill(parent, SIGUSR1); }
+        _exit(0);
+    }
+    CHECK(child > 0, "fork repeated signal source");
+    cgra_set_transaction_timeout(dev, 25);
+    cgra_set_timeout(dev, 1000);
+    double start = milliseconds();
+    int rc = cgra_identify(dev, NULL);
+    double elapsed = milliseconds() - start;
+    CHECK(rc == CGRA_ERR_TIMEOUT && elapsed >= 15 && elapsed < 300,
+          "whole-transaction budget bounds a blocked write despite EINTR");
+    cgra_diagnostic_t d;
+    cgra_get_diagnostic(dev, &d);
+    CHECK(d.code == rc && d.phase == CGRA_PHASE_WRITE && d.system_errno == ETIMEDOUT &&
+          d.command == 1 && d.attempt == 1 && d.tx_bytes == 0 && d.rx_bytes == 0,
+          "write deadline diagnostic records phase, cause, command and zero progress");
+    CHECK(cgra_run(dev, 0) == CGRA_ERR_DESYNC, "write timeout stops session without retry");
+    int status;
+    while (waitpid(child, &status, 0) < 0) assert(errno == EINTR);
+    CHECK(signals > 0 && WIFEXITED(status) && WEXITSTATUS(status) == 0,
+          "signals actually interrupted the wait");
+    sigaction(SIGUSR1, &old, NULL);
+    cgra_close(dev); close(filler); close(master);
+    CHECK(d.command == 1 && d.phase == CGRA_PHASE_WRITE,
+          "diagnostic is an owned copy after closing the handle");
+}
+
+static void test_transaction_read_budget(void)
+{
+    int master;
+    cgra_t *dev = open_peer(&master);
+    cgra_set_timeout(dev, 1000);
+    cgra_set_transaction_timeout(dev, 20);
+    double start = milliseconds();
+    CHECK(cgra_identify(dev, NULL) == CGRA_ERR_TIMEOUT && milliseconds() - start < 300,
+          "transaction budget also shortens the reply wait");
+    cgra_diagnostic_t d;
+    cgra_get_diagnostic(dev, &d);
+    CHECK(d.phase == CGRA_PHASE_READ && d.system_errno == ETIMEDOUT && d.tx_bytes == 1,
+          "read deadline diagnostic distinguishes a transmitted request");
+    cgra_clear_diagnostic(dev);
+    cgra_get_diagnostic(dev, &d);
+    CHECK(d.code == CGRA_OK && d.phase == CGRA_PHASE_NONE,
+          "diagnostic can be cleared explicitly");
+    cgra_close(dev); close(master);
+}
+
+static void test_partial_write_and_retry_budget(void)
+{
+    int master;
+    cgra_t *dev = open_peer(&master);
+    const unsigned char id[] = {0xCA, 3, 1, 1, 16};
+    unsigned char wire[16];
+    CHECK(write(master, id, sizeof(id)) == sizeof(id) &&
+          cgra_get_info(dev, NULL) == CGRA_OK && read(master, wire, 1) == 1,
+          "establish geometry for partial-write regression");
+    unsigned char ack = 0x79;
+    CHECK(write(master, &ack, 1) == 1, "queue complete ACK");
+    uint32_t cfg = CGRA_CFG(CGRA_OP_CONST, 0, 0, -123);
+    fragment_writes = inject_interrupt = inject_again = 1;
+    int rc = cgra_configure_n(dev, &cfg, 1);
+    fragment_writes = 0;
+    CHECK(rc == CGRA_OK && !inject_interrupt && !inject_again &&
+          read(master, wire, sizeof(wire)) == 6 && wire[0] == 2 && wire[1] == 0x85,
+          "partial writes, EINTR and EAGAIN preserve each serialized byte");
+    cgra_set_transaction_timeout(dev, 30);
+    cgra_set_timeout(dev, 1000);
+    cgra_set_retries(dev, 5);
+    fflush(stdout);
+    pid_t child = fork();
+    if (child == 0) {
+        alarm(2);
+        for (int i = 0; i < 5; i++) {
+            pause_ms(20);
+            unsigned char nack = 0x1f;
+            if (write(master, &nack, 1) != 1) _exit(1);
+        }
+        _exit(0);
+    }
+    CHECK(child > 0, "fork delayed NACK source");
+    double start = milliseconds();
+    rc = cgra_configure_n(dev, &cfg, 1);
+    double elapsed = milliseconds() - start;
+    cgra_diagnostic_t d;
+    cgra_get_diagnostic(dev, &d);
+    CHECK(rc == CGRA_ERR_TIMEOUT && elapsed < 90 && d.attempt == 2 &&
+          d.tx_bytes == 12 && d.rx_bytes == 1 && d.phase == CGRA_PHASE_READ,
+          "NACK retry shares original budget and diagnostic cumulative progress");
+    int status;
+    CHECK(waitpid(child, &status, 0) == child && WIFEXITED(status) && !WEXITSTATUS(status),
+          "NACK source finished");
+    cgra_close(dev); close(master);
+}
+
+static void test_open_flags(const char *self)
+{
+    int master;
+    cgra_t *dev = open_peer(&master);
+    struct stat tty, st;
+    CHECK(stat(ptsname(master), &tty) == 0, "stat slave for descriptor inspection");
+    int serial = -1;
+    for (int fd = 3; fd < 256; fd++)
+        if (fstat(fd, &st) == 0 && tty.st_dev == st.st_dev && tty.st_ino == st.st_ino)
+            serial = fd;
+    CHECK(serial >= 0 && (fcntl(serial, F_GETFD) & FD_CLOEXEC) &&
+          (fcntl(serial, F_GETFL) & O_NONBLOCK), "serial fd is nonblocking and close-on-exec");
+    fflush(stdout);
+    pid_t child = fork();
+    if (child == 0) {
+        char arg[24];
+        snprintf(arg, sizeof(arg), "%d", serial);
+        execl(self, self, "--closed", arg, (char *)NULL);
+        _exit(2);
+    }
+    int status;
+    CHECK(child > 0 && waitpid(child, &status, 0) == child &&
+          WIFEXITED(status) && !WEXITSTATUS(status), "serial descriptor does not survive exec");
+    cgra_close(dev);
+    dev = cgra_open_ex(ptsname(master), 115200, CGRA_OPEN_EXCLUSIVE);
+    CHECK(dev != NULL, "optional exclusive serial open succeeds");
+    errno = 0;
+    int another = open(ptsname(master), O_RDWR | O_NOCTTY);
+    CHECK(another == -1 && errno == EBUSY, "exclusive ownership rejects a subsequent ordinary open");
+    cgra_close(dev);
+    another = open(ptsname(master), O_RDWR | O_NOCTTY);
+    CHECK(another >= 0, "close releases exclusive access even while PTY master remains open");
+    close(another); close(master);
+    CHECK(cgra_open_ex("sim", 0, CGRA_OPEN_EXCLUSIVE) == NULL && errno == EINVAL &&
+          cgra_open_ex("sim", 0, 2) == NULL && errno == EINVAL,
+          "unsupported open flag combinations fail before opening");
+}
+
+static void server_ready(const char *path, void *user)
+{
+    int fd = *(int *)user;
+    assert(write(fd, path, strlen(path) + 1) == (ssize_t)strlen(path) + 1);
+}
+
+static void test_configurable_server(void)
+{
+    for (int scenario = 0; scenario < 4; scenario++) {
+        int ready[2], stop[2];
+        CHECK(pipe(ready) == 0 && pipe(stop) == 0, "create server ready/cancellation channels");
+        fflush(stdout);
+        pid_t child = fork();
+        if (child == 0) {
+            alarm(5);
+            close(ready[0]); close(stop[1]);
+            cgra_pty_options_t opts = {2, 3, scenario == 0 ? 2u : 3u, stop[0]};
+            int rc = cgra_emulate_pty_ex(&opts, server_ready, &ready[1]);
+            /* The service borrows the cancellation fd, never closes it. */
+            int owned = fcntl(stop[0], F_GETFD) >= 0;
+            close(ready[1]); close(stop[0]);
+            _exit(rc == CGRA_OK && owned ? 0 : 1);
+        }
+        CHECK(child > 0, "fork configurable PTY service");
+        close(ready[1]); close(stop[0]);
+        char path[128];
+        ssize_t n = read(ready[0], path, sizeof(path));
+        CHECK(n > 0 && path[n - 1] == 0, "receive borrowed PTY path through callback");
+        cgra_t *dev = cgra_open(path, 115200);
+        cgra_info_t info;
+        int16_t a[] = {-32768, 3, 32767}, b[] = {-1, -7, 2}, out[3];
+        CHECK(dev && cgra_get_info(dev, &info) == CGRA_OK && info.rows == 2 &&
+              info.cols == 3 && info.version == (scenario == 0 ? 2 : 3) &&
+              cgra_vec_add(dev, a, b, out, 3) == CGRA_OK &&
+              out[0] == 32767 && out[1] == -4 && out[2] == -32767,
+              "configured v2/v3 geometry serves a real serial API workload");
+        int raw = open(path, O_RDWR | O_NOCTTY | O_NONBLOCK);
+        CHECK(raw >= 0, "open raw client for stream/backpressure cases");
+        if (scenario == 1) {
+            /* 100 one-byte IDs in one write exceeded the old 256-byte FIFO. */
+            unsigned char ids[100], reply[500];
+            memset(ids, 1, sizeof(ids));
+            CHECK(write(raw, ids, sizeof(ids)) == sizeof(ids), "batch 100 consecutive ID commands");
+            size_t got = 0;
+            while (got < sizeof(reply)) {
+                struct pollfd pfd = {.fd = raw, .events = POLLIN};
+                assert(poll(&pfd, 1, 1000) == 1);
+                ssize_t k = read(raw, reply + got, sizeof(reply) - got);
+                assert(k > 0); got += (size_t)k;
+            }
+            int valid = 1;
+            for (size_t i = 0; i < sizeof(reply); i += 5)
+                if (memcmp(reply + i, "\312\3\2\3\20", 5)) valid = 0;
+            CHECK(valid, "all 500 response bytes survive without model FIFO overflow");
+        } else if (scenario == 2) {
+            const unsigned char partial[] = {2, 0x12};
+            CHECK(write(raw, partial, sizeof(partial)) == sizeof(partial),
+                  "leave a CFG frame incomplete before cancellation");
+        } else if (scenario == 3) {
+            unsigned char requests[8192];
+            memset(requests, 5, sizeof(requests));
+            CHECK(write(raw, requests, sizeof(requests)) > 0,
+                  "flood readback requests without draining responses");
+            pause_ms(30); /* server reaches TX backpressure */
+        }
+        CHECK(write(stop[1], "s", 1) == 1, "request controlled stop");
+        int status;
+        CHECK(waitpid(child, &status, 0) == child && WIFEXITED(status) && !WEXITSTATUS(status),
+              "server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained");
+        cgra_close(dev); close(raw); close(ready[0]); close(stop[1]);
+    }
+    cgra_pty_options_t bad = {0, 4, 3, -1};
+    CHECK(cgra_emulate_pty_ex(&bad, NULL, NULL) == CGRA_ERR_ARG &&
+          cgra_emulate_pty_ex(NULL, NULL, NULL) == CGRA_ERR_ARG,
+          "invalid service options rejected before callback/device creation");
+}
+
+static void test_diagnostic_persistence(void)
+{
+    cgra_t *dev = cgra_open("sim:1x1:flaky", 0);
+    uint32_t cfg = 0;
+    cgra_set_retries(dev, 0);
+    CHECK(cgra_configure_n(dev, &cfg, 1) == CGRA_ERR_NACK,
+          "complete NACK available for diagnostic persistence check");
+    cgra_diagnostic_t before, after;
+    cgra_get_diagnostic(dev, &before);
+    CHECK(before.code == CGRA_ERR_NACK && before.phase == CGRA_PHASE_VALIDATE &&
+          before.command == 2 && before.system_errno == 0 && before.attempt == 1 &&
+          before.tx_bytes == 6 && before.rx_bytes == 1, "NACK diagnostic is distinct from syscall failure");
+    CHECK(cgra_configure_n(dev, &cfg, 1) == CGRA_OK && cgra_run(NULL, 1) == CGRA_ERR_ARG,
+          "subsequent success and invalid call do not overwrite last failure");
+    cgra_get_diagnostic(dev, &after);
+    CHECK(before.code == after.code && before.phase == after.phase && before.command == after.command &&
+          before.tx_bytes == after.tx_bytes, "stored diagnostic survives later success");
+    cgra_close(dev);
+}
+
+int main(int argc, char **argv)
+{
+    if (argc == 3 && strcmp(argv[1], "--closed") == 0)
+        return fcntl(atoi(argv[2]), F_GETFD) == -1 && errno == EBADF ? 0 : 1;
     alarm(10);
     test_silent_reply();
     test_fragmented_reply();
@@ -250,6 +530,12 @@ int main(void)
     test_uncertain_session();
     test_high_descriptor();
     test_kernel_partial_output();
+    test_write_budget();
+    test_transaction_read_budget();
+    test_partial_write_and_retry_budget();
+    test_open_flags(argv[0]);
+    test_configurable_server();
+    test_diagnostic_persistence();
     printf("# %d transport checks passed\n", checks);
     return 0;
 }
