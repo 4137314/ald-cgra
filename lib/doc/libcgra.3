@@ -457,6 +457,22 @@ time \(em and, since the counts are deterministic, for comparing a fused v3 run
 against the same work on
 .B "sim:v2"
 without needing an FPGA or a stopwatch.
+.PP
+.B cgra_set_profiling(dev, enabled)
+enables optional monotonic host timing and starts a new profile; disabling
+freezes the collected values. Default is disabled.
+.B cgra_get_profile(dev, out)
+copies a cgra_profile_t with configuration_io_ns, execution_io_ns,
+configuration_transactions, requested_steps and valid. Configuration means CFG;
+other read/write calls include model processing or serial waits and retries.
+Serialization, checksums and host kernel work are outside these intervals.
+The clock calls add overhead; these values are not FPGA latency.
+Requested steps sum RUN/EXEC arguments once per logical command, including
+commands that later fail; they do not attest captures after an uncertain transfer.
+Configuration transactions exclude retries. A clock failure clears valid
+without changing the command result, diagnostic or errno. The profile is
+owned copied data, separate from cgra_stats_t; reset_stats does not reset it.
+NULL handle/output is a no-op. Re-enabling resets all profile fields.
 .SH EXAMPLE
 .nf
 .EX

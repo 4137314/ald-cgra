@@ -868,7 +868,7 @@ const char *dsl_default_text(void)
     "doc     = inclusive prefix sum on row 0 (use `cgra scan`)\n"
     "pattern = scan\n"
     "\n"
-    "# ---- custom per-PE example: out = (a + b) then squared on the diagonal ----\n"
+    "# ---- custom per-PE example: out = a + b on the diagonal ----\n"
     "[mode custom_example]\n"
     "doc     = template for hand-placed PEs; edit freely\n"
     "pattern = custom\n"

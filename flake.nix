@@ -52,7 +52,7 @@
           pname = "cgra";
           inherit version;
           src = ./.;
-          nativeBuildInputs = [ pkgs.gcc pkgs.gnumake pkgs.pkg-config pkgs.texinfo ];
+          nativeBuildInputs = [ pkgs.gcc pkgs.gnumake pkgs.pkg-config pkgs.texinfo pkgs.python3 ];
           buildInputs = [ pkgs.readline ];
           # The Makefile's install target builds the optimised (-O3) binaries,
           # the info manual, and lays out bin/lib/include/man/info/completion

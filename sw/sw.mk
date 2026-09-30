@@ -58,7 +58,7 @@ sh_quote = '$(subst ','"'"',$(1))'
 MAKE_CALLER = CFLAGS=$(call sh_quote,$(CALLER_CFLAGS)) LDFLAGS=$(call sh_quote,$(CALLER_LDFLAGS)) LDLIBS=$(call sh_quote,$(CALLER_LDLIBS)) $(MAKE)
 
 CFLAGS  ?=
-CFLAGS  += -std=c11 $(WARN) $(OPT) -I. -I$(LIBDIR)/include $(RL_CFLAGS) -MMD -MP
+CFLAGS  += -std=c11 $(WARN) $(OPT) -I. -I$(BUILD) -I$(LIBDIR)/include $(RL_CFLAGS) -MMD -MP
 CFLAGS  += -include $(BUILD)/install_paths.h
 LDFLAGS += $(filter -fsanitize=% -pg,$(OPT))
 LDLIBS  += $(RL_LIBS)
@@ -70,6 +70,11 @@ OBJS = $(SRCS:%.c=$(BUILD)/%.o)
 BUILD_CONFIG_EXTRA = HAVE_READLINE=$(HAVE_READLINE) RL_CFLAGS=$(RL_CFLAGS) RL_LIBS=$(RL_LIBS) pkgdatadir=$(pkgdatadir) LIB=$(LIB)
 include ../scripts/build-config.mk
 $(OBJS): $(BUILD_CONFIG)
+
+$(BUILD)/build_provenance.h: force-build-config $(BUILD_CONFIG) $(LIB) ../scripts/build-provenance.py
+	python3 ../scripts/build-provenance.py $@ $(BUILD_CONFIG) $(LIBDIR)/$(BUILD)/.build-config.json
+
+$(BUILD)/bench.o: $(BUILD)/build_provenance.h
 
 # Generate through make's file function: prefix text never becomes shell code.
 # Compare before replacement so only a changed runtime path rebuilds objects.
@@ -125,7 +130,7 @@ $(BIN): $(OBJS) $(LIB)
 UNITBIN = $(BUILD)/test_sw
 
 .PHONY: compdb
-compdb: $(BUILD)/install_paths.h
+compdb: $(BUILD)/install_paths.h $(BUILD)/build_provenance.h
 	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CPPFLAGS) $(CFLAGS))
 	python3 ../scripts/gen-compdb.py fragment $(BUILD)/compile_commands.json \
 	    $(BUILD)/compdb-flags.txt $(patsubst $(BUILD)/%.o,%.c,$(OBJS)) --tests test/test_sw.c
@@ -174,10 +179,10 @@ bench: $(BIN)
 valgrind: $(UNITBIN)
 	valgrind --error-exitcode=99 --leak-check=full --track-origins=yes -q ./$(UNITBIN)
 
-analyze: $(BUILD)/install_paths.h | $(BUILD)
+analyze: $(BUILD)/install_paths.h $(BUILD)/build_provenance.h | $(BUILD)
 	mkdir -p $(BUILD)/analyze
 	@for src in $(SRCS); do \
-	    $(CC) -std=c11 -O1 -I$(LIBDIR)/include $(RL_CFLAGS) -include $(BUILD)/install_paths.h \
+	    $(CC) -std=c11 -O1 -I$(BUILD) -I$(LIBDIR)/include $(RL_CFLAGS) -include $(BUILD)/install_paths.h \
 	        -fanalyzer -Wall -Wextra -Werror -c "$$src" \
 	        -o "$(BUILD)/analyze/$$(basename "$$src" .c).o" || exit 1; \
 	done

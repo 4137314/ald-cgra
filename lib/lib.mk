@@ -115,7 +115,7 @@ $(KERNELBIN): test/test_kernels.c $(STATIC) | $(BUILD)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@
 
 $(FAULTBIN): test/test_faults.c $(STATIC) | $(BUILD)
-	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk -o $@
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk,--wrap=clock_gettime -o $@
 
 valgrind: $(TESTBIN)
 	valgrind --error-exitcode=99 --leak-check=full --track-origins=yes -q ./$(TESTBIN)

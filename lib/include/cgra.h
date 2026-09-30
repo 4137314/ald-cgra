@@ -205,6 +205,26 @@ void cgra_get_stats(cgra_t *dev, cgra_stats_t *stats);
 /* Zero the link statistics. */
 void cgra_reset_stats(cgra_t *dev);
 
+/* Optional host-side profiling; existing cgra_stats_t ABI is unchanged.
+ * Enabling (nonzero) starts a new measurement; disabling freezes the values.
+ * Measures monotonic time inside transport write/read calls, including model
+ * processing or serial waits and retries. CFG is separate from all other I/O.
+ * Serialization, checksums and host kernel work are outside these intervals;
+ * this is not a measurement of FPGA execution latency. Profiling adds clock
+ * calls only when enabled. valid==0 means disabled since open or clock failure;
+ * profiling failure never changes a transaction's result/diagnostic/errno.
+ * requested_steps counts RUN/EXEC step arguments once per logical command,
+ * even if it subsequently fails: it cannot attest physical captures after an
+ * uncertain transfer. Configuration transactions count CFG commands, not retries.
+ * NULL handle/output is a no-op. Values are copied, with no borrowed storage. */
+typedef struct {
+    uint64_t configuration_io_ns, execution_io_ns;
+    uint64_t configuration_transactions, requested_steps;
+    int valid;
+} cgra_profile_t;
+void cgra_set_profiling(cgra_t *dev, int enabled);
+void cgra_get_profile(cgra_t *dev, cgra_profile_t *profile);
+
 /* Device identity returned by the ID handshake. */
 typedef struct {
     uint8_t version;   /* protocol version       */

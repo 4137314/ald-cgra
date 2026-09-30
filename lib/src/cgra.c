@@ -52,6 +52,8 @@ struct cgra {
     int          proto_ver;    /* cached ID version, -1 = not asked yet */
     cgra_info_t  info;
     cgra_stats_t stats;
+    int profiling;
+    cgra_profile_t profile;
 };
 
 /* -------------------------------------------------- serial transport */
@@ -269,6 +271,18 @@ void cgra_reset_stats(cgra_t *dev)
         memset(&dev->stats, 0, sizeof(dev->stats));
 }
 
+void cgra_set_profiling(cgra_t *dev, int enabled)
+{
+    if (!dev) return;
+    dev->profiling = enabled != 0;
+    if (enabled) dev->profile = (cgra_profile_t){.valid = 1};
+}
+
+void cgra_get_profile(cgra_t *dev, cgra_profile_t *profile)
+{
+    if (dev && profile) *profile = dev->profile;
+}
+
 const char *cgra_strerror(int err)
 {
     switch (err) {
@@ -313,6 +327,7 @@ static int begin_transaction(cgra_t *dev, uint8_t command)
         dev->transaction_deadline = now + (int64_t)dev->transaction_ms * 1000000;
     }
     dev->stats.transactions++;
+    if (dev->profiling && command == CMD_CFG) dev->profile.configuration_transactions++;
     return CGRA_OK;
 }
 
@@ -369,7 +384,7 @@ static int wait_ready(cgra_t *dev, short events, int64_t deadline,
     }
 }
 
-static int write_exact(cgra_t *dev, const uint8_t *buf, size_t n)
+static int write_exact_impl(cgra_t *dev, const uint8_t *buf, size_t n)
 {
     if (dev->emu != NULL) {
         emu_feed(dev->emu, buf, n);
@@ -394,7 +409,7 @@ static int write_exact(cgra_t *dev, const uint8_t *buf, size_t n)
     return CGRA_OK;
 }
 
-static int read_exact(cgra_t *dev, uint8_t *buf, size_t n)
+static int read_exact_impl(cgra_t *dev, uint8_t *buf, size_t n)
 {
     if (dev->emu != NULL) {
         size_t got = emu_drain(dev->emu, buf, n);
@@ -427,6 +442,46 @@ static int read_exact(cgra_t *dev, uint8_t *buf, size_t n)
         dev->active.rx_bytes += (size_t)k;
     }
     return CGRA_OK;
+}
+
+static int64_t profile_start(cgra_t *dev)
+{
+    int saved = errno;
+    int64_t start = 0;
+    if (monotonic_ns(&start)) dev->profile.valid = 0;
+    errno = saved;
+    return start;
+}
+
+static void profile_end(cgra_t *dev, int64_t start)
+{
+    int saved = errno;
+    int64_t end;
+    if (monotonic_ns(&end) || end < start) dev->profile.valid = 0;
+    else if (dev->profile.valid) {
+        uint64_t *total = dev->active.command == CMD_CFG
+                        ? &dev->profile.configuration_io_ns : &dev->profile.execution_io_ns;
+        *total += (uint64_t)(end - start);
+    }
+    errno = saved;
+}
+
+static int write_exact(cgra_t *dev, const uint8_t *buf, size_t n)
+{
+    if (!dev->profiling) return write_exact_impl(dev, buf, n);
+    int64_t start = profile_start(dev);
+    int rc = write_exact_impl(dev, buf, n);
+    profile_end(dev, start);
+    return rc;
+}
+
+static int read_exact(cgra_t *dev, uint8_t *buf, size_t n)
+{
+    if (!dev->profiling) return read_exact_impl(dev, buf, n);
+    int64_t start = profile_start(dev);
+    int rc = read_exact_impl(dev, buf, n);
+    profile_end(dev, start);
+    return rc;
 }
 
 static int expect_ack(cgra_t *dev)
@@ -597,6 +652,7 @@ int cgra_run(cgra_t *dev, uint8_t steps)
     /* RUN advances state and is never retried, even on a NACK. */
     int rc = begin_transaction(dev, CMD_RUN);
     if (rc != CGRA_OK) return rc;
+    if (dev->profiling) dev->profile.requested_steps += steps;
     uint8_t buf[2] = { CMD_RUN, steps };
     rc = write_exact(dev, buf, sizeof(buf));
     if (rc != CGRA_OK) return uncertain(dev, rc);
@@ -713,6 +769,7 @@ int cgra_exec_n(cgra_t *dev, uint8_t steps, unsigned flags, uint16_t tap_mask,
     unsigned att = 0;
     rc = begin_transaction(dev, CMD_EXEC);
     if (rc != CGRA_OK) return rc;
+    if (dev->profiling) dev->profile.requested_steps += steps;
     for (;;) {
         if (att > 0) dev->stats.retries++;
         dev->active.attempt = (uint64_t)att + 1;

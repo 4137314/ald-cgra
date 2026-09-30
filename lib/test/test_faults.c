@@ -1,19 +1,23 @@
 /* GNU/ELF link wrapping injects allocation/read failures, without production
  * test hooks. Real PTYs and termios are used during server startup. */
+#define _POSIX_C_SOURCE 200809L
 #include "cgra.h"
 #include <assert.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <time.h>
 
 void *__real_calloc(size_t count, size_t size);
 void *__wrap_calloc(size_t count, size_t size);
 ssize_t __real_read(int fd, void *buf, size_t size);
 ssize_t __wrap_read(int fd, void *buf, size_t size);
 ssize_t __wrap___read_chk(int fd, void *buf, size_t size, size_t capacity);
+int __real_clock_gettime(clockid_t clock, struct timespec *time);
+int __wrap_clock_gettime(clockid_t clock, struct timespec *time);
 
-static int fail_allocation, fail_read, read_calls, ready_calls, checks;
+static int fail_allocation, fail_read, fail_clock, read_calls, ready_calls, checks;
 #define CHECK(cond, message) do { \
     int passed = (cond); \
     printf("%s fault %d - %s\n", passed ? "ok" : "not ok", ++checks, message); \
@@ -24,6 +28,12 @@ void *__wrap_calloc(size_t count, size_t size)
 {
     if (fail_allocation) { errno = ENOMEM; return NULL; }
     return __real_calloc(count, size);
+}
+
+int __wrap_clock_gettime(clockid_t clock, struct timespec *time)
+{
+    if (fail_clock) { errno = EIO; return -1; }
+    return __real_clock_gettime(clock, time);
 }
 
 ssize_t __wrap_read(int fd, void *buf, size_t size)
@@ -56,6 +66,16 @@ int main(void)
     alarm(5);
     cgra_t *dev = cgra_open("sim:", 115200);
     CHECK(dev != NULL, "open before injecting allocation failures");
+    cgra_set_profiling(dev, 1);
+    fail_clock = 1;
+    errno = EDOM;
+    CHECK(cgra_run(dev, 1) == CGRA_OK && errno == EDOM,
+          "profiling clock failure preserves emulator transaction and errno");
+    cgra_profile_t profile;
+    cgra_get_profile(dev, &profile);
+    CHECK(!profile.valid, "clock failure marks profile invalid, never zero-time success");
+    fail_clock = 0;
+    cgra_set_profiling(dev, 0);
     int16_t h = 2, x = 3, out = 1234;
     fail_allocation = 1;
     CHECK(cgra_conv(dev, &h, 1, &x, 1, &out, 1) == CGRA_OK && out == 6,

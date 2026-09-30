@@ -19,7 +19,7 @@ static enum source source_kind(const char *text, int16_t *constant)
         memcpy(number, text + 6, len - 7); number[len - 7] = 0;
         long value;
         if (dsl_integer(number, INT16_MIN, UINT16_MAX, &value)) return UNSUPPORTED;
-        *constant = (int16_t)value;
+        *constant = (int16_t)(value <= INT16_MAX ? value : value - 65536);
         return CONSTANT;
     }
     return UNSUPPORTED;
@@ -69,6 +69,56 @@ int bench_reference(const dsl_mode *m, cgra_info_t g,
                     const int16_t *a, const int16_t *b, size_t n,
                     int16_t *out, char *reason, size_t reason_size)
 {
+    if (!strcmp(m->pattern, "systolic")) {
+        for (size_t row = 0; row < n; row++) {
+            int64_t sum = 0;
+            for (size_t col = 0; col < 16; col++)
+                sum += (int32_t)a[row * 16 + col] * b[col];
+            uint16_t bits = (uint16_t)sum;
+            out[row] = (int16_t)(bits <= INT16_MAX ? (int32_t)bits : (int32_t)bits - 65536);
+        }
+        return (int)n;
+    }
+    if (!strcmp(m->pattern, "conv")) {
+        for (size_t i = 0; i < n + 4; i++) {
+            int64_t sum = 0;
+            for (size_t j = 0; j < 5; j++)
+                if (i >= j && i - j < n) sum += (int32_t)b[j] * a[i - j];
+            uint16_t bits = (uint16_t)sum;
+            out[i] = (int16_t)(bits <= INT16_MAX ? (int32_t)bits : (int32_t)bits - 65536);
+        }
+        return (int)(n + 4);
+    }
+    if (!strcmp(m->pattern, "scan")) {
+        int16_t sum = 0;
+        for (size_t i = 0; i < n; i++) out[i] = sum = scalar("add", sum, a[i], 0, 0);
+        return (int)n;
+    }
+    if (!strcmp(m->pattern, "custom")) {
+        /* Recognize the complete hand-placed ADD example by its structure,
+         * never by its mutable name. Other custom mappings stay explicit skips. */
+        unsigned seen = 0;
+        long steps = 4;
+        int known = g.rows == 4 && g.cols == 4 && m->npe == 16 &&
+                    (!m->out[0] || !strcmp(m->out, "diag"));
+        if (m->steps[0] && strcmp(m->steps, "rows") && strcmp(m->steps, "auto"))
+            known = known && !dsl_integer(m->steps, 0, UINT8_MAX, &steps);
+        for (int i = 0; known && i < m->npe; i++) {
+            const dsl_pe *p = &m->pe[i];
+            if (p->r < 0 || p->r >= 4 || p->c < 0 || p->c >= 4) { known = 0; break; }
+            unsigned bit = 1u << (unsigned)(p->r * 4 + p->c);
+            if (seen & bit) { known = 0; break; }
+            seen |= bit;
+            known = !strcmp(p->op, p->r == p->c ? "add" : "pass") &&
+                    !strcmp(p->a, p->r <= p->c ? "north" : "west") &&
+                    (p->r == p->c ? !strcmp(p->b, "west") :
+                     (!p->b[0] || !strcmp(p->b, "zero")));
+        }
+        if (known && steps >= 4) {
+            for (size_t i = 0; i < n; i++) out[i] = scalar("add", a[i], b[i], 0, 0);
+            return (int)n;
+        }
+    }
     int reduction = !strcmp(m->pattern, "reduce");
     if (m->pattern[0] && strcmp(m->pattern, "diagonal") && !reduction) {
         snprintf(reason, reason_size, "no scalar reference for pattern %s", m->pattern);

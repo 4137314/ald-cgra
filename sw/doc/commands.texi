@@ -100,39 +100,63 @@ over columns with the running fold carried between blocks.  Default op is
 @end deffn
 
 @deffn Command bench [@var{mode}] [--size @var{N}] [--repeat @var{R}] [--json]
-Measure one mode (default @code{add}) and check every result against an
-independent scalar reference. Supported references cover stateless diagonal
-modes and reductions on PE(0,0). Reference generation and output comparison
-are outside the timed intervals. The measured calls include configuration
-and execution; link counters cover those calls. @var{N} must be 1..4096 and
-@var{R} 1..INT_MAX. An unsupported single benchmark returns nonzero.
+Measure one mode (default @code{add}) with one checked warm-up and @var{R}
+measured calls. Every call is checked outside API timing. Independent scalar
+references cover stateless diagonals, reductions, the structurally recognized
+custom ADD example, matvec, scan and convolution. Matvec uses @var{N} rows and
+16 columns; scan uses @var{N} inputs; convolution uses @var{N} inputs and five
+coefficients, producing @var{N}+4 outputs. This benchmark output capacity is
+separate from the regular vector CLI limit. @var{N} is 1..4096 and @var{R}
+1..INT_MAX, subject to timing-sample allocation. Unsupported references fail
+an individual @command{bench} invocation with an explicit skip.
 @end deffn
 
 @deffn Command benchall [--size @var{N}] [--repeat @var{R}] [--json]
-Inspect every loaded mode and report @code{passed}, @code{failed} or
-@code{skipped}. Invalid configurations, transport errors and numerical
-mismatches are failures. Valid custom/stateful-diagonal mappings and dedicated
-matrix/scan/convolution patterns without a scalar benchmark reference are
-explicitly skipped. The built-in 4x4 custom template fails validation on
-smaller shapes; it is not a portable mapping.
+Report every loaded mode as @code{passed}, @code{failed} or @code{skipped}.
+Malformed mappings, transport errors and numerical mismatches fail. Arbitrary
+custom and stateful-diagonal modes without an independent reference are
+skipped; being compilable is not verification. The known 4x4 ADD template is
+recognized by all PE operations/routes, output selection and schedule, never
+by its name. Its fixed coordinates are invalid on incompatible geometries.
 
-JSON schema version 1 records the resolved port/backend, device geometry,
-protocol version, configured baud/timeout, compiler and deterministic workload
-identifier. The baud value does not model emulator timing. Each entry records
-the mode's @code{mapping} fields (empty fields use documented defaults).
-Software source/build provenance still needs an accompanying source snapshot.
-The report keeps all entries in @code{results}. Each entry has
-@code{mode}, @code{pattern} and @code{status}; passed entries include
-@code{verification: "scalar"}, timings and link counters, and other entries
-include @code{reason}. @code{modes} counts successes, @code{failed} and
-@code{skipped} count the other outcomes. Totals include successful measurements
-only. Any failure, or no successful measurements, gives a nonzero exit status.
+JSON schema version 2 records backend, geometry, protocol, baud/timeout,
+compiler, actual build signatures, source hashes, commit/dirty state when
+available, platform and deterministic workload ID. @env{CGRA_BITSTREAM_ID}
+is an optional operator-supplied identifier, not device attestation; absence
+is JSON null. @code{compiled_template_words} records compilation output;
+matvec/conv fill weights per tile rather than using those zero placeholders.
 
-A completed benchmark report is published with @option{-o} even when it
-contains failures; parse/open failures before reporting preserve the previous
-file. @command{make bench} retains the failing JSON artifact and propagates
-nonzero status. This report does not establish correctness for excluded
-mappings or inputs beyond the deterministic benchmark vectors.
+Each successful entry contains API/CPU samples in measurement order, mean,
+median and nearest-rank p95. The CPU baseline executes the scalar reference
+with identical modular semantics, consumes its outputs and includes reference
+dispatch overhead; it is not a claim of optimal native CPU performance.
+@code{prepare_ms} covers compile/reference/sample allocation once per mode.
+@code{configuration_io_ms} and @code{execution_io_ms} sum instrumented transport
+calls over measured iterations, including retries and emulator work or serial
+waits. @code{host_api_other_ms} is remaining API wall time (host computation,
+serialization, checking and instrumentation overhead). @code{verify_ms}
+covers API/CPU comparisons outside both timed computations. Workload filling,
+ID and warm-up are excluded from measured link counters. Profiling adds clock
+calls; these measurements cannot be converted into FPGA speedup.
+
+Byte/transaction counters, configuration transactions and requested RUN/EXEC
+steps are separate from useful arithmetic counts. The latter count scalar
+adds/subtracts/multiplies, exclude routing/padding and initial zero additions,
+and are null when no count is specified. Requested steps do not attest physical
+captures after a failed transfer. Failed entries retain completed samples and
+a reason. Totals include successful measurements; any failure or zero successes
+returns nonzero. Skips are explicit in @code{results} and the summary.
+
+Completed reports are published with @option{-o} even on failure; failures
+before reporting preserve the destination. @command{make bench} executes each
+requested size once, stores its complete JSON in an isolated run directory,
+and publishes a schema-2 sweep index at @env{OUT} (default
+@file{sw/build/benchmark.json}). The index lists point size, command, exit
+status, path and hash. It preserves failed reports and incomplete diagnostics;
+if no new report is produced, the previous public index remains untouched.
+The run directory and index must be distributed together. @env{DEV=auto}
+first probes the device. Source hashes and samples make evidence traceable,
+not a proof of all possible workload values.
 @end deffn
 
 @section Development

@@ -8,6 +8,7 @@
 #include "cgra.h"
 
 #include <assert.h>
+#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -400,8 +401,46 @@ static void test_kernel_op_validation(void)
     }
 }
 
+static void test_profiling(void)
+{
+    cgra_t *dev = cgra_open("sim:1x1", 115200);
+    CHECK(dev != NULL, "open profiling device");
+    cgra_profile_t p;
+    cgra_get_profile(dev, &p);
+    CHECK(!p.valid && p.configuration_io_ns == 0 && p.execution_io_ns == 0,
+          "profiling is disabled by default");
+    cgra_info_t g;
+    CHECK(cgra_get_info(dev, &g) == CGRA_OK, "identify before profiling");
+    cgra_set_profiling(dev, 1);
+    uint32_t cfg = CGRA_CFG(CGRA_OP_CONST, CGRA_SEL_ZERO, CGRA_SEL_ZERO, 7);
+    CHECK(cgra_configure_n(dev, &cfg, 1) == CGRA_OK, "profile configuration I/O");
+    errno = EDOM;
+    CHECK(cgra_run(dev, 255) == CGRA_OK && errno == EDOM, "profiling preserves successful transaction errno");
+    CHECK(cgra_exec_n(dev, 0, 0, 0, NULL, 0, NULL, 0, NULL, 0) == CGRA_OK,
+          "profile zero-step EXEC");
+    cgra_get_profile(dev, &p);
+    CHECK(p.valid && p.configuration_transactions == 1 && p.requested_steps == 255 &&
+          p.configuration_io_ns > 0 && p.execution_io_ns > 0,
+          "configuration and other transport intervals are separate; steps counted once");
+    cgra_set_profiling(dev, 0);
+    CHECK(cgra_run(dev, 1) == CGRA_OK, "commands remain usable with profiling disabled");
+    cgra_profile_t frozen;
+    cgra_get_profile(dev, &frozen);
+    CHECK(frozen.requested_steps == p.requested_steps && frozen.execution_io_ns == p.execution_io_ns,
+          "disabling profiling freezes collected values");
+    cgra_set_profiling(dev, 1);
+    cgra_get_profile(dev, &p);
+    CHECK(p.valid && p.requested_steps == 0 && p.configuration_transactions == 0 &&
+          p.configuration_io_ns == 0 && p.execution_io_ns == 0, "re-enabling starts a new profile");
+    cgra_set_profiling(NULL, 1);
+    cgra_get_profile(dev, NULL);
+    cgra_get_profile(NULL, &p);
+    cgra_close(dev);
+}
+
 int main(void)
 {
+    test_profiling();
     test_kernel_op_validation();
     cgra_t *dev = cgra_open("sim:", 115200);
     if (!dev) { fprintf(stderr, "Bail out! cannot open sim: emulator\n"); return 1; }

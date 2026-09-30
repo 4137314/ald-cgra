@@ -95,27 +95,40 @@ Systolic matrix\-vector product y = A*x (A row-major, tiled over rows x cols blo
 Inclusive prefix scan on row 0.
 .TP
 .B bench " [" \fIMODE\fR "] [\-\-size " \fIN\fR "] [\-\-repeat " \fIR\fR "]"
-Measure a mode and compare every invocation with an independent scalar
-reference outside the timed interval. Supports stateless diagonal modes and
-PE(0,0) reductions. Size must be 1..4096; repeat must be 1..INT_MAX.
-Supports --json and -o. Unsupported single benchmarks return nonzero.
+Measure one checked warm-up and R measured invocations against independent
+scalar references, outside API timing. Supports stateless diagonals, reductions,
+known custom ADD routing, matvec (N rows, 16 columns), scan (N inputs) and
+convolution (N inputs, 5 coefficients, N+4 outputs). Size is 1..4096; repeat is
+1..INT_MAX subject to sample allocation. The convolution benchmark capacity is
+separate from the regular CLI output limit. Supports --json and -o.
 .TP
 .B benchall " [\-\-size " \fIN\fR "] [\-\-repeat " \fIR\fR "] [\-\-json]"
-Report every loaded mode as passed, failed or skipped, in text or JSON.
-Malformed configurations, execution errors and scalar mismatches fail.
-Valid mappings without an available scalar reference are explicitly skipped.
-JSON schema_version=1 records backend/port, geometry, protocol version,
-configured baud/timeout, compiler, workload ID and mapping fields. Empty mapping
-fields mean documented defaults. Source/build provenance needs a separate
-source snapshot. The results array retains all entries, with a status and a
-reason for failures/skips; successful entries have verification="scalar".
-The modes field counts successes; failed and skipped count other outcomes.
-Timings and byte totals cover successful measurements only.
-Any failure or zero successful measurements gives a nonzero exit status.
-A completed report is written with -o even on benchmark failure.
-The bring-up pipeline
-.RB ( "make bench" )
-wraps this to sweep several vector sizes on a device.
+Report every loaded mode as passed, failed or skipped. Malformed configurations,
+execution errors and scalar mismatches fail. Arbitrary custom/stateful mappings
+without a scalar reference are skipped. The known custom example is recognized
+by structure, not by name; its fixed 4x4 coordinates fail on incompatible shapes.
+JSON schema_version=2 records backend, geometry, protocol, compiler/build flags,
+source hashes, commit/dirty state when available, platform, workload and mapping.
+CGRA_BITSTREAM_ID optionally supplies an operator identifier, not device attestation.
+Measured API and CPU samples, median and nearest-rank p95 are retained. The CPU
+baseline runs the scalar reference including dispatch, with outputs consumed;
+it does not claim optimal CPU performance. Warm-up and ID are outside measured
+link statistics. Preparation and verification are separate from API timing.
+Configuration I/O and other transport I/O (including waits/retries/model work)
+are measured separately; remaining API wall time includes host computation,
+serialization/checks and instrumentation overhead. These are host timings,
+not FPGA throughput. Useful scalar arithmetic, requested steps, transactions
+and bytes are separate counts; unspecified arithmetic counts are null.
+Failed entries retain completed samples and a reason. Totals include successes
+only; any failure or zero successes returns nonzero. An unsupported single
+benchmark returns nonzero. Completed reports publish with -o even on failure;
+errors before report generation preserve the destination.
+.B make bench
+executes each size once and writes each point into an isolated run directory.
+OUT is a schema-2 index of their paths, hashes, commands and exit statuses.
+Distribute the index together with its run directory. Failed reports and
+incomplete diagnostics remain available; no new report preserves the old index.
+See the Info manual for field definitions and numerical workload parameters.
 .TP
 .B selftest
 Run every kernel against the emulator and check the results. The suite runs

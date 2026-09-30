@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import select
+import statistics
 import subprocess
 import sys
 import tempfile
@@ -37,7 +38,7 @@ with tempfile.TemporaryDirectory() as temp:
         return json.loads(result.stdout.decode("utf-8"),
                           parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))
 
-    for geometry in ("1x16", "16x1", "2x3", "3x2", "4x4"):
+    for geometry in ("1x16", "2x8", "4x4", "8x2", "16x1", "2x3", "3x2"):
         for version in ("", ":v2"):
             result = run("benchall", "-d", f"sim:{geometry}{version}",
                          "--size", "17", "--repeat", "2", "--json")
@@ -45,7 +46,7 @@ with tempfile.TemporaryDirectory() as temp:
             rows, cols = map(int, geometry.split("x"))
             check(data["device"]["rows"] == rows and data["device"]["cols"] == cols and
                   data["device"]["protocol_version"] == (2 if version else 3) and
-                  data["device"]["backend"] == "emulator" and data["workload"] == "deterministic-edges-v1",
+                  data["device"]["backend"] == "emulator" and data["workload"] == "deterministic-edges-v2",
                   "benchmark metadata describes the actual backend and geometry")
             invalid_custom = geometry != "4x4"
             failures = [row for row in data["results"] if row["status"] == "failed"]
@@ -55,9 +56,35 @@ with tempfile.TemporaryDirectory() as temp:
                   f"stdlib scalar checks pass; fixed custom template is diagnosed on {geometry}{version}: {result.stderr!r}")
             passed = [row for row in data["results"] if row["status"] == "passed"]
             check(len(passed) == data["modes"] and all(row["verification"] == "scalar" for row in passed)
-                  and data["skipped"] > 0 and
+                  and data["skipped"] == 0 and
                   len(data["results"]) == data["modes"] + data["failed"] + data["skipped"],
                   "report accounts for every mode and distinguishes scalar checks from skips")
+            check(data["schema_version"] == 2 and data["warmup"] == 1 and
+                  len(data["build"]["sources_sha256"]) == 64 and data["build"]["cli"]["config"] and
+                  all(len(row["samples_ms"]) == len(row["cpu_samples_ms"]) == 2 and
+                      row["completed_iterations"] == 2 and row["p95_ms"] >= row["median_ms"] >= 0 and
+                      row["cpu_p95_ms"] >= row["cpu_median_ms"] >= 0 for row in passed),
+                  "measured samples, CPU baseline and build provenance are complete")
+            modes = {row["mode"]: row for row in passed}
+            check(all(name in modes for name in ("matvec", "scan", "conv")) and
+                  modes["matvec"]["outputs"] == 17 and modes["conv"]["outputs"] == 21 and
+                  modes["scan"]["outputs"] == 17,
+                  "dedicated public API workloads execute and match independent references")
+            check(all(row["configuration_transactions"] > 0 and row["requested_steps"] > 0 and
+                      row["configuration_io_ms"] >= 0 and row["execution_io_ms"] >= 0 and
+                      row["host_api_other_ms"] >= 0 for row in passed) and
+                  modes["matvec"]["useful_arithmetic_ops_per_iteration"] == 17 * 31 and
+                  modes["conv"]["useful_arithmetic_ops_per_iteration"] == 17 * 10 - 21 and
+                  modes["scan"]["useful_arithmetic_ops_per_iteration"] == 16,
+                  "configuration, communication, requested steps and useful arithmetic stay distinct")
+            check(all(abs(row["median_ms"] - statistics.median(row["samples_ms"])) < 1e-7 and
+                      abs(row["p95_ms"] - max(row["samples_ms"])) < 1e-7 for row in passed),
+                  "reported two-sample median and nearest-rank p95 match retained measurements")
+
+    for mode in ("matvec", "conv", "scan"):
+        for size in (1, 4096):
+            result = run("bench", mode, "-d", "sim", "--size", str(size), "--repeat", "1", "--json")
+            check(result.returncode == 0 and report(result)["ok"], f"{mode} benchmark handles size {size}")
 
     for option, values in (("--size", ("0", "-1", "4097", "2junk")),
                            ("--repeat", ("0", "-1", "2junk", "999999999999999999999")),
@@ -88,8 +115,16 @@ with tempfile.TemporaryDirectory() as temp:
           and rows["unknown_pattern"]["status"] == "failed" and rows["broken"]["reason"],
           "escaped names round-trip; invalid modes and patterns are never omitted")
     result = run("bench", "custom_example", "-d", "sim:", "--size", "8", "--repeat", "1", "--json")
+    check(result.returncode == 0 and report(result)["results"][0]["status"] == "passed",
+          "known custom ADD routing is checked against its scalar reference")
+    config.write_text("[mode arbitrary]\npattern=custom\npe 0,0=op=pass a=self\n")
+    result = run("-c", str(config), "bench", "arbitrary", "-d", "sim:", "--size", "8", "--repeat", "1", "--json")
     check(result.returncode != 0 and report(result)["results"][0]["status"] == "skipped",
-          "a single unsupported benchmark does not claim success")
+          "an arbitrary compilable custom mapping remains an explicit skip")
+    config.write_text("[mode custom_example]\npe 0,0=op=sub a=north b=west\n")
+    result = run("-c", str(config), "bench", "custom_example", "-d", "sim:", "--size", "8", "--repeat", "1", "--json")
+    check(result.returncode != 0 and report(result)["results"][0]["status"] == "skipped",
+          "a changed custom example cannot inherit validation from its name")
     config.write_bytes(b"[mode invalid\xff]\nop=add\n")
     result = run("-c", str(config), "bench", "-d", "sim:", "--size", "8", "--repeat", "1", "--json")
     check(result.returncode == 0 and report(result)["ok"], "valid single benchmark JSON")
@@ -131,8 +166,25 @@ with tempfile.TemporaryDirectory() as temp:
                      STDLIB=str(broken_root), OUT=str(destination))
     result = subprocess.run(["sh", "scripts/cgra-bench.sh"], env=sweep_env,
                             capture_output=True, timeout=15)
-    check(result.returncode != 0 and json.loads(destination.read_text())["failed"] == 1,
-          "sweep script preserves failing JSON and propagates nonzero status")
+    sweep = json.loads(destination.read_text())
+    point_reports = [json.loads((destination.parent / point["report"]).read_text()) for point in sweep["points"]]
+    check(result.returncode != 0 and sweep["schema_version"] == 2 and not sweep["ok"] and
+          [r["size"] for r in point_reports] == [8, 17] and all(r["failed"] == 1 for r in point_reports),
+          "sweep retains each failing point and propagates nonzero status")
+    previous = destination.read_bytes()
+    result = subprocess.run(["sh", "scripts/cgra-bench.sh"], env=dict(sweep_env, DEV="/nonexistent/cgra"),
+                            capture_output=True, timeout=15)
+    check(result.returncode != 0 and destination.read_bytes() == previous,
+          "a sweep producing no report preserves the previous artifact")
+    # Count real CLI benchmark launches; there must be no largest-size rerun.
+    wrapper = root / "count-cli"
+    launches = root / "launches"
+    wrapper.write_text("#!/bin/sh\nprintf '%s\\n' x >> \"$LAUNCHES\"\nexec \"$REAL_CGRA\" \"$@\"\n")
+    wrapper.chmod(0o755)
+    result = subprocess.run(["sh", "scripts/cgra-bench.sh"],
+                            env=dict(sweep_env, CGRA=str(wrapper), REAL_CGRA=binary, LAUNCHES=str(launches)),
+                            capture_output=True, timeout=15)
+    check(launches.read_text().splitlines() == ["x", "x"], "one actual benchmark invocation per sweep point")
 
     # A fake 1x1 device ACKs configuration and returns a checksum-valid but
     # numerically wrong EXEC reply. This must fail the scalar comparison.
