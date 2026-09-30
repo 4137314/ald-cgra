@@ -1,0 +1,19 @@
+make -C hw  -f hw.mk formal-full
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 formal/run.py --suite full
+F-PE-SMOKE: PROVED (0.642 s)
+F-PE-NEGATIVE: FAIL (0.586 s) [expected negative]
+F-PE-ALU-MUX: PROVED (6.045 s)
+F-CTRL-1x1-DIV1: PROVED (1.381 s)
+F-CTRL-1x1-DIV2: PROVED (1.461 s)
+F-CTRL-1x1-DIV3: PROVED (1.558 s)
+F-CTRL-1x1-DIV4: PROVED (1.657 s)
+F-CTRL-2x3-DIV2: PROVED (1.632 s)
+F-CTRL-3x2-DIV2: PROVED (1.609 s)
+F-CTRL-4x4-DIV2: PROVED (1.766 s)
+F-CTRL-1x16-DIV2: PROVED (1.934 s)
+F-CTRL-16x1-DIV2: PROVED (1.877 s)
+M-PE-ADD: FAIL (1.759 s) [expected negative]
+M-CTRL-STEP: FAIL (0.927 s) [expected negative]
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/full-20260928T102901Z-314228/manifest.json; acceptance PASS
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'

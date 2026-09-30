@@ -1,0 +1,43 @@
+ok contract 1 - reject unused input: ping -d sim unexpected
+ok contract 2 - reject unused input: run add --a 1 --b 2 -d sim --cols 4
+ok contract 3 - reject unused input: show add extra
+ok contract 4 - reject unused input: bench add extra
+ok contract 5 - reject unused input: scan --a 1 2
+ok contract 6 - reject unused input: run relu --a 1 --b 2
+ok contract 7 - reject unused input: conv --a 1 -m 2 --x 3
+ok contract 8 - reject unused input: matvec -m 1 --x 2 --b 3
+ok contract 9 - ping: validate option before configuration or external effects
+ok contract 10 - reset: validate option before configuration or external effects
+ok contract 11 - dump: validate option before configuration or external effects
+ok contract 12 - run: validate option before configuration or external effects
+ok contract 13 - pipe: validate option before configuration or external effects
+ok contract 14 - conv: validate option before configuration or external effects
+ok contract 15 - scan: validate option before configuration or external effects
+ok contract 16 - bench: validate option before configuration or external effects
+ok contract 17 - benchall: validate option before configuration or external effects
+ok contract 18 - show: validate option before configuration or external effects
+ok contract 19 - probe: validate option before configuration or external effects
+ok contract 20 - modes: validate option before configuration or external effects
+ok contract 21 - devices: validate option before configuration or external effects
+ok contract 22 - pipelines: validate option before configuration or external effects
+ok contract 23 - io: validate option before configuration or external effects
+ok contract 24 - config: validate option before configuration or external effects
+ok contract 25 - check: validate option before configuration or external effects
+ok contract 26 - init: validate option before configuration or external effects
+ok contract 27 - emulate: validate option before configuration or external effects
+ok contract 28 - selftest: validate option before configuration or external effects
+ok contract 29 - shell: validate option before configuration or external effects
+ok contract 30 - stdout/success for --help
+ok contract 31 - stdout/success for run --help
+ok contract 32 - stdout/success for --version
+ok contract 33 - negative positional operands remain valid
+ok contract 34 - reject whole shell line: unclosed
+ok contract 35 - reject whole shell line: argument limit
+ok contract 36 - reject whole shell line: token too long
+ok contract 37 - reject whole shell line: line too long
+ok contract 38 - reject whole shell line: contains NUL
+ok contract 39 - shell quotes and negative numbers round-trip
+ok contract 40 - oversized line is drained before the next command
+ok contract 41 - shell retains inherited configuration
+ok contract 42 - per-line configuration overrides inherited configuration
+# 42 command/shell contract checks passed

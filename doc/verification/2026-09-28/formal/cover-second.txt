@@ -1,0 +1,13 @@
+make -C hw  -f hw.mk formal-cover
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 formal/run.py --suite cover
+F-PE-SMOKE-COVER: BOUNDED_PASS (0.935 s)
+F-PE-ALU-MUX-COVER: BOUNDED_PASS (3.353 s)
+F-CTRL-1x1-DIV1-COVER: ERROR (1.044 s)
+F-CTRL-1x1-DIV2-COVER: ERROR (0.992 s)
+F-CTRL-1x1-DIV3-COVER: ERROR (0.944 s)
+F-CTRL-1x1-DIV4-COVER: ERROR (0.941 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/cover-20260928T102410Z-302016/manifest.json; acceptance FAIL
+make[1]: *** [hw.mk:111: formal-cover] Error 1
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'
+make: *** [Makefile:94: formal-cover] Error 2

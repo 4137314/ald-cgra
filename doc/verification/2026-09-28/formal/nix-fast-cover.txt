@@ -1,0 +1,24 @@
+warning: Git tree '/home/main/dev/git/ald-cgra' is dirty
+make -C hw  -f hw.mk formal-fast
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 formal/run.py --suite fast
+F-PE-SMOKE: PROVED (0.688 s)
+F-PE-NEGATIVE: FAIL (0.585 s) [expected negative]
+F-PE-ALU-MUX: PROVED (5.989 s)
+F-CTRL-1x1-DIV1: PROVED (1.366 s)
+F-CTRL-1x1-DIV2: PROVED (1.533 s)
+F-CTRL-1x1-DIV3: PROVED (1.506 s)
+F-CTRL-1x1-DIV4: PROVED (1.609 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/fast-20260928T150253Z-421979/manifest.json; acceptance PASS
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'
+make -C hw  -f hw.mk formal-cover
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 formal/run.py --suite cover
+F-PE-SMOKE-COVER: BOUNDED_PASS (0.589 s)
+F-PE-ALU-MUX-COVER: BOUNDED_PASS (2.295 s)
+F-CTRL-1x1-DIV1-COVER: BOUNDED_PASS (0.877 s)
+F-CTRL-1x1-DIV2-COVER: BOUNDED_PASS (0.855 s)
+F-CTRL-1x1-DIV3-COVER: BOUNDED_PASS (0.91 s)
+F-CTRL-1x1-DIV4-COVER: BOUNDED_PASS (0.904 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/cover-20260928T150306Z-423193/manifest.json; acceptance PASS
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'

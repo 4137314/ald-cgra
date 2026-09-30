@@ -1,0 +1,21 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)
+
+-- Running command `ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=3 cgra_pkg.vhd uart_tx.vhd uart_tx_contract.psl -e uart_tx; write_rtlil dut.il; write_json frontend.json' --
+
+1. Executing GHDL.
+Importing module uart_tx.
+
+2. Executing RTLIL backend.
+Output filename: dut.il
+
+3. Executing JSON backend.
+
+End of script. Logfile hash: 0f5960c43c, time: 0.07s, user: 0.07s, system: 0.01s, MEM: 69.14 MB peak
+Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)
+Time spent: 90% 1x ghdl (0 sec), 7% 2x write_json (0 sec), ...

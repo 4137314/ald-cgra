@@ -1,0 +1,14 @@
+make -C hw  -f hw.mk formal-fast
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 formal/run.py --suite fast
+F-PE-SMOKE: PROVED (1.038 s)
+F-PE-NEGATIVE: FAIL (0.936 s) [expected negative]
+F-PE-ALU-MUX: PROVED (9.542 s)
+F-CTRL-1x1-DIV1: ERROR (3.778 s)
+F-CTRL-1x1-DIV2: ERROR (0.892 s)
+F-CTRL-1x1-DIV3: ERROR (0.993 s)
+F-CTRL-1x1-DIV4: ERROR (0.996 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/fast-20260928T102410Z-302015/manifest.json; acceptance FAIL
+make[1]: *** [hw.mk:111: formal-fast] Error 1
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'
+make: *** [Makefile:94: formal-fast] Error 2

@@ -1,0 +1,10 @@
+In function 'cgra_write_inputs_n',
+    inlined from 'cgra_write_inputs_n' at /source/lib/src/cgra.c:558:5:
+/source/lib/src/cgra.c:578:25: error: writing 16 bytes into a region of size 15 [-Werror=stringop-overflow=]
+  578 |         buf[offset + 1] = (uint8_t)(value >> 8);
+      |         ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~
+/source/lib/src/cgra.c: In function 'cgra_write_inputs_n':
+/source/lib/src/cgra.c:569:13: note: at offset [51, 66] into destination object 'buf' of size 66
+  569 |     uint8_t buf[1 + 4 * CGRA_MAX_EDGE + 1];
+      |             ^~~
+cc1: all warnings being treated as errors

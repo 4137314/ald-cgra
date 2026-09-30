@@ -1,0 +1,23 @@
+make -C doc -f doc.mk
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/doc'
+latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build main.tex
+Rc files read:
+  NONE
+Latexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.
+Latexmk: Nothing to do for 'main.tex'.
+Latexmk: All targets (build/main.pdf) are up-to-date
+
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/doc'
+make -C sw  -f sw.mk  PROFILE=release doc
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+makeinfo -o build/cgra.info doc/cgra.texi
+  lint   doc/cgra.1
+  render doc/cgra.1
+  lint   doc/cgra.5
+  render doc/cgra.5
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'
+make -C lib -f lib.mk PROFILE=release man
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+groff -man -z doc/libcgra.3
+groff -man -Tutf8 doc/libcgra.3 > build/libcgra.3.txt
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'

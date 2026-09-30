@@ -1,0 +1,35 @@
+SBY 12:03:48 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/full-20260929T100345Z-56098/F-UART-RX-C868/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/full-20260929T100345Z-56098/F-UART-RX-C868/task/src/dut.il'.
+SBY 12:03:48 [task] engine_0: smtbmc yices
+SBY 12:03:48 [task] base: starting process "cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 12:03:48 [task] base: finished (returncode=0)
+SBY 12:03:48 [task] prep: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 12:03:48 [task] prep: finished (returncode=0)
+SBY 12:03:48 [task] smt2: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 12:03:48 [task] smt2: finished (returncode=0)
+SBY 12:03:48 [task] engine_0.basecase: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 16  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 12:03:48 [task] engine_0.induction: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -i --noprogress -t 16  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2"
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 12:03:48 [task] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 12:03:48 [task] engine_0.induction: ##   0:00:00  Trying induction in step 16..
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  BMC failed!
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Assert failed in uart_rx: uart_rx_contract.f_rx_sync1
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Assert failed in uart_rx: uart_rx_contract.f_rx_sync2
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 12:03:48 [task] engine_0.induction: ##   0:00:00  Trying induction in step 15..
+SBY 12:03:48 [task] engine_0.basecase: ##   0:00:00  Status: failed
+SBY 12:03:48 [task] engine_0.induction: ##   0:00:00  Trying induction in step 14..
+SBY 12:03:48 [task] engine_0.basecase: finished (returncode=1)
+SBY 12:03:48 [task] engine_0.basecase: Status returned by engine for basecase: FAIL
+SBY 12:03:48 [task] engine_0.induction: terminating process
+SBY 12:03:48 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 12:03:48 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 12:03:48 [task] summary: engine_0 (smtbmc yices) returned FAIL for basecase
+SBY 12:03:48 [task] summary: counterexample trace [basecase]: task/engine_0/trace.vcd
+SBY 12:03:48 [task] summary:   failed assertion uart_rx.\uart_rx_contract.f_rx_sync1 at 
+SBY 12:03:48 [task] summary:   failed assertion uart_rx.\uart_rx_contract.f_rx_sync2 at 
+SBY 12:03:48 [task] DONE (FAIL, rc=2)

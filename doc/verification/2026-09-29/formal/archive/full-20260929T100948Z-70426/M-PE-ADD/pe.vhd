@@ -1,0 +1,98 @@
+-- pe.vhd
+-- CGRA processing element: two operand muxes (N/S/E/W neighbour, immediate,
+-- own register, zero), a 16-bit signed ALU and one output register.
+-- The register updates only when 'step' is asserted, so the host controls
+-- the array cycle by cycle through the UART protocol.
+--
+-- Neighbour operands arrive bundled in a pe_neigh_t record; the raw config
+-- word is split into fields by decode_cfg (both in cgra_pkg).
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use work.cgra_pkg.all;
+
+entity pe is
+  port (
+    clk   : in  std_logic;
+    rst   : in  std_logic;   -- clears the output register (config lives outside)
+    step  : in  std_logic;
+    cfg   : in  cfg_t;
+    neigh : in  pe_neigh_t;
+    dout  : out data_t
+  );
+end entity pe;
+
+architecture rtl of pe is
+
+  signal r : data_t := (others => '0');
+
+  -- Operand mux: pick one of the four neighbours, the immediate k, the PE's
+  -- own register m, or zero.
+  function pick(sel : sel_t; nb : pe_neigh_t; k, m : data_t) return data_t is
+  begin
+    case sel is
+      when SEL_N     => return nb.n;
+      when SEL_S     => return nb.s;
+      when SEL_E     => return nb.e;
+      when SEL_W     => return nb.w;
+      when SEL_CONST => return k;
+      when SEL_SELF  => return m;
+      when others    => return to_signed(0, DATA_W);
+    end case;
+  end function;
+
+begin
+
+  alu_p : process (clk)
+    variable f    : cfg_fields_t;
+    variable a, b : data_t;
+    variable res  : data_t;
+    variable prod : signed(2 * DATA_W - 1 downto 0);
+    variable macv : signed(2 * DATA_W - 1 downto 0);
+  begin
+    if rising_edge(clk) then
+      if rst = '1' then
+        r <= (others => '0');
+      elsif step = '1' then
+        f := decode_cfg(cfg);
+        a := pick(f.sel_a, neigh, f.imm, r);
+        b := pick(f.sel_b, neigh, f.imm, r);
+
+        case f.op is
+          when OP_NOP   => res := r;
+          when OP_PASS  => res := a;
+          when OP_ADD   => res := a - b;
+          when OP_SUB   => res := a - b;
+          when OP_MUL   => prod := a * b;
+                           res  := prod(DATA_W - 1 downto 0);
+          -- MAC as a full-width product-plus-accumulator, truncated once at the
+          -- end. Arithmetically identical to (r + prod(15 downto 0)) because
+          -- the low DATA_W bits of a sum depend only on the low DATA_W bits of
+          -- its addends, but this is the DSP48E1's native P = A*B + C shape, so
+          -- the accumulate can stay inside the multiplier tile instead of
+          -- costing a fabric carry chain on the critical path.
+          when OP_MAC   => prod := a * b;
+                           macv := prod + resize(r, 2 * DATA_W);
+                           res  := macv(DATA_W - 1 downto 0);
+          when OP_AND   => res := a and b;
+          when OP_OR    => res := a or b;
+          when OP_XOR   => res := a xor b;
+          when OP_SHL   => res := shift_left(a, to_integer(unsigned(b(3 downto 0))));
+          when OP_SHR   => res := shift_right(a, to_integer(unsigned(b(3 downto 0))));
+          when OP_MAX   => if a >= b then res := a; else res := b; end if;
+          when OP_MIN   => if a <= b then res := a; else res := b; end if;
+          when OP_ABS   => res := abs a;
+          when OP_ACC   => res := r + a;
+          when OP_CONST => res := f.imm;
+          when others   => res := r;
+        end case;
+
+        r <= res;
+      end if;
+    end if;
+  end process;
+
+  dout <= r;
+
+end architecture rtl;

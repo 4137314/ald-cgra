@@ -1,0 +1,173 @@
+python3 scripts/test_compdb.py
+ok compdb 1 - all host implementation and C unit-test sources are represented
+ok compdb 2 - no duplicate translation units
+ok compdb 3 - source path round-trips: src/cgra.c
+ok compdb 4 - compiler/profile/quoted flags preserved: src/cgra.c
+ok compdb 5 - test assertions follow the build: src/cgra.c
+ok compdb 6 - sanitizer flags follow the profile: src/cgra.c
+ok compdb 7 - source path round-trips: src/kernels.c
+ok compdb 8 - compiler/profile/quoted flags preserved: src/kernels.c
+ok compdb 9 - test assertions follow the build: src/kernels.c
+ok compdb 10 - sanitizer flags follow the profile: src/kernels.c
+ok compdb 11 - source path round-trips: src/emu.c
+ok compdb 12 - compiler/profile/quoted flags preserved: src/emu.c
+ok compdb 13 - test assertions follow the build: src/emu.c
+ok compdb 14 - sanitizer flags follow the profile: src/emu.c
+ok compdb 15 - source path round-trips: src/serve.c
+ok compdb 16 - compiler/profile/quoted flags preserved: src/serve.c
+ok compdb 17 - test assertions follow the build: src/serve.c
+ok compdb 18 - sanitizer flags follow the profile: src/serve.c
+ok compdb 19 - source path round-trips: test/test_cgra.c
+ok compdb 20 - compiler/profile/quoted flags preserved: test/test_cgra.c
+ok compdb 21 - test assertions follow the build: test/test_cgra.c
+ok compdb 22 - sanitizer flags follow the profile: test/test_cgra.c
+ok compdb 23 - source path round-trips: test/test_transport.c
+ok compdb 24 - compiler/profile/quoted flags preserved: test/test_transport.c
+ok compdb 25 - test assertions follow the build: test/test_transport.c
+ok compdb 26 - sanitizer flags follow the profile: test/test_transport.c
+ok compdb 27 - source path round-trips: test/test_kernels.c
+ok compdb 28 - compiler/profile/quoted flags preserved: test/test_kernels.c
+ok compdb 29 - test assertions follow the build: test/test_kernels.c
+ok compdb 30 - sanitizer flags follow the profile: test/test_kernels.c
+ok compdb 31 - source path round-trips: test/test_faults.c
+ok compdb 32 - compiler/profile/quoted flags preserved: test/test_faults.c
+ok compdb 33 - test assertions follow the build: test/test_faults.c
+ok compdb 34 - sanitizer flags follow the profile: test/test_faults.c
+ok compdb 35 - source path round-trips: main.c
+ok compdb 36 - compiler/profile/quoted flags preserved: main.c
+ok compdb 37 - test assertions follow the build: main.c
+ok compdb 38 - generated header matches the selected profile: main.c
+ok compdb 39 - sanitizer flags follow the profile: main.c
+ok compdb 40 - source path round-trips: cli.c
+ok compdb 41 - compiler/profile/quoted flags preserved: cli.c
+ok compdb 42 - test assertions follow the build: cli.c
+ok compdb 43 - generated header matches the selected profile: cli.c
+ok compdb 44 - sanitizer flags follow the profile: cli.c
+ok compdb 45 - source path round-trips: vector_io.c
+ok compdb 46 - compiler/profile/quoted flags preserved: vector_io.c
+ok compdb 47 - test assertions follow the build: vector_io.c
+ok compdb 48 - generated header matches the selected profile: vector_io.c
+ok compdb 49 - sanitizer flags follow the profile: vector_io.c
+ok compdb 50 - source path round-trips: bench.c
+ok compdb 51 - compiler/profile/quoted flags preserved: bench.c
+ok compdb 52 - test assertions follow the build: bench.c
+ok compdb 53 - generated header matches the selected profile: bench.c
+ok compdb 54 - sanitizer flags follow the profile: bench.c
+ok compdb 55 - source path round-trips: device.c
+ok compdb 56 - compiler/profile/quoted flags preserved: device.c
+ok compdb 57 - test assertions follow the build: device.c
+ok compdb 58 - generated header matches the selected profile: device.c
+ok compdb 59 - sanitizer flags follow the profile: device.c
+ok compdb 60 - source path round-trips: shell.c
+ok compdb 61 - compiler/profile/quoted flags preserved: shell.c
+ok compdb 62 - test assertions follow the build: shell.c
+ok compdb 63 - generated header matches the selected profile: shell.c
+ok compdb 64 - sanitizer flags follow the profile: shell.c
+ok compdb 65 - source path round-trips: dsl.c
+ok compdb 66 - compiler/profile/quoted flags preserved: dsl.c
+ok compdb 67 - test assertions follow the build: dsl.c
+ok compdb 68 - generated header matches the selected profile: dsl.c
+ok compdb 69 - sanitizer flags follow the profile: dsl.c
+ok compdb 70 - source path round-trips: compile.c
+ok compdb 71 - compiler/profile/quoted flags preserved: compile.c
+ok compdb 72 - test assertions follow the build: compile.c
+ok compdb 73 - generated header matches the selected profile: compile.c
+ok compdb 74 - sanitizer flags follow the profile: compile.c
+ok compdb 75 - source path round-trips: bench_ref.c
+ok compdb 76 - compiler/profile/quoted flags preserved: bench_ref.c
+ok compdb 77 - test assertions follow the build: bench_ref.c
+ok compdb 78 - generated header matches the selected profile: bench_ref.c
+ok compdb 79 - sanitizer flags follow the profile: bench_ref.c
+ok compdb 80 - source path round-trips: test/test_sw.c
+ok compdb 81 - compiler/profile/quoted flags preserved: test/test_sw.c
+ok compdb 82 - test assertions follow the build: test/test_sw.c
+ok compdb 83 - generated header matches the selected profile: test/test_sw.c
+ok compdb 84 - sanitizer flags follow the profile: test/test_sw.c
+ok compdb 85 - all release commands pass the compiler in syntax-only mode
+ok compdb 86 - all host implementation and C unit-test sources are represented
+ok compdb 87 - no duplicate translation units
+ok compdb 88 - source path round-trips: src/cgra.c
+ok compdb 89 - compiler/profile/quoted flags preserved: src/cgra.c
+ok compdb 90 - test assertions follow the build: src/cgra.c
+ok compdb 91 - sanitizer flags follow the profile: src/cgra.c
+ok compdb 92 - source path round-trips: src/kernels.c
+ok compdb 93 - compiler/profile/quoted flags preserved: src/kernels.c
+ok compdb 94 - test assertions follow the build: src/kernels.c
+ok compdb 95 - sanitizer flags follow the profile: src/kernels.c
+ok compdb 96 - source path round-trips: src/emu.c
+ok compdb 97 - compiler/profile/quoted flags preserved: src/emu.c
+ok compdb 98 - test assertions follow the build: src/emu.c
+ok compdb 99 - sanitizer flags follow the profile: src/emu.c
+ok compdb 100 - source path round-trips: src/serve.c
+ok compdb 101 - compiler/profile/quoted flags preserved: src/serve.c
+ok compdb 102 - test assertions follow the build: src/serve.c
+ok compdb 103 - sanitizer flags follow the profile: src/serve.c
+ok compdb 104 - source path round-trips: test/test_cgra.c
+ok compdb 105 - compiler/profile/quoted flags preserved: test/test_cgra.c
+ok compdb 106 - test assertions follow the build: test/test_cgra.c
+ok compdb 107 - sanitizer flags follow the profile: test/test_cgra.c
+ok compdb 108 - source path round-trips: test/test_transport.c
+ok compdb 109 - compiler/profile/quoted flags preserved: test/test_transport.c
+ok compdb 110 - test assertions follow the build: test/test_transport.c
+ok compdb 111 - sanitizer flags follow the profile: test/test_transport.c
+ok compdb 112 - source path round-trips: test/test_kernels.c
+ok compdb 113 - compiler/profile/quoted flags preserved: test/test_kernels.c
+ok compdb 114 - test assertions follow the build: test/test_kernels.c
+ok compdb 115 - sanitizer flags follow the profile: test/test_kernels.c
+ok compdb 116 - source path round-trips: test/test_faults.c
+ok compdb 117 - compiler/profile/quoted flags preserved: test/test_faults.c
+ok compdb 118 - test assertions follow the build: test/test_faults.c
+ok compdb 119 - sanitizer flags follow the profile: test/test_faults.c
+ok compdb 120 - source path round-trips: main.c
+ok compdb 121 - compiler/profile/quoted flags preserved: main.c
+ok compdb 122 - test assertions follow the build: main.c
+ok compdb 123 - generated header matches the selected profile: main.c
+ok compdb 124 - sanitizer flags follow the profile: main.c
+ok compdb 125 - source path round-trips: cli.c
+ok compdb 126 - compiler/profile/quoted flags preserved: cli.c
+ok compdb 127 - test assertions follow the build: cli.c
+ok compdb 128 - generated header matches the selected profile: cli.c
+ok compdb 129 - sanitizer flags follow the profile: cli.c
+ok compdb 130 - source path round-trips: vector_io.c
+ok compdb 131 - compiler/profile/quoted flags preserved: vector_io.c
+ok compdb 132 - test assertions follow the build: vector_io.c
+ok compdb 133 - generated header matches the selected profile: vector_io.c
+ok compdb 134 - sanitizer flags follow the profile: vector_io.c
+ok compdb 135 - source path round-trips: bench.c
+ok compdb 136 - compiler/profile/quoted flags preserved: bench.c
+ok compdb 137 - test assertions follow the build: bench.c
+ok compdb 138 - generated header matches the selected profile: bench.c
+ok compdb 139 - sanitizer flags follow the profile: bench.c
+ok compdb 140 - source path round-trips: device.c
+ok compdb 141 - compiler/profile/quoted flags preserved: device.c
+ok compdb 142 - test assertions follow the build: device.c
+ok compdb 143 - generated header matches the selected profile: device.c
+ok compdb 144 - sanitizer flags follow the profile: device.c
+ok compdb 145 - source path round-trips: shell.c
+ok compdb 146 - compiler/profile/quoted flags preserved: shell.c
+ok compdb 147 - test assertions follow the build: shell.c
+ok compdb 148 - generated header matches the selected profile: shell.c
+ok compdb 149 - sanitizer flags follow the profile: shell.c
+ok compdb 150 - source path round-trips: dsl.c
+ok compdb 151 - compiler/profile/quoted flags preserved: dsl.c
+ok compdb 152 - test assertions follow the build: dsl.c
+ok compdb 153 - generated header matches the selected profile: dsl.c
+ok compdb 154 - sanitizer flags follow the profile: dsl.c
+ok compdb 155 - source path round-trips: compile.c
+ok compdb 156 - compiler/profile/quoted flags preserved: compile.c
+ok compdb 157 - test assertions follow the build: compile.c
+ok compdb 158 - generated header matches the selected profile: compile.c
+ok compdb 159 - sanitizer flags follow the profile: compile.c
+ok compdb 160 - source path round-trips: bench_ref.c
+ok compdb 161 - compiler/profile/quoted flags preserved: bench_ref.c
+ok compdb 162 - test assertions follow the build: bench_ref.c
+ok compdb 163 - generated header matches the selected profile: bench_ref.c
+ok compdb 164 - sanitizer flags follow the profile: bench_ref.c
+ok compdb 165 - source path round-trips: test/test_sw.c
+ok compdb 166 - compiler/profile/quoted flags preserved: test/test_sw.c
+ok compdb 167 - test assertions follow the build: test/test_sw.c
+ok compdb 168 - generated header matches the selected profile: test/test_sw.c
+ok compdb 169 - sanitizer flags follow the profile: test/test_sw.c
+ok compdb 170 - all asan commands pass the compiler in syntax-only mode
+ok compdb 171 - a failed merge preserves the previous database
+# 171 compilation database checks passed

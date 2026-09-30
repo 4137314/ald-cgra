@@ -1,0 +1,712 @@
+Get:1 http://archive.ubuntu.com/ubuntu noble InRelease [256 kB]
+Get:2 http://security.ubuntu.com/ubuntu noble-security InRelease [126 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates InRelease [126 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble-backports InRelease [126 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble/restricted amd64 Packages [117 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 Packages [1808 kB]
+Get:7 http://security.ubuntu.com/ubuntu noble-security/main amd64 Packages [1300 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages [19.3 MB]
+Get:9 http://archive.ubuntu.com/ubuntu noble/multiverse amd64 Packages [331 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 Packages [1633 kB]
+Get:11 http://archive.ubuntu.com/ubuntu noble-updates/restricted amd64 Packages [2048 kB]
+Get:12 http://security.ubuntu.com/ubuntu noble-security/restricted amd64 Packages [1905 kB]
+Get:13 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages [2159 kB]
+Get:14 http://archive.ubuntu.com/ubuntu noble-updates/multiverse amd64 Packages [56.2 kB]
+Get:15 http://archive.ubuntu.com/ubuntu noble-backports/universe amd64 Packages [36.0 kB]
+Get:16 http://archive.ubuntu.com/ubuntu noble-backports/multiverse amd64 Packages [671 B]
+Get:17 http://archive.ubuntu.com/ubuntu noble-backports/main amd64 Packages [49.0 kB]
+Get:18 http://security.ubuntu.com/ubuntu noble-security/universe amd64 Packages [1549 kB]
+Get:19 http://security.ubuntu.com/ubuntu noble-security/multiverse amd64 Packages [50.0 kB]
+Fetched 33.0 MB in 9s (3610 kB/s)
+Reading package lists...
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following additional packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-13
+  cpp-13-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc-13 gcc-13-base
+  gcc-13-x86-64-linux-gnu gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils
+  libc-dev-bin libcc1-0 libcrypt-dev libctf-nobfd0 libctf0 libexpat1
+  libgcc-13-dev libgomp1 libgprofng0 libhwasan0 libisl23 libitm1 libjansson4
+  liblsan0 libmpc3 libmpfr6 libpython3-stdlib libpython3.12-minimal
+  libpython3.12-stdlib libquadmath0 libreadline8t64 libsframe1 libsqlite3-0
+  libtsan2 libubsan1 linux-libc-dev media-types netbase python3-minimal
+  python3.12 python3.12-minimal readline-common rpcsvc-proto tzdata
+Suggested packages:
+  binutils-doc gprofng-gui cpp-doc gcc-13-locales cpp-13-doc gcc-multilib
+  manpages-dev autoconf automake libtool flex bison gdb gcc-doc
+  gcc-13-multilib gcc-13-doc gdb-x86-64-linux-gnu glibc-doc make-doc
+  python3-doc python3-tk python3-venv python3.12-venv python3.12-doc
+  binfmt-support readline-doc
+Recommended packages:
+  manpages manpages-dev libc-devtools ca-certificates
+The following NEW packages will be installed:
+  binutils binutils-common binutils-x86-64-linux-gnu cpp cpp-13
+  cpp-13-x86-64-linux-gnu cpp-x86-64-linux-gnu gcc gcc-13 gcc-13-base
+  gcc-13-x86-64-linux-gnu gcc-x86-64-linux-gnu libasan8 libatomic1 libbinutils
+  libc-dev-bin libc6-dev libcc1-0 libcrypt-dev libctf-nobfd0 libctf0 libexpat1
+  libgcc-13-dev libgomp1 libgprofng0 libhwasan0 libisl23 libitm1 libjansson4
+  liblsan0 libmpc3 libmpfr6 libpython3-stdlib libpython3.12-minimal
+  libpython3.12-stdlib libquadmath0 libreadline8t64 libsframe1 libsqlite3-0
+  libtsan2 libubsan1 linux-libc-dev make media-types netbase python3
+  python3-minimal python3.12 python3.12-minimal readline-common rpcsvc-proto
+  tzdata
+0 upgraded, 52 newly installed, 0 to remove and 3 not upgraded.
+Need to get 62.2 MB of archives.
+After this operation, 219 MB of additional disk space will be used.
+Get:1 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-minimal amd64 3.12.3-1ubuntu0.17 [839 kB]
+Get:2 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libexpat1 amd64 2.6.1-2ubuntu0.6 [98.9 kB]
+Get:3 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12-minimal amd64 3.12.3-1ubuntu0.17 [2335 kB]
+Get:4 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3-minimal amd64 3.12.3-0ubuntu2.1 [27.4 kB]
+Get:5 http://archive.ubuntu.com/ubuntu noble/main amd64 media-types all 10.1.0 [27.5 kB]
+Get:6 http://archive.ubuntu.com/ubuntu noble/main amd64 netbase all 6.4 [13.1 kB]
+Get:7 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 tzdata all 2026c-0ubuntu0.24.04.1 [280 kB]
+Get:8 http://archive.ubuntu.com/ubuntu noble/main amd64 readline-common all 8.2-4build1 [56.5 kB]
+Get:9 http://archive.ubuntu.com/ubuntu noble/main amd64 libreadline8t64 amd64 8.2-4build1 [153 kB]
+Get:10 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsqlite3-0 amd64 3.45.1-1ubuntu2.8 [702 kB]
+Get:11 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3.12-stdlib amd64 3.12.3-1ubuntu0.17 [2071 kB]
+Get:12 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3.12 amd64 3.12.3-1ubuntu0.17 [651 kB]
+Get:13 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libpython3-stdlib amd64 3.12.3-0ubuntu2.1 [10.1 kB]
+Get:14 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 python3 amd64 3.12.3-0ubuntu2.1 [23.0 kB]
+Get:15 http://archive.ubuntu.com/ubuntu noble/main amd64 libjansson4 amd64 2.14-2build2 [32.8 kB]
+Get:16 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 binutils-common amd64 2.42-4ubuntu2.10 [240 kB]
+Get:17 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libsframe1 amd64 2.42-4ubuntu2.10 [15.7 kB]
+Get:18 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libbinutils amd64 2.42-4ubuntu2.10 [577 kB]
+Get:19 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libctf-nobfd0 amd64 2.42-4ubuntu2.10 [98.0 kB]
+Get:20 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libctf0 amd64 2.42-4ubuntu2.10 [94.5 kB]
+Get:21 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgprofng0 amd64 2.42-4ubuntu2.10 [849 kB]
+Get:22 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 binutils-x86-64-linux-gnu amd64 2.42-4ubuntu2.10 [2463 kB]
+Get:23 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 binutils amd64 2.42-4ubuntu2.10 [18.2 kB]
+Get:24 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 gcc-13-base amd64 13.3.0-6ubuntu2~24.04.1 [51.6 kB]
+Get:25 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libisl23 amd64 0.26-3build1.1 [680 kB]
+Get:26 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libmpfr6 amd64 4.2.1-1build1.1 [353 kB]
+Get:27 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libmpc3 amd64 1.3.1-1build1.1 [54.6 kB]
+Get:28 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 cpp-13-x86-64-linux-gnu amd64 13.3.0-6ubuntu2~24.04.1 [10.7 MB]
+Get:29 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 cpp-13 amd64 13.3.0-6ubuntu2~24.04.1 [1042 B]
+Get:30 http://archive.ubuntu.com/ubuntu noble/main amd64 cpp-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [5326 B]
+Get:31 http://archive.ubuntu.com/ubuntu noble/main amd64 cpp amd64 4:13.2.0-7ubuntu1 [22.4 kB]
+Get:32 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libcc1-0 amd64 14.2.0-4ubuntu2~24.04.1 [48.0 kB]
+Get:33 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgomp1 amd64 14.2.0-4ubuntu2~24.04.1 [148 kB]
+Get:34 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libitm1 amd64 14.2.0-4ubuntu2~24.04.1 [29.7 kB]
+Get:35 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libatomic1 amd64 14.2.0-4ubuntu2~24.04.1 [10.5 kB]
+Get:36 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libasan8 amd64 14.2.0-4ubuntu2~24.04.1 [3027 kB]
+Get:37 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 liblsan0 amd64 14.2.0-4ubuntu2~24.04.1 [1322 kB]
+Get:38 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libtsan2 amd64 14.2.0-4ubuntu2~24.04.1 [2772 kB]
+Get:39 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libubsan1 amd64 14.2.0-4ubuntu2~24.04.1 [1184 kB]
+Get:40 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libhwasan0 amd64 14.2.0-4ubuntu2~24.04.1 [1641 kB]
+Get:41 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libquadmath0 amd64 14.2.0-4ubuntu2~24.04.1 [153 kB]
+Get:42 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libgcc-13-dev amd64 13.3.0-6ubuntu2~24.04.1 [2681 kB]
+Get:43 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 gcc-13-x86-64-linux-gnu amd64 13.3.0-6ubuntu2~24.04.1 [21.1 MB]
+Get:44 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 gcc-13 amd64 13.3.0-6ubuntu2~24.04.1 [494 kB]
+Get:45 http://archive.ubuntu.com/ubuntu noble/main amd64 gcc-x86-64-linux-gnu amd64 4:13.2.0-7ubuntu1 [1212 B]
+Get:46 http://archive.ubuntu.com/ubuntu noble/main amd64 gcc amd64 4:13.2.0-7ubuntu1 [5018 B]
+Get:47 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libc-dev-bin amd64 2.39-0ubuntu8.9 [20.4 kB]
+Get:48 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 linux-libc-dev amd64 6.8.0-142.142 [1528 kB]
+Get:49 http://archive.ubuntu.com/ubuntu noble/main amd64 libcrypt-dev amd64 1:4.4.36-4build1 [112 kB]
+Get:50 http://archive.ubuntu.com/ubuntu noble/main amd64 rpcsvc-proto amd64 1.4.2-0ubuntu7 [67.4 kB]
+Get:51 http://archive.ubuntu.com/ubuntu noble-updates/main amd64 libc6-dev amd64 2.39-0ubuntu8.9 [2126 kB]
+Get:52 http://archive.ubuntu.com/ubuntu noble/main amd64 make amd64 4.3-4.1build2 [180 kB]
+debconf: delaying package configuration, since apt-utils is not installed
+Fetched 62.2 MB in 9s (6698 kB/s)
+Selecting previously unselected package libpython3.12-minimal:amd64.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4381 files and directories currently installed.)
+Preparing to unpack .../libpython3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+Selecting previously unselected package libexpat1:amd64.
+Preparing to unpack .../libexpat1_2.6.1-2ubuntu0.6_amd64.deb ...
+Unpacking libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
+Selecting previously unselected package python3.12-minimal.
+Preparing to unpack .../python3.12-minimal_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12-minimal (3.12.3-1ubuntu0.17) ...
+Setting up libpython3.12-minimal:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up libexpat1:amd64 (2.6.1-2ubuntu0.6) ...
+Setting up python3.12-minimal (3.12.3-1ubuntu0.17) ...
+Selecting previously unselected package python3-minimal.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 4700 files and directories currently installed.)
+Preparing to unpack .../0-python3-minimal_3.12.3-0ubuntu2.1_amd64.deb ...
+Unpacking python3-minimal (3.12.3-0ubuntu2.1) ...
+Selecting previously unselected package media-types.
+Preparing to unpack .../1-media-types_10.1.0_all.deb ...
+Unpacking media-types (10.1.0) ...
+Selecting previously unselected package netbase.
+Preparing to unpack .../2-netbase_6.4_all.deb ...
+Unpacking netbase (6.4) ...
+Selecting previously unselected package tzdata.
+Preparing to unpack .../3-tzdata_2026c-0ubuntu0.24.04.1_all.deb ...
+Unpacking tzdata (2026c-0ubuntu0.24.04.1) ...
+Selecting previously unselected package readline-common.
+Preparing to unpack .../4-readline-common_8.2-4build1_all.deb ...
+Unpacking readline-common (8.2-4build1) ...
+Selecting previously unselected package libreadline8t64:amd64.
+Preparing to unpack .../5-libreadline8t64_8.2-4build1_amd64.deb ...
+Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8 to /lib/x86_64-linux-gnu/libhistory.so.8.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libhistory.so.8.2 to /lib/x86_64-linux-gnu/libhistory.so.8.2.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8 to /lib/x86_64-linux-gnu/libreadline.so.8.usr-is-merged by libreadline8t64'
+Adding 'diversion of /lib/x86_64-linux-gnu/libreadline.so.8.2 to /lib/x86_64-linux-gnu/libreadline.so.8.2.usr-is-merged by libreadline8t64'
+Unpacking libreadline8t64:amd64 (8.2-4build1) ...
+Selecting previously unselected package libsqlite3-0:amd64.
+Preparing to unpack .../6-libsqlite3-0_3.45.1-1ubuntu2.8_amd64.deb ...
+Unpacking libsqlite3-0:amd64 (3.45.1-1ubuntu2.8) ...
+Selecting previously unselected package libpython3.12-stdlib:amd64.
+Preparing to unpack .../7-libpython3.12-stdlib_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+Selecting previously unselected package python3.12.
+Preparing to unpack .../8-python3.12_3.12.3-1ubuntu0.17_amd64.deb ...
+Unpacking python3.12 (3.12.3-1ubuntu0.17) ...
+Selecting previously unselected package libpython3-stdlib:amd64.
+Preparing to unpack .../9-libpython3-stdlib_3.12.3-0ubuntu2.1_amd64.deb ...
+Unpacking libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+Setting up python3-minimal (3.12.3-0ubuntu2.1) ...
+Selecting previously unselected package python3.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 5706 files and directories currently installed.)
+Preparing to unpack .../00-python3_3.12.3-0ubuntu2.1_amd64.deb ...
+Unpacking python3 (3.12.3-0ubuntu2.1) ...
+Selecting previously unselected package libjansson4:amd64.
+Preparing to unpack .../01-libjansson4_2.14-2build2_amd64.deb ...
+Unpacking libjansson4:amd64 (2.14-2build2) ...
+Selecting previously unselected package binutils-common:amd64.
+Preparing to unpack .../02-binutils-common_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking binutils-common:amd64 (2.42-4ubuntu2.10) ...
+Selecting previously unselected package libsframe1:amd64.
+Preparing to unpack .../03-libsframe1_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking libsframe1:amd64 (2.42-4ubuntu2.10) ...
+Selecting previously unselected package libbinutils:amd64.
+Preparing to unpack .../04-libbinutils_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking libbinutils:amd64 (2.42-4ubuntu2.10) ...
+Selecting previously unselected package libctf-nobfd0:amd64.
+Preparing to unpack .../05-libctf-nobfd0_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking libctf-nobfd0:amd64 (2.42-4ubuntu2.10) ...
+Selecting previously unselected package libctf0:amd64.
+Preparing to unpack .../06-libctf0_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking libctf0:amd64 (2.42-4ubuntu2.10) ...
+Selecting previously unselected package libgprofng0:amd64.
+Preparing to unpack .../07-libgprofng0_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking libgprofng0:amd64 (2.42-4ubuntu2.10) ...
+Selecting previously unselected package binutils-x86-64-linux-gnu.
+Preparing to unpack .../08-binutils-x86-64-linux-gnu_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking binutils-x86-64-linux-gnu (2.42-4ubuntu2.10) ...
+Selecting previously unselected package binutils.
+Preparing to unpack .../09-binutils_2.42-4ubuntu2.10_amd64.deb ...
+Unpacking binutils (2.42-4ubuntu2.10) ...
+Selecting previously unselected package gcc-13-base:amd64.
+Preparing to unpack .../10-gcc-13-base_13.3.0-6ubuntu2~24.04.1_amd64.deb ...
+Unpacking gcc-13-base:amd64 (13.3.0-6ubuntu2~24.04.1) ...
+Selecting previously unselected package libisl23:amd64.
+Preparing to unpack .../11-libisl23_0.26-3build1.1_amd64.deb ...
+Unpacking libisl23:amd64 (0.26-3build1.1) ...
+Selecting previously unselected package libmpfr6:amd64.
+Preparing to unpack .../12-libmpfr6_4.2.1-1build1.1_amd64.deb ...
+Unpacking libmpfr6:amd64 (4.2.1-1build1.1) ...
+Selecting previously unselected package libmpc3:amd64.
+Preparing to unpack .../13-libmpc3_1.3.1-1build1.1_amd64.deb ...
+Unpacking libmpc3:amd64 (1.3.1-1build1.1) ...
+Selecting previously unselected package cpp-13-x86-64-linux-gnu.
+Preparing to unpack .../14-cpp-13-x86-64-linux-gnu_13.3.0-6ubuntu2~24.04.1_amd64.deb ...
+Unpacking cpp-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04.1) ...
+Selecting previously unselected package cpp-13.
+Preparing to unpack .../15-cpp-13_13.3.0-6ubuntu2~24.04.1_amd64.deb ...
+Unpacking cpp-13 (13.3.0-6ubuntu2~24.04.1) ...
+Selecting previously unselected package cpp-x86-64-linux-gnu.
+Preparing to unpack .../16-cpp-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking cpp-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package cpp.
+Preparing to unpack .../17-cpp_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking cpp (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package libcc1-0:amd64.
+Preparing to unpack .../18-libcc1-0_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libcc1-0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libgomp1:amd64.
+Preparing to unpack .../19-libgomp1_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libgomp1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libitm1:amd64.
+Preparing to unpack .../20-libitm1_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libitm1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libatomic1:amd64.
+Preparing to unpack .../21-libatomic1_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libatomic1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libasan8:amd64.
+Preparing to unpack .../22-libasan8_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libasan8:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package liblsan0:amd64.
+Preparing to unpack .../23-liblsan0_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking liblsan0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libtsan2:amd64.
+Preparing to unpack .../24-libtsan2_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libtsan2:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libubsan1:amd64.
+Preparing to unpack .../25-libubsan1_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libubsan1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libhwasan0:amd64.
+Preparing to unpack .../26-libhwasan0_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libhwasan0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libquadmath0:amd64.
+Preparing to unpack .../27-libquadmath0_14.2.0-4ubuntu2~24.04.1_amd64.deb ...
+Unpacking libquadmath0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Selecting previously unselected package libgcc-13-dev:amd64.
+Preparing to unpack .../28-libgcc-13-dev_13.3.0-6ubuntu2~24.04.1_amd64.deb ...
+Unpacking libgcc-13-dev:amd64 (13.3.0-6ubuntu2~24.04.1) ...
+Selecting previously unselected package gcc-13-x86-64-linux-gnu.
+Preparing to unpack .../29-gcc-13-x86-64-linux-gnu_13.3.0-6ubuntu2~24.04.1_amd64.deb ...
+Unpacking gcc-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04.1) ...
+Selecting previously unselected package gcc-13.
+Preparing to unpack .../30-gcc-13_13.3.0-6ubuntu2~24.04.1_amd64.deb ...
+Unpacking gcc-13 (13.3.0-6ubuntu2~24.04.1) ...
+Selecting previously unselected package gcc-x86-64-linux-gnu.
+Preparing to unpack .../31-gcc-x86-64-linux-gnu_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking gcc-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package gcc.
+Preparing to unpack .../32-gcc_4%3a13.2.0-7ubuntu1_amd64.deb ...
+Unpacking gcc (4:13.2.0-7ubuntu1) ...
+Selecting previously unselected package libc-dev-bin.
+Preparing to unpack .../33-libc-dev-bin_2.39-0ubuntu8.9_amd64.deb ...
+Unpacking libc-dev-bin (2.39-0ubuntu8.9) ...
+Selecting previously unselected package linux-libc-dev:amd64.
+Preparing to unpack .../34-linux-libc-dev_6.8.0-142.142_amd64.deb ...
+Unpacking linux-libc-dev:amd64 (6.8.0-142.142) ...
+Selecting previously unselected package libcrypt-dev:amd64.
+Preparing to unpack .../35-libcrypt-dev_1%3a4.4.36-4build1_amd64.deb ...
+Unpacking libcrypt-dev:amd64 (1:4.4.36-4build1) ...
+Selecting previously unselected package rpcsvc-proto.
+Preparing to unpack .../36-rpcsvc-proto_1.4.2-0ubuntu7_amd64.deb ...
+Unpacking rpcsvc-proto (1.4.2-0ubuntu7) ...
+Selecting previously unselected package libc6-dev:amd64.
+Preparing to unpack .../37-libc6-dev_2.39-0ubuntu8.9_amd64.deb ...
+Unpacking libc6-dev:amd64 (2.39-0ubuntu8.9) ...
+Selecting previously unselected package make.
+Preparing to unpack .../38-make_4.3-4.1build2_amd64.deb ...
+Unpacking make (4.3-4.1build2) ...
+Setting up media-types (10.1.0) ...
+Setting up libsqlite3-0:amd64 (3.45.1-1ubuntu2.8) ...
+Setting up binutils-common:amd64 (2.42-4ubuntu2.10) ...
+Setting up linux-libc-dev:amd64 (6.8.0-142.142) ...
+Setting up libctf-nobfd0:amd64 (2.42-4ubuntu2.10) ...
+Setting up libgomp1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libsframe1:amd64 (2.42-4ubuntu2.10) ...
+Setting up libjansson4:amd64 (2.14-2build2) ...
+Setting up tzdata (2026c-0ubuntu0.24.04.1) ...
+debconf: unable to initialize frontend: Dialog
+debconf: (TERM is not set, so the dialog frontend is not usable.)
+debconf: falling back to frontend: Readline
+debconf: unable to initialize frontend: Readline
+debconf: (Can't locate Term/ReadLine.pm in @INC (you may need to install the Term::ReadLine module) (@INC entries checked: /etc/perl /usr/local/lib/x86_64-linux-gnu/perl/5.38.2 /usr/local/share/perl/5.38.2 /usr/lib/x86_64-linux-gnu/perl5/5.38 /usr/share/perl5 /usr/lib/x86_64-linux-gnu/perl-base /usr/lib/x86_64-linux-gnu/perl/5.38 /usr/share/perl/5.38 /usr/local/lib/site_perl) at /usr/share/perl5/Debconf/FrontEnd/Readline.pm line 8.)
+debconf: falling back to frontend: Teletype
+Configuring tzdata
+------------------
+
+Please select the geographic area in which you live. Subsequent configuration
+questions will narrow this down by presenting a list of cities, representing
+the time zones in which they are located.
+
+  1. Africa      4. Arctic    7. Australia  10. Pacific
+  2. America     5. Asia      8. Europe     11. Etc
+  3. Antarctica  6. Atlantic  9. Indian     12. Legacy
+Geographic area: 
+Use of uninitialized value $_[1] in join or string at /usr/share/perl5/Debconf/DbDriver/Stack.pm line 112.
+
+Current default time zone: '/UTC'
+Local time is now:      Mon Sep 28 15:18:04 UTC 2026.
+Universal Time is now:  Mon Sep 28 15:18:04 UTC 2026.
+Run 'dpkg-reconfigure tzdata' if you wish to change it.
+
+Use of uninitialized value $val in substitution (s///) at /usr/share/perl5/Debconf/Format/822.pm line 84, <GEN6> line 4.
+Use of uninitialized value $val in concatenation (.) or string at /usr/share/perl5/Debconf/Format/822.pm line 85, <GEN6> line 4.
+Setting up rpcsvc-proto (1.4.2-0ubuntu7) ...
+Setting up gcc-13-base:amd64 (13.3.0-6ubuntu2~24.04.1) ...
+Setting up make (4.3-4.1build2) ...
+Setting up libmpfr6:amd64 (4.2.1-1build1.1) ...
+Setting up libquadmath0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libmpc3:amd64 (1.3.1-1build1.1) ...
+Setting up libatomic1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libubsan1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libhwasan0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libcrypt-dev:amd64 (1:4.4.36-4build1) ...
+Setting up libasan8:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up netbase (6.4) ...
+Setting up libtsan2:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libbinutils:amd64 (2.42-4ubuntu2.10) ...
+Setting up libisl23:amd64 (0.26-3build1.1) ...
+Setting up libc-dev-bin (2.39-0ubuntu8.9) ...
+Setting up readline-common (8.2-4build1) ...
+Setting up libcc1-0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up liblsan0:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libitm1:amd64 (14.2.0-4ubuntu2~24.04.1) ...
+Setting up libctf0:amd64 (2.42-4ubuntu2.10) ...
+Setting up cpp-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04.1) ...
+Setting up libgprofng0:amd64 (2.42-4ubuntu2.10) ...
+Setting up libreadline8t64:amd64 (8.2-4build1) ...
+Setting up libgcc-13-dev:amd64 (13.3.0-6ubuntu2~24.04.1) ...
+Setting up libc6-dev:amd64 (2.39-0ubuntu8.9) ...
+Setting up binutils-x86-64-linux-gnu (2.42-4ubuntu2.10) ...
+Setting up cpp-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up libpython3.12-stdlib:amd64 (3.12.3-1ubuntu0.17) ...
+Setting up cpp-13 (13.3.0-6ubuntu2~24.04.1) ...
+Setting up gcc-13-x86-64-linux-gnu (13.3.0-6ubuntu2~24.04.1) ...
+Setting up python3.12 (3.12.3-1ubuntu0.17) ...
+Setting up binutils (2.42-4ubuntu2.10) ...
+Setting up gcc-13 (13.3.0-6ubuntu2~24.04.1) ...
+Setting up cpp (4:13.2.0-7ubuntu1) ...
+Setting up libpython3-stdlib:amd64 (3.12.3-0ubuntu2.1) ...
+Setting up gcc-x86-64-linux-gnu (4:13.2.0-7ubuntu1) ...
+Setting up python3 (3.12.3-0ubuntu2.1) ...
+running python rtupdate hooks for python3.12...
+running python post-rtupdate hooks for python3.12...
+Setting up gcc (4:13.2.0-7ubuntu1) ...
+Processing triggers for libc-bin (2.39-0ubuntu8.9) ...
+gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+Copyright (C) 2023 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+make: Entering directory '/work/lib'
+mkdir -p build
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+src/cgra.c: In function 'cgra_exec_n':
+src/cgra.c:571:39: warning: writing 16 bytes into a region of size 15 [-Wstringop-overflow=]
+  571 |         req[1 + EXEC_HDR + 2 * j + 1] = (uint8_t)(v >> 8);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~
+src/cgra.c:556:13: note: at offset [55, 70] into destination object 'req' of size 70
+  556 |     uint8_t req[EXEC_REQ_MAX];
+      |             ^~~
+src/cgra.c:570:39: warning: writing 16 bytes into a region of size 15 [-Wstringop-overflow=]
+  570 |         req[1 + EXEC_HDR + 2 * j + 0] = (uint8_t)(v & 0xFFu);
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~
+src/cgra.c:556:13: note: at offset [55, 70] into destination object 'req' of size 70
+  556 |     uint8_t req[EXEC_REQ_MAX];
+      |             ^~~
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/kernels.c -o build/kernels.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/emu.c -o build/emu.o
+cc -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/serve.c -o build/serve.o
+ar rcs build/libcgra.a build/cgra.o build/kernels.o build/emu.o build/serve.o
+make: Leaving directory '/work/lib'
+make: Entering directory '/work/lib'
+mkdir -p build/analyze
+src/cgra.c: In function 'cgra_configure_n':
+src/cgra.c:418:26: error: use of uninitialized value 'g.rows' [CWE-457] [-Werror=analyzer-use-of-uninitialized-value]
+  418 |     if (ncfg != (size_t)g.rows * g.cols) return CGRA_ERR_ARG;
+      |                         ~^~~~~
+  'cgra_dot': events 1-3
+    |
+    |  810 | int cgra_dot(cgra_t *dev, const int16_t *a, const int16_t *b, size_t n,
+    |      |     ^~~~~~~~
+    |      |     |
+    |      |     (1) entry to 'cgra_dot'
+    |......
+    |  813 |     if (dev == NULL || !cgra_buffer_valid(a, n) || !cgra_buffer_valid(b, n) || result == NULL)
+    |      |        ~                ~
+    |      |        |                |
+    |      |        |                (3) inlined call to 'cgra_buffer_valid' from 'cgra_dot'
+    |      |        (2) following 'false' branch (when 'dev' is non-NULL)...
+    |
+    +--> 'cgra_buffer_valid': event 4
+           |
+           |src/buffers.h:12:35:
+           |   12 |     return n <= CGRA_MAX_ELEMENTS && (n == 0 || p != NULL);
+           |      |            ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+           |      |                                   |
+           |      |                                   (4) ...to here
+           |
+           +--> 'cgra_buffer_valid': event 5
+                  |
+                  |   12 |     return n <= CGRA_MAX_ELEMENTS && (n == 0 || p != NULL);
+                  |      |            ~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
+                  |      |                                   |
+                  |      |                                   (5) following 'true' branch...
+                  |
+    <-------------+
+    |
+  'cgra_dot': event 6
+    |
+    |src/cgra.c:813:77:
+    |  813 |     if (dev == NULL || !cgra_buffer_valid(a, n) || !cgra_buffer_valid(b, n) || result == NULL)
+    |      |                                                                             ^
+    |      |                                                                             |
+    |      |                                                                             (6) ...to here
+    |
+  'cgra_dot': events 7-11
+    |
+    |  813 |     if (dev == NULL || !cgra_buffer_valid(a, n) || !cgra_buffer_valid(b, n) || result == NULL)
+    |      |                                                                             ^
+    |      |                                                                             |
+    |      |                                                                             (7) following 'false' branch (when 'result' is non-NULL)...
+    |  814 |         return CGRA_ERR_ARG;
+    |  815 |     if (!n) { *result = 0; return CGRA_OK; }
+    |      |        ~                                                                     
+    |      |        |
+    |      |        (8) ...to here
+    |      |        (9) following 'false' branch (when 'n != 0')...
+    |......
+    |  818 |     int rc = cgra_get_info(dev, &g);
+    |      |              ~~~~~~~~~~~~~~~~~~~~~~                                          
+    |      |              |
+    |      |              (10) ...to here
+    |      |              (11) calling 'cgra_get_info' from 'cgra_dot'
+    |
+    +--> 'cgra_get_info': events 12-19
+           |
+           |  378 | int cgra_get_info(cgra_t *dev, cgra_info_t *info)
+           |      |     ^~~~~~~~~~~~~
+           |      |     |
+           |      |     (12) entry to 'cgra_get_info'
+           |  379 | {
+           |  380 |     if (dev == NULL) return CGRA_ERR_ARG;
+           |      |        ~
+           |      |        |
+           |      |        (13) following 'false' branch (when 'dev' is non-NULL)...
+           |  381 |     if (dev->desynced) return CGRA_ERR_DESYNC;
+           |      |        ~~~~~~~~~~~~~~
+           |      |        |   |
+           |      |        |   (14) ...to here
+           |      |        (15) following 'false' branch...
+           |  382 |     if (dev->proto_ver < 0) {
+           |      |        ~~~~~~~~~~~~~~~
+           |      |        |   |
+           |      |        |   (16) ...to here
+           |      |        (17) following 'true' branch...
+           |  383 |         int rc = cgra_identify(dev, NULL);
+           |      |                  ~~~~~~~~~~~~~~~~~~~~~~~~
+           |      |                  |
+           |      |                  (18) ...to here
+           |      |                  (19) calling 'cgra_identify' from 'cgra_get_info'
+           |
+           +--> 'cgra_identify': events 20-31
+                  |
+                  |  356 | int cgra_identify(cgra_t *dev, cgra_info_t *info)
+                  |      |     ^~~~~~~~~~~~~
+                  |      |     |
+                  |      |     (20) entry to 'cgra_identify'
+                  |  357 | {
+                  |  358 |     if (dev == NULL)
+                  |      |        ~
+                  |      |        |
+                  |      |        (21) following 'false' branch (when 'dev' is non-NULL)...
+                  |  359 |         return CGRA_ERR_ARG;
+                  |  360 |     if (dev->desynced) return CGRA_ERR_DESYNC;
+                  |      |        ~~~~~~~~~~~~~~
+                  |      |        |   |
+                  |      |        |   (22) ...to here
+                  |      |        (23) following 'false' branch...
+                  |  361 |     dev->stats.transactions++;
+                  |      |     ~~~~~~~~~~~~~~~~~~~~~~~
+                  |      |               |
+                  |      |               (24) ...to here
+                  |......
+                  |  365 |     if (rc != CGRA_OK)
+                  |      |        ~
+                  |      |        |
+                  |      |        (25) following 'false' branch (when 'rc == 0')...
+                  |  366 |         return uncertain(dev, rc);
+                  |  367 |     rc = read_exact(dev, rsp, sizeof(rsp));
+                  |      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                  |      |          |
+                  |      |          (26) ...to here
+                  |  368 |     if (rc != CGRA_OK)
+                  |      |        ~
+                  |      |        |
+                  |      |        (27) following 'false' branch (when 'rc == 0')...
+                  |  369 |         return uncertain(dev, rc);
+                  |  370 |     if (rsp[0] != ID_BYTE0)
+                  |      |        ~~~~~~~
+                  |      |        |   |
+                  |      |        |   (28) ...to here
+                  |      |        (29) following 'false' branch...
+                  |  371 |         return uncertain(dev, CGRA_ERR_PROTO);
+                  |  372 |     dev->proto_ver = rsp[1];      /* cached for cgra_has_exec() */
+                  |      |                      ~~~~~~
+                  |      |                         |
+                  |      |                         (30) ...to here
+                  |  373 |     dev->info = (cgra_info_t){rsp[1], rsp[2], rsp[3], rsp[4]};
+                  |  374 |     if (info != NULL) *info = dev->info;
+                  |      |        ~
+                  |      |        |
+                  |      |        (31) following 'false' branch (when 'info' is NULL)...
+                  |
+                'cgra_identify': event 32
+                  |
+                  |cc1:
+                  | (32): ...to here
+                  |
+           <------+
+           |
+         'cgra_get_info': events 33-37
+           |
+           |  383 |         int rc = cgra_identify(dev, NULL);
+           |      |                  ^~~~~~~~~~~~~~~~~~~~~~~~
+           |      |                  |
+           |      |                  (33) returning to 'cgra_get_info' from 'cgra_identify'
+           |  384 |         if (rc != CGRA_OK) return rc;
+           |      |            ~      
+           |      |            |
+           |      |            (34) following 'false' branch (when 'rc == 0')...
+           |......
+           |  387 |     if (g->version < 2 || g->version > CGRA_PROTO_VER) return CGRA_ERR_PROTO;
+           |      |         ~~~~~~~~~~
+           |      |          |
+           |      |          (35) ...to here
+           |......
+           |  390 |     if (info != NULL) *info = *g;
+           |      |        ~              ~~~~~~~~~~
+           |      |        |                    |
+           |      |        |                    (37) ...to here
+           |      |        (36) following 'true' branch (when 'info' is non-NULL)...
+           |
+    <------+
+    |
+  'cgra_dot': events 38-39
+    |
+    |  818 |     int rc = cgra_get_info(dev, &g);
+    |      |              ^~~~~~~~~~~~~~~~~~~~~~
+    |      |              |
+    |      |              (38) returning to 'cgra_dot' from 'cgra_get_info'
+    |  819 |     if (rc != CGRA_OK) return rc;
+    |      |        ~      
+    |      |        |
+    |      |        (39) following 'false' branch (when 'rc == 0')...
+    |
+  'cgra_dot': event 40
+    |
+    |cc1:
+    | (40): ...to here
+    |
+  'cgra_dot': event 41
+    |
+    |  828 |     rc = cgra_configure_n(dev, cfg, (size_t)g.rows * g.cols);
+    |      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    |      |          |
+    |      |          (41) calling 'cgra_configure_n' from 'cgra_dot'
+    |
+    +--> 'cgra_configure_n': events 42-46
+           |
+           |  412 | int cgra_configure_n(cgra_t *dev, const uint32_t *cfg, size_t ncfg)
+           |      |     ^~~~~~~~~~~~~~~~
+           |      |     |
+           |      |     (42) entry to 'cgra_configure_n'
+           |  413 | {
+           |  414 |     if (dev == NULL || cfg == NULL) return CGRA_ERR_ARG;
+           |      |        ~
+           |      |        |
+           |      |        (44) following 'false' branch...
+           |  415 |     cgra_info_t g;
+           |      |                 ~
+           |      |                 |
+           |      |                 (43) region created on stack here
+           |  416 |     int rc = cgra_get_info(dev, &g);
+           |      |              ~~~~~~~~~~~~~~~~~~~~~~
+           |      |              |
+           |      |              (45) ...to here
+           |      |              (46) calling 'cgra_get_info' from 'cgra_configure_n'
+           |
+           +--> 'cgra_get_info': events 47-54
+                  |
+                  |  378 | int cgra_get_info(cgra_t *dev, cgra_info_t *info)
+                  |      |     ^~~~~~~~~~~~~
+                  |      |     |
+                  |      |     (47) entry to 'cgra_get_info'
+                  |  379 | {
+                  |  380 |     if (dev == NULL) return CGRA_ERR_ARG;
+                  |      |        ~
+                  |      |        |
+                  |      |        (48) following 'false' branch (when 'dev' is non-NULL)...
+                  |  381 |     if (dev->desynced) return CGRA_ERR_DESYNC;
+                  |      |        ~~~~~~~~~~~~~~
+                  |      |        |   |
+                  |      |        |   (49) ...to here
+                  |      |        (50) following 'false' branch...
+                  |  382 |     if (dev->proto_ver < 0) {
+                  |      |        ~~~~~~~~~~~~~~~
+                  |      |        |   |
+                  |      |        |   (51) ...to here
+                  |      |        (52) following 'true' branch...
+                  |  383 |         int rc = cgra_identify(dev, NULL);
+                  |      |                  ~~~~~~~~~~~~~~~~~~~~~~~~
+                  |      |                  |
+                  |      |                  (53) ...to here
+                  |      |                  (54) calling 'cgra_identify' from 'cgra_get_info'
+                  |
+                  +--> 'cgra_identify': events 55-62
+                         |
+                         |  356 | int cgra_identify(cgra_t *dev, cgra_info_t *info)
+                         |      |     ^~~~~~~~~~~~~
+                         |      |     |
+                         |      |     (55) entry to 'cgra_identify'
+                         |  357 | {
+                         |  358 |     if (dev == NULL)
+                         |      |        ~
+                         |      |        |
+                         |      |        (56) following 'false' branch (when 'dev' is non-NULL)...
+                         |  359 |         return CGRA_ERR_ARG;
+                         |  360 |     if (dev->desynced) return CGRA_ERR_DESYNC;
+                         |      |        ~~~~~~~~~~~~~~
+                         |      |        |   |
+                         |      |        |   (57) ...to here
+                         |      |        (58) following 'false' branch...
+                         |  361 |     dev->stats.transactions++;
+                         |      |     ~~~~~~~~~~~~~~~~~~~~~~~
+                         |      |               |
+                         |      |               (59) ...to here
+                         |......
+                         |  365 |     if (rc != CGRA_OK)
+                         |      |        ~
+                         |      |        |
+                         |      |        (60) following 'false' branch (when 'rc == 0')...
+                         |  366 |         return uncertain(dev, rc);
+                         |  367 |     rc = read_exact(dev, rsp, sizeof(rsp));
+                         |      |          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                         |      |          |
+                         |      |          (61) ...to here
+                         |      |          (62) calling 'read_exact' from 'cgra_identify'
+                         |
+                         +--> 'read_exact': events 63-65
+                                |
+                                |  268 | static int read_exact(cgra_t *dev, uint8_t *buf, size_t n)
+                                |      |            ^~~~~~~~~~
+                                |      |            |
+                                |      |            (63) entry to 'read_exact'
+                                |......
+                                |  272 |     if (dev->emu != NULL) {
+                                |      |        ~    
+                                |      |        |
+                                |      |        (64) following 'true' branch...
+                                |  273 |         got = emu_drain(dev->emu, buf, n);
+                                |      |               ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                                |      |               |
+                                |      |               (65) ...to here
+                                |
+                         <------+
+                         |
+                       'cgra_identify': event 66
+                         |
+                         |  367 |     rc = read_exact(dev, rsp, sizeof(rsp));
+                         |      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                         |      |          |
+                         |      |          (66) returning to 'cgra_identify' from 'read_exact'
+                         |
+                  <------+
+                  |
+                'cgra_get_info': event 67
+                  |
+                  |  383 |         int rc = cgra_identify(dev, NULL);
+                  |      |                  ^~~~~~~~~~~~~~~~~~~~~~~~
+                  |      |                  |
+                  |      |                  (67) returning to 'cgra_get_info' from 'cgra_identify'
+                  |
+           <------+
+           |
+         'cgra_configure_n': events 68-71
+           |
+           |  416 |     int rc = cgra_get_info(dev, &g);
+           |      |              ^~~~~~~~~~~~~~~~~~~~~~
+           |      |              |
+           |      |              (68) returning to 'cgra_configure_n' from 'cgra_get_info'
+           |  417 |     if (rc != CGRA_OK) return rc;
+           |      |        ~      
+           |      |        |
+           |      |        (69) following 'false' branch (when 'rc == 0')...
+           |  418 |     if (ncfg != (size_t)g.rows * g.cols) return CGRA_ERR_ARG;
+           |      |                         ~~~~~~
+           |      |                          |
+           |      |                          (70) ...to here
+           |      |                          (71) use of uninitialized value 'g.rows' here
+           |
+cc1: all warnings being treated as errors
+make: Leaving directory '/work/lib'
+make: *** [lib.mk:121: analyze] Error 1

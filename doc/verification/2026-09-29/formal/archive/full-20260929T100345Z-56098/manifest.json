@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "run_id": "20260929T100345Z-56098",
+  "suite": "full",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "dc886d2376c2662a798c65ac86d0e97938ceb3fb",
+  "dirty": true,
+  "runner_sha256": "31f1c3e35cd498d643898d0622ddc74b8e9b032773c29b3901b2a16ef18b8dcf",
+  "tasks": [
+    {
+      "id": "F-UART-TX-C3",
+      "top": "uart_tx",
+      "kind": "tx",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "CLKS_PER_BIT": 3
+      },
+      "assertions": 18,
+      "assumptions": 0,
+      "covers": 3,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=3 cgra_pkg.vhd uart_tx.vhd uart_tx_contract.psl -e uart_tx; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/uart_tx.vhd": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+        "hw/formal/uart_tx_contract.psl": "e7421fd003c618372d74548aafb9640f1b78ac21d7c43232379c6b11337af4bc"
+      },
+      "parameter_check_sha256": "7f0942e4cc4dcffc48fac05449e88bbf44e58405f8425bb032541f7013d05fb9",
+      "effective_properties_sha256": "49dc1ce229499d416dd87357d831fda4d5a349dbd4d0ed1097cfc0befa4810b5",
+      "checked_port_widths": {
+        "tx_data": 8,
+        "tx_serial": 1,
+        "tx_start": 1,
+        "tx_busy": 1
+      },
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "cover": 3,
+        "assert": 18
+      },
+      "smt2_cells": {
+        "assert": 18,
+        "assume": 1,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "a30a7b62b5037318653a84785f20fe092d75856bf6d9814b308a0601caaad006",
+        "task/src/properties.json": "d082b2a1710390dc5f50d2c668863fb7083fd32f3aacde01fe080a024ae6aa6b",
+        "task/model/design_smt2.smt2": "b138c1c5d74dc780ebab2190d57f5cce9a729a20528f66ddfbd3feca54e484d3"
+      },
+      "traces": [],
+      "duration_seconds": 0.946
+    },
+    {
+      "id": "F-UART-RX-C3",
+      "top": "uart_rx",
+      "kind": "rx",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "CLKS_PER_BIT": 3
+      },
+      "assertions": 16,
+      "assumptions": 0,
+      "covers": 4,
+      "result": "FAIL",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=3 cgra_pkg.vhd uart_rx.vhd uart_rx_contract.psl -e uart_rx; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/uart_rx.vhd": "97e05cd528af74182b9647845eec3892dcd99ab1f2912c4f1c10f8212fea06ac",
+        "hw/formal/uart_rx_contract.psl": "418168e43326c935bf7d9da4152760eaf5859dbd03c4f60e91f4f4b9ab4609b3"
+      },
+      "parameter_check_sha256": "7f0942e4cc4dcffc48fac05449e88bbf44e58405f8425bb032541f7013d05fb9",
+      "effective_properties_sha256": "a118172b745b74743664445899c27389abe745027a515e3a84c4ab77b14cb5f4",
+      "checked_port_widths": {
+        "rx_data": 8,
+        "rx_serial": 1,
+        "rx_valid": 1
+      },
+      "exit_code": 2,
+      "solver_status": "FAIL",
+      "property_cells": {
+        "cover": 4,
+        "assert": 16
+      },
+      "smt2_cells": {
+        "assert": 16,
+        "assume": 1,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "adf58766a9069d83838a2d3d9e35e6447a8f2216a562cea095e976469e8fd489",
+        "task/src/properties.json": "015b24cb3ca7c16bef505a875ef74675521ed3b1ee39720c4eafe0f15f9cd59c",
+        "task/model/design_smt2.smt2": "85fec17fe3b63d783b7987ad47a0af21675d83148b2ba37f0d9b132a1fdf81c0"
+      },
+      "traces": [
+        "task/engine_0/trace.yw"
+      ],
+      "duration_seconds": 0.749
+    },
+    {
+      "id": "F-UART-TX-C868",
+      "top": "uart_tx",
+      "kind": "tx",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "CLKS_PER_BIT": 868
+      },
+      "assertions": 18,
+      "assumptions": 0,
+      "covers": 3,
+      "result": "UNKNOWN",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=868 cgra_pkg.vhd uart_tx.vhd uart_tx_contract.psl -e uart_tx; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/uart_tx.vhd": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+        "hw/formal/uart_tx_contract.psl": "e7421fd003c618372d74548aafb9640f1b78ac21d7c43232379c6b11337af4bc"
+      },
+      "parameter_check_sha256": "4328fa89db1c6f892cc65c5f7ab2f197da002c0a84029d61a3f16edb9f92859b",
+      "effective_properties_sha256": "20804ba62f2b3373bc2995de556210a722870910ba370dee4af34cb16d313f6f",
+      "checked_port_widths": {
+        "tx_data": 8,
+        "tx_serial": 1,
+        "tx_start": 1,
+        "tx_busy": 1
+      },
+      "exit_code": 4,
+      "solver_status": "UNKNOWN",
+      "property_cells": {
+        "cover": 3,
+        "assert": 18
+      },
+      "smt2_cells": {
+        "assert": 18,
+        "assume": 1,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "96eb9acabeb6da760fd9722d06a88239bc522efc9b9983a8149cc656ea771084",
+        "task/src/properties.json": "3f162e44e72d55dc88a8780bac8e9929d52c16efe3c8713e2f8d4b33cd6e91ce",
+        "task/model/design_smt2.smt2": "6b445720bebbb8d24eb751b6a2154af300b641f3c852016ed132fa29c015c0ea"
+      },
+      "traces": [
+        "task/engine_0/trace_induct.yw"
+      ],
+      "duration_seconds": 1.046
+    },
+    {
+      "id": "F-UART-RX-C868",
+      "top": "uart_rx",
+      "kind": "rx",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "CLKS_PER_BIT": 868
+      },
+      "assertions": 16,
+      "assumptions": 0,
+      "covers": 4,
+      "result": "FAIL",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=868 cgra_pkg.vhd uart_rx.vhd uart_rx_contract.psl -e uart_rx; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/uart_rx.vhd": "97e05cd528af74182b9647845eec3892dcd99ab1f2912c4f1c10f8212fea06ac",
+        "hw/formal/uart_rx_contract.psl": "418168e43326c935bf7d9da4152760eaf5859dbd03c4f60e91f4f4b9ab4609b3"
+      },
+      "parameter_check_sha256": "4328fa89db1c6f892cc65c5f7ab2f197da002c0a84029d61a3f16edb9f92859b",
+      "effective_properties_sha256": "d72eb0ff629bb07b5d8d789a2f7d94072f18a5b289e06cad04e7d3508c24fac2",
+      "checked_port_widths": {
+        "rx_data": 8,
+        "rx_serial": 1,
+        "rx_valid": 1
+      },
+      "exit_code": 2,
+      "solver_status": "FAIL",
+      "property_cells": {
+        "cover": 4,
+        "assert": 16
+      },
+      "smt2_cells": {
+        "assert": 16,
+        "assume": 1,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "b5ac0ffd59ff3c03a2dd55240b485d3e18ad37bbe8248a90b542359721d8f2bb",
+        "task/src/properties.json": "33d0702f54d2776a1e8c7fb33cffc6ece65f5cb3981812153bbd325905125d8f",
+        "task/model/design_smt2.smt2": "62d26e74f79118222b2cc3c0b402551e559d450d0517f5e630991fff614f68eb"
+      },
+      "traces": [
+        "task/engine_0/trace.yw"
+      ],
+      "duration_seconds": 0.742
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-UART-TX-C3",
+    "F-UART-RX-C3",
+    "F-UART-TX-C868",
+    "F-UART-RX-C868"
+  ]
+}

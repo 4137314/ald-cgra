@@ -1,0 +1,14 @@
+python3 sw/test/test_install.py
+ok install 1 - install uses release artifacts despite PROFILE=asan; prefix has spaces/quote/ampersand
+ok install 2 - installed include lookup works before init, outside checkout
+ok install 3 - init copies every bundled stdlib file from the installed prefix
+ok install 4 - installed stdlib is byte-identical to sources
+ok install 5 - installed API links/runs external C matrix, scan and convolution kernels on v2/v3
+ok install 6 - changing PREFIX refreshes runtime paths; DESTDIR stays out of the binary configuration
+ok install 7 - custom library/header directories install through DESTDIR without embedding it
+ok install 8 - pkg-config describes the actual custom directories, including spaces/quote/ampersand
+ok install 9 - external C client links/runs using only the custom installation's pkg-config flags
+ok install 10 - rebuilt staged binary resolves only its new installed prefix
+ok install 11 - staged/deployed installation supports init without source fallback
+ok install 12 - init propagates stdlib installation failure
+# 12 isolated installation checks passed

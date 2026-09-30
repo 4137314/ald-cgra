@@ -1,0 +1,62 @@
+SBY 17:03:09 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20260928T150306Z-423193/F-CTRL-1x1-DIV1-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20260928T150306Z-423193/F-CTRL-1x1-DIV1-COVER/task/src/dut.il'.
+SBY 17:03:09 [task] engine_0: smtbmc yices
+SBY 17:03:09 [task] base: starting process "cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 17:03:10 [task] base: finished (returncode=0)
+SBY 17:03:10 [task] prep: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 17:03:10 [task] prep: finished (returncode=0)
+SBY 17:03:10 [task] smt2: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 17:03:10 [task] smt2: finished (returncode=0)
+SBY 17:03:10 [task] engine_0: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 32  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Reached cover statement in step 0 at cgra_ctrl: ctrl_contract.c_ctrl_step
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Reached cover statement in step 1 at cgra_ctrl: ctrl_contract.c_ctrl_255
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at cgra_ctrl: ctrl_contract.c_ctrl_nack
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Reached cover statement in step 3 at cgra_ctrl: ctrl_contract.c_ctrl_zero
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace3.vcd
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace3.smtc
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace3.yw
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Reached cover statement in step 5 at cgra_ctrl: ctrl_contract.c_ctrl_timeout
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace4.vcd
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace4_tb.v
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace4.smtc
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace4.yw
+SBY 17:03:10 [task] engine_0: ##   0:00:00  Status: passed
+SBY 17:03:10 [task] engine_0: finished (returncode=0)
+SBY 17:03:10 [task] engine_0: Status returned by engine: pass
+SBY 17:03:10 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 17:03:10 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 17:03:10 [task] summary: engine_0 (smtbmc yices) returned pass
+SBY 17:03:10 [task] summary: cover trace: task/engine_0/trace0.vcd
+SBY 17:03:10 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_ctrl_step at 
+SBY 17:03:10 [task] summary: cover trace: task/engine_0/trace1.vcd
+SBY 17:03:10 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_ctrl_255 at  step 1
+SBY 17:03:10 [task] summary: cover trace: task/engine_0/trace2.vcd
+SBY 17:03:10 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_ctrl_nack at  step 2
+SBY 17:03:10 [task] summary: cover trace: task/engine_0/trace3.vcd
+SBY 17:03:10 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_ctrl_zero at  step 3
+SBY 17:03:10 [task] summary: cover trace: task/engine_0/trace4.vcd
+SBY 17:03:10 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_ctrl_timeout at  step 5
+SBY 17:03:10 [task] DONE (PASS, rc=0)

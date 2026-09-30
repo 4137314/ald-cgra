@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "workload": "add",
+  "n": 256,
+  "k": 0,
+  "rows": 4,
+  "cols": 4,
+  "protocol": 2,
+  "warmup": 1,
+  "samples": [
+    {
+      "wall_ns": 41160,
+      "process_cpu_ns": 41873,
+      "transactions": 193,
+      "tx_bytes": 1410,
+      "rx_bytes": 2241,
+      "logical_steps": 256,
+      "temporary_heap_requested": 0,
+      "temporary_heap_peak_live": 0,
+      "largest_temporary_allocation": 0,
+      "process_peak_rss_kib": 26556
+    },
+    {
+      "wall_ns": 40775,
+      "process_cpu_ns": 41481,
+      "transactions": 193,
+      "tx_bytes": 1410,
+      "rx_bytes": 2241,
+      "logical_steps": 256,
+      "temporary_heap_requested": 0,
+      "temporary_heap_peak_live": 0,
+      "largest_temporary_allocation": 0,
+      "process_peak_rss_kib": 26556
+    },
+    {
+      "wall_ns": 41099,
+      "process_cpu_ns": 41799,
+      "transactions": 193,
+      "tx_bytes": 1410,
+      "rx_bytes": 2241,
+      "logical_steps": 256,
+      "temporary_heap_requested": 0,
+      "temporary_heap_peak_live": 0,
+      "largest_temporary_allocation": 0,
+      "process_peak_rss_kib": 26556
+    },
+    {
+      "wall_ns": 41142,
+      "process_cpu_ns": 41850,
+      "transactions": 193,
+      "tx_bytes": 1410,
+      "rx_bytes": 2241,
+      "logical_steps": 256,
+      "temporary_heap_requested": 0,
+      "temporary_heap_peak_live": 0,
+      "largest_temporary_allocation": 0,
+      "process_peak_rss_kib": 26556
+    },
+    {
+      "wall_ns": 40677,
+      "process_cpu_ns": 41382,
+      "transactions": 193,
+      "tx_bytes": 1410,
+      "rx_bytes": 2241,
+      "logical_steps": 256,
+      "temporary_heap_requested": 0,
+      "temporary_heap_peak_live": 0,
+      "largest_temporary_allocation": 0,
+      "process_peak_rss_kib": 26556
+    }
+  ],
+  "verified": true,
+  "statistics": {
+    "wall_ns": {
+      "median": 41099,
+      "p95": 41160
+    },
+    "process_cpu_ns": {
+      "median": 41799,
+      "p95": 41873
+    }
+  },
+  "useful_arithmetic_ops_per_call": 256,
+  "provenance": {
+    "commit": "dc886d2376c2662a798c65ac86d0e97938ceb3fb",
+    "dirty": true,
+    "sources_sha256": {
+      "lib/src/bitvec.h": "36be589e4cf81ec17f0d4ab6db636b2abbd7966e3e0cdaf7e483541ba0d9b387",
+      "lib/src/buffers.h": "6edec617e92fd3394a54059e9c1ea30e73d4fc6dd3a1b43fc20d8183befc905d",
+      "lib/src/cgra.c": "a713fe220060d2721d8e2664d63cd3d1db9a1257320c91bca3baf19ca1e03299",
+      "lib/src/emu.c": "c193eef9a4ad5c116bb09b695a54274628c5c82ed437385575c33602bdd88b69",
+      "lib/src/emu.h": "8a07a851f3f3915367c4495cda7f848695c9caa1d02a29a050c717a2290c9510",
+      "lib/src/kernels.c": "86a7e7a8c760c59dbe79810fb336137beb05bef540d7981383ab498a239d527a",
+      "lib/src/serve.c": "93546df53650b0013801f6a72109af97fdbc2a28f1d1fd7778325a605bce85d2",
+      "lib/include/cgra.h": "1dca5e1495d8ebc9a192df380b5daadf5b304b8fea05768f45881ca2c1bf04c2",
+      "scripts/bench_geometry.c": "6c62ee52f8f845660035e5d313d7c9037b50707d46027d62161ce45ec9ee8c10",
+      "scripts/measure-geometry.py": "1b5c132775e4d1cd5a8b7c4ac7b34706678508661485f76c32667724c8f2350a",
+      "lib/lib.mk": "c17c3a53f28f5dc461f03949960b07729727d64a26a4193578b43b75c8b3a9f1",
+      "scripts/build-config.mk": "d5fbf2b598f3b5cb20f9f1be100a311bd5a7637fc7811248afbd52d8c1224a1c",
+      "scripts/build-config.py": "ba957bd318663b151cc2602050e892d4e44f60541ea54361d6cec19a497ba3e5"
+    },
+    "platform": "Linux-6.18.52-1-lts-x86_64-with-glibc2.42",
+    "backend": "clockless-emulator",
+    "compiler": "gcc (GCC) 15.2.0",
+    "compile_command": [
+      "gcc",
+      "-std=c11",
+      "-O3",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Ilib/include",
+      "-Ilib/src",
+      "scripts/bench_geometry.c",
+      "lib/build/libcgra.a",
+      "-Wl,--wrap=calloc,--wrap=malloc,--wrap=free,--wrap=emu_feed",
+      "-o",
+      "/home/main/dev/git/ald-cgra/build/geometry-20260928T151103Z"
+    ],
+    "binary_sha256": "0e80a9f4abc37eecf1b98b095e200eeef818bca801eb8bba16c9569bb668b2e8",
+    "library_sha256": "a03d8c1d4e08899d328ab06b5a001f977314fa06ca580ffd61b895ee4b585f71",
+    "library_build": {
+      "config": "gcc\nar\nPROFILE=release\nCPPFLAGS=\nCFLAGS=-std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP\nLDFLAGS=\nLDLIBS=\nARFLAGS=-rv\nVERSION=0.1.0 SOVERSION=0 SONAME=libcgra.so.0\n",
+      "environment": {
+        "COMPILER_PATH": null,
+        "CPATH": null,
+        "C_INCLUDE_PATH": null,
+        "GCC_EXEC_PREFIX": null,
+        "LIBRARY_PATH": null,
+        "MACOSX_DEPLOYMENT_TARGET": null,
+        "NIX_CFLAGS_COMPILE": " -frandom-seed=1kds69qpga -isystem /nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/include -isystem /nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/include -isystem /nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1/include -isystem /nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/include -isystem /nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -isystem /nix/store/bavw0xma2yw36nlba6wpb960vqhh89w8-ncurses-6.6-dev/include -isystem /nix/store/nwi9bw5vqnhkvpm6sp62awhb3ijcs1p5-valgrind-3.27.1-dev/include -isystem /nix/store/lc3a14lcfrbii8f008kjgl45xibjm1w8-perf-linux-7.1.3/include -isystem /nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/include -isystem /nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/include -isystem /nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1/include -isystem /nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/include -isystem /nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -isystem /nix/store/bavw0xma2yw36nlba6wpb960vqhh89w8-ncurses-6.6-dev/include -isystem /nix/store/nwi9bw5vqnhkvpm6sp62awhb3ijcs1p5-valgrind-3.27.1-dev/include -isystem /nix/store/lc3a14lcfrbii8f008kjgl45xibjm1w8-perf-linux-7.1.3/include",
+        "NIX_LDFLAGS": "-rpath /home/main/dev/git/ald-cgra/outputs/out/lib  -L/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/lib -L/nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/lib -L/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/lib -L/nix/store/62qhvy2m2lpqj7ca39j9wvp2kkcxwdcg-ncurses-6.6/lib -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -L/nix/store/xnmn964hfwjk334q3kdicnl94gm66prr-clang-tools-21.1.8/lib -L/nix/store/v9pcwc34f8g4x6bi987y92ydfpcbjwdd-bear-4.0.4/lib -L/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/lib -L/nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/lib -L/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/lib -L/nix/store/62qhvy2m2lpqj7ca39j9wvp2kkcxwdcg-ncurses-6.6/lib -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -L/nix/store/xnmn964hfwjk334q3kdicnl94gm66prr-clang-tools-21.1.8/lib -L/nix/store/v9pcwc34f8g4x6bi987y92ydfpcbjwdd-bear-4.0.4/lib",
+        "SDKROOT": null
+      },
+      "schema": 1,
+      "tools": [
+        [
+          [
+            "gcc",
+            "/nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/gcc",
+            11487,
+            1000000000
+          ]
+        ],
+        [
+          [
+            "ar",
+            "/nix/store/ddk8rvjihg4vhh1k6x9rc65y1zb1kx34-binutils-2.46/bin/ar",
+            84344,
+            1000000000
+          ]
+        ]
+      ]
+    },
+    "workload": "review-positive-v1; conv h=[1,-2,3,-4,5]",
+    "timing_scope": "public API call, includes host preparation/configuration/communication/model",
+    "memory_scope": "temporary project malloc/calloc requested and live bytes; excludes caller arrays, libc internals and stack; RSS is whole-process Linux peak including warmup",
+    "identification": "one initial ID excluded; per-call CFG included",
+    "bitstream": null
+  },
+  "command": [
+    "/home/main/dev/git/ald-cgra/build/geometry-20260928T151103Z",
+    "sim:4x4:v2",
+    "add",
+    "256",
+    "5",
+    "1"
+  ],
+  "exit_code": 0
+}

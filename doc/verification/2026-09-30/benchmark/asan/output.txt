@@ -1,0 +1,248 @@
+make -C lib -f lib.mk PROFILE=asan
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/cgra.c -o build/asan/cgra.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/vector.c -o build/asan/vector.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/kernels.c -o build/asan/kernels.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/emu.c -o build/asan/emu.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/serve.c -o build/asan/serve.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/asan/cgra.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/vector.c -o build/asan/vector.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/kernels.c -o build/asan/kernels.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/emu.c -o build/asan/emu.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/serve.c -o build/asan/serve.pic.o
+ar rcs build/asan/libcgra.a build/asan/cgra.o build/asan/vector.o build/asan/kernels.o build/asan/emu.o build/asan/serve.o
+gcc -shared -Wl,-soname,libcgra.so.0 -fsanitize=address,undefined -o build/asan/libcgra.so.0.1.0 build/asan/cgra.pic.o build/asan/vector.pic.o build/asan/kernels.pic.o build/asan/emu.pic.o build/asan/serve.pic.o
+ln -sf libcgra.so.0.1.0 build/asan/libcgra.so.0
+ln -sf libcgra.so.0.1.0 build/asan/libcgra.so
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C lib -f lib.mk PROFILE=asan test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_cgra.c build/asan/cgra.o build/asan/vector.o build/asan/kernels.o build/asan/emu.o build/asan/serve.o -fsanitize=address,undefined -o build/asan/test_cgra
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_transport.c build/asan/cgra.o build/asan/vector.o build/asan/kernels.o build/asan/emu.o build/asan/serve.o -fsanitize=address,undefined -Wl,--wrap=write -o build/asan/test_transport
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_kernels.c build/asan/libcgra.a -fsanitize=address,undefined -o build/asan/test_kernels
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_faults.c build/asan/libcgra.a -fsanitize=address,undefined -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk,--wrap=clock_gettime -o build/asan/test_faults
+In file included from test/test_transport.c:5:
+test/test_transport.c: In function ‘server_ready’:
+test/test_transport.c:428:12: warning: argument 2 is null but the corresponding size argument 3 value is [1, 9223372036854775806] [-Wnonnull]
+  428 |     assert(write(fd, path, strlen(path) + 1) == (ssize_t)strlen(path) + 1);
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from test/test_transport.c:18:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/unistd.h:378:16: note: in a call to function ‘write’ declared with attribute ‘access (read_only, 2, 3)’
+  378 | extern ssize_t write (int __fd, const void *__buf, size_t __n) __wur
+      |                ^~~~~
+./build/asan/test_cgra
+ok 1 - open profiling device
+ok 2 - profiling is disabled by default
+ok 3 - identify before profiling
+ok 4 - profile configuration I/O
+ok 5 - profiling preserves successful transaction errno
+ok 6 - profile zero-step EXEC
+ok 7 - configuration and other transport intervals are separate; steps counted once
+ok 8 - commands remain usable with profiling disabled
+ok 9 - disabling profiling freezes collected values
+ok 10 - re-enabling starts a new profile
+ok 11 - open kernel validation device
+ok 12 - unsupported binary kernel op rejected
+ok 13 - unsupported immediate kernel op rejected
+ok 14 - unsupported binary kernel op rejected
+ok 15 - unsupported immediate kernel op rejected
+ok 16 - unsupported binary kernel op rejected
+ok 17 - unsupported immediate kernel op rejected
+ok 18 - unsupported binary kernel op rejected
+ok 19 - unsupported immediate kernel op rejected
+ok 20 - unsupported binary kernel op rejected
+ok 21 - unsupported immediate kernel op rejected
+ok 22 - unsupported binary kernel op rejected
+ok 23 - unsupported immediate kernel op rejected
+ok 24 - unsupported binary kernel op rejected
+ok 25 - unsupported immediate kernel op rejected
+ok 26 - unsupported binary kernel op rejected
+ok 27 - unsupported immediate kernel op rejected
+ok 28 - invalid op does not contact device or modify output
+ok 29 - open kernel validation device
+ok 30 - unsupported binary kernel op rejected
+ok 31 - unsupported immediate kernel op rejected
+ok 32 - unsupported binary kernel op rejected
+ok 33 - unsupported immediate kernel op rejected
+ok 34 - unsupported binary kernel op rejected
+ok 35 - unsupported immediate kernel op rejected
+ok 36 - unsupported binary kernel op rejected
+ok 37 - unsupported immediate kernel op rejected
+ok 38 - unsupported binary kernel op rejected
+ok 39 - unsupported immediate kernel op rejected
+ok 40 - unsupported binary kernel op rejected
+ok 41 - unsupported immediate kernel op rejected
+ok 42 - unsupported binary kernel op rejected
+ok 43 - unsupported immediate kernel op rejected
+ok 44 - unsupported binary kernel op rejected
+ok 45 - unsupported immediate kernel op rejected
+ok 46 - invalid op does not contact device or modify output
+# libcgra unit tests
+ok 47 - CFG imm field round-trips signed
+ok 48 - CFG opcode field
+ok 49 - CFG sel_a field
+ok 50 - CFG sel_b field
+ok 51 - CFG reserved bits are zero
+ok 52 - identify succeeds on sim:
+ok 53 - identify reports protocol version
+ok 54 - identify reports ROWS
+ok 55 - identify reports COLS
+ok 56 - identify reports datapath width
+ok 57 - configure ok
+ok 58 - write_inputs ok
+ok 59 - run ok
+ok 60 - read_regs ok
+ok 61 - PE(0,0)=north+west=42
+ok 62 - reset_datapath ok
+ok 63 - read after reset ok
+ok 64 - registers cleared by reset
+ok 65 - vec_add ok
+ok 66 - vec_add matches host reference
+ok 67 - vec_sub ok
+ok 68 - vec_sub matches host reference
+ok 69 - vec_mul ok
+ok 70 - vec_mul matches (16-bit wrap)
+ok 71 - vec_relu ok
+ok 72 - vec_relu = max(a,0)
+ok 73 - vec_addi ok
+ok 74 - vec_addi = a + imm
+ok 75 - vec_max (n=3, partial lane)
+ok 76 - vec_max tail chunk correct
+ok 77 - apply(shl) ok
+ok 78 - SHL of negative wraps (=-16)
+ok 79 - SHL uses modulo arithmetic for boundaries and all masked shift counts
+ok 80 - SHR matches floor division for boundaries and all masked shift counts
+ok 81 - dot ok
+ok 82 - dot product = 35
+ok 83 - sim: advertises protocol v3 (exec)
+ok 84 - exec: configure
+ok 85 - exec: single-tap transaction
+ok 86 - exec: tapped register holds 7 + 5
+ok 87 - exec: two-tap mask
+ok 88 - exec: taps come back in PE order
+ok 89 - exec: empty mask (write+run only)
+ok 90 - exec: empty mask still stepped the array
+ok 91 - exec: rejects ntaps != popcount(mask)
+ok 92 - exec: configure ACC
+ok 93 - exec: reset then accumulate
+ok 94 - exec: three accumulates of 5 from a cleared register
+ok 95 - exec: accumulate without reset
+ok 96 - exec: without the flag the accumulator carries over
+ok 97 - exec: accumulate with fused reset
+ok 98 - exec: fused reset cleared the accumulator first
+ok 99 - configure(NULL) -> ERR_ARG
+ok 100 - vec_add(b=NULL) -> ERR_ARG
+ok 101 - dot(b=NULL) -> ERR_ARG
+ok 102 - strerror returns non-empty text
+ok 103 - strerror returns non-empty text
+ok 104 - strerror returns non-empty text
+ok 105 - strerror returns non-empty text
+ok 106 - strerror returns non-empty text
+ok 107 - strerror returns non-empty text
+ok 108 - open sim:flaky
+ok 109 - vec_add recovers through the retry path
+ok 110 - flaky result still correct
+ok 111 - exactly two retries (first CFG + first EXEC/WR NACKed)
+ok 112 - transaction counter advanced
+ok 113 - reset_stats zeroes counters
+ok 114 - open sim:v2 (legacy device)
+ok 115 - sim:v2 identifies as protocol v2
+ok 116 - sim:v2 does not advertise exec
+ok 117 - cgra_exec refuses a pre-v3 device
+ok 118 - v2 fallback: vec_add runs
+ok 119 - v2 fallback: results identical to the fused path
+ok 120 - v2 fallback: dot identical to the fused path
+ok 121 - open both protocol backends
+ok 122 - fused path uses less than half the round trips
+ok 123 - fused path also moves fewer bytes
+ok 124 - sim:1x1
+ok 125 - ID reports actual geometry
+ok 126 - cached ID succeeds
+ok 127 - short configuration rejected
+ok 128 - long configuration rejected
+ok 129 - short west edge rejected
+ok 130 - long north edge rejected
+ok 131 - short register buffer rejected
+ok 132 - unknown EXEC flags rejected
+ok 133 - NULL input with nonzero length rejected
+ok 134 - tap count mismatch rejected
+ok 135 - mask selecting absent PE rejected
+ok 136 - legacy CFG requires 4x4
+ok 137 - legacy WR requires 4x4
+ok 138 - legacy RD requires 4x4
+ok 139 - legacy EXEC requires 4x4
+ok 140 - legacy apply requires 4x4
+ok 141 - invalid buffers/geometry perform no transfers after cached ID
+ok 142 - runtime CFG succeeds
+ok 143 - runtime WR succeeds
+ok 144 - runtime RUN succeeds
+ok 145 - runtime RD succeeds with exact capacity
+ok 146 - row-major results and read buffer canary intact
+ok 147 - last PE masked read and zero inputs
+ok 148 - sim:1x16
+ok 149 - ID reports actual geometry
+ok 150 - cached ID succeeds
+ok 151 - short configuration rejected
+ok 152 - long configuration rejected
+ok 153 - short west edge rejected
+ok 154 - long north edge rejected
+ok 155 - short register buffer rejected
+ok 156 - unknown EXEC flags rejected
+ok 157 - NULL input with nonzero length rejected
+ok 158 - tap count mismatch rejected
+ok 159 - legacy CFG requires 4x4
+ok 160 - legacy WR requires 4x4
+ok 161 - legacy RD requires 4x4
+ok 162 - legacy EXEC requires 4x4
+ok 163 - legacy apply requires 4x4
+ok 164 - invalid buffers/geometry perform no transfers after cached ID
+ok 165 - runtime CFG succeeds
+ok 166 - runtime WR succeeds
+ok 167 - runtime RUN succeeds
+ok 168 - runtime RD succeeds with exact capacity
+ok 169 - row-major results and read buffer canary intact
+ok 170 - last PE masked read and zero inputs
+ok 171 - sim:16x1
+ok 172 - ID reports actual geometry
+ok 173 - cached ID succeeds
+ok 174 - short configuration rejected
+ok 175 - long configuration rejected
+ok 176 - short west edge rejected
+ok 177 - long north edge rejected
+ok 178 - short register buffer rejected
+ok 179 - unknown EXEC flags rejected
+ok 180 - NULL input with nonzero length rejected
+ok 181 - tap count mismatch rejected
+ok 182 - legacy CFG requires 4x4
+ok 183 - legacy WR requires 4x4
+ok 184 - legacy RD requires 4x4
+ok 185 - legacy EXEC requires 4x4
+ok 186 - legacy apply requires 4x4
+ok 187 - invalid buffers/geometry perform no transfers after cached ID
+ok 188 - runtime CFG succeeds
+ok 189 - runtime WR succeeds
+ok 190 - runtime RUN succeeds
+ok 191 - runtime RD succeeds with exact capacity
+ok 192 - row-major results and read buffer canary intact
+ok 193 - last PE masked read and zero inputs
+ok 194 - sim:2x3
+ok 195 - ID reports actual geometry
+ok 196 - cached ID succeeds
+ok 197 - short configuration rejected
+ok 198 - long configuration rejected
+ok 199 - short west edge rejected
+ok 200 - long north edge rejected
+ok 201 - short register buffer rejected
+ok 202 - unknown EXEC flags rejected
+ok 203 - NULL input with nonzero length rejected
+ok 204 - tap count mismatch rejected
+ok 205 - mask selecting absent PE rejected
+ok 206 - legacy CFG requires 4x4
+ok 207 - legacy WR requires 4x4
+ok 208 - legacy RD requires 4x4
+ok 20==208==LeakSanitizer has encountered a fatal error.
+==208==HINT: For debugging, try setting environment variable LSAN_OPTIONS=verbosity=1:log_threads=1
+==208==HINT: LeakSanitizer does not work under ptrace (strace, gdb, etc)
+make[1]: *** [lib.mk:103: test] Error 1
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make: *** [Makefile:107: test] Error 2

@@ -1,0 +1,14 @@
+[options]
+mode cover
+depth 32
+timeout 90
+[engines]
+smtbmc yices
+[script]
+read_rtlil dut.il
+read_verilog -formal  pe_smoke.sv
+prep -top pe_smoke -flatten
+write_json properties.json
+[files]
+dut.il
+pe_smoke.sv

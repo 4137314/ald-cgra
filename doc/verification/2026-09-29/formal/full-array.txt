@@ -1,0 +1,24 @@
+F-PE-SMOKE: PROVED (0.588 s)
+F-PE-NEGATIVE: FAIL (0.588 s) [expected negative]
+F-PE-ALU-MUX: PROVED (5.986 s)
+F-CTRL-1x1-DIV1: PROVED (1.357 s)
+F-CTRL-1x1-DIV2: PROVED (1.503 s)
+F-CTRL-1x1-DIV3: PROVED (1.553 s)
+F-CTRL-1x1-DIV4: PROVED (1.662 s)
+F-ARRAY-1x1: PROVED (7.995 s)
+F-ARRAY-2x3: PROVED (9.527 s)
+F-ARRAY-1x2: PROVED (3.674 s)
+F-ARRAY-2x1: PROVED (3.959 s)
+F-ARRAY-3x2: PROVED (8.031 s)
+F-ARRAY-4x4: PROVED (19.066 s)
+F-ARRAY-1x16: PROVED (17.602 s)
+F-ARRAY-16x1: PROVED (15.711 s)
+F-CTRL-2x3-DIV2: PROVED (1.66 s)
+F-CTRL-3x2-DIV2: PROVED (1.679 s)
+F-CTRL-4x4-DIV2: PROVED (2.422 s)
+F-CTRL-1x16-DIV2: PROVED (2.275 s)
+F-CTRL-16x1-DIV2: PROVED (2.175 s)
+M-PE-ADD: FAIL (2.183 s) [expected negative]
+M-CTRL-STEP: FAIL (1.234 s) [expected negative]
+M-ARRAY-NORTH: ERROR (92.837 s) [expected negative]
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/full-20260929T095844Z-39428/manifest.json; acceptance FAIL

@@ -149,7 +149,19 @@ nix run . -- selftest  # run the CLI without installing
 nix profile install .  # install like any package
 nix build .#doc        # the IEEE PDF report
 nix develop            # dev shell with the whole toolchain
+nix flake check        # executes software, GHDL/Tcl, formal-fast and PDF checks
 ```
+
+The verified host platform is **x86_64 Linux**. Nix outputs currently target
+that platform; Darwin and other architectures are not advertised as tested.
+PTY regressions and GNU linker fault injection are Linux build dependencies.
+The standalone Make targets remain available without Nix.
+
+CI separates GCC 13/Clang 18 software, HDL/scripts, pinned formal tools,
+documents and Nix packaging. Sanitizer jobs enable leak detection; GCC alone
+runs `-fanalyzer`. Formal logs/models/counterexamples and gate manifests are
+retained on failure. See the [verification matrix](doc/verification-matrix.md)
+and [formal contract](hw/formal/README.md) for the exact verified scope.
 
 ## Building, testing, sanitizers
 
@@ -230,7 +242,7 @@ argument arrays to preserve spaces and quotes.
 
 Once the board is programmed with the synthesized RTL, one command sweeps the
 loaded `.cgra` modes and prints a structured report with scalar verification,
-throughput and serial link cost per supported mode, plus a JSON artifact:
+host timing and serial link cost per supported mode, plus an artifact for each size:
 
 ```sh
 make bench DEV=auto                       # discovers + checks the FPGA, then benchmarks
@@ -238,15 +250,20 @@ make bench DEV=sim SIZES="1024 4096" REPEAT=100   # dry-run on the emulator
 cgra benchall -d auto --size 4096 --json  # the underlying structured command
 ```
 
-`DEV=auto` first runs `cgra probe` (autodiscover + known-answer correctness), so
-the initial checks run before the sweep. Each measured invocation is then
-compared with an independent scalar reference outside the timing interval.
-JSON includes every mode as `passed`, `failed` or `skipped`. Failures cause a
-nonzero exit status and remain in the saved artifact. Custom/stateful-diagonal
-mappings without a scalar reference are explicitly skipped after validation;
-the built-in 4×4 custom template is invalid on smaller shapes. Supported sizes
-are 1..4096; larger requests are rejected. See
-[sw/scripts/cgra-bench.sh](sw/scripts/cgra-bench.sh) and `cgra(1)`.
+`DEV=auto` first probes the device. Every mode has one checked warm-up;
+each measured invocation is compared with an independent scalar reference
+outside timing. JSON schema 2 retains samples, median/p95, a scalar CPU
+baseline, separate configuration/other I/O timings and actual build/source
+provenance. These are host wall times, not FPGA performance.
+
+Matvec uses `size` rows and 16 columns; scan uses `size` inputs; convolution
+uses `size` inputs and five coefficients. The known custom ADD example is
+checked by structure. Arbitrary custom/stateful mappings without a reference
+remain explicit skips; the fixed 4×4 template fails on incompatible shapes.
+Sizes are 1..4096. `make bench` executes each requested size once and writes a
+schema-2 index at `OUT`, with a separate report/hash/status for each point.
+Failed reports are retained; a run producing no report preserves the old index.
+See [the benchmark contract](sw/doc/commands.texi) and `cgra(1)`.
 
 ### Profiling the C code
 
@@ -548,8 +565,13 @@ isolates the protocol paths without measuring those earlier optimisations.
 dense matvec and convolution. Elapsed-time benefit depends on link latency
 and throughput; neither these counters nor the emulator's wall clock establish
 a hardware speedup over the CPU. Physical link timings and a CPU baseline
-remain to be measured. Convolution still constructs a dense Toeplitz matrix
-in host memory; skipping its zero tiles saves transfers, not workspace.
+remain to be measured. Convolution now generates only tiles intersecting the
+implicit Toeplitz band, with no heap workspace after opening a handle.
+The [before/after experiment](doc/verification/2026-09-28/implicit-conv/README.md)
+records 50 distinct workload/geometry/protocol points: the `n=4096, k=5`
+Toeplitz allocation falls from 33,587,200 bytes to zero temporary heap bytes.
+Bytes, transactions and logical steps stay identical in that experiment;
+emulator timing improvements measure host work, not FPGA speedup.
 
 ## PE configuration word
 

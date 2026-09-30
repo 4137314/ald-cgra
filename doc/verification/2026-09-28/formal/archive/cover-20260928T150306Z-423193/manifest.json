@@ -1,0 +1,498 @@
+{
+  "schema_version": 1,
+  "run_id": "20260928T150306Z-423193",
+  "suite": "cover",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "dc886d2376c2662a798c65ac86d0e97938ceb3fb",
+  "dirty": true,
+  "runner_sha256": "64dfb84adb6c0fb681dabe5ba8a2b9d1fcaaae336ed8ac968e5bcc0f6de82482",
+  "tasks": [
+    {
+      "id": "F-PE-SMOKE-COVER",
+      "top": "pe_smoke",
+      "kind": "pe",
+      "mode": "cover",
+      "depth": 32,
+      "assertions": 4,
+      "assumptions": 1,
+      "covers": 1,
+      "result": "BOUNDED_PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover  cgra_pkg.vhd pe.vhd pe_ports.vhd -e pe_ports; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "initial reset; subsequent inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+        "hw/formal/pe_ports.vhd": "4e5d7456a44fe624414bb42ad7851038dea1b3de2cac1ea9ebe34e1c5211dd34",
+        "hw/formal/pe_smoke.sv": "b09ea037f68ecc71ce3905ce7995ba343560485aea22b76b59471ceb27d296a0"
+      },
+      "checked_port_widths": {
+        "n": 16,
+        "s": 16,
+        "e": 16,
+        "w": 16,
+        "q": 16,
+        "cfg": 32
+      },
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assert": 4,
+        "assume": 1,
+        "cover": 1
+      },
+      "smt2_cells": {
+        "assert": 0,
+        "assume": 2,
+        "cover": 1
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "b037c817fa0f8c22a70552720c136fb58f12ca56fef6a08c32c0089cc8003899",
+        "task/src/properties.json": "a221f8ae5bb18e9a8440d1f142d5d8edbf52c3ef6687c4921a1bab931aa6b9a8",
+        "task/model/design_smt2.smt2": "dd20d377ed644b34789f04986b516f0798873b53aac0e1b9e88f289554a0b41d"
+      },
+      "traces": [
+        "task/engine_0/trace0.yw"
+      ],
+      "meaning": "bounded reachability only; no universal guarantee",
+      "duration_seconds": 0.589
+    },
+    {
+      "id": "F-PE-ALU-MUX-COVER",
+      "top": "pe_contract",
+      "kind": "pe",
+      "mode": "cover",
+      "depth": 32,
+      "gates": true,
+      "assertions": 1,
+      "assumptions": 1,
+      "covers": 20,
+      "result": "BOUNDED_PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover  cgra_pkg.vhd pe.vhd pe_ports.vhd -e pe_ports; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "initial reset; subsequent inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+        "hw/formal/pe_ports.vhd": "4e5d7456a44fe624414bb42ad7851038dea1b3de2cac1ea9ebe34e1c5211dd34",
+        "hw/formal/pe_contract.sv": "d1b193cbbfb3e68d8cbf72b521c2a8deef5b6e4d605f23b2c48f0e065036f07c"
+      },
+      "checked_port_widths": {
+        "n": 16,
+        "s": 16,
+        "e": 16,
+        "w": 16,
+        "q": 16,
+        "cfg": 32
+      },
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assert": 1,
+        "assume": 1,
+        "cover": 20
+      },
+      "smt2_cells": {
+        "assert": 0,
+        "assume": 2,
+        "cover": 20
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "b037c817fa0f8c22a70552720c136fb58f12ca56fef6a08c32c0089cc8003899",
+        "task/src/properties.json": "a61f9c277a2aaec069d7984ad7d03d1779625aae654426ca2d2ee1ecfe21d5b5",
+        "task/model/design_smt2.smt2": "a2e33462ac5d379399ae88ba840be117d10306ae81ca54a6270b6a108e425161"
+      },
+      "traces": [
+        "task/engine_0/trace0.yw",
+        "task/engine_0/trace1.yw",
+        "task/engine_0/trace10.yw",
+        "task/engine_0/trace11.yw",
+        "task/engine_0/trace12.yw",
+        "task/engine_0/trace13.yw",
+        "task/engine_0/trace14.yw",
+        "task/engine_0/trace15.yw",
+        "task/engine_0/trace16.yw",
+        "task/engine_0/trace17.yw",
+        "task/engine_0/trace18.yw",
+        "task/engine_0/trace19.yw",
+        "task/engine_0/trace2.yw",
+        "task/engine_0/trace3.yw",
+        "task/engine_0/trace4.yw",
+        "task/engine_0/trace5.yw",
+        "task/engine_0/trace6.yw",
+        "task/engine_0/trace7.yw",
+        "task/engine_0/trace8.yw",
+        "task/engine_0/trace9.yw"
+      ],
+      "meaning": "bounded reachability only; no universal guarantee",
+      "duration_seconds": 2.295
+    },
+    {
+      "id": "F-CTRL-1x1-DIV1-COVER",
+      "top": "cgra_ctrl",
+      "kind": "ctrl",
+      "mode": "cover",
+      "depth": 32,
+      "parameters": {
+        "G_ROWS": 1,
+        "G_COLS": 1,
+        "G_STEP_DIV": 1,
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 27,
+      "assumptions": 0,
+      "covers": 5,
+      "result": "BOUNDED_PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=1 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+        "hw/formal/ctrl_contract.psl": "d6d84390df5639eaea552562a7bc8f3e0861c1f0dcf137afc2f77e05eb7f3632"
+      },
+      "parameter_check_sha256": "1aaa482de264fc16cd5f6039cb5df9b849c1a3d4259ed906404753073bed5b10",
+      "effective_properties_sha256": "682c7cb60899b4102305a78e0ab35e2001e74a3022a6eb1c1e9b28b493d81ce1",
+      "checked_port_widths": {
+        "cfg": 32,
+        "pe_regs": 16,
+        "west_o": 16,
+        "north_o": 16
+      },
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "cover": 5,
+        "assert": 27
+      },
+      "smt2_cells": {
+        "assert": 0,
+        "assume": 1,
+        "cover": 5
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "48c7edca6caf9b09783497120eff1af860c354ba321746fe612dc24471497352",
+        "task/src/properties.json": "b066da762a47cffcbe26ed89f2e19063471c2cea32f88a2be8750892fd575514",
+        "task/model/design_smt2.smt2": "7f54a4b78a520deca0553e8f5940fac66c8597d5ea9661b46f0383a390948753"
+      },
+      "traces": [
+        "task/engine_0/trace0.yw",
+        "task/engine_0/trace1.yw",
+        "task/engine_0/trace2.yw",
+        "task/engine_0/trace3.yw",
+        "task/engine_0/trace4.yw"
+      ],
+      "meaning": "bounded reachability only; no universal guarantee",
+      "duration_seconds": 0.877
+    },
+    {
+      "id": "F-CTRL-1x1-DIV2-COVER",
+      "top": "cgra_ctrl",
+      "kind": "ctrl",
+      "mode": "cover",
+      "depth": 32,
+      "parameters": {
+        "G_ROWS": 1,
+        "G_COLS": 1,
+        "G_STEP_DIV": 2,
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 28,
+      "assumptions": 0,
+      "covers": 5,
+      "result": "BOUNDED_PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+        "hw/formal/ctrl_contract.psl": "d6d84390df5639eaea552562a7bc8f3e0861c1f0dcf137afc2f77e05eb7f3632"
+      },
+      "parameter_check_sha256": "13d5543ee57a570bb5f6aa4fefcf9b6c59f1e281ef1bd46ff611572a8dc6819c",
+      "effective_properties_sha256": "887cd40d88a0df441b870007539d14db0fecebae92532557d834e5c9036755db",
+      "checked_port_widths": {
+        "cfg": 32,
+        "pe_regs": 16,
+        "west_o": 16,
+        "north_o": 16
+      },
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "cover": 5,
+        "assert": 28
+      },
+      "smt2_cells": {
+        "assert": 0,
+        "assume": 1,
+        "cover": 5
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "1ea2aa76e887db9e6a2993434f7595ec6e057d43517ca986dd8364f9ec21465b",
+        "task/src/properties.json": "b28b939a5bd0466d065b0e7eb0e06c9ae377750c9d95bc474e9f53d61e0f460a",
+        "task/model/design_smt2.smt2": "a701988c2be8b4ac79bf9e0e66f69efc7ecc796d5d78e4e05e1aa0f8a4486dd5"
+      },
+      "traces": [
+        "task/engine_0/trace0.yw",
+        "task/engine_0/trace1.yw",
+        "task/engine_0/trace2.yw",
+        "task/engine_0/trace3.yw",
+        "task/engine_0/trace4.yw"
+      ],
+      "meaning": "bounded reachability only; no universal guarantee",
+      "duration_seconds": 0.855
+    },
+    {
+      "id": "F-CTRL-1x1-DIV3-COVER",
+      "top": "cgra_ctrl",
+      "kind": "ctrl",
+      "mode": "cover",
+      "depth": 32,
+      "parameters": {
+        "G_ROWS": 1,
+        "G_COLS": 1,
+        "G_STEP_DIV": 3,
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 28,
+      "assumptions": 0,
+      "covers": 5,
+      "result": "BOUNDED_PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=3 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+        "hw/formal/ctrl_contract.psl": "d6d84390df5639eaea552562a7bc8f3e0861c1f0dcf137afc2f77e05eb7f3632"
+      },
+      "parameter_check_sha256": "4e9e9b1aaa524d10be239830be6f7de0f2dd6ae767b3e9e976c4279b20a1cc05",
+      "effective_properties_sha256": "37d57c778d8dd1761a7d7bf66be696471dec32b8b6c51f37d390653d6c52a08c",
+      "checked_port_widths": {
+        "cfg": 32,
+        "pe_regs": 16,
+        "west_o": 16,
+        "north_o": 16
+      },
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "cover": 5,
+        "assert": 28
+      },
+      "smt2_cells": {
+        "assert": 0,
+        "assume": 1,
+        "cover": 5
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "4bed7ccaa1dd57b5a9d4266ed538938962af8740d34d33f706a5e25b452c384b",
+        "task/src/properties.json": "26a22b79970cafe2cdde4cbf3d2465480861b2ec8e74889d4c3d7278ca791828",
+        "task/model/design_smt2.smt2": "c5e075993d3e288374f56459f5d1c90ed82a7a3fc5ae65db512f5ee0ba79a125"
+      },
+      "traces": [
+        "task/engine_0/trace0.yw",
+        "task/engine_0/trace1.yw",
+        "task/engine_0/trace2.yw",
+        "task/engine_0/trace3.yw",
+        "task/engine_0/trace4.yw"
+      ],
+      "meaning": "bounded reachability only; no universal guarantee",
+      "duration_seconds": 0.91
+    },
+    {
+      "id": "F-CTRL-1x1-DIV4-COVER",
+      "top": "cgra_ctrl",
+      "kind": "ctrl",
+      "mode": "cover",
+      "depth": 32,
+      "parameters": {
+        "G_ROWS": 1,
+        "G_COLS": 1,
+        "G_STEP_DIV": 4,
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 28,
+      "assumptions": 0,
+      "covers": 5,
+      "result": "BOUNDED_PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=4 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+        "hw/formal/ctrl_contract.psl": "d6d84390df5639eaea552562a7bc8f3e0861c1f0dcf137afc2f77e05eb7f3632"
+      },
+      "parameter_check_sha256": "539f8841540bba353f15c1843c274070f34731839f00b7a623b749a33bf0a259",
+      "effective_properties_sha256": "33a0b0e65dde2a34a29864e802716a3253f6248db29a7cc01f66658056f467d3",
+      "checked_port_widths": {
+        "cfg": 32,
+        "pe_regs": 16,
+        "west_o": 16,
+        "north_o": 16
+      },
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "cover": 5,
+        "assert": 28
+      },
+      "smt2_cells": {
+        "assert": 0,
+        "assume": 1,
+        "cover": 5
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "e81be44e81f8b0c1c0665996bc7f2e7ecffb0834e6ab77ff3eb086444672e987",
+        "task/src/properties.json": "b28fae4a1dde4771ceff5c3438e70912c0e9ed052d1aaf947ac603b3a4cd6c41",
+        "task/model/design_smt2.smt2": "ea4a27d419904d7ad72329a25ed4744e5e7ee4f173f487ca8f7617bb18d9c1d6"
+      },
+      "traces": [
+        "task/engine_0/trace0.yw",
+        "task/engine_0/trace1.yw",
+        "task/engine_0/trace2.yw",
+        "task/engine_0/trace3.yw",
+        "task/engine_0/trace4.yw"
+      ],
+      "meaning": "bounded reachability only; no universal guarantee",
+      "duration_seconds": 0.904
+    }
+  ]
+}

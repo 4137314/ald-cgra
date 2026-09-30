@@ -1,0 +1,4 @@
+error:
+       … while fetching the input 'git+file:///home/main/dev/git/ald-cgra'
+
+       error: opening lock file "/home/main/.cache/nix/fetcher-locks/3451ddb948d8a2f1763e85359b7ac595a59b83397e664e8ee274e0ba025e3a8a.lock": Read-only file system

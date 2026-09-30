@@ -1,0 +1,74 @@
+{
+  "id": "M-PE-ADD",
+  "top": "pe_contract",
+  "kind": "pe",
+  "mode": "bmc",
+  "depth": 4,
+  "gates": true,
+  "assertions": 1,
+  "assumptions": 1,
+  "covers": 20,
+  "negative": true,
+  "mutation": "pe-add-to-sub",
+  "result": "FAIL",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover  cgra_pkg.vhd pe.vhd pe_ports.vhd -e pe_ports; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "initial reset; subsequent inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+    "hw/formal/pe_ports.vhd": "4e5d7456a44fe624414bb42ad7851038dea1b3de2cac1ea9ebe34e1c5211dd34",
+    "hw/formal/pe_contract.sv": "c28564474a5f3aa80f26adaafb9f1b4c8dfba6fe8b790f1aa57e5e5ca9a62866",
+    "hw/formal/pe_spec.sv": "9882ff448d049839635b9a523229688f55b20d3fd032acb31edf48b99168499e"
+  },
+  "mutated_source_sha256": {
+    "pe.vhd": "ad68c21aa8b6c62186a556f38f6f4851dd5c8e701ac4b02a9ff11bf633f6b3c4"
+  },
+  "checked_port_widths": {
+    "n": 16,
+    "s": 16,
+    "e": 16,
+    "w": 16,
+    "q": 16,
+    "cfg": 32
+  },
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "assert": 1,
+    "assume": 1,
+    "cover": 20
+  },
+  "smt2_cells": {
+    "assert": 1,
+    "assume": 2,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "2353ddb6cab82e766a14916cf1ffef2dc21eca5169e0092fae9bfd6e9008b44d",
+    "task/src/properties.json": "a310fb788eac2833073ef3e4385e0d9420b1fbaa0fa4958b1cc13d1fa54e318f",
+    "task/model/design_smt2.smt2": "91cde9eab7f3c0df78f7d8c01ec6c57d381960788ff39d5b4ec8e5b75e4ba2c8"
+  },
+  "traces": [
+    "task/engine_0/trace.yw"
+  ],
+  "duration_seconds": 2.455
+}

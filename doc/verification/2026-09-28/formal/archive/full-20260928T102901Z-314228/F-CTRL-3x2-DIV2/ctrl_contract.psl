@@ -1,0 +1,98 @@
+-- Bound to the production architecture, without copying its state machine.
+-- All bytes, rx_valid, tx_busy, pe_regs and reset are symbolic. Safety does
+-- not assume transmitter progress. Initial register values are the RTL's.
+vunit ctrl_contract (cgra_ctrl(rtl)) {
+  default clock is rising_edge(clk);
+  F_SELECTED: assert always (G_ROWS = 3 and G_COLS = 2 and G_STEP_DIV = 2 and G_TIMEOUT_CYCLES = 100000000);
+
+
+  signal f_seen : boolean := false;
+  signal f_pending : natural range 0 to 255 := 0;
+  signal f_age : natural range 0 to G_STEP_DIV := G_STEP_DIV;
+
+  f_monitor : process(clk)
+  begin
+    if rising_edge(clk) then
+      f_seen <= true;
+      if rst = '1' then
+        f_pending <= 0;
+      elsif state = S_RUN_ARG and rx_valid = '1' then
+        f_pending <= to_integer(unsigned(rx_data));
+      elsif state = S_EX_CK and rx_valid = '1' and unsigned(rx_data) = cksum then
+        f_pending <= to_integer(ex_steps);
+      elsif step = '1' and f_pending > 0 then
+        f_pending <= f_pending - 1;
+      end if;
+      if rst = '1' or dp_rst = '1' or step = '1' then
+        f_age <= 0;
+      elsif f_age < G_STEP_DIV then
+        f_age <= f_age + 1;
+      end if;
+    end if;
+  end process;
+
+  F_CTRL_RESET: assert always (rst = '1' -> next
+    (state = S_IDLE and step = '0' and dp_rst = '0' and tx_start = '0'));
+  -- Reachable-state invariants strengthen induction, never assumptions.
+  F_CTRL_INDEX_RANGE: assert always (word_idx < max_size(G_ROWS * G_COLS, G_ROWS + G_COLS));
+  F_CTRL_WR_RETURN: assert always (wr_ret = S_WR_CK or wr_ret = S_EX_CK);
+  F_CTRL_RUN_RETURN: assert always (run_ret = S_RUN_ACK or run_ret = S_EX_RD);
+  F_CTRL_STATE_RANGE: assert always (state <= S_SEND_WAIT);
+  F_CTRL_SEND_RETURN: assert always (ret_state = S_IDLE or ret_state = S_ID or
+    ret_state = S_RD or ret_state = S_RD_CK or ret_state = S_EX_RD or
+    ret_state = S_EX_CKTX or ret_state = S_EX_ST);
+  F_CTRL_PHASE_RANGE: assert always (run_phase < G_STEP_DIV and run_wait < G_STEP_DIV);
+  F_CTRL_AGE_RANGE: assert always (f_age <= G_STEP_DIV);
+  F_CTRL_PENDING_IDLE: assert always (state /= S_RUN -> f_pending = 0);
+  F_CTRL_RUN_INDEX: assert always ((state = S_RUN or state = S_RUN_ARG) -> word_idx = 0);
+  F_CTRL_SEND_INDEX: assert always
+    (((state = S_SEND or state = S_SEND_WAIT) and
+      (ret_state = S_RD or ret_state = S_EX_RD)) -> word_idx < G_ROWS * G_COLS);
+  -- Relate the independently observed capture budget to the implementation's
+  -- remaining count. DIV=1 consumes at launch; larger divisors consume at the
+  -- end of a phase. These are asserted inductive lemmas, not input constraints.
+  F_CTRL_BUDGET_SINGLE_LAUNCH: assert always
+    ((G_STEP_DIV = 1 and state = S_RUN and step = '1') -> f_pending = to_integer(run_cnt) + 1);
+  F_CTRL_BUDGET_SINGLE_IDLE: assert always
+    ((G_STEP_DIV = 1 and state = S_RUN and step = '0') -> f_pending = to_integer(run_cnt));
+  F_CTRL_BUDGET_MULTI_LAUNCH: assert always
+    ((G_STEP_DIV > 1 and state = S_RUN and run_phase <= 1) -> f_pending = to_integer(run_cnt));
+  F_CTRL_BUDGET_MULTI_SETTLE: assert always
+    ((G_STEP_DIV > 1 and state = S_RUN and run_phase > 1) -> f_pending + 1 = to_integer(run_cnt));
+  F_CTRL_CFG_INDEX: assert always (state = S_CFG -> word_idx < G_ROWS * G_COLS);
+  F_CTRL_WR_INDEX: assert always (state = S_WR -> word_idx < G_ROWS + G_COLS);
+  F_CTRL_RD_INDEX: assert always
+    ((state = S_RD or state = S_EX_RD) -> word_idx < G_ROWS * G_COLS);
+  F_CTRL_STEP_CONTEXT: assert always
+    ((rst = '1' or state /= S_RUN or run_wait /= 0 or run_cnt = 0 or run_phase /= 0)
+      -> next (step = '0'));
+  F_CTRL_STEP_PROGRESS: assert always
+    ((rst = '0' and state = S_RUN and run_wait = 0 and run_cnt /= 0 and run_phase = 0)
+      -> next (step = '1'));
+  F_CTRL_CAPTURE_BUDGET: assert always
+    ((f_seen and rst = '0' and step = '1') -> f_pending > 0);
+  F_CTRL_RUN_COMPLETE: assert always (state = S_RUN_ACK -> f_pending = 0);
+  F_CTRL_EXEC_COMPLETE: assert always
+    ((state = S_EX_RD and ex_ok = '1') -> f_pending = 0);
+  F_CTRL_CAPTURE_SPACING: assert always
+    ((f_seen and rst = '0' and step = '1') -> f_age >= G_STEP_DIV - 1);
+  F_CTRL_BAD_EXEC: assert always
+    ((rst = '0' and state = S_EX_CK and rx_valid = '1' and unsigned(rx_data) /= cksum)
+      -> next (step = '0' and dp_rst = '0' and ex_ok = '0' and state = S_EX_RD));
+  F_CTRL_WATCHDOG: assert always
+    ((rst = '0' and rx_valid = '0' and wd = G_TIMEOUT_CYCLES and
+      (state = S_CFG or state = S_CFG_CK or state = S_WR or state = S_WR_CK or
+       state = S_RUN_ARG or state = S_EX_HDR or state = S_EX_CK)) -> next (state = S_IDLE));
+  F_CTRL_TX_CONTEXT: assert always
+    ((rst = '1' or state /= S_SEND or tx_busy = '1') -> next (tx_start = '0'));
+  F_CTRL_TX_LAUNCH: assert always
+    ((rst = '0' and state = S_SEND and tx_busy = '0') -> next (tx_start = '1'));
+  F_CTRL_TX_STABLE: assert always
+    ((rst = '0' and (state = S_SEND or state = S_SEND_WAIT)) -> next (tx_data = prev(tx_data)));
+
+  C_CTRL_STEP: cover {rst = '0' and step = '1'};
+  C_CTRL_255: cover {state = S_RUN_ARG and rx_valid = '1' and rx_data = x"FF"};
+  C_CTRL_ZERO: cover {state = S_RUN_ACK and f_pending = 0};
+  C_CTRL_NACK: cover {tx_start = '1' and tx_data = RSP_NACK};
+  C_CTRL_TIMEOUT: cover {wd = G_TIMEOUT_CYCLES and rx_valid = '0'; state = S_IDLE};
+}

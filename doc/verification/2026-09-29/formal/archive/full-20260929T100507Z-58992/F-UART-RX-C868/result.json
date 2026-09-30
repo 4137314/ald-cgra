@@ -1,0 +1,67 @@
+{
+  "id": "F-UART-RX-C868",
+  "top": "uart_rx",
+  "kind": "rx",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "CLKS_PER_BIT": 868
+  },
+  "assertions": 30,
+  "assumptions": 0,
+  "covers": 4,
+  "result": "UNKNOWN",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=868 cgra_pkg.vhd uart_rx.vhd uart_rx_contract.psl -e uart_rx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/uart_rx.vhd": "97e05cd528af74182b9647845eec3892dcd99ab1f2912c4f1c10f8212fea06ac",
+    "hw/formal/uart_rx_contract.psl": "7da9c3fbb091708561cfbaf258e31b7f315d96889faf9d878b5e3a1e031639ea"
+  },
+  "parameter_check_sha256": "4328fa89db1c6f892cc65c5f7ab2f197da002c0a84029d61a3f16edb9f92859b",
+  "effective_properties_sha256": "64c7ce0becf1a4bfd698b7887f2cc438304ffa15f245b269bdc16d624253bb65",
+  "checked_port_widths": {
+    "rx_data": 8,
+    "rx_serial": 1,
+    "rx_valid": 1
+  },
+  "exit_code": 4,
+  "solver_status": "UNKNOWN",
+  "property_cells": {
+    "cover": 4,
+    "assert": 30
+  },
+  "smt2_cells": {
+    "assert": 30,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "907293af1ecf1f0df9294df2c28d29aa5937f09c3f306a645bfe8bc70991bcc9",
+    "task/src/properties.json": "02955762895b1b5d9d11f56b6a24c6903a35e85bae55b9776e55afc28d61e643",
+    "task/model/design_smt2.smt2": "54c86ff74030d12deaefccf0d8c0f716b8e83e9051db91687b5b77a317cadc6b"
+  },
+  "traces": [
+    "task/engine_0/trace_induct.yw"
+  ],
+  "duration_seconds": 1.406
+}

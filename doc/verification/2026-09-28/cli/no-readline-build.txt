@@ -1,0 +1,115 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/sw'
+mkdir -p build/debug
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c main.c -o build/debug/main.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdio.h:28,
+                 from cli.h:4,
+                 from main.c:2:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c cli.c -o build/debug/cli.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/ctype.h:25,
+                 from cli.c:21:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c vector_io.c -o build/debug/vector_io.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/ctype.h:25,
+                 from vector_io.c:2:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c bench.c -o build/debug/bench.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/math.h:27,
+                 from bench.c:2:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c device.c -o build/debug/device.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/errno.h:25,
+                 from device.c:2:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c shell.c -o build/debug/shell.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/ctype.h:25,
+                 from shell.c:2:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c dsl.c -o build/debug/dsl.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdint.h:26,
+                 from /nix/store/0axpqqmj1rcanmm2i8vzpd8xxwkmq2jf-gcc-15.2.0/lib/gcc/x86_64-unknown-linux-gnu/15.2.0/include/stdint.h:11,
+                 from ../lib/include/cgra.h:29,
+                 from dsl.h:20,
+                 from dsl.c:7:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c compile.c -o build/debug/compile.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdint.h:26,
+                 from /nix/store/0axpqqmj1rcanmm2i8vzpd8xxwkmq2jf-gcc-15.2.0/lib/gcc/x86_64-unknown-linux-gnu/15.2.0/include/stdint.h:11,
+                 from ../lib/include/cgra.h:29,
+                 from compile.h:9,
+                 from compile.c:11:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h -c bench_ref.c -o build/debug/bench_ref.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdint.h:26,
+                 from /nix/store/0axpqqmj1rcanmm2i8vzpd8xxwkmq2jf-gcc-15.2.0/lib/gcc/x86_64-unknown-linux-gnu/15.2.0/include/stdint.h:11,
+                 from ../lib/include/cgra.h:29,
+                 from dsl.h:20,
+                 from bench_ref.h:4,
+                 from bench_ref.c:1:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=debug static
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+mkdir -p build/debug
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -Iinclude -MMD -MP -c src/cgra.c -o build/debug/cgra.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdint.h:26,
+                 from /nix/store/0axpqqmj1rcanmm2i8vzpd8xxwkmq2jf-gcc-15.2.0/lib/gcc/x86_64-unknown-linux-gnu/15.2.0/include/stdint.h:11,
+                 from include/cgra.h:29,
+                 from src/cgra.c:8:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -Iinclude -MMD -MP -c src/kernels.c -o build/debug/kernels.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdint.h:26,
+                 from /nix/store/0axpqqmj1rcanmm2i8vzpd8xxwkmq2jf-gcc-15.2.0/lib/gcc/x86_64-unknown-linux-gnu/15.2.0/include/stdint.h:11,
+                 from include/cgra.h:29,
+                 from src/kernels.c:2:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -Iinclude -MMD -MP -c src/emu.c -o build/debug/emu.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdint.h:26,
+                 from /nix/store/0axpqqmj1rcanmm2i8vzpd8xxwkmq2jf-gcc-15.2.0/lib/gcc/x86_64-unknown-linux-gnu/15.2.0/include/stdint.h:11,
+                 from src/emu.h:19,
+                 from src/emu.c:9:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -Iinclude -MMD -MP -c src/serve.c -o build/debug/serve.o
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/libc-header-start.h:33,
+                 from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/stdint.h:26,
+                 from /nix/store/0axpqqmj1rcanmm2i8vzpd8xxwkmq2jf-gcc-15.2.0/lib/gcc/x86_64-unknown-linux-gnu/15.2.0/include/stdint.h:11,
+                 from include/cgra.h:29,
+                 from src/serve.c:12:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/features.h:435:4: warning: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Wcpp]
+  435 | #  warning _FORTIFY_SOURCE requires compiling with optimization (-O)
+      |    ^~~~~~~
+ar rcs build/debug/libcgra.a build/debug/cgra.o build/debug/kernels.o build/debug/emu.o build/debug/serve.o
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O0 -g3 -fno-omit-frame-pointer -I. -I../lib/include  -MMD -MP -include build/debug/install_paths.h build/debug/main.o build/debug/cli.o build/debug/vector_io.o build/debug/bench.o build/debug/device.o build/debug/shell.o build/debug/dsl.o build/debug/compile.o build/debug/bench_ref.o ../lib/build/debug/libcgra.a   -o build/debug/cgra
+make: Leaving directory '/home/main/dev/git/ald-cgra/sw'

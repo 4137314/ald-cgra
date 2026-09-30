@@ -1,0 +1,68 @@
+{
+  "id": "F-PE-NEGATIVE",
+  "top": "pe_smoke",
+  "kind": "pe",
+  "mode": "bmc",
+  "depth": 8,
+  "negative": true,
+  "assertions": 5,
+  "assumptions": 1,
+  "covers": 1,
+  "result": "FAIL",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover  cgra_pkg.vhd pe.vhd pe_ports.vhd -e pe_ports; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "initial reset; subsequent inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+    "hw/formal/pe_ports.vhd": "4e5d7456a44fe624414bb42ad7851038dea1b3de2cac1ea9ebe34e1c5211dd34",
+    "hw/formal/pe_smoke.sv": "b09ea037f68ecc71ce3905ce7995ba343560485aea22b76b59471ceb27d296a0"
+  },
+  "checked_port_widths": {
+    "n": 16,
+    "s": 16,
+    "e": 16,
+    "w": 16,
+    "q": 16,
+    "cfg": 32
+  },
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "assert": 5,
+    "assume": 1,
+    "cover": 1
+  },
+  "smt2_cells": {
+    "assert": 5,
+    "assume": 2,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "b037c817fa0f8c22a70552720c136fb58f12ca56fef6a08c32c0089cc8003899",
+    "task/src/properties.json": "8f68fd3490908e8191eeed26806b50e9a9f8c0e8ebb7ac130d8e649c161d11f0",
+    "task/model/design_smt2.smt2": "25cef9fa4793cb5d0030cd1cc6fab40bc798daf97b81e90c60910602bc9c0d72"
+  },
+  "traces": [
+    "task/engine_0/trace.yw"
+  ],
+  "duration_seconds": 0.693
+}

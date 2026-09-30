@@ -1,0 +1,1432 @@
+make -C lib -f lib.mk PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C lib -f lib.mk PROFILE=release test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_cgra.c build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o  -o build/test_cgra
+./build/test_cgra
+ok 1 - open kernel validation device
+ok 2 - unsupported binary kernel op rejected
+ok 3 - unsupported immediate kernel op rejected
+ok 4 - unsupported binary kernel op rejected
+ok 5 - unsupported immediate kernel op rejected
+ok 6 - unsupported binary kernel op rejected
+ok 7 - unsupported immediate kernel op rejected
+ok 8 - unsupported binary kernel op rejected
+ok 9 - unsupported immediate kernel op rejected
+ok 10 - unsupported binary kernel op rejected
+ok 11 - unsupported immediate kernel op rejected
+ok 12 - unsupported binary kernel op rejected
+ok 13 - unsupported immediate kernel op rejected
+ok 14 - unsupported binary kernel op rejected
+ok 15 - unsupported immediate kernel op rejected
+ok 16 - unsupported binary kernel op rejected
+ok 17 - unsupported immediate kernel op rejected
+ok 18 - invalid op does not contact device or modify output
+ok 19 - open kernel validation device
+ok 20 - unsupported binary kernel op rejected
+ok 21 - unsupported immediate kernel op rejected
+ok 22 - unsupported binary kernel op rejected
+ok 23 - unsupported immediate kernel op rejected
+ok 24 - unsupported binary kernel op rejected
+ok 25 - unsupported immediate kernel op rejected
+ok 26 - unsupported binary kernel op rejected
+ok 27 - unsupported immediate kernel op rejected
+ok 28 - unsupported binary kernel op rejected
+ok 29 - unsupported immediate kernel op rejected
+ok 30 - unsupported binary kernel op rejected
+ok 31 - unsupported immediate kernel op rejected
+ok 32 - unsupported binary kernel op rejected
+ok 33 - unsupported immediate kernel op rejected
+ok 34 - unsupported binary kernel op rejected
+ok 35 - unsupported immediate kernel op rejected
+ok 36 - invalid op does not contact device or modify output
+# libcgra unit tests
+ok 37 - CFG imm field round-trips signed
+ok 38 - CFG opcode field
+ok 39 - CFG sel_a field
+ok 40 - CFG sel_b field
+ok 41 - CFG reserved bits are zero
+ok 42 - identify succeeds on sim:
+ok 43 - identify reports protocol version
+ok 44 - identify reports ROWS
+ok 45 - identify reports COLS
+ok 46 - identify reports datapath width
+ok 47 - configure ok
+ok 48 - write_inputs ok
+ok 49 - run ok
+ok 50 - read_regs ok
+ok 51 - PE(0,0)=north+west=42
+ok 52 - reset_datapath ok
+ok 53 - read after reset ok
+ok 54 - registers cleared by reset
+ok 55 - vec_add ok
+ok 56 - vec_add matches host reference
+ok 57 - vec_sub ok
+ok 58 - vec_sub matches host reference
+ok 59 - vec_mul ok
+ok 60 - vec_mul matches (16-bit wrap)
+ok 61 - vec_relu ok
+ok 62 - vec_relu = max(a,0)
+ok 63 - vec_addi ok
+ok 64 - vec_addi = a + imm
+ok 65 - vec_max (n=3, partial lane)
+ok 66 - vec_max tail chunk correct
+ok 67 - apply(shl) ok
+ok 68 - SHL of negative wraps (=-16)
+ok 69 - SHL uses modulo arithmetic for boundaries and all masked shift counts
+ok 70 - SHR matches floor division for boundaries and all masked shift counts
+ok 71 - dot ok
+ok 72 - dot product = 35
+ok 73 - sim: advertises protocol v3 (exec)
+ok 74 - exec: configure
+ok 75 - exec: single-tap transaction
+ok 76 - exec: tapped register holds 7 + 5
+ok 77 - exec: two-tap mask
+ok 78 - exec: taps come back in PE order
+ok 79 - exec: empty mask (write+run only)
+ok 80 - exec: empty mask still stepped the array
+ok 81 - exec: rejects ntaps != popcount(mask)
+ok 82 - exec: configure ACC
+ok 83 - exec: reset then accumulate
+ok 84 - exec: three accumulates of 5 from a cleared register
+ok 85 - exec: accumulate without reset
+ok 86 - exec: without the flag the accumulator carries over
+ok 87 - exec: accumulate with fused reset
+ok 88 - exec: fused reset cleared the accumulator first
+ok 89 - configure(NULL) -> ERR_ARG
+ok 90 - vec_add(b=NULL) -> ERR_ARG
+ok 91 - dot(b=NULL) -> ERR_ARG
+ok 92 - strerror returns non-empty text
+ok 93 - strerror returns non-empty text
+ok 94 - strerror returns non-empty text
+ok 95 - strerror returns non-empty text
+ok 96 - strerror returns non-empty text
+ok 97 - strerror returns non-empty text
+ok 98 - open sim:flaky
+ok 99 - vec_add recovers through the retry path
+ok 100 - flaky result still correct
+ok 101 - exactly two retries (first CFG + first EXEC/WR NACKed)
+ok 102 - transaction counter advanced
+ok 103 - reset_stats zeroes counters
+ok 104 - open sim:v2 (legacy device)
+ok 105 - sim:v2 identifies as protocol v2
+ok 106 - sim:v2 does not advertise exec
+ok 107 - cgra_exec refuses a pre-v3 device
+ok 108 - v2 fallback: vec_add runs
+ok 109 - v2 fallback: results identical to the fused path
+ok 110 - v2 fallback: dot identical to the fused path
+ok 111 - open both protocol backends
+ok 112 - fused path uses less than half the round trips
+ok 113 - fused path also moves fewer bytes
+ok 114 - sim:1x1
+ok 115 - ID reports actual geometry
+ok 116 - cached ID succeeds
+ok 117 - short configuration rejected
+ok 118 - long configuration rejected
+ok 119 - short west edge rejected
+ok 120 - long north edge rejected
+ok 121 - short register buffer rejected
+ok 122 - unknown EXEC flags rejected
+ok 123 - NULL input with nonzero length rejected
+ok 124 - tap count mismatch rejected
+ok 125 - mask selecting absent PE rejected
+ok 126 - legacy CFG requires 4x4
+ok 127 - legacy WR requires 4x4
+ok 128 - legacy RD requires 4x4
+ok 129 - legacy EXEC requires 4x4
+ok 130 - legacy apply requires 4x4
+ok 131 - invalid buffers/geometry perform no transfers after cached ID
+ok 132 - runtime CFG succeeds
+ok 133 - runtime WR succeeds
+ok 134 - runtime RUN succeeds
+ok 135 - runtime RD succeeds with exact capacity
+ok 136 - row-major results and read buffer canary intact
+ok 137 - last PE masked read and zero inputs
+ok 138 - sim:1x16
+ok 139 - ID reports actual geometry
+ok 140 - cached ID succeeds
+ok 141 - short configuration rejected
+ok 142 - long configuration rejected
+ok 143 - short west edge rejected
+ok 144 - long north edge rejected
+ok 145 - short register buffer rejected
+ok 146 - unknown EXEC flags rejected
+ok 147 - NULL input with nonzero length rejected
+ok 148 - tap count mismatch rejected
+ok 149 - legacy CFG requires 4x4
+ok 150 - legacy WR requires 4x4
+ok 151 - legacy RD requires 4x4
+ok 152 - legacy EXEC requires 4x4
+ok 153 - legacy apply requires 4x4
+ok 154 - invalid buffers/geometry perform no transfers after cached ID
+ok 155 - runtime CFG succeeds
+ok 156 - runtime WR succeeds
+ok 157 - runtime RUN succeeds
+ok 158 - runtime RD succeeds with exact capacity
+ok 159 - row-major results and read buffer canary intact
+ok 160 - last PE masked read and zero inputs
+ok 161 - sim:16x1
+ok 162 - ID reports actual geometry
+ok 163 - cached ID succeeds
+ok 164 - short configuration rejected
+ok 165 - long configuration rejected
+ok 166 - short west edge rejected
+ok 167 - long north edge rejected
+ok 168 - short register buffer rejected
+ok 169 - unknown EXEC flags rejected
+ok 170 - NULL input with nonzero length rejected
+ok 171 - tap count mismatch rejected
+ok 172 - legacy CFG requires 4x4
+ok 173 - legacy WR requires 4x4
+ok 174 - legacy RD requires 4x4
+ok 175 - legacy EXEC requires 4x4
+ok 176 - legacy apply requires 4x4
+ok 177 - invalid buffers/geometry perform no transfers after cached ID
+ok 178 - runtime CFG succeeds
+ok 179 - runtime WR succeeds
+ok 180 - runtime RUN succeeds
+ok 181 - runtime RD succeeds with exact capacity
+ok 182 - row-major results and read buffer canary intact
+ok 183 - last PE masked read and zero inputs
+ok 184 - sim:2x3
+ok 185 - ID reports actual geometry
+ok 186 - cached ID succeeds
+ok 187 - short configuration rejected
+ok 188 - long configuration rejected
+ok 189 - short west edge rejected
+ok 190 - long north edge rejected
+ok 191 - short register buffer rejected
+ok 192 - unknown EXEC flags rejected
+ok 193 - NULL input with nonzero length rejected
+ok 194 - tap count mismatch rejected
+ok 195 - mask selecting absent PE rejected
+ok 196 - legacy CFG requires 4x4
+ok 197 - legacy WR requires 4x4
+ok 198 - legacy RD requires 4x4
+ok 199 - legacy EXEC requires 4x4
+ok 200 - legacy apply requires 4x4
+ok 201 - invalid buffers/geometry perform no transfers after cached ID
+ok 202 - runtime CFG succeeds
+ok 203 - runtime WR succeeds
+ok 204 - runtime RUN succeeds
+ok 205 - runtime RD succeeds with exact capacity
+ok 206 - row-major results and read buffer canary intact
+ok 207 - last PE masked read and zero inputs
+ok 208 - sim:3x2
+ok 209 - ID reports actual geometry
+ok 210 - cached ID succeeds
+ok 211 - short configuration rejected
+ok 212 - long configuration rejected
+ok 213 - short west edge rejected
+ok 214 - long north edge rejected
+ok 215 - short register buffer rejected
+ok 216 - unknown EXEC flags rejected
+ok 217 - NULL input with nonzero length rejected
+ok 218 - tap count mismatch rejected
+ok 219 - mask selecting absent PE rejected
+ok 220 - legacy CFG requires 4x4
+ok 221 - legacy WR requires 4x4
+ok 222 - legacy RD requires 4x4
+ok 223 - legacy EXEC requires 4x4
+ok 224 - legacy apply requires 4x4
+ok 225 - invalid buffers/geometry perform no transfers after cached ID
+ok 226 - runtime CFG succeeds
+ok 227 - runtime WR succeeds
+ok 228 - runtime RUN succeeds
+ok 229 - runtime RD succeeds with exact capacity
+ok 230 - row-major results and read buffer canary intact
+ok 231 - last PE masked read and zero inputs
+ok 232 - sim:2x8
+ok 233 - ID reports actual geometry
+ok 234 - cached ID succeeds
+ok 235 - short configuration rejected
+ok 236 - long configuration rejected
+ok 237 - short west edge rejected
+ok 238 - long north edge rejected
+ok 239 - short register buffer rejected
+ok 240 - unknown EXEC flags rejected
+ok 241 - NULL input with nonzero length rejected
+ok 242 - tap count mismatch rejected
+ok 243 - legacy CFG requires 4x4
+ok 244 - legacy WR requires 4x4
+ok 245 - legacy RD requires 4x4
+ok 246 - legacy EXEC requires 4x4
+ok 247 - legacy apply requires 4x4
+ok 248 - invalid buffers/geometry perform no transfers after cached ID
+ok 249 - runtime CFG succeeds
+ok 250 - runtime WR succeeds
+ok 251 - runtime RUN succeeds
+ok 252 - runtime RD succeeds with exact capacity
+ok 253 - row-major results and read buffer canary intact
+ok 254 - last PE masked read and zero inputs
+ok 255 - sim:8x2
+ok 256 - ID reports actual geometry
+ok 257 - cached ID succeeds
+ok 258 - short configuration rejected
+ok 259 - long configuration rejected
+ok 260 - short west edge rejected
+ok 261 - long north edge rejected
+ok 262 - short register buffer rejected
+ok 263 - unknown EXEC flags rejected
+ok 264 - NULL input with nonzero length rejected
+ok 265 - tap count mismatch rejected
+ok 266 - legacy CFG requires 4x4
+ok 267 - legacy WR requires 4x4
+ok 268 - legacy RD requires 4x4
+ok 269 - legacy EXEC requires 4x4
+ok 270 - legacy apply requires 4x4
+ok 271 - invalid buffers/geometry perform no transfers after cached ID
+ok 272 - runtime CFG succeeds
+ok 273 - runtime WR succeeds
+ok 274 - runtime RUN succeeds
+ok 275 - runtime RD succeeds with exact capacity
+ok 276 - row-major results and read buffer canary intact
+ok 277 - last PE masked read and zero inputs
+ok 278 - sim:4x4
+ok 279 - ID reports actual geometry
+ok 280 - cached ID succeeds
+ok 281 - short configuration rejected
+ok 282 - long configuration rejected
+ok 283 - short west edge rejected
+ok 284 - long north edge rejected
+ok 285 - short register buffer rejected
+ok 286 - unknown EXEC flags rejected
+ok 287 - NULL input with nonzero length rejected
+ok 288 - tap count mismatch rejected
+ok 289 - invalid buffers/geometry perform no transfers after cached ID
+ok 290 - runtime CFG succeeds
+ok 291 - runtime WR succeeds
+ok 292 - runtime RUN succeeds
+ok 293 - runtime RD succeeds with exact capacity
+ok 294 - row-major results and read buffer canary intact
+ok 295 - last PE masked read and zero inputs
+ok 296 - invalid emulator geometry rejected
+ok 297 - invalid emulator geometry rejected
+ok 298 - invalid emulator geometry rejected
+ok 299 - invalid emulator geometry rejected
+ok 300 - invalid emulator geometry rejected
+ok 301 - invalid emulator geometry rejected
+1..301
+# 301 passed, 0 failed
+./build/test_transport
+ok transport 1 - create PTY
+ok transport 2 - open serial library on PTY
+ok transport 3 - silent peer times out
+ok transport 4 - silent peer contributes no received bytes
+ok transport 5 - create PTY
+ok transport 6 - open serial library on PTY
+ok transport 7 - fork delayed peer
+ok transport 8 - fragments cannot restart the whole-reply deadline
+ok transport 9 - only bytes read before timeout are counted
+ok transport 10 - delayed peer delivered the complete reply
+ok transport 11 - create PTY
+ok transport 12 - open serial library on PTY
+ok transport 13 - disconnected PTY rejects write
+ok transport 14 - failed transfer does not invent byte counts
+ok transport 15 - create PTY
+ok transport 16 - open serial library on PTY
+ok transport 17 - establish geometry before injecting reply failure
+ok transport 18 - failing command preserves its original error
+ok transport 19 - uncertain request is sent once with no recovery byte
+ok transport 20 - peer observes exactly the original request
+ok transport 21 - all protocol entry points reject a desynchronized session
+ok transport 22 - blocked calls leave wire, counters and output untouched
+ok transport 23 - create PTY
+ok transport 24 - open serial library on PTY
+ok transport 25 - establish geometry before injecting reply failure
+ok transport 26 - failing command preserves its original error
+ok transport 27 - uncertain request is sent once with no recovery byte
+ok transport 28 - peer observes exactly the original request
+ok transport 29 - all protocol entry points reject a desynchronized session
+ok transport 30 - blocked calls leave wire, counters and output untouched
+ok transport 31 - create PTY
+ok transport 32 - open serial library on PTY
+ok transport 33 - establish geometry before injecting reply failure
+ok transport 34 - failing command preserves its original error
+ok transport 35 - uncertain request is sent once with no recovery byte
+ok transport 36 - peer observes exactly the original request
+ok transport 37 - all protocol entry points reject a desynchronized session
+ok transport 38 - blocked calls leave wire, counters and output untouched
+ok transport 39 - create PTY
+ok transport 40 - open serial library on PTY
+ok transport 41 - establish geometry before injecting reply failure
+ok transport 42 - failing command preserves its original error
+ok transport 43 - uncertain request is sent once with no recovery byte
+ok transport 44 - peer observes exactly the original request
+ok transport 45 - all protocol entry points reject a desynchronized session
+ok transport 46 - blocked calls leave wire, counters and output untouched
+ok transport 47 - create PTY
+ok transport 48 - open serial library on PTY
+ok transport 49 - establish geometry before injecting reply failure
+ok transport 50 - failing command preserves its original error
+ok transport 51 - uncertain request is sent once with no recovery byte
+ok transport 52 - peer observes exactly the original request
+ok transport 53 - all protocol entry points reject a desynchronized session
+ok transport 54 - blocked calls leave wire, counters and output untouched
+ok transport 55 - create PTY
+ok transport 56 - open serial library on PTY
+ok transport 57 - establish geometry before injecting reply failure
+ok transport 58 - inject malformed reply
+ok transport 59 - failing command preserves its original error
+ok transport 60 - uncertain request is sent once with no recovery byte
+ok transport 61 - peer observes exactly the original request
+ok transport 62 - all protocol entry points reject a desynchronized session
+ok transport 63 - blocked calls leave wire, counters and output untouched
+ok transport 64 - create PTY
+ok transport 65 - open serial library on PTY
+ok transport 66 - establish geometry before injecting reply failure
+ok transport 67 - inject malformed reply
+ok transport 68 - failing command preserves its original error
+ok transport 69 - uncertain request is sent once with no recovery byte
+ok transport 70 - peer observes exactly the original request
+ok transport 71 - all protocol entry points reject a desynchronized session
+ok transport 72 - blocked calls leave wire, counters and output untouched
+ok transport 73 - reserve descriptors through FD_SETSIZE
+ok transport 74 - create PTY
+ok transport 75 - open serial library on PTY
+ok transport 76 - serial descriptor is above the select bitmap limit
+ok transport 77 - high descriptor returns error instead of aborting
+ok transport 78 - create PTY
+ok transport 79 - open serial library on PTY
+ok transport 80 - identify kernel fault-injection peer
+ok transport 81 - queue mid-kernel protocol error
+ok transport 82 - kernel returns the original mid-execution error
+ok transport 83 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 84 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 85 - all nonempty kernels reject the stopped session
+ok transport 86 - stopped kernel session sends no retries or later kernel commands
+ok transport 87 - create PTY
+ok transport 88 - open serial library on PTY
+ok transport 89 - identify kernel fault-injection peer
+ok transport 90 - queue mid-kernel protocol error
+ok transport 91 - kernel returns the original mid-execution error
+ok transport 92 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 93 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 94 - all nonempty kernels reject the stopped session
+ok transport 95 - stopped kernel session sends no retries or later kernel commands
+ok transport 96 - create PTY
+ok transport 97 - open serial library on PTY
+ok transport 98 - identify kernel fault-injection peer
+ok transport 99 - queue mid-kernel protocol error
+ok transport 100 - kernel returns the original mid-execution error
+ok transport 101 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 102 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 103 - all nonempty kernels reject the stopped session
+ok transport 104 - stopped kernel session sends no retries or later kernel commands
+ok transport 105 - create PTY
+ok transport 106 - open serial library on PTY
+ok transport 107 - identify kernel fault-injection peer
+ok transport 108 - queue mid-kernel protocol error
+ok transport 109 - kernel returns the original mid-execution error
+ok transport 110 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 111 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 112 - all nonempty kernels reject the stopped session
+ok transport 113 - stopped kernel session sends no retries or later kernel commands
+ok transport 114 - create PTY
+ok transport 115 - open serial library on PTY
+ok transport 116 - identify kernel fault-injection peer
+ok transport 117 - queue mid-kernel protocol error
+ok transport 118 - kernel returns the original mid-execution error
+ok transport 119 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 120 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 121 - all nonempty kernels reject the stopped session
+ok transport 122 - stopped kernel session sends no retries or later kernel commands
+ok transport 123 - create PTY
+ok transport 124 - open serial library on PTY
+ok transport 125 - open same PTY to fill its transmit queue
+ok transport 126 - real PTY backpressure before the library write
+ok transport 127 - install interrupted-wait handler
+ok transport 128 - fork repeated signal source
+ok transport 129 - whole-transaction budget bounds a blocked write despite EINTR
+ok transport 130 - write deadline diagnostic records phase, cause, command and zero progress
+ok transport 131 - write timeout stops session without retry
+ok transport 132 - signals actually interrupted the wait
+ok transport 133 - diagnostic is an owned copy after closing the handle
+ok transport 134 - create PTY
+ok transport 135 - open serial library on PTY
+ok transport 136 - transaction budget also shortens the reply wait
+ok transport 137 - read deadline diagnostic distinguishes a transmitted request
+ok transport 138 - diagnostic can be cleared explicitly
+ok transport 139 - create PTY
+ok transport 140 - open serial library on PTY
+ok transport 141 - establish geometry for partial-write regression
+ok transport 142 - queue complete ACK
+ok transport 143 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 144 - fork delayed NACK source
+ok transport 145 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 146 - NACK source finished
+ok transport 147 - create PTY
+ok transport 148 - open serial library on PTY
+ok transport 149 - stat slave for descriptor inspection
+ok transport 150 - serial fd is nonblocking and close-on-exec
+ok transport 151 - serial descriptor does not survive exec
+ok transport 152 - optional exclusive serial open succeeds
+ok transport 153 - exclusive ownership rejects a subsequent ordinary open
+ok transport 154 - close releases exclusive access even while PTY master remains open
+ok transport 155 - unsupported open flag combinations fail before opening
+ok transport 156 - create server ready/cancellation channels
+ok transport 157 - fork configurable PTY service
+ok transport 158 - receive borrowed PTY path through callback
+ok transport 159 - configured v2/v3 geometry serves a real serial API workload
+ok transport 160 - open raw client for stream/backpressure cases
+ok transport 161 - request controlled stop
+ok transport 162 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 163 - create server ready/cancellation channels
+ok transport 164 - fork configurable PTY service
+ok transport 165 - receive borrowed PTY path through callback
+ok transport 166 - configured v2/v3 geometry serves a real serial API workload
+ok transport 167 - open raw client for stream/backpressure cases
+ok transport 168 - batch 100 consecutive ID commands
+ok transport 169 - all 500 response bytes survive without model FIFO overflow
+ok transport 170 - request controlled stop
+ok transport 171 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 172 - create server ready/cancellation channels
+ok transport 173 - fork configurable PTY service
+ok transport 174 - receive borrowed PTY path through callback
+ok transport 175 - configured v2/v3 geometry serves a real serial API workload
+ok transport 176 - open raw client for stream/backpressure cases
+ok transport 177 - leave a CFG frame incomplete before cancellation
+ok transport 178 - request controlled stop
+ok transport 179 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 180 - create server ready/cancellation channels
+ok transport 181 - fork configurable PTY service
+ok transport 182 - receive borrowed PTY path through callback
+ok transport 183 - configured v2/v3 geometry serves a real serial API workload
+ok transport 184 - open raw client for stream/backpressure cases
+ok transport 185 - flood readback requests without draining responses
+ok transport 186 - request controlled stop
+ok transport 187 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 188 - invalid service options rejected before callback/device creation
+ok transport 189 - complete NACK available for diagnostic persistence check
+ok transport 190 - NACK diagnostic is distinct from syscall failure
+ok transport 191 - subsequent success and invalid call do not overwrite last failure
+ok transport 192 - stored diagnostic survives later success
+# 192 transport checks passed
+./build/test_kernels
+ok kernel 1 - open public contract test device
+ok kernel 2 - vector partial overlap rejected in both directions
+ok kernel 3 - immediate and scan partial overlap rejected
+ok kernel 4 - matrix output cannot overwrite A or x
+ok kernel 5 - convolution output cannot overwrite either input
+ok kernel 6 - new kernels enforce output capacities
+ok kernel 7 - matrix product, convolution sum and workspace overflow rejected
+ok kernel 8 - vector footprints must fit addressable storage
+ok kernel 9 - op validation also applies to empty input
+ok kernel 10 - nonempty input pointers are required
+ok kernel 11 - argument errors preserve output and perform no ID or compute I/O
+ok kernel 12 - empty vectors and scans accept NULL buffers
+ok kernel 13 - empty dot returns zero and still requires its result pointer
+ok kernel 14 - empty matrix rows are a no-op; zero columns write exactly rows zeros
+ok kernel 15 - either empty convolution input yields empty output
+ok kernel 16 - even empty kernels require a handle
+ok kernel 17 - empty operations do not discover or modify the device
+ok kernel 18 - NULL device reports EINVAL
+ok kernel 19 - invalid emulator reports EINVAL
+ok kernel 20 - unsupported serial baud reports EINVAL
+ok kernel 21 - serial open preserves tcgetattr errno
+ok kernel 22 - workspace allocation has a distinct error
+ok kernel 23 - sim:1x1:v2
+ok kernel 24 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 25 - public scan matches independent scalar fold and preserves output canary
+ok kernel 26 - scan supports exact in-place output
+ok kernel 27 - public scan matches independent scalar fold and preserves output canary
+ok kernel 28 - scan supports exact in-place output
+ok kernel 29 - public scan matches independent scalar fold and preserves output canary
+ok kernel 30 - scan supports exact in-place output
+ok kernel 31 - public scan matches independent scalar fold and preserves output canary
+ok kernel 32 - scan supports exact in-place output
+ok kernel 33 - public convolution matches scalar reference and preserves output canary
+ok kernel 34 - vector output may equal A
+ok kernel 35 - vector output may equal B
+ok kernel 36 - immediate vector supports in-place output
+ok kernel 37 - dot may store its result inside a consumed input
+ok kernel 38 - open convolution tile regression device
+ok kernel 39 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 40 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 41 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 42 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 43 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 44 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 45 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 46 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 47 - sim:1x1
+ok kernel 48 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 49 - public scan matches independent scalar fold and preserves output canary
+ok kernel 50 - scan supports exact in-place output
+ok kernel 51 - public scan matches independent scalar fold and preserves output canary
+ok kernel 52 - scan supports exact in-place output
+ok kernel 53 - public scan matches independent scalar fold and preserves output canary
+ok kernel 54 - scan supports exact in-place output
+ok kernel 55 - public scan matches independent scalar fold and preserves output canary
+ok kernel 56 - scan supports exact in-place output
+ok kernel 57 - public convolution matches scalar reference and preserves output canary
+ok kernel 58 - vector output may equal A
+ok kernel 59 - vector output may equal B
+ok kernel 60 - immediate vector supports in-place output
+ok kernel 61 - dot may store its result inside a consumed input
+ok kernel 62 - open convolution tile regression device
+ok kernel 63 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 64 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 65 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 66 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 67 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 68 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 69 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 70 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 71 - sim:1x16:v2
+ok kernel 72 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 73 - public scan matches independent scalar fold and preserves output canary
+ok kernel 74 - scan supports exact in-place output
+ok kernel 75 - public scan matches independent scalar fold and preserves output canary
+ok kernel 76 - scan supports exact in-place output
+ok kernel 77 - public scan matches independent scalar fold and preserves output canary
+ok kernel 78 - scan supports exact in-place output
+ok kernel 79 - public scan matches independent scalar fold and preserves output canary
+ok kernel 80 - scan supports exact in-place output
+ok kernel 81 - public convolution matches scalar reference and preserves output canary
+ok kernel 82 - vector output may equal A
+ok kernel 83 - vector output may equal B
+ok kernel 84 - immediate vector supports in-place output
+ok kernel 85 - dot may store its result inside a consumed input
+ok kernel 86 - open convolution tile regression device
+ok kernel 87 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 88 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 89 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 90 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 91 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 92 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 93 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 94 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 95 - sim:1x16
+ok kernel 96 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 97 - public scan matches independent scalar fold and preserves output canary
+ok kernel 98 - scan supports exact in-place output
+ok kernel 99 - public scan matches independent scalar fold and preserves output canary
+ok kernel 100 - scan supports exact in-place output
+ok kernel 101 - public scan matches independent scalar fold and preserves output canary
+ok kernel 102 - scan supports exact in-place output
+ok kernel 103 - public scan matches independent scalar fold and preserves output canary
+ok kernel 104 - scan supports exact in-place output
+ok kernel 105 - public convolution matches scalar reference and preserves output canary
+ok kernel 106 - vector output may equal A
+ok kernel 107 - vector output may equal B
+ok kernel 108 - immediate vector supports in-place output
+ok kernel 109 - dot may store its result inside a consumed input
+ok kernel 110 - open convolution tile regression device
+ok kernel 111 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 112 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 113 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 114 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 115 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 116 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 117 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 118 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 119 - sim:16x1:v2
+ok kernel 120 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 121 - public scan matches independent scalar fold and preserves output canary
+ok kernel 122 - scan supports exact in-place output
+ok kernel 123 - public scan matches independent scalar fold and preserves output canary
+ok kernel 124 - scan supports exact in-place output
+ok kernel 125 - public scan matches independent scalar fold and preserves output canary
+ok kernel 126 - scan supports exact in-place output
+ok kernel 127 - public scan matches independent scalar fold and preserves output canary
+ok kernel 128 - scan supports exact in-place output
+ok kernel 129 - public convolution matches scalar reference and preserves output canary
+ok kernel 130 - vector output may equal A
+ok kernel 131 - vector output may equal B
+ok kernel 132 - immediate vector supports in-place output
+ok kernel 133 - dot may store its result inside a consumed input
+ok kernel 134 - open convolution tile regression device
+ok kernel 135 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 136 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 137 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 138 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 139 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 140 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 141 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 142 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 143 - sim:16x1
+ok kernel 144 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 145 - public scan matches independent scalar fold and preserves output canary
+ok kernel 146 - scan supports exact in-place output
+ok kernel 147 - public scan matches independent scalar fold and preserves output canary
+ok kernel 148 - scan supports exact in-place output
+ok kernel 149 - public scan matches independent scalar fold and preserves output canary
+ok kernel 150 - scan supports exact in-place output
+ok kernel 151 - public scan matches independent scalar fold and preserves output canary
+ok kernel 152 - scan supports exact in-place output
+ok kernel 153 - public convolution matches scalar reference and preserves output canary
+ok kernel 154 - vector output may equal A
+ok kernel 155 - vector output may equal B
+ok kernel 156 - immediate vector supports in-place output
+ok kernel 157 - dot may store its result inside a consumed input
+ok kernel 158 - open convolution tile regression device
+ok kernel 159 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 160 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 161 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 162 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 163 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 164 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 165 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 166 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 167 - sim:2x3:v2
+ok kernel 168 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 169 - public scan matches independent scalar fold and preserves output canary
+ok kernel 170 - scan supports exact in-place output
+ok kernel 171 - public scan matches independent scalar fold and preserves output canary
+ok kernel 172 - scan supports exact in-place output
+ok kernel 173 - public scan matches independent scalar fold and preserves output canary
+ok kernel 174 - scan supports exact in-place output
+ok kernel 175 - public scan matches independent scalar fold and preserves output canary
+ok kernel 176 - scan supports exact in-place output
+ok kernel 177 - public convolution matches scalar reference and preserves output canary
+ok kernel 178 - vector output may equal A
+ok kernel 179 - vector output may equal B
+ok kernel 180 - immediate vector supports in-place output
+ok kernel 181 - dot may store its result inside a consumed input
+ok kernel 182 - open convolution tile regression device
+ok kernel 183 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 184 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 185 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 186 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 187 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 188 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 189 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 190 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 191 - sim:2x3
+ok kernel 192 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 193 - public scan matches independent scalar fold and preserves output canary
+ok kernel 194 - scan supports exact in-place output
+ok kernel 195 - public scan matches independent scalar fold and preserves output canary
+ok kernel 196 - scan supports exact in-place output
+ok kernel 197 - public scan matches independent scalar fold and preserves output canary
+ok kernel 198 - scan supports exact in-place output
+ok kernel 199 - public scan matches independent scalar fold and preserves output canary
+ok kernel 200 - scan supports exact in-place output
+ok kernel 201 - public convolution matches scalar reference and preserves output canary
+ok kernel 202 - vector output may equal A
+ok kernel 203 - vector output may equal B
+ok kernel 204 - immediate vector supports in-place output
+ok kernel 205 - dot may store its result inside a consumed input
+ok kernel 206 - open convolution tile regression device
+ok kernel 207 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 208 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 209 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 210 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 211 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 212 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 213 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 214 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 215 - sim:3x2:v2
+ok kernel 216 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 217 - public scan matches independent scalar fold and preserves output canary
+ok kernel 218 - scan supports exact in-place output
+ok kernel 219 - public scan matches independent scalar fold and preserves output canary
+ok kernel 220 - scan supports exact in-place output
+ok kernel 221 - public scan matches independent scalar fold and preserves output canary
+ok kernel 222 - scan supports exact in-place output
+ok kernel 223 - public scan matches independent scalar fold and preserves output canary
+ok kernel 224 - scan supports exact in-place output
+ok kernel 225 - public convolution matches scalar reference and preserves output canary
+ok kernel 226 - vector output may equal A
+ok kernel 227 - vector output may equal B
+ok kernel 228 - immediate vector supports in-place output
+ok kernel 229 - dot may store its result inside a consumed input
+ok kernel 230 - open convolution tile regression device
+ok kernel 231 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 232 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 233 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 234 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 235 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 236 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 237 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 238 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 239 - sim:3x2
+ok kernel 240 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 241 - public scan matches independent scalar fold and preserves output canary
+ok kernel 242 - scan supports exact in-place output
+ok kernel 243 - public scan matches independent scalar fold and preserves output canary
+ok kernel 244 - scan supports exact in-place output
+ok kernel 245 - public scan matches independent scalar fold and preserves output canary
+ok kernel 246 - scan supports exact in-place output
+ok kernel 247 - public scan matches independent scalar fold and preserves output canary
+ok kernel 248 - scan supports exact in-place output
+ok kernel 249 - public convolution matches scalar reference and preserves output canary
+ok kernel 250 - vector output may equal A
+ok kernel 251 - vector output may equal B
+ok kernel 252 - immediate vector supports in-place output
+ok kernel 253 - dot may store its result inside a consumed input
+ok kernel 254 - open convolution tile regression device
+ok kernel 255 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 256 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 257 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 258 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 259 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 260 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 261 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 262 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 263 - sim:2x8:v2
+ok kernel 264 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 265 - public scan matches independent scalar fold and preserves output canary
+ok kernel 266 - scan supports exact in-place output
+ok kernel 267 - public scan matches independent scalar fold and preserves output canary
+ok kernel 268 - scan supports exact in-place output
+ok kernel 269 - public scan matches independent scalar fold and preserves output canary
+ok kernel 270 - scan supports exact in-place output
+ok kernel 271 - public scan matches independent scalar fold and preserves output canary
+ok kernel 272 - scan supports exact in-place output
+ok kernel 273 - public convolution matches scalar reference and preserves output canary
+ok kernel 274 - vector output may equal A
+ok kernel 275 - vector output may equal B
+ok kernel 276 - immediate vector supports in-place output
+ok kernel 277 - dot may store its result inside a consumed input
+ok kernel 278 - open convolution tile regression device
+ok kernel 279 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 280 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 281 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 282 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 283 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 284 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 285 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 286 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 287 - sim:2x8
+ok kernel 288 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 289 - public scan matches independent scalar fold and preserves output canary
+ok kernel 290 - scan supports exact in-place output
+ok kernel 291 - public scan matches independent scalar fold and preserves output canary
+ok kernel 292 - scan supports exact in-place output
+ok kernel 293 - public scan matches independent scalar fold and preserves output canary
+ok kernel 294 - scan supports exact in-place output
+ok kernel 295 - public scan matches independent scalar fold and preserves output canary
+ok kernel 296 - scan supports exact in-place output
+ok kernel 297 - public convolution matches scalar reference and preserves output canary
+ok kernel 298 - vector output may equal A
+ok kernel 299 - vector output may equal B
+ok kernel 300 - immediate vector supports in-place output
+ok kernel 301 - dot may store its result inside a consumed input
+ok kernel 302 - open convolution tile regression device
+ok kernel 303 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 304 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 305 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 306 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 307 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 308 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 309 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 310 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 311 - sim:8x2:v2
+ok kernel 312 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 313 - public scan matches independent scalar fold and preserves output canary
+ok kernel 314 - scan supports exact in-place output
+ok kernel 315 - public scan matches independent scalar fold and preserves output canary
+ok kernel 316 - scan supports exact in-place output
+ok kernel 317 - public scan matches independent scalar fold and preserves output canary
+ok kernel 318 - scan supports exact in-place output
+ok kernel 319 - public scan matches independent scalar fold and preserves output canary
+ok kernel 320 - scan supports exact in-place output
+ok kernel 321 - public convolution matches scalar reference and preserves output canary
+ok kernel 322 - vector output may equal A
+ok kernel 323 - vector output may equal B
+ok kernel 324 - immediate vector supports in-place output
+ok kernel 325 - dot may store its result inside a consumed input
+ok kernel 326 - open convolution tile regression device
+ok kernel 327 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 328 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 329 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 330 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 331 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 332 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 333 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 334 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 335 - sim:8x2
+ok kernel 336 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 337 - public scan matches independent scalar fold and preserves output canary
+ok kernel 338 - scan supports exact in-place output
+ok kernel 339 - public scan matches independent scalar fold and preserves output canary
+ok kernel 340 - scan supports exact in-place output
+ok kernel 341 - public scan matches independent scalar fold and preserves output canary
+ok kernel 342 - scan supports exact in-place output
+ok kernel 343 - public scan matches independent scalar fold and preserves output canary
+ok kernel 344 - scan supports exact in-place output
+ok kernel 345 - public convolution matches scalar reference and preserves output canary
+ok kernel 346 - vector output may equal A
+ok kernel 347 - vector output may equal B
+ok kernel 348 - immediate vector supports in-place output
+ok kernel 349 - dot may store its result inside a consumed input
+ok kernel 350 - open convolution tile regression device
+ok kernel 351 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 352 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 353 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 354 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 355 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 356 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 357 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 358 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 359 - sim:4x4:v2
+ok kernel 360 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 361 - public scan matches independent scalar fold and preserves output canary
+ok kernel 362 - scan supports exact in-place output
+ok kernel 363 - public scan matches independent scalar fold and preserves output canary
+ok kernel 364 - scan supports exact in-place output
+ok kernel 365 - public scan matches independent scalar fold and preserves output canary
+ok kernel 366 - scan supports exact in-place output
+ok kernel 367 - public scan matches independent scalar fold and preserves output canary
+ok kernel 368 - scan supports exact in-place output
+ok kernel 369 - public convolution matches scalar reference and preserves output canary
+ok kernel 370 - vector output may equal A
+ok kernel 371 - vector output may equal B
+ok kernel 372 - immediate vector supports in-place output
+ok kernel 373 - dot may store its result inside a consumed input
+ok kernel 374 - open convolution tile regression device
+ok kernel 375 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 376 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 377 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 378 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 379 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 380 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 381 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 382 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 383 - sim:4x4
+ok kernel 384 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 385 - public scan matches independent scalar fold and preserves output canary
+ok kernel 386 - scan supports exact in-place output
+ok kernel 387 - public scan matches independent scalar fold and preserves output canary
+ok kernel 388 - scan supports exact in-place output
+ok kernel 389 - public scan matches independent scalar fold and preserves output canary
+ok kernel 390 - scan supports exact in-place output
+ok kernel 391 - public scan matches independent scalar fold and preserves output canary
+ok kernel 392 - scan supports exact in-place output
+ok kernel 393 - public convolution matches scalar reference and preserves output canary
+ok kernel 394 - vector output may equal A
+ok kernel 395 - vector output may equal B
+ok kernel 396 - immediate vector supports in-place output
+ok kernel 397 - dot may store its result inside a consumed input
+ok kernel 398 - open convolution tile regression device
+ok kernel 399 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 400 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 401 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 402 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 403 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 404 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 405 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 406 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+# 406 public kernel checks passed
+./build/test_faults
+ok fault 1 - open before injecting allocation failures
+ok fault 2 - implicit convolution needs no heap allocation after open
+ok fault 3 - allocation-free convolution executes on the device
+ok fault 4 - open allocation failure reports ENOMEM
+ok fault 5 - server allocation failure returns NOMEM before readiness callback
+ok fault 6 - server retries EINTR and reports the subsequent read failure
+# 6 injected fault checks passed
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C sw  -f sw.mk  PROFILE=release test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=release static
+make[2]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+make[2]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+./build/test_sw
+./build/cgra selftest
+# cgra CLI unit tests (DSL + compiler)
+ok 1 - dsl_parse accepts a valid config
+ok 2 - device 'lab' found
+ok 3 - device port parsed
+ok 4 - device baud parsed
+ok 5 - mode 'amplify' found
+ok 6 - mode op parsed
+ok 7 - variable $GAIN expanded to 7
+ok 8 - pipeline 'chain' has two stages
+ok 9 - io profile 'hx' found
+ok 10 - unknown directive is rejected
+ok 11 - directive outside any section is rejected
+ok 12 - unknown section type is rejected
+ok 13 - built-in defaults parse
+ok 14 - core modes present in defaults
+ok 15 - sim device in defaults
+ok 16 - strict parser defaults
+ok 17 - invalid token/value rejected without changing configuration
+ok 18 - invalid token/value rejected without changing configuration
+ok 19 - invalid token/value rejected without changing configuration
+ok 20 - invalid token/value rejected without changing configuration
+ok 21 - invalid token/value rejected without changing configuration
+ok 22 - invalid token/value rejected without changing configuration
+ok 23 - invalid token/value rejected without changing configuration
+ok 24 - invalid token/value rejected without changing configuration
+ok 25 - invalid token/value rejected without changing configuration
+ok 26 - invalid token/value rejected without changing configuration
+ok 27 - invalid token/value rejected without changing configuration
+ok 28 - invalid token/value rejected without changing configuration
+ok 29 - invalid token/value rejected without changing configuration
+ok 30 - invalid token/value rejected without changing configuration
+ok 31 - invalid token/value rejected without changing configuration
+ok 32 - invalid token/value rejected without changing configuration
+ok 33 - invalid token/value rejected without changing configuration
+ok 34 - invalid token/value rejected without changing configuration
+ok 35 - invalid token/value rejected without changing configuration
+ok 36 - invalid token/value rejected without changing configuration
+ok 37 - invalid token/value rejected without changing configuration
+ok 38 - variable capacity overflow rolls back
+ok 39 - literal dollar, braced variable and explicit zero timeout accepted
+ok 40 - invalid output selector is not silently ignored
+ok 41 - invalid output selector is not silently ignored
+ok 42 - invalid output selector is not silently ignored
+ok 43 - invalid output selector is not silently ignored
+ok 44 - validation defaults
+ok 45 - malformed override rejected
+ok 46 - failed override leaves the original mode intact
+ok 47 - diagnostic counts blank lines
+ok 48 - unknown PE field rejected
+ok 49 - failed parse creates no partial mode
+ok 50 - stage immediate requires complete integer
+ok 51 - invalid step count rejected
+ok 52 - invalid step count rejected
+ok 53 - invalid step count rejected
+ok 54 - invalid step count rejected
+ok 55 - explicit zero steps is valid
+ok 56 - 255 steps is valid
+ok 57 - malformed immediate rejected
+ok 58 - malformed immediate rejected
+ok 59 - malformed immediate rejected
+ok 60 - malformed immediate rejected
+ok 61 - malformed immediate rejected
+ok 62 - two different diagonal immediates rejected
+ok 63 - override sets both constant operands
+ok 64 - two different reduction immediates rejected
+ok 65 - two different custom immediates rejected
+ok 66 - equivalent signed and unsigned immediates accepted
+ok 67 - pipeline syntax parses before semantic validation
+ok 68 - binary later pipeline stage rejected
+ok 69 - open validation device
+ok 70 - reduction capacity rejected before execution
+ok 71 - missing B rejected by the C engine
+ok 72 - convolution length overflow rejected before arithmetic
+ok 73 - unsupported scan operation rejected instead of becoming ADD
+ok 74 - invalid engine arguments leave device and output untouched
+ok 75 - binding defaults
+ok 76 - load actual arithmetic standard library
+ok 77 - parse reversed operands
+ok 78 - sim:
+ok 79 - stdlib neg uses A even in ALU operand B
+ok 80 - both north operands read A
+ok 81 - swapped subtraction reads B minus A
+ok 82 - reduction injects B into ALU operand A
+ok 83 - sim:v2
+ok 84 - stdlib neg uses A even in ALU operand B
+ok 85 - both north operands read A
+ok 86 - swapped subtraction reads B minus A
+ok 87 - reduction injects B into ALU operand A
+ok 88 - sim:2x3
+ok 89 - stdlib neg uses A even in ALU operand B
+ok 90 - both north operands read A
+ok 91 - swapped subtraction reads B minus A
+ok 92 - reduction injects B into ALU operand A
+ok 93 - sim:2x3:v2
+ok 94 - stdlib neg uses A even in ALU operand B
+ok 95 - both north operands read A
+ok 96 - swapped subtraction reads B minus A
+ok 97 - reduction injects B into ALU operand A
+ok 98 - sim:3x2
+ok 99 - stdlib neg uses A even in ALU operand B
+ok 100 - both north operands read A
+ok 101 - swapped subtraction reads B minus A
+ok 102 - reduction injects B into ALU operand A
+ok 103 - sim:1x16
+ok 104 - stdlib neg uses A even in ALU operand B
+ok 105 - both north operands read A
+ok 106 - swapped subtraction reads B minus A
+ok 107 - reduction injects B into ALU operand A
+ok 108 - open reset semantics device
+ok 109 - identify reset semantics device
+ok 110 - seed stale registers before mode invocation
+ok 111 - default once clears stale state and accumulates across chunks
+ok 112 - explicit once starts a new invocation from zero
+ok 113 - read full state after reset once
+ok 114 - initial reset also clears untapped NOP registers
+ok 115 - each clears the accumulator for every chunk
+ok 116 - open reset semantics device
+ok 117 - identify reset semantics device
+ok 118 - seed stale registers before mode invocation
+ok 119 - default once clears stale state and accumulates across chunks
+ok 120 - explicit once starts a new invocation from zero
+ok 121 - read full state after reset once
+ok 122 - initial reset also clears untapped NOP registers
+ok 123 - each clears the accumulator for every chunk
+ok 124 - open reset semantics device
+ok 125 - identify reset semantics device
+ok 126 - seed stale registers before mode invocation
+ok 127 - default once clears stale state and accumulates across chunks
+ok 128 - explicit once starts a new invocation from zero
+ok 129 - read full state after reset once
+ok 130 - initial reset also clears untapped NOP registers
+ok 131 - each clears the accumulator for every chunk
+ok 132 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 133 - zero steps returns cleared registers even after a previous execution
+ok 134 - open reset semantics device
+ok 135 - identify reset semantics device
+ok 136 - seed stale registers before mode invocation
+ok 137 - default once clears stale state and accumulates across chunks
+ok 138 - explicit once starts a new invocation from zero
+ok 139 - read full state after reset once
+ok 140 - initial reset also clears untapped NOP registers
+ok 141 - each clears the accumulator for every chunk
+ok 142 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 143 - zero steps returns cleared registers even after a previous execution
+ok 144 - open reset semantics device
+ok 145 - identify reset semantics device
+ok 146 - seed stale registers before mode invocation
+ok 147 - default once clears stale state and accumulates across chunks
+ok 148 - explicit once starts a new invocation from zero
+ok 149 - read full state after reset once
+ok 150 - initial reset also clears untapped NOP registers
+ok 151 - each clears the accumulator for every chunk
+ok 152 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 153 - zero steps returns cleared registers even after a previous execution
+ok 154 - open reset semantics device
+ok 155 - identify reset semantics device
+ok 156 - seed stale registers before mode invocation
+ok 157 - default once clears stale state and accumulates across chunks
+ok 158 - explicit once starts a new invocation from zero
+ok 159 - read full state after reset once
+ok 160 - initial reset also clears untapped NOP registers
+ok 161 - each clears the accumulator for every chunk
+ok 162 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 163 - zero steps returns cleared registers even after a previous execution
+ok 164 - open pattern validation device
+ok 165 - field syntax remains independent of final merged pattern
+ok 166 - compile and ex-- protocol v3 (fused exec) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+-- protocol v2 (write/run/read) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+ok    retry-on-nack (retries=2)
+all tests PASSED
+--- CLI smoke tests (device sim) ---
+ecution reject an ignored field without changing output
+ok 167 - field syntax remains independent of final merged pattern
+ok 168 - compile and execution reject an ignored field without changing output
+ok 169 - field syntax remains independent of final merged pattern
+ok 170 - compile and execution reject an ignored field without changing output
+ok 171 - field syntax remains independent of final merged pattern
+ok 172 - compile and execution reject an ignored field without changing output
+ok 173 - field syntax remains independent of final merged pattern
+ok 174 - compile and execution reject an ignored field without changing output
+ok 175 - field syntax remains independent of final merged pattern
+ok 176 - compile and execution reject an ignored field without changing output
+ok 177 - field syntax remains independent of final merged pattern
+ok 178 - compile and execution reject an ignored field without changing output
+ok 179 - field syntax remains independent of final merged pattern
+ok 180 - compile and execution reject an ignored field without changing output
+ok 181 - field syntax remains independent of final merged pattern
+ok 182 - compile and execution reject an ignored field without changing output
+ok 183 - field syntax remains independent of final merged pattern
+ok 184 - compile and execution reject an ignored field without changing output
+ok 185 - field syntax remains independent of final merged pattern
+ok 186 - compile and execution reject an ignored field without changing output
+ok 187 - field syntax remains independent of final merged pattern
+ok 188 - compile and execution reject an ignored field without changing output
+ok 189 - field syntax remains independent of final merged pattern
+ok 190 - compile and execution reject an ignored field without changing output
+ok 191 - inapplicable fields issue no configuration/reset/run commands
+ok 192 - compile 'add' ok
+ok 193 - PE(0,0) opcode = ADD
+ok 194 - PE(0,0) sel_a = north
+ok 195 - PE(0,0) sel_b = west
+ok 196 - cfg_decode names the opcode
+ok 197 - open sim: for engine tests
+ok 198 - matvec_run ok
+ok 199 - matvec matches host reference (6x5)
+ok 200 - scan_run returns n
+ok 201 - scan matches host reference
+ok 202 - conv_run returns n+k-1
+ok 203 - conv matches host reference
+ok 204 - open both protocol backends
+ok 205 - matvec v3 ok
+ok 206 - matvec v2 ok
+ok 207 - matvec identical across protocols
+ok 208 - scan v3 ok
+ok 209 - scan v2 ok
+ok 210 - scan identical across protocols
+ok 211 - scan: fused path uses fewer round trips
+ok 212 - scan: fused path moves fewer bytes
+ok 213 - open sim: for the sparse-skip test
+ok 214 - conv 3*48 runs
+ok 215 - conv still matches the host reference
+ok 216 - dense matvec runs
+ok 217 - conv skips the Toeplitz zero blocks (>4x fewer round trips)
+ok 218 - sim:1x1:v2
+ok 219 - rectangular kernels match scalar reference
+ok 220 - sim:1x1
+ok 221 - rectangular kernels match scalar reference
+ok 222 - sim:1x16:v2
+ok 223 - rectangular kernels match scalar reference
+ok 224 - sim:1x16
+ok 225 - rectangular kernels match scalar reference
+ok 226 - sim:16x1:v2
+ok 227 - rectangular kernels match scalar reference
+ok 228 - sim:16x1
+ok 229 - rectangular kernels match scalar reference
+ok 230 - sim:2x3:v2
+ok 231 - rectangular kernels match scalar reference
+ok 232 - sim:2x3
+ok 233 - rectangular kernels match scalar reference
+ok 234 - sim:3x2:v2
+ok 235 - rectangular kernels match scalar reference
+ok 236 - sim:3x2
+ok 237 - rectangular kernels match scalar reference
+ok 238 - sim:2x8:v2
+ok 239 - rectangular kernels match scalar reference
+ok 240 - sim:2x8
+ok 241 - rectangular kernels match scalar reference
+ok 242 - sim:8x2:v2
+ok 243 - rectangular kernels match scalar reference
+ok 244 - sim:8x2
+ok 245 - rectangular kernels match scalar reference
+ok 246 - sim:4x4:v2
+ok 247 - rectangular kernels match scalar reference
+ok 248 - sim:4x4
+ok 249 - rectangular kernels match scalar reference
+ok 250 - parse custom coordinate beyond default 4x4
+ok 251 - custom coordinate valid on 1x16
+ok 252 - custom coordinate rejected on 2x3
+ok 253 - out-of-range output tap rejected
+1..253
+# 253 passed, 0 failed
+11 22 33 44 55 66 77 88
+0 0 0 2 5
+./build/cgra run muli -d sim --imm 10 --a "1 2 3 4" --io hex
+0x000A 0x0014 0x001E 0x0028
+./build/cgra pipe saxpy -d sim --a "1 2 3 4"
+10 13 16 19
+./build/cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+10 26 42 58
+./build/cgra scan -d sim --a "3 1 4 1 5 9 2 6"
+3 4 8 9 14 23 25 31
+./build/cgra scan -d sim --op max --a "3 1 4 1 5 9 2 6"
+3 3 4 4 5 9 9 9
+./build/cgra conv -d sim -m "1 2 3" --x "4 5 6 7 8"
+4 13 28 34 40 37 24
+./build/cgra run add -d sim:flaky --a "1 2 3 4" --b "10 20 30 40"   # retry recovers
+11 22 33 44
+./build/cgra run add -d sim:v2 --a "1 2 3 4" --b "10 20 30 40"      # pre-v3 fallback
+11 22 33 44
+./build/cgra scan -d sim:v2 --a "3 1 4 1 5 9 2 6"                   # pre-v3 fallback
+3 4 8 9 14 23 25 31
+./build/cgra run add -d sim --a "1 2 3" --b "10 20 30" --json
+{"count": 3, "result": [11, 22, 33]}
+CGRA_PATH=config/stdlib ./build/cgra run square -d sim --a "2 3 4 5"   # stdlib via CGRA_PATH
+4 9 16 25
+./build/cgra show relu -v | head -1
+mode relu (pattern diagonal):
+./build/cgra show add >/dev/null && echo "show ok"
+show ok
+./build/cgra probe -d sim:2x3
+device: protocol v3, 2x3 array, 16-bit datapath
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+device OK
+./build/cgra show add -d sim:3x2 >/dev/null
+sh test/test_cli.sh ./build/cgra
+ok CLI 1 - reject run add -d sim: --a 1 2 --b 3 4 --steps 256
+ok CLI 2 - reject run add -d sim: --a 1 2 --b 3 4 --steps -1
+ok CLI 3 - reject run add -d sim: --a 1 2 --b 3 4 --steps 1junk
+ok CLI 4 - reject run add -d sim: --a 1 2 --b 3 4 --steps 999999999999999999999999
+ok CLI 5 - reject run addi -d sim: --a 1 --imm 4junk
+ok CLI 6 - explicit zero steps
+ok CLI 7 - reject run add -d sim: --a 2 --b 3
+ok CLI 8 - reject check
+ok CLI 9 - reject check
+ok CLI 10 - reject -c /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/pipeline.cgra pipe invalid -d sim: --a 1 2 3
+error: pipeline invalid: stage mul requires unavailable vector B
+1 error(s)
+ok CLI 11 - check validates pipeline arity
+ok CLI 12 - same input and output file keeps data until read
+ok CLI 13 - hard-linked input and output
+ok CLI 14 - reject run missing -d sim: --a 1 -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 15 - failed command preserves existing output
+ok CLI 16 - reject run addi -d sim: --a 1 -o /dev/full
+ok CLI 17 - file output matches stdout: ping -d sim:
+ok CLI 18 - file output matches stdout: show add -d sim:2x3
+ok CLI 19 - file output matches stdout: show add -d sim:3x2 -v
+ok CLI 20 - file output matches stdout: modes
+ok CLI 21 - file output matches stdout: devices
+ok CLI 22 - file output matches stdout: pipelines
+ok CLI 23 - file output matches stdout: io
+ok CLI 24 - file output matches stdout: config
+ok CLI 25 - file output matches stdout: check
+ok CLI 26 - file output matches stdout: dump -d sim:2x3
+ok CLI 27 - file output matches stdout: run add -d sim: --a 1 2 --b 3 4 --json
+ok CLI 28 - file output matches stdout: pipe saxpy -d sim: --a 1 2
+ok CLI 29 - file output matches stdout: matvec -d sim: -m 1 2 3 4 --x 1 2
+ok CLI 30 - file output matches stdout: conv -d sim: -m 1 2 --x 3 4
+ok CLI 31 - file output matches stdout: scan -d sim: --a 1 2 --dtype u16
+ok CLI 32 - reject init -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 33 - reject reset -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 34 - reject probe -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 35 - reject emulate -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 36 - reject selftest -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 37 - reject shell -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 38 - reject ping --json -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 39 - reject show --dtype s16 -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 40 - reject modes --io hex -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 41 - reject bench --dtype s16 -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 42 - reject benchall --io hex -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 43 - reject -c /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/pipeline.cgra check -o /tmp/nix-shell.QqEn1h/tmp.yPKF3lJsfa/result
+ok CLI 44 - failed check preserves file and diagnoses on stderr
+ok CLI 45 - reject ping -d sim: -o /dev/full
+ok CLI 46 - reject show add -d sim: -o /dev/full
+# 46 CLI regression checks passed
+python3 test/test_contract.py ./build/cgra
+ok contract 1 - reject unused input: ping -d sim unexpected
+ok contract 2 - reject unused input: run add --a 1 --b 2 -d sim --cols 4
+ok contract 3 - reject unused input: show add extra
+ok contract 4 - reject unused input: bench add extra
+ok contract 5 - reject unused input: scan --a 1 2
+ok contract 6 - reject unused input: run relu --a 1 --b 2
+ok contract 7 - reject unused input: conv --a 1 -m 2 --x 3
+ok contract 8 - reject unused input: matvec -m 1 --x 2 --b 3
+ok contract 9 - ping: validate option before configuration or external effects
+ok contract 10 - reset: validate option before configuration or external effects
+ok contract 11 - dump: validate option before configuration or external effects
+ok contract 12 - run: validate option before configuration or external effects
+ok contract 13 - pipe: validate option before configuration or external effects
+ok contract 14 - conv: validate option before configuration or external effects
+ok contract 15 - scan: validate option before configuration or external effects
+ok contract 16 - bench: validate option before configuration or external effects
+ok contract 17 - benchall: validate option before configuration or external effects
+ok contract 18 - show: validate option before configuration or external effects
+ok contract 19 - probe: validate option before configuration or external effects
+ok contract 20 - modes: validate option before configuration or external effects
+ok contract 21 - devices: validate option before configuration or external effects
+ok contract 22 - pipelines: validate option before configuration or external effects
+ok contract 23 - io: validate option before configuration or external effects
+ok contract 24 - config: validate option before configuration or external effects
+ok contract 25 - check: validate option before configuration or external effects
+ok contract 26 - init: validate option before configuration or external effects
+ok contract 27 - emulate: validate option before configuration or external effects
+ok contract 28 - selftest: validate option before configuration or external effects
+ok contract 29 - shell: validate option before configuration or external effects
+ok contract 30 - stdout/success for --help
+ok contract 31 - stdout/success for run --help
+ok contract 32 - stdout/success for --version
+ok contract 33 - negative positional operands remain valid
+ok contract 34 - reject whole shell line: unclosed
+ok contract 35 - reject whole shell line: argument limit
+ok contract 36 - reject whole shell line: token too long
+ok contract 37 - reject whole shell line: line too long
+ok contract 38 - reject whole shell line: contains NUL
+ok contract 39 - shell quotes and negative numbers round-trip
+ok contract 40 - oversized line is drained before the next command
+ok contract 41 - shell retains inherited configuration
+ok contract 42 - per-line configuration overrides inherited configuration
+ok contract 43 - completion lists shell and benchall
+ok contract 44 - completion follows run options after a global device option
+ok contract 45 - completion exposes matvec dimensions
+ok contract 46 - completion exposes version
+ok contract 47 - terminal shell rejects an unclosed quote before dispatch
+ok contract 48 - PTY service publishes readiness
+ok contract 49 - emulate accepts selected geometry/protocol
+ok contract 50 - CLI reaches configurable server over real serial transport
+ok contract 51 - SIGTERM shuts down service with success and no error
+ok contract 52 - PTY service publishes readiness
+ok contract 53 - emulate accepts selected geometry/protocol
+ok contract 54 - CLI reaches configurable server over real serial transport
+ok contract 55 - SIGTERM shuts down service with success and no error
+ok contract 56 - invalid service geometry/options rejected
+ok contract 57 - invalid service geometry/options rejected
+ok contract 58 - invalid service geometry/options rejected
+# 58 command/shell contract checks passed
+python3 test/test_bench.py ./build/cgra
+ok benchmark 1 - benchmark metadata describes the actual backend and geometry
+ok benchmark 2 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 3 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 4 - benchmark metadata describes the actual backend and geometry
+ok benchmark 5 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 6 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 7 - benchmark metadata describes the actual backend and geometry
+ok benchmark 8 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 9 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 10 - benchmark metadata describes the actual backend and geometry
+ok benchmark 11 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 12 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 13 - benchmark metadata describes the actual backend and geometry
+ok benchmark 14 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 15 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 16 - benchmark metadata describes the actual backend and geometry
+ok benchmark 17 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 18 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 19 - benchmark metadata describes the actual backend and geometry
+ok benchmark 20 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 21 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 22 - benchmark metadata describes the actual backend and geometry
+ok benchmark 23 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 24 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 25 - benchmark metadata describes the actual backend and geometry
+ok benchmark 26 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4: b''
+ok benchmark 27 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 28 - benchmark metadata describes the actual backend and geometry
+ok benchmark 29 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4:v2: b''
+ok benchmark 30 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 31 - reject --size=0
+ok benchmark 32 - reject --size=-1
+ok benchmark 33 - reject --size=4097
+ok benchmark 34 - reject --size=2junk
+ok benchmark 35 - reject --repeat=0
+ok benchmark 36 - reject --repeat=-1
+ok benchmark 37 - reject --repeat=2junk
+ok benchmark 38 - reject --repeat=999999999999999999999
+ok benchmark 39 - reject --cols=0
+ok benchmark 40 - reject --cols=4097
+ok benchmark 41 - reject --cols=2junk
+ok benchmark 42 - reject malformed/out-of-range vector 32768junk
+ok benchmark 43 - reject malformed/out-of-range vector 65536
+ok benchmark 44 - reject malformed/out-of-range vector -32769
+ok benchmark 45 - reject malformed/out-of-range vector 1-2
+ok benchmark 46 - reject malformed/out-of-range vector 999999999999999999999999999
+ok benchmark 47 - reject unknown formatting ('--dtype', 'u8')
+ok benchmark 48 - reject unknown formatting ('--io', 'missing')
+ok benchmark 49 - failed sweep returns nonzero and publishes its complete JSON artifact
+ok benchmark 50 - escaped names round-trip; invalid modes and patterns are never omitted
+ok benchmark 51 - a single unsupported benchmark does not claim success
+ok benchmark 52 - valid single benchmark JSON
+ok benchmark 53 - invalid UTF-8 bytes cannot invalidate JSON
+ok benchmark 54 - embedded NUL in configuration rejected
+ok benchmark 55 - embedded NUL in vector input rejected
+ok benchmark 56 - CGRA_PATH longer than the old fixed buffer is fully searched
+ok benchmark 57 - CGRA_BAUD requires a complete integer
+ok benchmark 58 - oversized configuration path is rejected instead of truncated
+ok benchmark 59 - configuration file capacity overflow is explicit
+ok benchmark 60 - sweep script preserves failing JSON and propagates nonzero status
+ok benchmark 61 - checksum-valid wrong hardware output fails scalar validation: []
+# 61 benchmark/CLI checks passed
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'

@@ -1,0 +1,765 @@
+{
+  "schema_version": 1,
+  "points": [
+    {
+      "id": "1x16-v2-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:1x16:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v2-add-256.json",
+      "sha256": "ca1f3663d892dcca88c3b747f17164a1e54c0c6a4383b2cba98acf69bee2e336",
+      "status": "PASS"
+    },
+    {
+      "id": "1x16-v2-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:1x16:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v2-scan-256.json",
+      "sha256": "16ab0e1f08e1ca94da15005d0541dfcddc2bc9f6f6fe68522511931bbb6b3259",
+      "status": "PASS"
+    },
+    {
+      "id": "1x16-v2-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:1x16:v2",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v2-matvec-16.json",
+      "sha256": "ba8a6fde0f6c3b0883dda5e2a6c75a639042810a0c84ef69271abb7d6a05dfde",
+      "status": "PASS"
+    },
+    {
+      "id": "1x16-v2-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:1x16:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v2-conv-256.json",
+      "sha256": "6bfe28fee175252c2e001fad9aa966fa99743bdca4f498548bce88fdf80b64e8",
+      "status": "PASS"
+    },
+    {
+      "id": "1x16-v3-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:1x16",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v3-add-256.json",
+      "sha256": "2bbba718856322dd8bac3eace77ae2b78bd384c1cd162996b2110d29ba03c11b",
+      "status": "PASS"
+    },
+    {
+      "id": "1x16-v3-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:1x16",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v3-scan-256.json",
+      "sha256": "48114a71142c1bc3677c21da62a1e3983a16d88273934087918fbbf36f9ee631",
+      "status": "PASS"
+    },
+    {
+      "id": "1x16-v3-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:1x16",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v3-matvec-16.json",
+      "sha256": "a0b85a35398937052d8a99448eb407b563e130f688a1cc2fa4166cbefdb597a6",
+      "status": "PASS"
+    },
+    {
+      "id": "1x16-v3-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:1x16",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "1x16-v3-conv-256.json",
+      "sha256": "da497a7c2debdc688b752aa22c4437a4e6dd9c05a9c3f2b455040cf4b0ba759c",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v2-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:2x8:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v2-add-256.json",
+      "sha256": "67ee081150b04f2d7658c0d4c842f56cfad1d89ca70aca9150d89f187d9b979a",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v2-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:2x8:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v2-scan-256.json",
+      "sha256": "13403ec5a8bab33f5dcf57c7c42ee079b14d0907c7785c24fdf7008620e7f0cd",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v2-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:2x8:v2",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v2-matvec-16.json",
+      "sha256": "31eee7d2ed3676280fe9e4a201f9150d98964f1df058c1e9253b54404c6775a2",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v2-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:2x8:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v2-conv-256.json",
+      "sha256": "0bc216030d5495a7db7270e6346a7f8551fce5fd4831f792ce61aca1aaed5ac3",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v3-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:2x8",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v3-add-256.json",
+      "sha256": "337c4b70281de1c3a60090bd2afa60f089d0ca3358cfaf31d4cc21534237fd69",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v3-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:2x8",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v3-scan-256.json",
+      "sha256": "40cc50e884c2ec2922e0d08bc4ed271af88446535c0d00dd60e6bf230f1df53d",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v3-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:2x8",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v3-matvec-16.json",
+      "sha256": "f6b567fd30f8d493dd4070b6f933082c919b4c01c495284ec8ea99dc1523d2d2",
+      "status": "PASS"
+    },
+    {
+      "id": "2x8-v3-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:2x8",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "2x8-v3-conv-256.json",
+      "sha256": "fb4763714e29526c85aaeb2ac39ad38d1b4bb2209d0be48807bfe37fa663e7d0",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v2-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:4x4:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v2-add-256.json",
+      "sha256": "61a8d57890f992726792fb0ef6f77e4ce64d3c6a4d26960c5c669b7eafb60bf3",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v2-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:4x4:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v2-scan-256.json",
+      "sha256": "301e91fc3f8a1d5a6bdf7996c8ecaa46e48f4680fe6c1167ae40d8dd7bd63db4",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v2-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:4x4:v2",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v2-matvec-16.json",
+      "sha256": "490056f1045c86cece9235888946044d80c87631a319c7b789e95a0066bb7383",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v2-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:4x4:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v2-conv-256.json",
+      "sha256": "892a8d52768f1ecb32df403d209a126184e943ad2b621284966f6450ce5612b2",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v3-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:4x4",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v3-add-256.json",
+      "sha256": "89435e0b685d7096a903172ec1323ded3890eeffd3d567b7ba8b359e7497a0c7",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v3-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:4x4",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v3-scan-256.json",
+      "sha256": "9e44df401dec6a66d63821a030f83ed86c3a0ecbb3d64ae78394ac0da6c83385",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v3-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:4x4",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v3-matvec-16.json",
+      "sha256": "3b4d7875119c4f404fcc5a9a74679ee0502b3335ec40c7090c27f4c2a06db9c3",
+      "status": "PASS"
+    },
+    {
+      "id": "4x4-v3-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:4x4",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "4x4-v3-conv-256.json",
+      "sha256": "5cd8751d1131573c32f1da7dae1878f96d8f5e20a97006f0e4d5442b94b54feb",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v2-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:8x2:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v2-add-256.json",
+      "sha256": "8e8d1af854a8cfac59254bb1f373a2fb3cb513d9f6f02c2ea26e8b6b2e6cd977",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v2-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:8x2:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v2-scan-256.json",
+      "sha256": "0e8a7444880450e76f21f6c48cc0ebf8ebdaa742d9d5cc0599d605aa2d00db81",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v2-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:8x2:v2",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v2-matvec-16.json",
+      "sha256": "d6240bf9d5cf6c6fade337e5d4a69db62d729154c176a9694077354b0c857cdf",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v2-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:8x2:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v2-conv-256.json",
+      "sha256": "e5e48bcf5e103790ab3401b865547b8ee381e7fa37412ec1e2aeb1a6ddcbd047",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v3-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:8x2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v3-add-256.json",
+      "sha256": "7ccb3e96b06142e9ffcb55298ad66b10f31d25b338593ab06da2fe9bfdadbb53",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v3-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:8x2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v3-scan-256.json",
+      "sha256": "df41243790bb3d23df5c5a339b957b857a4a36ae14d83601ddf9c34b697431e9",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v3-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:8x2",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v3-matvec-16.json",
+      "sha256": "f25b083c5deef47c187507848d1446f9c430dc420a8bba19740739c94b0a59d5",
+      "status": "PASS"
+    },
+    {
+      "id": "8x2-v3-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:8x2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "8x2-v3-conv-256.json",
+      "sha256": "97d868f513aa921b444b0e74c1aa51b340057768b522c709c640fd216a8e8dac",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v2-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:16x1:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v2-add-256.json",
+      "sha256": "17da01167095ec5958f4977d1913c538d4ee9767c3b85a9d6713f2f7a606f8a8",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v2-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:16x1:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v2-scan-256.json",
+      "sha256": "07d1eaaf9466902b0c041fd59b5fcc86c7d2e68143c9751aaeee57162840a3ed",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v2-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:16x1:v2",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v2-matvec-16.json",
+      "sha256": "c7bbbe135c104b60fd3f235607b6c13152e7a5b6cad74c2c4c8d6464fceb38a6",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v2-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:16x1:v2",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v2-conv-256.json",
+      "sha256": "0b43bc3e8d38531bd454dd117248d455034b31551b1cd48311ec2e92971123cd",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v3-add-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "add",
+        "-d",
+        "sim:16x1",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v3-add-256.json",
+      "sha256": "15d61a53053b109d62a36f74c62cafe44d56abae88764ce7a28b861b7a72d9d3",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v3-scan-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "scan",
+        "-d",
+        "sim:16x1",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v3-scan-256.json",
+      "sha256": "f5583a5703ee7a11d9a433814c042bc63ca83957757adee8fe36de9bc9212cdb",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v3-matvec-16",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "matvec",
+        "-d",
+        "sim:16x1",
+        "--size",
+        "16",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v3-matvec-16.json",
+      "sha256": "0189ecfa14df69cc7a8104a34a5076a6b3d7ce4631b7a4ecff60a2c8ab2eba01",
+      "status": "PASS"
+    },
+    {
+      "id": "16x1-v3-conv-256",
+      "command": [
+        "sw/build/cgra",
+        "bench",
+        "conv",
+        "-d",
+        "sim:16x1",
+        "--size",
+        "256",
+        "--repeat",
+        "5",
+        "--json"
+      ],
+      "exit_code": 0,
+      "path": "16x1-v3-conv-256.json",
+      "sha256": "1a9224895f306608b96d05b62c511bb4628885050a3e428ae1bed8a3c88d2074",
+      "status": "PASS"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+-- Digital sampled-line model: rx_serial may change on every clock. This is
+-- not a metastability model or an analog baud-tolerance claim. The independent
+-- monitor stores sampled bits by ascending index, unlike the DUT shift register.
+vunit uart_rx_contract (uart_rx(rtl)) {
+  default clock is rising_edge(clk);
+  signal f_seen : boolean := false;
+  signal f_bits : std_logic_vector(7 downto 0) := (others => '0');
+  signal f_received : natural range 0 to 8 := 0;
+  f_monitor : process(clk)
+  begin
+    if rising_edge(clk) then
+      f_seen <= true;
+      if rst = '1' then
+        f_received <= 0;
+      elsif state = S_START and clk_cnt = (CLKS_PER_BIT - 1) / 2 and rx_s2 = '0' then
+        f_received <= 0;
+      elsif state = S_DATA and clk_cnt = CLKS_PER_BIT - 1 and f_received < 8 then
+        f_bits(f_received) <= rx_s2;
+        f_received <= f_received + 1;
+      end if;
+    end if;
+  end process;
+  F_RX_RESET: assert always (rst = '1' -> next
+    (state = S_IDLE and rx_valid = '0' and clk_cnt = 0 and bit_idx = 0));
+  F_RX_STATE: assert always (state <= S_BREAK);
+  F_RX_COUNTER: assert always (clk_cnt < CLKS_PER_BIT and bit_idx < 8 and f_received <= 8);
+  -- prev has no input sample at time zero. Start checking after one edge.
+  F_RX_SYNC1: assert always (f_seen -> rx_s1 = prev(rx_serial));
+  F_RX_SYNC2: assert always (f_seen -> rx_s2 = prev(rx_s1));
+  F_RX_INDEX: assert always (state = S_DATA -> bit_idx = f_received);
+  F_RX_START_INDEX: assert always (state = S_START -> bit_idx = 0);
+  F_RX_EIGHT: assert always (state = S_STOP -> f_received = 8);
+  F_RX_START: assert always ((rst = '0' and state = S_IDLE and rx_s2 = '0') -> next (state = S_START));
+  F_RX_GLITCH: assert always
+    ((rst = '0' and state = S_START and clk_cnt = (CLKS_PER_BIT - 1) / 2 and rx_s2 = '1')
+      -> next (state = S_IDLE and rx_valid = '0'));
+  F_RX_ACCEPT: assert always
+    ((rst = '0' and state = S_STOP and clk_cnt = CLKS_PER_BIT - 1 and rx_s2 = '1')
+      -> next (rx_valid = '1' and rx_data = prev(f_bits) and state = S_IDLE));
+  F_RX_DROP: assert always
+    ((rst = '0' and state = S_STOP and clk_cnt = CLKS_PER_BIT - 1 and rx_s2 = '0')
+      -> next (rx_valid = '0' and state = S_BREAK));
+  F_RX_VALID_CONTEXT: assert always ((f_seen and rx_valid = '1') ->
+    prev(rst = '0' and state = S_STOP and clk_cnt = CLKS_PER_BIT - 1 and rx_s2 = '1'));
+  F_RX_PULSE: assert always (rx_valid = '1' -> next (rx_valid = '0'));
+  F_RX_BREAK: assert always ((rst = '0' and state = S_BREAK and rx_s2 = '0')
+    -> next (state = S_BREAK and rx_valid = '0'));
+  F_RX_RELEASE: assert always ((rst = '0' and state = S_BREAK and rx_s2 = '1')
+    -> next (state = S_IDLE));
+  F_RX_CONFIRM: assert always
+    ((rst = '0' and state = S_START and clk_cnt = (CLKS_PER_BIT - 1) / 2 and rx_s2 = '0')
+      -> next (state = S_DATA and clk_cnt = 0 and bit_idx = 0));
+  F_RX_START_TICK: assert always
+    ((rst = '0' and state = S_START and clk_cnt < (CLKS_PER_BIT - 1) / 2)
+      -> next (state = S_START and clk_cnt = prev(clk_cnt) + 1));
+  F_RX_TICK: assert always
+    ((rst = '0' and (state = S_DATA or state = S_STOP) and clk_cnt < CLKS_PER_BIT - 1)
+      -> next (state = prev(state) and clk_cnt = prev(clk_cnt) + 1 and bit_idx = prev(bit_idx)));
+  F_RX_SAMPLE: assert always
+    ((rst = '0' and state = S_DATA and clk_cnt = CLKS_PER_BIT - 1 and bit_idx < 7)
+      -> next (state = S_DATA and clk_cnt = 0 and bit_idx = prev(bit_idx) + 1));
+  F_RX_LAST: assert always
+    ((rst = '0' and state = S_DATA and clk_cnt = CLKS_PER_BIT - 1 and bit_idx = 7)
+      -> next (state = S_STOP and clk_cnt = 0 and bit_idx = 0));
+  F_RX_BITS0: assert always (f_received > 0 -> data_r(8 - f_received + 0) = f_bits(0));
+  F_RX_BITS1: assert always (f_received > 1 -> data_r(8 - f_received + 1) = f_bits(1));
+  F_RX_BITS2: assert always (f_received > 2 -> data_r(8 - f_received + 2) = f_bits(2));
+  F_RX_BITS3: assert always (f_received > 3 -> data_r(8 - f_received + 3) = f_bits(3));
+  F_RX_BITS4: assert always (f_received > 4 -> data_r(8 - f_received + 4) = f_bits(4));
+  F_RX_BITS5: assert always (f_received > 5 -> data_r(8 - f_received + 5) = f_bits(5));
+  F_RX_BITS6: assert always (f_received > 6 -> data_r(8 - f_received + 6) = f_bits(6));
+  F_RX_BITS7: assert always (f_received > 7 -> data_r(8 - f_received + 7) = f_bits(7));
+  C_RX_BYTE: cover {f_seen and rx_valid = '1' and rx_data /= x"00"};
+  C_RX_BAD_STOP: cover {state = S_STOP and clk_cnt = CLKS_PER_BIT - 1 and rx_s2 = '0' and rst = '0'; state = S_BREAK};
+  C_RX_GLITCH: cover {state = S_START and clk_cnt = (CLKS_PER_BIT - 1) / 2 and rx_s2 = '1' and rst = '0'; state = S_IDLE};
+  C_RX_RECOVERY: cover {state = S_BREAK and rx_s2 = '1' and rst = '0'; state = S_IDLE};
+}

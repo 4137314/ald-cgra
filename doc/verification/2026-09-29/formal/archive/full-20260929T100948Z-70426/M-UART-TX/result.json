@@ -1,0 +1,73 @@
+{
+  "id": "M-UART-TX",
+  "top": "uart_tx",
+  "kind": "tx",
+  "mode": "bmc",
+  "depth": 40,
+  "parameters": {
+    "CLKS_PER_BIT": 3
+  },
+  "assertions": 19,
+  "assumptions": 0,
+  "covers": 3,
+  "negative": true,
+  "mutation": "tx-msb-first",
+  "result": "FAIL",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=3 cgra_pkg.vhd uart_tx.vhd uart_tx_contract.psl -e uart_tx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/uart_tx.vhd": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+    "hw/formal/uart_tx_contract.psl": "be61aae127eb6fde724b4a17a7052945f2fb5c0fbbf2fbafaa5b0eedfff19af0"
+  },
+  "mutated_source_sha256": {
+    "uart_tx.vhd": "c983172d45279dbcfe912319229d6e5e6a2769f3c17538950016b2823352220e"
+  },
+  "parameter_check_sha256": "7f0942e4cc4dcffc48fac05449e88bbf44e58405f8425bb032541f7013d05fb9",
+  "effective_properties_sha256": "d5ee2abfe70134983c39e9fceb50a3abe21bd9b2a7dd681fd2e5fd0c92e75c48",
+  "checked_port_widths": {
+    "tx_data": 8,
+    "tx_serial": 1,
+    "tx_start": 1,
+    "tx_busy": 1
+  },
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "cover": 3,
+    "assert": 19
+  },
+  "smt2_cells": {
+    "assert": 19,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "ce34a9dff648d8e10db7646b14548e03eacd7324f47ebb9731ebb7ca14b810c0",
+    "task/src/properties.json": "bfd38275608bfb66ec5002ed8d17f7d8b63695250589a96ddb1a0c382b0ca5d5",
+    "task/model/design_smt2.smt2": "4917474cd3a535cb139ae27f8829898dea18c420b94c59236e3924834b44e57f"
+  },
+  "traces": [
+    "task/engine_0/trace.yw"
+  ],
+  "duration_seconds": 0.847
+}

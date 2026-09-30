@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "run_id": "20260929T095542Z-31958",
+  "suite": "fast",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "dc886d2376c2662a798c65ac86d0e97938ceb3fb",
+  "dirty": true,
+  "runner_sha256": "337fbc00a332e4a55001c455fe1871e23c658119a51017eb61a3047963f2751b",
+  "tasks": [
+    {
+      "id": "F-ARRAY-2x3",
+      "top": "array_contract",
+      "kind": "array",
+      "mode": "prove",
+      "depth": 4,
+      "gates": true,
+      "parameters": {
+        "G_ROWS": 2,
+        "G_COLS": 3
+      },
+      "assertions": 6,
+      "assumptions": 1,
+      "covers": 5,
+      "result": "TIMEOUT",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_ROWS=2 -gG_COLS=3 cgra_pkg.vhd cgra_comp_pkg.vhd pe.vhd cgra_array.vhd array_ports.vhd -e array_ports; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "initial reset; subsequent inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/cgra_comp_pkg.vhd": "df833600c2edd6bb80d36ea2e1c225bf370ffa64664e04f249d43775c7da4b7e",
+        "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+        "hw/rtl/cgra_array.vhd": "0d84bdc23743a1c1b69821979ca7d9588e0e630e359811911997139e3e95c2c4",
+        "hw/formal/array_ports.vhd": "2755e855d2d5879f9788f55565245924cafe4c23dc62d6bab5679539b59b80d4",
+        "hw/formal/pe_spec.sv": "9882ff448d049839635b9a523229688f55b20d3fd032acb31edf48b99168499e",
+        "hw/formal/array_contract.sv": "9bdf016d357b53e621b0a07c5a987b6373ea3cc7094a92ceb2c5750897be325d"
+      },
+      "checked_port_widths": {
+        "cfg": 192,
+        "q": 96,
+        "west": 32,
+        "north": 48
+      },
+      "exit_code": 8,
+      "solver_status": "TIMEOUT",
+      "property_cells": {
+        "assert": 6,
+        "assume": 1,
+        "cover": 5
+      },
+      "smt2_cells": {
+        "assert": 6,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "d008da8f6998b97346a6e2a2eebecaa81fe3cb098269c3e4b987b8934c11f3a0",
+        "task/src/properties.json": "5d05056d59be923363aa31e0425d2e60630665455bbd7f3a147690815788d166",
+        "task/model/design_smt2.smt2": "7487c1de7f01069ac1c4fd5065ae0f4a5b05c5172cd5f34063af5e0bd0c2051b"
+      },
+      "traces": [],
+      "duration_seconds": 92.194
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-ARRAY-2x3"
+  ]
+}

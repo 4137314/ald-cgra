@@ -1,0 +1,46 @@
+[
+  {
+    "command": [
+      "sw/build/cgra",
+      "ping",
+      "-d",
+      "sim",
+      "unexpected"
+    ],
+    "exit": 0,
+    "stdout": "cgra ok: protocol v3, 4x4 array, 16-bit datapath\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "sw/build/cgra",
+      "run",
+      "add",
+      "--a",
+      "1",
+      "--b",
+      "2",
+      "-d",
+      "sim",
+      "--cols",
+      "4"
+    ],
+    "exit": 0,
+    "stdout": "3\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "make",
+      "-C",
+      "lib",
+      "-f",
+      "lib.mk",
+      "CC=/nonexistent/cgra-review-cc",
+      "static"
+    ],
+    "exit": 0,
+    "stdout": "make: Entering directory '/home/main/dev/git/ald-cgra/lib'\nmake: Nothing to be done for 'static'.\nmake: Leaving directory '/home/main/dev/git/ald-cgra/lib'\n",
+    "stderr": ""
+  }
+]

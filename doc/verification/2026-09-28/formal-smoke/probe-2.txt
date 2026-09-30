@@ -1,0 +1,7 @@
+Yices 2.7.0
+Copyright SRI International.
+Linked with GMP 6.3.0
+Copyright Free Software Foundation, Inc.
+Build date: 2026-07-01
+Platform: x86_64-pc-linux-gnu (release)
+Revision: unknown

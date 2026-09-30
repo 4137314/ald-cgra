@@ -1,0 +1,99 @@
+{
+  "schema": 1,
+  "commit": "dc886d2376c2662a798c65ac86d0e97938ceb3fb",
+  "dirty": true,
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+    "hw/formal/pe_ports.vhd": "4e5d7456a44fe624414bb42ad7851038dea1b3de2cac1ea9ebe34e1c5211dd34",
+    "hw/formal/pe_smoke.sv": "b09ea037f68ecc71ce3905ce7995ba343560485aea22b76b59471ceb27d296a0",
+    "flake.lock": "bb1090d48393f6d3b78bb1f05e762eca74b7e6251f8f373dcc92a4afa8a484ad"
+  },
+  "frontend": "GHDL 6.0.0 via ghdl-yosys-plugin 1b97dc71377cea7e861be6625be4353c377a5fb5",
+  "yosys": "0.67",
+  "sby": "0.61 (Nix package; executable reports unknown version)",
+  "solver": "Yices 2.7.0",
+  "clock": "one rising-edge clock",
+  "initial_state": "DUT initialized as production RTL; initial reset assumed; later reset unrestricted",
+  "inputs": "full 16-bit neighbours and 32-bit cfg, step, reset symbolic",
+  "tasks": [
+    {
+      "id": "F01-prove",
+      "result": "PROVED",
+      "expected_solver_status": "PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "mode": "prove",
+      "depth": 8,
+      "property_cells": {
+        "assert": 4,
+        "assume": 1,
+        "cover": 1
+      },
+      "smt2_counts": {
+        "assert": 4,
+        "user_assume": 1,
+        "cover": 0
+      },
+      "log": "prove.txt",
+      "trace": null,
+      "command": [
+        "sby",
+        "-f",
+        "prove.sby"
+      ]
+    },
+    {
+      "id": "F01-negative",
+      "result": "FAIL",
+      "expected_solver_status": "FAIL",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "mode": "bmc",
+      "depth": 8,
+      "property_cells": {
+        "assert": 5,
+        "assume": 1,
+        "cover": 1
+      },
+      "smt2_counts": {
+        "assert": 5,
+        "user_assume": 1,
+        "cover": 0
+      },
+      "log": "negative.txt",
+      "trace": "negative-trace.yw",
+      "command": [
+        "sby",
+        "-f",
+        "negative.sby"
+      ]
+    },
+    {
+      "id": "F01-cover",
+      "result": "COVER_REACHED",
+      "expected_solver_status": "PASS",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "mode": "cover",
+      "depth": 8,
+      "property_cells": {
+        "assert": 4,
+        "assume": 1,
+        "cover": 1
+      },
+      "smt2_counts": {
+        "assert": 0,
+        "user_assume": 1,
+        "cover": 1
+      },
+      "log": "cover.txt",
+      "trace": "cover-trace.yw",
+      "command": [
+        "sby",
+        "-f",
+        "cover.sby"
+      ]
+    }
+  ]
+}

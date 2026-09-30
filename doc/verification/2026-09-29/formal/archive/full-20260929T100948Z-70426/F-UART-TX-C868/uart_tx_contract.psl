@@ -1,0 +1,55 @@
+-- Digital single-clock transmitter contract on production RTL.
+-- Inputs, including start during busy and resets during a frame, unrestricted.
+vunit uart_tx_contract (uart_tx(rtl)) {
+  default clock is rising_edge(clk);
+  F_SELECTED: assert always (CLKS_PER_BIT = 868);
+
+  signal f_seen : boolean := false;
+  signal f_word : std_logic_vector(7 downto 0) := (others => '0');
+  signal f_sent : natural range 0 to 8 := 0;
+  f_monitor : process(clk)
+  begin
+    if rising_edge(clk) then
+      f_seen <= true;
+      if rst = '1' then
+        f_sent <= 0;
+      elsif state = S_IDLE and tx_start = '1' then
+        f_word <= tx_data;
+        f_sent <= 0;
+      elsif state = S_DATA and clk_cnt = CLKS_PER_BIT - 1 and f_sent < 8 then
+        f_sent <= f_sent + 1;
+      end if;
+    end if;
+  end process;
+  F_TX_RESET: assert always (rst = '1' -> next
+    (state = S_IDLE and tx_busy = '0' and tx_serial = '1' and clk_cnt = 0 and bit_idx = 0));
+  F_TX_STATE: assert always (state <= S_STOP);
+  F_TX_COUNTER: assert always (clk_cnt < CLKS_PER_BIT and bit_idx < 8 and f_sent <= 8);
+  F_TX_INDEX: assert always (state = S_DATA -> f_sent = bit_idx);
+  F_TX_START_INDEX: assert always (state = S_START -> bit_idx = 0 and f_sent = 0);
+  F_TX_EIGHT: assert always (state = S_STOP -> f_sent = 8);
+  F_TX_CAPTURE: assert always
+    ((rst = '0' and state = S_IDLE and tx_start = '1') -> next
+      (state = S_START and tx_busy = '1' and data_r = prev(tx_data)));
+  F_TX_WORD: assert always (data_r = f_word);
+  F_TX_IDLE: assert always
+    ((rst = '0' and state = S_IDLE and tx_start = '0') -> next
+      (state = S_IDLE and tx_busy = '0' and tx_serial = '1'));
+  F_TX_BUSY: assert always ((f_seen and state /= S_IDLE) -> tx_busy = '1');
+  F_TX_START: assert always ((rst = '0' and state = S_START) -> next (tx_serial = '0'));
+  F_TX_DATA: assert always ((rst = '0' and state = S_DATA) -> next (tx_serial = prev(f_word(bit_idx))));
+  F_TX_STOP: assert always ((rst = '0' and state = S_STOP) -> next (tx_serial = '1'));
+  F_TX_PERIOD: assert always ((rst = '0' and state /= S_IDLE and clk_cnt < CLKS_PER_BIT - 1)
+    -> next (clk_cnt = prev(clk_cnt) + 1 and state = prev(state) and bit_idx = prev(bit_idx)));
+  F_TX_START_END: assert always ((rst = '0' and state = S_START and clk_cnt = CLKS_PER_BIT - 1)
+    -> next (state = S_DATA and clk_cnt = 0 and bit_idx = 0));
+  F_TX_BIT_END: assert always ((rst = '0' and state = S_DATA and clk_cnt = CLKS_PER_BIT - 1 and bit_idx < 7)
+    -> next (state = S_DATA and clk_cnt = 0 and bit_idx = prev(bit_idx) + 1));
+  F_TX_DATA_END: assert always ((rst = '0' and state = S_DATA and clk_cnt = CLKS_PER_BIT - 1 and bit_idx = 7)
+    -> next (state = S_STOP and clk_cnt = 0));
+  F_TX_FRAME_END: assert always ((rst = '0' and state = S_STOP and clk_cnt = CLKS_PER_BIT - 1)
+    -> next (state = S_IDLE and clk_cnt = 0));
+  C_TX_NONEMPTY: cover {f_seen and state = S_DATA and f_word /= x"00"};
+  C_TX_COMPLETE: cover {state = S_STOP and clk_cnt = CLKS_PER_BIT - 1 and rst = '0'; state = S_IDLE};
+  C_TX_RESET: cover {state = S_DATA and rst = '1'; state = S_IDLE and tx_busy = '0'};
+}

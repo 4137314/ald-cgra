@@ -1,0 +1,3 @@
+F-PE-ALU-MUX: PROVED (10.335 s)
+M-ARRAY-NORTH: BOUNDED_PASS (1.512 s) [expected negative]
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/full-20260929T100545Z-60299/manifest.json; acceptance FAIL

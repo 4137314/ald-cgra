@@ -1,0 +1,35 @@
+SBY 12:29:26 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/full-20260928T102901Z-314228/M-CTRL-STEP/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/full-20260928T102901Z-314228/M-CTRL-STEP/task/src/dut.il'.
+SBY 12:29:26 [task] engine_0: smtbmc yices
+SBY 12:29:26 [task] base: starting process "cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 12:29:26 [task] base: finished (returncode=0)
+SBY 12:29:26 [task] prep: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 12:29:26 [task] prep: finished (returncode=0)
+SBY 12:29:26 [task] smt2: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 12:29:26 [task] smt2: finished (returncode=0)
+SBY 12:29:26 [task] engine_0: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 16  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assumptions in step 4..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Checking assertions in step 4..
+SBY 12:29:26 [task] engine_0: ##   0:00:00  BMC failed!
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Assert failed in cgra_ctrl: ctrl_contract.f_ctrl_step_progress
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 12:29:26 [task] engine_0: ##   0:00:00  Status: failed
+SBY 12:29:26 [task] engine_0: finished (returncode=1)
+SBY 12:29:26 [task] engine_0: Status returned by engine: FAIL
+SBY 12:29:26 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 12:29:26 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 12:29:26 [task] summary: engine_0 (smtbmc yices) returned FAIL
+SBY 12:29:26 [task] summary: counterexample trace: task/engine_0/trace.vcd
+SBY 12:29:26 [task] summary:   failed assertion cgra_ctrl.\ctrl_contract.f_ctrl_step_progress at  step 4
+SBY 12:29:26 [task] DONE (FAIL, rc=2)

@@ -1,0 +1,85 @@
+{
+  "software": {
+    "command": [
+      "make",
+      "-j4",
+      "test"
+    ],
+    "exit": 0,
+    "seconds": 0.997,
+    "log": "software.log"
+  },
+  "sanitizers": {
+    "command": [
+      "make",
+      "-j4",
+      "PROFILE=asan",
+      "test"
+    ],
+    "exit": 0,
+    "seconds": 2.656,
+    "log": "sanitizers.log"
+  },
+  "install": {
+    "command": [
+      "make",
+      "test-install"
+    ],
+    "exit": 0,
+    "seconds": 10.053,
+    "log": "install.log"
+  },
+  "compdb": {
+    "command": [
+      "make",
+      "test-compdb"
+    ],
+    "exit": 0,
+    "seconds": 2.54,
+    "log": "compdb.log"
+  },
+  "hdl": {
+    "command": [
+      "make",
+      "sim"
+    ],
+    "exit": 0,
+    "seconds": 36.158,
+    "log": "hdl.log"
+  },
+  "tcl": {
+    "command": [
+      "make",
+      "-C",
+      "hw",
+      "-f",
+      "hw.mk",
+      "test-scripts"
+    ],
+    "exit": 0,
+    "seconds": 0.114,
+    "log": "tcl.log"
+  },
+  "docs": {
+    "command": [
+      "make",
+      "docs"
+    ],
+    "exit": 0,
+    "seconds": 0.538,
+    "log": "docs.log"
+  },
+  "analyzer": {
+    "command": [
+      "make",
+      "-C",
+      "lib",
+      "-f",
+      "lib.mk",
+      "analyze"
+    ],
+    "exit": 0,
+    "seconds": 2.673,
+    "log": "analyzer.log"
+  }
+}

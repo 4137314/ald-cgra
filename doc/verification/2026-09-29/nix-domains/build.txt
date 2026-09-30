@@ -1,0 +1,1943 @@
+warning: Git tree '/home/main/dev/git/ald-cgra' is dirty
+evaluation warning: Package 'texlive-combined-2025' in /nix/store/d1qrs4cfnhmkhkripp32pyn64c8ldjzq-source/pkgs/tools/typesetting/tex/texlive/build-tex-env.nix:447 has the following problem: removal: texlive.combine is deprecated and will be removed from Nixpkgs 27.05. Please switch to texliveSmall.withPackages. See https://nixos.org/manual/nixpkgs/stable/#sec-language-texlive-user-guide. See https://nixos.org/manual/nixpkgs/unstable#sec-problems
+these 5 derivations will be built:
+  /nix/store/1a7vlkbg7h2yg5l65ij2fvv2rp61jhh9-cgra-0.1.0.drv
+  /nix/store/bajaamalm3818ip8a0iv1gpy87f4msnr-cgra-formal-fast.drv
+  /nix/store/hbn0qwckh8p5ldc30ipqmjlzkmq1m9cl-cgra-doc-0.1.0.drv
+  /nix/store/iparmbq9rr0avd9dy876fcp898p1s6aa-cgra-hdl-check.drv
+  /nix/store/lhmq17vdvqh3hywbs8rl9l45s5bz44gl-cgra-software-check.drv
+this path will be fetched (76.7 KiB download, 326.9 KiB unpacked):
+  /nix/store/8mp5f2yh8p5xicpiv9s449zl94yhqw7v-bash-interactive-5.3p9-dev
+building '/nix/store/1a7vlkbg7h2yg5l65ij2fvv2rp61jhh9-cgra-0.1.0.drv'...
+copying path '/nix/store/8mp5f2yh8p5xicpiv9s449zl94yhqw7v-bash-interactive-5.3p9-dev' from 'https://cache.nixos.org'...
+cgra> Running phase: unpackPhase
+cgra> unpacking source archive /nix/store/m694nnvlxygkvnlvy1g7rncfa30mhrls-964llswmjayk6y0ai8qwxxip91f3jbd9-source
+cgra> source root is 964llswmjayk6y0ai8qwxxip91f3jbd9-source
+cgra> Running phase: patchPhase
+cgra> Running phase: updateAutotoolsGnuConfigScriptsPhase
+cgra> Running phase: installPhase
+cgra> make all PROFILE=release
+cgra> make[1]: Entering directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source'
+cgra> make -C lib -f lib.mk PROFILE=release
+cgra> make[2]: Entering directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/lib'
+cgra> mkdir -p build
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/vector.c -o build/vector.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/kernels.c -o build/kernels.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/emu.c -o build/emu.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/serve.c -o build/serve.o
+cgra> ar rcs build/libcgra.a build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/cgra.pic.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/vector.c -o build/vector.pic.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/kernels.c -o build/kernels.pic.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/emu.c -o build/emu.pic.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/serve.c -o build/serve.pic.o
+cgra> gcc -shared -Wl,-soname,libcgra.so.0  -o build/libcgra.so.0.1.0 build/cgra.pic.o build/vector.pic.o build/kernels.pic.o build/emu.pic.o build/serve.pic.o
+cgra> ln -sf libcgra.so.0.1.0 build/libcgra.so.0
+cgra> ln -sf libcgra.so.0.1.0 build/libcgra.so
+cgra> make[2]: Leaving directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/lib'
+cgra> make -C sw  -f sw.mk  PROFILE=release
+cgra> make[2]: Entering directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/sw'
+cgra> mkdir -p build
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c main.c -o build/main.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c cli.c -o build/cli.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c vector_io.c -o build/vector_io.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c bench.c -o build/bench.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c device.c -o build/device.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c shell.c -o build/shell.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c dsl.c -o build/dsl.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c compile.c -o build/compile.o
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c bench_ref.c -o build/bench_ref.o
+cgra> CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=release static
+cgra> make[3]: Entering directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/lib'
+cgra> make[3]: Leaving directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/lib'
+cgra> gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h build/main.o build/cli.o build/vector_io.o build/bench.o build/device.o build/shell.o build/dsl.o build/compile.o build/bench_ref.o ../lib/build/libcgra.a  -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/cgra
+cgra> make[2]: Leaving directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/sw'
+cgra> make[1]: Leaving directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source'
+cgra> make -C sw  -f sw.mk  PROFILE=release PROFILE=release info
+cgra> make[1]: Entering directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/sw'
+cgra> makeinfo -o build/cgra.info doc/cgra.texi
+cgra> make[1]: Leaving directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/sw'
+cgra> # binary
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/bin'
+cgra> install -m755 sw/build/cgra '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/bin/cgra'
+cgra> # libraries (static + shared with soname symlinks)
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib'
+cgra> install -m644 lib/build/libcgra.a '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib/libcgra.a'
+cgra> install -m755 lib/build/libcgra.so.0.1.0 '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib/libcgra.so.0.1.0'
+cgra> ln -sf libcgra.so.0.1.0 '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib/libcgra.so.0'
+cgra> ln -sf libcgra.so.0.1.0 '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib/libcgra.so'
+cgra> # header
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/include'
+cgra> install -m644 lib/include/cgra.h '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/include/cgra.h'
+cgra> # pkg-config file (actual install directories; no DESTDIR)
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib/pkgconfig'
+cgra> sed -e 's|@PREFIX@|/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0|g' -e 's|@VERSION@|0.1.0|g' \
+cgra>     -e 's|@LIBDIR@|${exec_prefix}/lib|g' \
+cgra>     -e 's|@INCLUDEDIR@|${prefix}/include|g' \
+cgra>     lib/cgra.pc.in > '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib/pkgconfig/cgra.pc'
+cgra> # man pages (1 = CLI, 3 = library, 5 = config format)
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/man/man1' '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/man/man3' '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/man/man5'
+cgra> install -m644 sw/doc/cgra.1     '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/man/man1/cgra.1'
+cgra> install -m644 lib/doc/libcgra.3 '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/man/man3/libcgra.3'
+cgra> install -m644 sw/doc/cgra.5     '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/man/man5/cgra.5'
+cgra> # info manual
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/info'
+cgra> install -m644 sw/build/cgra.info '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/info/cgra.info'
+cgra> # bash completion
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/bash-completion/completions'
+cgra> install -m644 sw/completions/cgra.bash '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/bash-completion/completions/cgra'
+cgra> # runtime standard library (.cgra)
+cgra> install -d '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/cgra/stdlib'
+cgra> install -m644 sw/config/stdlib/*.cgra '/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/cgra/stdlib/'
+cgra> installed cgra 0.1.0 under /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0
+cgra> run 'ldconfig' if you installed the shared library to a system dir
+cgra> Running phase: fixupPhase
+cgra> shrinking RPATHs of ELF executables and libraries in /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0
+cgra> shrinking /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/bin/cgra
+cgra> shrinking /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib/libcgra.so.0.1.0
+cgra> checking for references to /build/ in /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0...
+cgra> gzipping man pages under /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/share/man/
+cgra> patching script interpreter paths in /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0
+cgra> stripping (with command strip and flags -S -p) in  /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/lib /nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0/bin
+building '/nix/store/lhmq17vdvqh3hywbs8rl9l45s5bz44gl-cgra-software-check.drv'...
+building '/nix/store/iparmbq9rr0avd9dy876fcp898p1s6aa-cgra-hdl-check.drv'...
+building '/nix/store/bajaamalm3818ip8a0iv1gpy87f4msnr-cgra-formal-fast.drv'...
+cgra-formal-fast> make -C hw  -f hw.mk formal-fast
+cgra-formal-fast> make[1]: Entering directory '/build/source/hw'
+cgra-formal-fast> python3 formal/run.py --suite fast
+cgra-formal-fast> F-PE-SMOKE: PROVED (0.637 s)
+cgra-formal-fast> F-PE-NEGATIVE: FAIL (0.586 s) [expected negative]
+cgra-formal-fast> F-PE-ALU-MUX: PROVED (5.793 s)
+cgra-formal-fast> F-CTRL-1x1-DIV1: PROVED (1.316 s)
+cgra-formal-fast> F-CTRL-1x1-DIV2: PROVED (1.406 s)
+cgra-formal-fast> F-CTRL-1x1-DIV3: PROVED (1.565 s)
+cgra-formal-fast> F-CTRL-1x1-DIV4: PROVED (1.659 s)
+cgra-formal-fast> F-ARRAY-1x1: PROVED (5.232 s)
+cgra-formal-fast> F-ARRAY-2x3: PROVED (5.815 s)
+cgra-formal-fast> F-UART-TX-C3: PROVED (0.694 s)
+cgra-formal-fast> F-UART-RX-C3: PROVED (0.96 s)
+cgra-formal-fast> Manifest: /build/source/hw/build/formal/fast-20260929T161730Z-9/manifest.json; acceptance PASS
+cgra-formal-fast> make[1]: Leaving directory '/build/source/hw'
+building '/nix/store/hbn0qwckh8p5ldc30ipqmjlzkmq1m9cl-cgra-doc-0.1.0.drv'...
+cgra-doc> Running phase: unpackPhase
+cgra-doc> unpacking source archive /nix/store/m694nnvlxygkvnlvy1g7rncfa30mhrls-964llswmjayk6y0ai8qwxxip91f3jbd9-source
+cgra-doc> source root is 964llswmjayk6y0ai8qwxxip91f3jbd9-source
+cgra-doc> Running phase: patchPhase
+cgra-doc> Running phase: updateAutotoolsGnuConfigScriptsPhase
+cgra-doc> Running phase: buildPhase
+cgra-doc> make: Entering directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc'
+cgra-doc> python3 tools/wire_data.py render
+cgra-doc> render: 10 validated rows, source doc/data/wire-cost.csv
+cgra-doc> latexmk -pdf -interaction=nonstopmode -halt-on-error -file-line-error -output-directory=build main.tex
+cgra-doc> Rc files read:
+cgra-doc>   NONE
+cgra-doc> Latexmk: This is Latexmk, John Collins, 15 June 2025. Version 4.87.
+cgra-doc> No existing .aux file, so I'll make a simple one, and require run of *latex.
+cgra-doc> Latexmk: applying rule 'pdflatex'...
+cgra-doc> Rule 'pdflatex':  Reasons for rerun
+cgra-doc> Category 'other':
+cgra-doc>   Rerun of 'pdflatex' forced or previously required:
+cgra-doc>     Reason or flag: 'Initial setup'
+cgra-doc> 
+cgra-doc> ------------
+cgra-doc> Run number 1 of rule 'pdflatex'
+cgra-doc> ------------
+cgra-doc> ------------
+cgra-doc> Running 'pdflatex  -interaction=nonstopmode -halt-on-error -file-line-error -recorder -output-directory="build"  "main.tex"'
+cgra-doc> ------------
+cgra-doc> This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex)
+cgra-doc>  restricted \write18 enabled.
+cgra-doc> entering extended mode
+cgra-doc> (./main.tex
+cgra-doc> LaTeX2e <2025-11-01>
+cgra-doc> L3 programming layer <2026-01-19>
+cgra-doc> (./IEEEtran.cls
+cgra-doc> Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+cgra-doc> -- See the "IEEEtran_HOWTO" manual for usage information.
+cgra-doc> -- http://www.michaelshell.org/tex/ieeetran/
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/ot1ptm.fd)
+cgra-doc> -- Using 8.5in x 11in (letter) paper.
+cgra-doc> -- Using PDF output.
+cgra-doc> -- This is a 10 point document.
+cgra-doc> )
+cgra-doc> ** ATTENTION: Overriding command lockouts (line 4).
+cgra-doc> (./config/preamble.tex (./config/package.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/base/fontenc.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/t1ptm.fd))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/base/inputenc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/keyval.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/etoolbox/etoolbox.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype-pdftex.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype.cfg))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsmath.sty
+cgra-doc> For additional information on amsmath, use the `?' option.
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amstext.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsgen.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsbsy.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsopn.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/amssymb.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/amsfonts.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/booktabs/booktabs.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/tools/array.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/graphicx.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/graphics.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/trig.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-cfg/graphics.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-def/pdftex.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/xcolor/xcolor.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-cfg/color.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/mathcolor.ltx))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/frontendlayer/tikz.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/basiclayer/pgf.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgfrcs.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfutil-common.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfutil-latex.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfrcs.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/pgf.revision.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/basiclayer/pgfcore.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/systemlayer/pgfsys.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeys.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgf.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys-pdftex.def
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys-common-pdf.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsyssoftpath.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsysprotocol.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcore.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmath.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathutil.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathparser.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.basic.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.random.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.comparison.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.base.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.round.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.misc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathcalc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfloat.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfint.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepoints.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathusage.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorescopes.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoretransformations.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorequick.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreobjects.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorearrows.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreshade.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreimage.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreexternal.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorelayers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoretransparency.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepatterns.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorerdf.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduleshapes.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduleplot.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/compatibility/pgfcomp-version-0-65.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/compatibility/pgfcomp-version-1-18.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgffor.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgfkeys.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeys.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/math/pgfmath.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmath.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgffor.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/tikz.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryplothandlers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmodulematrix.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgfplots/pgfplots.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.revision.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotscore.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/sys/pgfplotssysgeneric.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/pgfplotslibrary.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryfpu.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex))
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsutil.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsarray.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/numtable/pgfplotstableshared.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsdeque.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsbinary.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsbinary.data.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsutil.verb.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotscolormap.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotscolor.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsstackedplots.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsplothandlers.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsmeshplothandler.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsmeshplotimage.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.scaling.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotscoordprocessing.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.errorbars.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.markers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsticks.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.paths.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduledecorations.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.
+cgra-doc> code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex
+cgra-doc> ))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing
+cgra-doc> .code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.te
+cgra-doc> x))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryplotmarks.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/cite/cite.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/url/url.sty) (./config/colors.tex) (./config/tikz.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryarrows.meta.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybackgrounds.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.misc.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex))
+cgra-doc> (./config/macros.tex) (./config/hyperref.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/hyperref.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/iftex/iftex.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/kvsetkeys/kvsetkeys.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/kvdefinekeys/kvdefinekeys.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pdfescape/pdfescape.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/ltxcmds/ltxcmds.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pdftexcmds/pdftexcmds.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/infwarerr/infwarerr.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hycolor/hycolor.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/nameref.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/refcount/refcount.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/gettitlestring/gettitlestring.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/kvoptions/kvoptions.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/stringenc/stringenc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/pd1enc.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/intcalc/intcalc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/puenc.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/bitset/bitset.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/bigintcalc/bigintcalc.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/hpdftex.def
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/rerunfilecheck/rerunfilecheck.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/uniquecounter/uniquecounter.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/bookmark/bookmark.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/bookmark/bkm-pdftex.def))))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/l3backend/l3backend-pdftex.def) (build/main.aux)
+cgra-doc> -- Lines per column: 56 (exact).
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-ptm.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/context/base/mkii/supp-pdf.mkii
+cgra-doc> [Loading MPS to PDF converter (version 2006.09.02).]
+cgra-doc> )
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/epstopdf-pkg/epstopdf-base.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/latexconfig/epstopdf-sys.cfg))
+cgra-doc> Package pgfplots notification 'compat/show suggested version=true': document ha
+cgra-doc> s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
+cgra-doc> 
+cgra-doc> (./frontmatter/title.tex) (./frontmatter/abstract.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-cmr.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/umsa.fd)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-msa.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/umsb.fd)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-msb.cfg)) (./frontmatter/keywords.tex) (./src/sections.tex
+cgra-doc>  (./src/introduction.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `cgra-survey' on page 1 undefined on input line 5.
+cgra-doc> 
+cgra-doc> ) (./src/background.tex (./src/background/related-work.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `cgra-survey' on page 1 undefined on input line 2.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `adres' on page 1 undefined on input line 3.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `morphosys' on page 1 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `hycube' on page 1 undefined on input line 5.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `piperench' on page 1 undefined on input line 6.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `dyser' on page 1 undefined on input line 7.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `plasticine' on page 1 undefined on input line 8.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `cgra-me' on page 1 undefined on input line 9.
+cgra-doc> 
+cgra-doc> ) (./src/background/stationary-data.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `kung-leiserson' on page 1 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `kung' on page 1 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `tpu' on page 1 undefined on input line 5.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `sze-survey' on page 1 undefined on input line 9.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `eyeriss' on page 1 undefined on input line 10.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:dataflow' on page 1 undefined on input line 16.
+cgra-doc> 
+cgra-doc> ) (./src/background/scope.tex)) (./src/architecture.tex
+cgra-doc> (./src/architecture/overview.tex) [1{/nix/store/gygb8llwp0gwcs8hhlmvza693jpscn7
+cgra-doc> f-texlive-combined-2025/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/ni
+cgra-doc> x/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/
+cgra-doc> enc/dvips/base/8r.enc}] (./src/architecture/processing-element.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `fig:pe' on page 2 undefined on input line 3.
+cgra-doc> 
+cgra-doc> (./figures/pe/figure.tex (./figures/pe/diagram.tex)))
+cgra-doc> (./src/architecture/interconnect.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `fig:array' on page 2 undefined on input line 3.
+cgra-doc> 
+cgra-doc> (./figures/array/figure.tex (./figures/array/diagram.tex)
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:dataflow' on page 2 undefined on input line 8.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:dataflow' on page 2 undefined on input line 8.
+cgra-doc> 
+cgra-doc> ))) (./src/protocol.tex (./src/protocol/overview.tex)
+cgra-doc> (./src/protocol/commands.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `tab:proto' on page 2 undefined on input line 3.
+cgra-doc> 
+cgra-doc> (./tables/commands/table.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/t1pcr.fd)
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:exec' on page 2 undefined on input line 4.
+cgra-doc> 
+cgra-doc> )) (./src/protocol/wire-example.tex [2]
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:results' on page 3 undefined on input line 23.
+cgra-doc> 
+cgra-doc> ) (./src/protocol/fused-execute.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:cost' on page 3 undefined on input line 8.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `fig:exec' on page 3 undefined on input line 12.
+cgra-doc> 
+cgra-doc> (./figures/exec/figure.tex (./figures/exec/diagram.tex))
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:results' on page 3 undefined on input line 34.
+cgra-doc> 
+cgra-doc> ) (./src/protocol/controller.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `fig:fsm' on page 3 undefined on input line 3.
+cgra-doc> 
+cgra-doc> (./figures/fsm/figure.tex (./figures/fsm/diagram.tex)))) (./src/dataflow.tex
+cgra-doc> [3] (./src/dataflow/overview.tex) (./src/dataflow/vectors-reductions.tex)
+cgra-doc> (./src/dataflow/matrix-vector.tex (./figures/systolic/figure.tex
+cgra-doc> (./figures/systolic/diagram.tex))) (./src/dataflow/forwarding.tex) [4]
+cgra-doc> (./src/dataflow/conv-scan.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `golub-vanloan' on page 5 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `blelloch' on page 5 undefined on input line 11.
+cgra-doc> 
+cgra-doc> )) (./src/software.tex (./src/software/transport.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `fig:stack' on page 5 undefined on input line 1.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `stevens-apue' on page 5 undefined on input line 8.
+cgra-doc> 
+cgra-doc> ) (./src/software/dispatch.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:exec' on page 5 undefined on input line 1.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:results' on page 5 undefined on input line 9.
+cgra-doc> 
+cgra-doc> ) (./src/software/geometry.tex (./figures/stack/figure.tex
+cgra-doc> (./figures/stack/diagram.tex))) (./src/software/cli.tex)
+cgra-doc> (./src/software/contracts.tex)) (./src/analysis.tex
+cgra-doc> (./src/analysis/command-costs.tex (./tables/wire-sizes/table.tex))
+cgra-doc> (./src/analysis/kernel-counts.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `tab:kernel-counts' on page 5 undefined on input line
+cgra-doc> 3.
+cgra-doc> 
+cgra-doc> [5] (./tables/kernel-counts/table.tex)) (./src/analysis/latency.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ftdi-latency' on page 6 undefined on input line 18.
+cgra-doc> 
+cgra-doc> )) (./src/implementation.tex (./src/implementation/scope.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `artix7' on page 6 undefined on input line 1.
+cgra-doc> 
+cgra-doc> ) (./src/implementation/multicycle.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `fig:timing' on page 6 undefined on input line 6.
+cgra-doc> 
+cgra-doc> (./figures/timing/figure.tex (./figures/timing/diagram.tex))
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ug903' on page 6 undefined on input line 15.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `bhasker-timing' on page 6 undefined on input line 15.
+cgra-doc> 
+cgra-doc> ) [6] (./src/implementation/timing-gates.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ug949' on page 7 undefined on input line 9.
+cgra-doc> 
+cgra-doc> ) (./src/implementation/physical-evaluation.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ug479' on page 7 undefined on input line 6.
+cgra-doc> 
+cgra-doc> ) (./src/implementation/validation.tex)) (./src/results.tex
+cgra-doc> (./src/results/verification.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ghdl' on page 7 undefined on input line 5.
+cgra-doc> 
+cgra-doc> (./tables/verification/table.tex)
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:vivado-validation' on page 7 undefined on input l
+cgra-doc> ine 38.
+cgra-doc> 
+cgra-doc> ) [7] (./src/results/wire-experiment.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `tab:measured' on page 8 undefined on input line 3.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `sec:cost' on page 8 undefined on input line 14.
+cgra-doc> 
+cgra-doc> (./tables/measured/table.tex (./build/wire-table.tex))
+cgra-doc> (./figures/cost/figure.tex (./figures/cost/diagram.tex)
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `tab:measured' on page 8 undefined on input line 5.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Reference `tab:measured' on page 8 undefined on input line 5.
+cgra-doc> 
+cgra-doc> ))) (./src/conclusion.tex)) (./backmatter/references.tex
+cgra-doc> No file main.bbl.
+cgra-doc> )
+cgra-doc> 
+cgra-doc> ** Conference Paper **
+cgra-doc> Before submitting the final camera ready copy, remember to:
+cgra-doc> 
+cgra-doc>  1. Manually equalize the lengths of two columns on the last page
+cgra-doc>  of your paper;
+cgra-doc> 
+cgra-doc>  2. Ensure that any PostScript and/or PDF output post-processing
+cgra-doc>  uses only Type 1 fonts and that every step in the generation
+cgra-doc>  process uses the appropriate paper size.
+cgra-doc> 
+cgra-doc> [8] (build/main.aux)
+cgra-doc> 
+cgra-doc> LaTeX Warning: There were undefined references.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+cgra-doc> 
+cgra-doc>  )</nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/
+cgra-doc> fonts/type1/public/amsfonts/cm/cmex10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb
+cgra-doc> 6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi10.p
+cgra-doc> fb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist
+cgra-doc> /fonts/type1/public/amsfonts/cm/cmmi5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb
+cgra-doc> 6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi6.pf
+cgra-doc> b></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/
+cgra-doc> fonts/type1/public/amsfonts/cm/cmmi7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6
+cgra-doc> d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
+cgra-doc> ></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/f
+cgra-doc> onts/type1/public/amsfonts/cm/cmmi9.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d
+cgra-doc> 0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+cgra-doc> </nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fo
+cgra-doc> nts/type1/public/amsfonts/cm/cmr5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s
+cgra-doc> 09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr7.pfb></n
+cgra-doc> ix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts
+cgra-doc> /type1/public/amsfonts/cm/cmr8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i
+cgra-doc> -texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr9.pfb></nix/
+cgra-doc> store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/ty
+cgra-doc> pe1/public/amsfonts/cm/cmsy10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-
+cgra-doc> texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></nix/
+cgra-doc> store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/ty
+cgra-doc> pe1/public/amsfonts/cm/cmsy8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-t
+cgra-doc> exlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></nix/s
+cgra-doc> tore/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/typ
+cgra-doc> e1/urw/courier/ucrr8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-
+cgra-doc> combined-2025-texmfdist/fonts/type1/urw/times/utmb8a.pfb></nix/store/gmpqpifqyp
+cgra-doc> ljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/times/ut
+cgra-doc> mbi8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-te
+cgra-doc> xmfdist/fonts/type1/urw/times/utmr8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6
+cgra-doc> d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/times/utmri8a.pfb>
+cgra-doc> Output written on build/main.pdf (8 pages, 302064 bytes).
+cgra-doc> Transcript written on build/main.log.
+cgra-doc> Latexmk: Getting log file 'build/main.log'
+cgra-doc> Latexmk: Examining 'build/main.fls'
+cgra-doc> Latexmk: Examining 'build/main.log'
+cgra-doc> Latexmk: Missing bbl file 'build/main.bbl' in following:
+cgra-doc>  No file main.bbl.
+cgra-doc> Latexmk: References changed.
+cgra-doc> Latexmk: Log file says output to 'build/main.pdf'
+cgra-doc> Latexmk: Using bibtex to make bibliography file(s).
+cgra-doc>   ===Source file 'build/main.bbl' for 'pdflatex'
+cgra-doc> Create bibtex build/main
+cgra-doc> Latexmk: Found bibliography file(s):
+cgra-doc>   ./bib/bib.bib
+cgra-doc> Latexmk: applying rule 'bibtex build/main'...
+cgra-doc> Rule 'bibtex build/main':  Reasons for rerun
+cgra-doc> Category 'other':
+cgra-doc>   Rerun of 'bibtex build/main' forced or previously required:
+cgra-doc>     Reason or flag: 'Initial set up of rule'
+cgra-doc> 
+cgra-doc> ------------
+cgra-doc> Run number 1 of rule 'bibtex build/main'
+cgra-doc> ------------
+cgra-doc> ====== ENV{BIBINPUTS} changed to '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc:build:/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc/build:'
+cgra-doc> Latexmk: Change directory to 'build/'.
+cgra-doc> To assist finding of files in document directory, I set
+cgra-doc>   BIBINPUTS='/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc:build:/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc/build:'
+cgra-doc>   BSTINPUTS='/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc:'.
+cgra-doc> ------------
+cgra-doc> Running 'bibtex  "main.aux"'
+cgra-doc> ------------
+cgra-doc> This is BibTeX, Version 0.99d (TeX Live 2025/nixos.org)
+cgra-doc> The top-level auxiliary file: main.aux
+cgra-doc> The style file: IEEEtran.bst
+cgra-doc> Database file #1: bib/bib.bib
+cgra-doc> -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+cgra-doc> -- http://www.michaelshell.org/tex/ieeetran/bibtex/
+cgra-doc> -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+cgra-doc> 
+cgra-doc> Done.
+cgra-doc> Latexmk: Change directory back to '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc'
+cgra-doc> Latexmk: applying rule 'pdflatex'...
+cgra-doc> Rule 'pdflatex':  Reasons for rerun
+cgra-doc> Changed files or newly in use/created:
+cgra-doc>   build/main.aux
+cgra-doc>   build/main.bbl
+cgra-doc> 
+cgra-doc> ------------
+cgra-doc> Run number 2 of rule 'pdflatex'
+cgra-doc> ------------
+cgra-doc> ------------
+cgra-doc> Running 'pdflatex  -interaction=nonstopmode -halt-on-error -file-line-error -recorder -output-directory="build"  "main.tex"'
+cgra-doc> ------------
+cgra-doc> This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex)
+cgra-doc>  restricted \write18 enabled.
+cgra-doc> entering extended mode
+cgra-doc> (./main.tex
+cgra-doc> LaTeX2e <2025-11-01>
+cgra-doc> L3 programming layer <2026-01-19>
+cgra-doc> (./IEEEtran.cls
+cgra-doc> Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+cgra-doc> -- See the "IEEEtran_HOWTO" manual for usage information.
+cgra-doc> -- http://www.michaelshell.org/tex/ieeetran/
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/ot1ptm.fd)
+cgra-doc> -- Using 8.5in x 11in (letter) paper.
+cgra-doc> -- Using PDF output.
+cgra-doc> -- This is a 10 point document.
+cgra-doc> )
+cgra-doc> ** ATTENTION: Overriding command lockouts (line 4).
+cgra-doc> (./config/preamble.tex (./config/package.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/base/fontenc.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/t1ptm.fd))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/base/inputenc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/keyval.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/etoolbox/etoolbox.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype-pdftex.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype.cfg))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsmath.sty
+cgra-doc> For additional information on amsmath, use the `?' option.
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amstext.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsgen.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsbsy.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsopn.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/amssymb.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/amsfonts.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/booktabs/booktabs.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/tools/array.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/graphicx.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/graphics.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/trig.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-cfg/graphics.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-def/pdftex.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/xcolor/xcolor.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-cfg/color.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/mathcolor.ltx))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/frontendlayer/tikz.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/basiclayer/pgf.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgfrcs.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfutil-common.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfutil-latex.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfrcs.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/pgf.revision.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/basiclayer/pgfcore.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/systemlayer/pgfsys.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeys.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgf.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys-pdftex.def
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys-common-pdf.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsyssoftpath.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsysprotocol.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcore.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmath.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathutil.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathparser.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.basic.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.random.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.comparison.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.base.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.round.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.misc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathcalc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfloat.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfint.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepoints.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathusage.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorescopes.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoretransformations.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorequick.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreobjects.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorearrows.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreshade.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreimage.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreexternal.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorelayers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoretransparency.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepatterns.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorerdf.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduleshapes.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduleplot.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/compatibility/pgfcomp-version-0-65.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/compatibility/pgfcomp-version-1-18.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgffor.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgfkeys.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeys.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/math/pgfmath.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmath.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgffor.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/tikz.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryplothandlers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmodulematrix.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgfplots/pgfplots.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.revision.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotscore.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/sys/pgfplotssysgeneric.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/pgfplotslibrary.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryfpu.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex))
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsutil.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsarray.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/numtable/pgfplotstableshared.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsdeque.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsbinary.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsbinary.data.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsutil.verb.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotscolormap.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotscolor.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsstackedplots.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsplothandlers.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsmeshplothandler.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsmeshplotimage.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.scaling.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotscoordprocessing.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.errorbars.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.markers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsticks.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.paths.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduledecorations.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.
+cgra-doc> code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex
+cgra-doc> ))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing
+cgra-doc> .code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.te
+cgra-doc> x))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryplotmarks.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/cite/cite.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/url/url.sty) (./config/colors.tex) (./config/tikz.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryarrows.meta.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybackgrounds.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.misc.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex))
+cgra-doc> (./config/macros.tex) (./config/hyperref.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/hyperref.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/iftex/iftex.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/kvsetkeys/kvsetkeys.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/kvdefinekeys/kvdefinekeys.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pdfescape/pdfescape.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/ltxcmds/ltxcmds.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pdftexcmds/pdftexcmds.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/infwarerr/infwarerr.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hycolor/hycolor.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/nameref.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/refcount/refcount.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/gettitlestring/gettitlestring.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/kvoptions/kvoptions.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/stringenc/stringenc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/pd1enc.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/intcalc/intcalc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/puenc.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/bitset/bitset.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/bigintcalc/bigintcalc.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/hpdftex.def
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/rerunfilecheck/rerunfilecheck.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/uniquecounter/uniquecounter.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/bookmark/bookmark.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/bookmark/bkm-pdftex.def))))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/l3backend/l3backend-pdftex.def) (build/main.aux)
+cgra-doc> -- Lines per column: 56 (exact).
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-ptm.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/context/base/mkii/supp-pdf.mkii
+cgra-doc> [Loading MPS to PDF converter (version 2006.09.02).]
+cgra-doc> )
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/epstopdf-pkg/epstopdf-base.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/latexconfig/epstopdf-sys.cfg))
+cgra-doc> Package pgfplots notification 'compat/show suggested version=true': document ha
+cgra-doc> s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
+cgra-doc> 
+cgra-doc> (./frontmatter/title.tex) (./frontmatter/abstract.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-cmr.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/umsa.fd)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-msa.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/umsb.fd)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-msb.cfg)) (./frontmatter/keywords.tex) (./src/sections.tex
+cgra-doc>  (./src/introduction.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `cgra-survey' on page 1 undefined on input line 5.
+cgra-doc> 
+cgra-doc> ) (./src/background.tex (./src/background/related-work.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `cgra-survey' on page 1 undefined on input line 2.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `adres' on page 1 undefined on input line 3.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `morphosys' on page 1 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `hycube' on page 1 undefined on input line 5.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `piperench' on page 1 undefined on input line 6.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `dyser' on page 1 undefined on input line 7.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `plasticine' on page 1 undefined on input line 8.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `cgra-me' on page 1 undefined on input line 9.
+cgra-doc> 
+cgra-doc> ) (./src/background/stationary-data.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `kung-leiserson' on page 1 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `kung' on page 1 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `tpu' on page 1 undefined on input line 5.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `sze-survey' on page 1 undefined on input line 9.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `eyeriss' on page 1 undefined on input line 10.
+cgra-doc> 
+cgra-doc> ) (./src/background/scope.tex)) (./src/architecture.tex
+cgra-doc> (./src/architecture/overview.tex) [1{/nix/store/gygb8llwp0gwcs8hhlmvza693jpscn7
+cgra-doc> f-texlive-combined-2025/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/ni
+cgra-doc> x/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/
+cgra-doc> enc/dvips/base/8r.enc}] (./src/architecture/processing-element.tex
+cgra-doc> (./figures/pe/figure.tex (./figures/pe/diagram.tex)))
+cgra-doc> (./src/architecture/interconnect.tex (./figures/array/figure.tex
+cgra-doc> (./figures/array/diagram.tex)))) (./src/protocol.tex
+cgra-doc> (./src/protocol/overview.tex) (./src/protocol/commands.tex
+cgra-doc> (./tables/commands/table.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/t1pcr.fd))) (./src/protocol/wire-example.tex [2])
+cgra-doc> (./src/protocol/fused-execute.tex (./figures/exec/figure.tex
+cgra-doc> (./figures/exec/diagram.tex))) (./src/protocol/controller.tex
+cgra-doc> (./figures/fsm/figure.tex (./figures/fsm/diagram.tex)))) (./src/dataflow.tex
+cgra-doc> [3] (./src/dataflow/overview.tex) (./src/dataflow/vectors-reductions.tex)
+cgra-doc> (./src/dataflow/matrix-vector.tex (./figures/systolic/figure.tex
+cgra-doc> (./figures/systolic/diagram.tex))) (./src/dataflow/forwarding.tex) [4]
+cgra-doc> (./src/dataflow/conv-scan.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `golub-vanloan' on page 5 undefined on input line 4.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `blelloch' on page 5 undefined on input line 11.
+cgra-doc> 
+cgra-doc> )) (./src/software.tex (./src/software/transport.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `stevens-apue' on page 5 undefined on input line 8.
+cgra-doc> 
+cgra-doc> ) (./src/software/dispatch.tex) (./src/software/geometry.tex
+cgra-doc> (./figures/stack/figure.tex (./figures/stack/diagram.tex)))
+cgra-doc> (./src/software/cli.tex) (./src/software/contracts.tex)) (./src/analysis.tex
+cgra-doc> (./src/analysis/command-costs.tex (./tables/wire-sizes/table.tex))
+cgra-doc> (./src/analysis/kernel-counts.tex [5] (./tables/kernel-counts/table.tex))
+cgra-doc> (./src/analysis/latency.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ftdi-latency' on page 6 undefined on input line 18.
+cgra-doc> 
+cgra-doc> )) (./src/implementation.tex (./src/implementation/scope.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `artix7' on page 6 undefined on input line 1.
+cgra-doc> 
+cgra-doc> ) (./src/implementation/multicycle.tex (./figures/timing/figure.tex
+cgra-doc> (./figures/timing/diagram.tex))
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ug903' on page 6 undefined on input line 15.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `bhasker-timing' on page 6 undefined on input line 15.
+cgra-doc> 
+cgra-doc> ) [6] (./src/implementation/timing-gates.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ug949' on page 7 undefined on input line 9.
+cgra-doc> 
+cgra-doc> ) (./src/implementation/physical-evaluation.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ug479' on page 7 undefined on input line 6.
+cgra-doc> 
+cgra-doc> ) (./src/implementation/validation.tex)) (./src/results.tex
+cgra-doc> (./src/results/verification.tex
+cgra-doc> 
+cgra-doc> LaTeX Warning: Citation `ghdl' on page 7 undefined on input line 5.
+cgra-doc> 
+cgra-doc> (./tables/verification/table.tex)) [7] (./src/results/wire-experiment.tex
+cgra-doc> (./tables/measured/table.tex (./build/wire-table.tex))
+cgra-doc> (./figures/cost/figure.tex (./figures/cost/diagram.tex))))
+cgra-doc> (./src/conclusion.tex)) (./backmatter/references.tex (build/main.bbl [8]))
+cgra-doc> 
+cgra-doc> ** Conference Paper **
+cgra-doc> Before submitting the final camera ready copy, remember to:
+cgra-doc> 
+cgra-doc>  1. Manually equalize the lengths of two columns on the last page
+cgra-doc>  of your paper;
+cgra-doc> 
+cgra-doc>  2. Ensure that any PostScript and/or PDF output post-processing
+cgra-doc>  uses only Type 1 fonts and that every step in the generation
+cgra-doc>  process uses the appropriate paper size.
+cgra-doc> 
+cgra-doc> [9] (build/main.aux)
+cgra-doc> 
+cgra-doc> LaTeX Warning: There were undefined references.
+cgra-doc> 
+cgra-doc> 
+cgra-doc> LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+cgra-doc> 
+cgra-doc>  )</nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/
+cgra-doc> fonts/type1/public/amsfonts/cm/cmex10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb
+cgra-doc> 6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi10.p
+cgra-doc> fb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist
+cgra-doc> /fonts/type1/public/amsfonts/cm/cmmi5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb
+cgra-doc> 6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi6.pf
+cgra-doc> b></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/
+cgra-doc> fonts/type1/public/amsfonts/cm/cmmi7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6
+cgra-doc> d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
+cgra-doc> ></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/f
+cgra-doc> onts/type1/public/amsfonts/cm/cmmi9.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d
+cgra-doc> 0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+cgra-doc> </nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fo
+cgra-doc> nts/type1/public/amsfonts/cm/cmr5.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s
+cgra-doc> 09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr7.pfb></n
+cgra-doc> ix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts
+cgra-doc> /type1/public/amsfonts/cm/cmr8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i
+cgra-doc> -texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr9.pfb></nix/
+cgra-doc> store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/ty
+cgra-doc> pe1/public/amsfonts/cm/cmsy10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-
+cgra-doc> texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></nix/
+cgra-doc> store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/ty
+cgra-doc> pe1/public/amsfonts/cm/cmsy8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-t
+cgra-doc> exlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></nix/s
+cgra-doc> tore/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/typ
+cgra-doc> e1/urw/courier/ucrr8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-
+cgra-doc> combined-2025-texmfdist/fonts/type1/urw/times/utmb8a.pfb></nix/store/gmpqpifqyp
+cgra-doc> ljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/times/ut
+cgra-doc> mbi8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-te
+cgra-doc> xmfdist/fonts/type1/urw/times/utmr8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6
+cgra-doc> d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/times/utmri8a.pfb>
+cgra-doc> Output written on build/main.pdf (9 pages, 313875 bytes).
+cgra-doc> Transcript written on build/main.log.
+cgra-doc> Latexmk: Getting log file 'build/main.log'
+cgra-doc> Latexmk: Examining 'build/main.fls'
+cgra-doc> Latexmk: Examining 'build/main.log'
+cgra-doc> Latexmk: Found input bbl file 'build/main.bbl'
+cgra-doc> Latexmk: References changed.
+cgra-doc> Latexmk: Log file says output to 'build/main.pdf'
+cgra-doc> Latexmk: Using bibtex to make bibliography file(s).
+cgra-doc>   ===Source file 'build/main.bbl' for 'pdflatex'
+cgra-doc> Latexmk: Found bibliography file(s):
+cgra-doc>   ./bib/bib.bib
+cgra-doc> Latexmk: applying rule 'bibtex build/main'...
+cgra-doc> Rule 'bibtex build/main':  Reasons for rerun
+cgra-doc> Changed files or newly in use/created:
+cgra-doc>   build/main.aux
+cgra-doc> 
+cgra-doc> ------------
+cgra-doc> Run number 2 of rule 'bibtex build/main'
+cgra-doc> ------------
+cgra-doc> ====== ENV{BIBINPUTS} changed to '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc:build:/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc/build:'
+cgra-doc> Latexmk: Change directory to 'build/'.
+cgra-doc> To assist finding of files in document directory, I set
+cgra-doc>   BIBINPUTS='/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc:build:/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc/build:'
+cgra-doc>   BSTINPUTS='/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc:'.
+cgra-doc> ------------
+cgra-doc> Running 'bibtex  "main.aux"'
+cgra-doc> ------------
+cgra-doc> This is BibTeX, Version 0.99d (TeX Live 2025/nixos.org)
+cgra-doc> The top-level auxiliary file: main.aux
+cgra-doc> The style file: IEEEtran.bst
+cgra-doc> Database file #1: bib/bib.bib
+cgra-doc> -- IEEEtran.bst version 1.14 (2015/08/26) by Michael Shell.
+cgra-doc> -- http://www.michaelshell.org/tex/ieeetran/bibtex/
+cgra-doc> -- See the "IEEEtran_bst_HOWTO.pdf" manual for usage information.
+cgra-doc> 
+cgra-doc> Done.
+cgra-doc> Latexmk: Change directory back to '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc'
+cgra-doc> Latexmk: applying rule 'pdflatex'...
+cgra-doc> Rule 'pdflatex':  Reasons for rerun
+cgra-doc> Changed files or newly in use/created:
+cgra-doc>   build/main.aux
+cgra-doc> 
+cgra-doc> ------------
+cgra-doc> Run number 3 of rule 'pdflatex'
+cgra-doc> ------------
+cgra-doc> ------------
+cgra-doc> Running 'pdflatex  -interaction=nonstopmode -halt-on-error -file-line-error -recorder -output-directory="build"  "main.tex"'
+cgra-doc> ------------
+cgra-doc> This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org) (preloaded format=pdflatex)
+cgra-doc>  restricted \write18 enabled.
+cgra-doc> entering extended mode
+cgra-doc> (./main.tex
+cgra-doc> LaTeX2e <2025-11-01>
+cgra-doc> L3 programming layer <2026-01-19>
+cgra-doc> (./IEEEtran.cls
+cgra-doc> Document Class: IEEEtran 2015/08/26 V1.8b by Michael Shell
+cgra-doc> -- See the "IEEEtran_HOWTO" manual for usage information.
+cgra-doc> -- http://www.michaelshell.org/tex/ieeetran/
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/ot1ptm.fd)
+cgra-doc> -- Using 8.5in x 11in (letter) paper.
+cgra-doc> -- Using PDF output.
+cgra-doc> -- This is a 10 point document.
+cgra-doc> )
+cgra-doc> ** ATTENTION: Overriding command lockouts (line 4).
+cgra-doc> (./config/preamble.tex (./config/package.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/base/fontenc.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/t1ptm.fd))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/base/inputenc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/keyval.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/etoolbox/etoolbox.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype-pdftex.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/microtype.cfg))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsmath.sty
+cgra-doc> For additional information on amsmath, use the `?' option.
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amstext.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsgen.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsbsy.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsmath/amsopn.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/amssymb.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/amsfonts.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/booktabs/booktabs.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/tools/array.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/graphicx.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/graphics.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/trig.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-cfg/graphics.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-def/pdftex.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/xcolor/xcolor.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics-cfg/color.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/graphics/mathcolor.ltx))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/frontendlayer/tikz.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/basiclayer/pgf.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgfrcs.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfutil-common.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfutil-latex.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfrcs.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/pgf.revision.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/basiclayer/pgfcore.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/systemlayer/pgfsys.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeys.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeyslibraryfiltered.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgf.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys-pdftex.def
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsys-common-pdf.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsyssoftpath.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/systemlayer/pgfsysprotocol.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcore.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmath.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathutil.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathparser.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.basic.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.random.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.comparison.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.base.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.round.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.misc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfunctions.integerarithmetics.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathcalc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmathfloat.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfint.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepoints.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathusage.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorescopes.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoretransformations.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorequick.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreobjects.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorearrows.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreshade.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreimage.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoreexternal.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorelayers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcoretransparency.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorepatterns.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/basiclayer/pgfcorerdf.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduleshapes.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduleplot.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/compatibility/pgfcomp-version-0-65.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/compatibility/pgfcomp-version-1-18.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgffor.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/utilities/pgfkeys.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgfkeys.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgf/math/pgfmath.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/math/pgfmath.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/utilities/pgffor.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/tikz.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryplothandlers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmodulematrix.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/pgfplots/pgfplots.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.revision.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotscore.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/sys/pgfplotssysgeneric.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/pgfplotslibrary.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_loader.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryfpu.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/oldpgfcompatib/pgfplotsoldpgfsupp_pgfutil-common-lists.tex))
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsutil.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsliststructure.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsliststructureext.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsarray.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsmatrix.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/numtable/pgfplotstableshared.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/liststructure/pgfplotsdeque.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsbinary.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsbinary.data.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotsutil.verb.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/pgflibrarypgfplots.surfshading.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/sys/pgflibrarypgfplots.surfshading.pgfsys-pdftex.def)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotscolormap.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/util/pgfplotscolor.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsstackedplots.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsplothandlers.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsmeshplothandler.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsmeshplotimage.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.scaling.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotscoordprocessing.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.errorbars.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.markers.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplotsticks.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/pgfplots.paths.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/modules/pgfmoduledecorations.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathmorphing.
+cgra-doc> code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathmorphing.code.tex
+cgra-doc> ))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarydecorations.pathreplacing
+cgra-doc> .code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/decorations/pgflibrarydecorations.pathreplacing.code.te
+cgra-doc> x))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgfplots/libs/tikzlibrarypgfplots.contourlua.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryplotmarks.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryplotmarks.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/cite/cite.sty))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/url/url.sty) (./config/colors.tex) (./config/tikz.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/pgflibraryarrows.meta.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryautomata.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.multipart.code.tex
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.multipart.code.tex)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarypositioning.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarycalc.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryfit.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarybackgrounds.code.tex)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.geometric.code.tex
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.geometric.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibraryshapes.misc.code.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/libraries/shapes/pgflibraryshapes.misc.code.tex))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarymatrix.code.tex))
+cgra-doc> (./config/macros.tex) (./config/hyperref.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/hyperref.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/iftex/iftex.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/kvsetkeys/kvsetkeys.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/kvdefinekeys/kvdefinekeys.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pdfescape/pdfescape.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/ltxcmds/ltxcmds.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/pdftexcmds/pdftexcmds.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/infwarerr/infwarerr.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hycolor/hycolor.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/nameref.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/refcount/refcount.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/gettitlestring/gettitlestring.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/kvoptions/kvoptions.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/stringenc/stringenc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/pd1enc.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/intcalc/intcalc.sty)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/puenc.def)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/bitset/bitset.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/bigintcalc/bigintcalc.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/hyperref/hpdftex.def
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/rerunfilecheck/rerunfilecheck.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/generic/uniquecounter/uniquecounter.sty)))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/bookmark/bookmark.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/bookmark/bkm-pdftex.def))))
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/l3backend/l3backend-pdftex.def) (build/main.aux)
+cgra-doc> -- Lines per column: 56 (exact).
+cgra-doc> 
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-ptm.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/context/base/mkii/supp-pdf.mkii
+cgra-doc> [Loading MPS to PDF converter (version 2006.09.02).]
+cgra-doc> )
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/epstopdf-pkg/epstopdf-base.sty
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/latexconfig/epstopdf-sys.cfg))
+cgra-doc> Package pgfplots notification 'compat/show suggested version=true': document ha
+cgra-doc> s been generated with the most recent feature set (\pgfplotsset{compat=1.18}).
+cgra-doc> 
+cgra-doc> (./frontmatter/title.tex) (./frontmatter/abstract.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-cmr.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/umsa.fd)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-msa.cfg)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/amsfonts/umsb.fd)
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/microtype/mt-msb.cfg)) (./frontmatter/keywords.tex) (./src/sections.tex
+cgra-doc>  (./src/introduction.tex) (./src/background.tex
+cgra-doc> (./src/background/related-work.tex) (./src/background/stationary-data.tex)
+cgra-doc> (./src/background/scope.tex)) (./src/architecture.tex
+cgra-doc> (./src/architecture/overview.tex) [1{/nix/store/gygb8llwp0gwcs8hhlmvza693jpscn7
+cgra-doc> f-texlive-combined-2025/share/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/ni
+cgra-doc> x/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/
+cgra-doc> enc/dvips/base/8r.enc}] (./src/architecture/processing-element.tex
+cgra-doc> (./figures/pe/figure.tex (./figures/pe/diagram.tex)))
+cgra-doc> (./src/architecture/interconnect.tex (./figures/array/figure.tex
+cgra-doc> (./figures/array/diagram.tex)))) (./src/protocol.tex
+cgra-doc> (./src/protocol/overview.tex) (./src/protocol/commands.tex
+cgra-doc> (./tables/commands/table.tex
+cgra-doc> (/nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/te
+cgra-doc> x/latex/psnfss/t1pcr.fd))) (./src/protocol/wire-example.tex [2])
+cgra-doc> (./src/protocol/fused-execute.tex (./figures/exec/figure.tex
+cgra-doc> (./figures/exec/diagram.tex))) (./src/protocol/controller.tex
+cgra-doc> (./figures/fsm/figure.tex (./figures/fsm/diagram.tex)))) (./src/dataflow.tex
+cgra-doc> [3] (./src/dataflow/overview.tex) (./src/dataflow/vectors-reductions.tex)
+cgra-doc> (./src/dataflow/matrix-vector.tex (./figures/systolic/figure.tex
+cgra-doc> (./figures/systolic/diagram.tex))) (./src/dataflow/forwarding.tex) [4]
+cgra-doc> (./src/dataflow/conv-scan.tex)) (./src/software.tex
+cgra-doc> (./src/software/transport.tex) (./src/software/dispatch.tex)
+cgra-doc> (./src/software/geometry.tex (./figures/stack/figure.tex
+cgra-doc> (./figures/stack/diagram.tex))) (./src/software/cli.tex)
+cgra-doc> (./src/software/contracts.tex)) (./src/analysis.tex
+cgra-doc> (./src/analysis/command-costs.tex (./tables/wire-sizes/table.tex))
+cgra-doc> (./src/analysis/kernel-counts.tex [5] (./tables/kernel-counts/table.tex))
+cgra-doc> (./src/analysis/latency.tex)) (./src/implementation.tex
+cgra-doc> (./src/implementation/scope.tex) (./src/implementation/multicycle.tex
+cgra-doc> (./figures/timing/figure.tex (./figures/timing/diagram.tex))) [6]
+cgra-doc> (./src/implementation/timing-gates.tex)
+cgra-doc> (./src/implementation/physical-evaluation.tex)
+cgra-doc> (./src/implementation/validation.tex)) (./src/results.tex
+cgra-doc> (./src/results/verification.tex (./tables/verification/table.tex)) [7]
+cgra-doc> (./src/results/wire-experiment.tex (./tables/measured/table.tex
+cgra-doc> (./build/wire-table.tex)) (./figures/cost/figure.tex
+cgra-doc> (./figures/cost/diagram.tex)))) (./src/conclusion.tex))
+cgra-doc> (./backmatter/references.tex (build/main.bbl [8]))
+cgra-doc> 
+cgra-doc> ** Conference Paper **
+cgra-doc> Before submitting the final camera ready copy, remember to:
+cgra-doc> 
+cgra-doc>  1. Manually equalize the lengths of two columns on the last page
+cgra-doc>  of your paper;
+cgra-doc> 
+cgra-doc>  2. Ensure that any PostScript and/or PDF output post-processing
+cgra-doc>  uses only Type 1 fonts and that every step in the generation
+cgra-doc>  process uses the appropriate paper size.
+cgra-doc> 
+cgra-doc> [9] (build/main.aux) )</nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-comb
+cgra-doc> ined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmex10.pfb></nix/store/gmpqp
+cgra-doc> ifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/
+cgra-doc> amsfonts/cm/cmmi10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-com
+cgra-doc> bined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></nix/store/gmpqp
+cgra-doc> ifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/
+cgra-doc> amsfonts/cm/cmmi6.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-comb
+cgra-doc> ined-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></nix/store/gmpqpi
+cgra-doc> fqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/a
+cgra-doc> msfonts/cm/cmmi8.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combi
+cgra-doc> ned-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmmi9.pfb></nix/store/gmpqpif
+cgra-doc> qypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/am
+cgra-doc> sfonts/cm/cmr10.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combin
+cgra-doc> ed-2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr5.pfb></nix/store/gmpqpifqy
+cgra-doc> pljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsf
+cgra-doc> onts/cm/cmr7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-
+cgra-doc> 2025-texmfdist/fonts/type1/public/amsfonts/cm/cmr8.pfb></nix/store/gmpqpifqyplj
+cgra-doc> n5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfont
+cgra-doc> s/cm/cmr9.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-202
+cgra-doc> 5-texmfdist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></nix/store/gmpqpifqypljn
+cgra-doc> 5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts
+cgra-doc> /cm/cmsy7.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-202
+cgra-doc> 5-texmfdist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></nix/store/gmpqpifqypljn5
+cgra-doc> cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/public/amsfonts/
+cgra-doc> cm/cmsy9.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025
+cgra-doc> -texmfdist/fonts/type1/urw/courier/ucrr8a.pfb></nix/store/gmpqpifqypljn5cnc419b
+cgra-doc> 39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/times/utmb8a.pfb></
+cgra-doc> nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/font
+cgra-doc> s/type1/urw/times/utmbi8a.pfb></nix/store/gmpqpifqypljn5cnc419b39cb6d0s09i-texl
+cgra-doc> ive-combined-2025-texmfdist/fonts/type1/urw/times/utmr8a.pfb></nix/store/gmpqpi
+cgra-doc> fqypljn5cnc419b39cb6d0s09i-texlive-combined-2025-texmfdist/fonts/type1/urw/time
+cgra-doc> s/utmri8a.pfb>
+cgra-doc> Output written on build/main.pdf (9 pages, 314783 bytes).
+cgra-doc> Transcript written on build/main.log.
+cgra-doc> Latexmk: Getting log file 'build/main.log'
+cgra-doc> Latexmk: Examining 'build/main.fls'
+cgra-doc> Latexmk: Examining 'build/main.log'
+cgra-doc> Latexmk: Found input bbl file 'build/main.bbl'
+cgra-doc> Latexmk: Log file says output to 'build/main.pdf'
+cgra-doc> Latexmk: Using bibtex to make bibliography file(s).
+cgra-doc>   ===Source file 'build/main.bbl' for 'pdflatex'
+cgra-doc> Latexmk: Found bibliography file(s):
+cgra-doc>   ./bib/bib.bib
+cgra-doc> Latexmk: All targets (build/main.pdf) are up-to-date
+cgra-doc> 
+cgra-doc> make: Leaving directory '/build/964llswmjayk6y0ai8qwxxip91f3jbd9-source/doc'
+cgra-doc> Running phase: installPhase
+cgra-doc> Running phase: fixupPhase
+cgra-doc> shrinking RPATHs of ELF executables and libraries in /nix/store/9ki35y50xazkfcnyrnsaf4d06zlq67x3-cgra-doc-0.1.0
+cgra-doc> checking for references to /build/ in /nix/store/9ki35y50xazkfcnyrnsaf4d06zlq67x3-cgra-doc-0.1.0...
+cgra-doc> patching script interpreter paths in /nix/store/9ki35y50xazkfcnyrnsaf4d06zlq67x3-cgra-doc-0.1.0
+/nix/store/rdbn8p3qrxmlr8d0d1paap41qnx0zypf-cgra-0.1.0
+/nix/store/84ayk34r5pgzcrlbjs0bd2jvc7nhxjqv-cgra-software-check
+/nix/store/ks78c1k0sxaw2znyq33xwyrb1vp59w4b-cgra-hdl-check
+/nix/store/qng84rmaw0x7kzzpqaxz5cqr4gdbiagc-cgra-formal-fast
+/nix/store/9ki35y50xazkfcnyrnsaf4d06zlq67x3-cgra-doc-0.1.0

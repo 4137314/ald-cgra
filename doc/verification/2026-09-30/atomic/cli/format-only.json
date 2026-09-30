@@ -1,0 +1,6 @@
+{
+  "verified_tree": "c222316517d14757ca726a0f335e96d416b291e9",
+  "commit_candidate_tree": "853733f3b62dbf7712b1e5da6a425f3100a9e2b4",
+  "change": "trim blank lines at EOF in bench.c/vector_io.c",
+  "diff_ignoring_blank_lines_exit_code": 0
+}

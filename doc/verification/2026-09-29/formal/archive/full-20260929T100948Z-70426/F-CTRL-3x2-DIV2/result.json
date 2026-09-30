@@ -1,0 +1,69 @@
+{
+  "id": "F-CTRL-3x2-DIV2",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_ROWS": 3,
+    "G_COLS": 2,
+    "G_STEP_DIV": 2,
+    "G_TIMEOUT_CYCLES": 100000000
+  },
+  "assertions": 28,
+  "assumptions": 0,
+  "covers": 5,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=3 -gG_COLS=2 -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=100000000 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "d6d84390df5639eaea552562a7bc8f3e0861c1f0dcf137afc2f77e05eb7f3632"
+  },
+  "parameter_check_sha256": "c6426e701079b4778b3ee31ec7465a56d8e8c1f06cd0091138890c06eea2745a",
+  "effective_properties_sha256": "621e253bfc095689cb16b8dd8e17d4f7a850a424be9fdca2402729d677b308e9",
+  "checked_port_widths": {
+    "cfg": 192,
+    "pe_regs": 96,
+    "west_o": 48,
+    "north_o": 32
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 5,
+    "assert": 28
+  },
+  "smt2_cells": {
+    "assert": 28,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "87a5a169007de8f546c74e30b7536a6aede8020b8ce937c3bfd1d5dd1e1fca33",
+    "task/src/properties.json": "bb23f3599fb3388e619578c3b7130fd05ca4acc8a62d488a978864a919d4225c",
+    "task/model/design_smt2.smt2": "f4420fdf7cf66bed4f94cdfaa7b648be5aad224e00cb0322609522a4ca3a3e3b"
+  },
+  "traces": [],
+  "duration_seconds": 2.078
+}

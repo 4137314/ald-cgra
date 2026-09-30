@@ -60,18 +60,18 @@ A01 estende S6 alla matrice comando/opzione, A10 estende gli oracoli di S7.
 | A04 | P1 | `ASYNC_REG`, verifica netlist/placement e copertura dei vincoli con Vivado reale; estensione H5 | DA FARE |
 | A05 | P1/P2 | Manifest e pubblicazione per run Vivado; programmazione associata all'artefatto verificato | DA FARE |
 | A06 | P2/P3 | PDF di consegna unico, commit/manifest e bibliografia ribilanciata dopo layout finale; estensione T4/R6 | DA FARE |
-| A07 | P2 | Arity/opzioni CLI, help/version, completion e limiti shell verificati; opzioni output completate | PARZIALE |
-| A08 | P2 | Separazione dei domini CLI e contesto di invocazione; definire estensioni diagnostica/deadline mantenendo ABI | DA FARE |
-| A09 | P2 | Convoluzione senza Toeplitz densa; oracoli/guasti e confronto memoria/tempo host | DA FARE |
-| A10 | P1/P2 | Benchmark dei kernel mancanti, artifact per tutto lo sweep, baseline e metadati | DA FARE |
+| A07 | P2 | Arity/opzioni CLI, help/version, completion e limiti shell verificati; opzioni output completate | VERIFICATO |
+| A08 | P2 | Separazione dei domini CLI e contesto di invocazione; definire estensioni diagnostica/deadline mantenendo ABI | VERIFICATO |
+| A09 | P2 | Convoluzione senza Toeplitz densa; oracoli/guasti e confronto memoria/tempo host | VERIFICATO |
+| A10 | P1/P2 | Benchmark dei kernel mancanti, artifact per tutto lo sweep, baseline e metadati | VERIFICATO |
 | A11 | P2 | Matrice requisiti/test, confini ALU/UART e guasti protocollo sistematici; estensione H3/T3 | DA FARE |
-| A12 | P2 | CI per domini, GCC/Clang, artifact e `checks` Nix; supporto piattaforme esplicito | DA FARE |
+| A12 | P2 | CI per domini, GCC/Clang, artifact e `checks` Nix; supporto piattaforme esplicito | VERIFICATO |
 | A13 | P2/P3 | Manuali/esempi coerenti, claim→fonte, integrità CSV distinta da attualità dei sorgenti | DA FARE |
-| A14 | P2 | Guida AGENTS nella radice, caricamento verificato in Codex/Claude e indice operativo breve | DA FARE |
-| A15 | P2 | Confronto forme a 16 PE con workload/risorse comparabili e run Vivado selezionati | DA FARE |
-| A16 | P2 | Licenza scelta dall'autore e metadati Nix coerenti; estensione T4 | DA FARE |
+| A14 | P2 | Guida AGENTS nella radice, caricamento verificato in Codex/Claude e indice operativo breve | PARZIALE |
+| A15 | P2 | Confronto forme a 16 PE con workload/risorse comparabili e run Vivado selezionati | PARZIALE |
+| A16 | P2 | Licenza scelta dall'autore e metadati Nix coerenti; estensione T4 | PARZIALE |
 | A17 | P2 | Compilation database JSON valido con percorsi speciali e flag coerenti con la build | VERIFICATO |
-| A18 | P2 | Oggetti invalidati quando cambiano compiler/flag nello stesso profilo | DA FARE |
+| A18 | P2 | Oggetti invalidati quando cambiano compiler/flag nello stesso profilo | VERIFICATO |
 
 Il ciclo di revisione ha prodotto analisi, task ed evidenze, senza correzioni al codice
 di produzione o nuovi risultati Vivado. I probe hanno riprodotto A01, A02,
@@ -426,10 +426,196 @@ Run, riproduzione e log in
 Commit delle correzioni: `25c01d1`, `7491f55`, `8d1e5c8`.
 Evidenze in [`doc/verification/2026-09-25/fixes/`](doc/verification/2026-09-25/fixes/README.md).
 
+## Consolidamento e formalizzazione del 27 settembre 2026
+
+L'incarico continua A03–A16/A18; A01, A02 e A17 vanno preservati.
+Gli ID nuovi sotto coprono soltanto requisiti aggiuntivi. Nessun push,
+release o programmazione della scheda è autorizzato da questo ciclo.
+
+| ID | Intervento / criterio di chiusura | Stato |
+|---|---|---|
+| F01 | Toolchain fissata, prova del PE VHDL di produzione, proprietà presenti nel solver e controllo negativo raggiungibile | VERIFICATO |
+| F02 | PE completo a 16 bit e wiring/sincronia array sulle istanze dichiarate, cover e mutazioni mirate | VERIFICATO |
+| F03 | Controller: RUN/EXEC, indici, STEP_DIV 1/2/3/4, handshake, watchdog con ipotesi esplicite | PARZIALE |
+| F04 | UART TX/RX nel modello digitale dichiarato, prove e cover | VERIFICATO |
+| F05 | Target fast/full/cover, manifest JSON, matrice requisiti–test–proprietà–evidenza e CI/Nix eseguiti | VERIFICATO |
+| B01 | Contratto sperimentale a blocchi versionato, CRC/framing/sequence e deduplicazione delimitata | DA FARE |
+| B02 | Memoria locale e sequencer RTL, modello, API e CLI con workload end-to-end e regressioni legacy | DA FARE |
+| B03 | Prove buffer/sequencer, misura traffico/round trip, sintesi reale e limiti fisici documentati | DA FARE |
+| C07 | Deadline dell'intera transazione, diagnostica additiva, CLOEXEC/apertura esclusiva opzionale | VERIFICATO |
+| C08 | Server PTY configurabile/arrestabile e piani riutilizzabili con invalidazione esplicita | PARZIALE |
+
+### Checkpoint 2026-09-27 / 01 — baseline completata
+
+- HEAD iniziale `dc886d2376c2662a798c65ac86d0e97938ceb3fb`, working tree
+  inizialmente pulito; nessun rollback al riferimento storico.
+- Eseguiti con esito 0: `make -j4 test`, `make -j4 PROFILE=asan test`
+  (LSan attivo), `make test-install`, `make test-compdb`, `make sim`,
+  `make -C hw -f hw.mk test-scripts`, `make docs`,
+  `make -C lib -f lib.mk analyze`. GCC 15.2.0, GHDL 6.0.0.
+- Conteggi correnti: **1049** controlli software per profilo, **121** compdb,
+  **12** installazione, **56** Tcl. Non sono percentuali di copertura.
+- Riprodotti prima delle modifiche: `ping -d sim unexpected` e
+  `run add --a 1 --b 2 -d sim --cols 4` accettati; cambio a
+  `CC=/nonexistent/cgra-review-cc` dichiara erroneamente valida la libreria.
+- Evidenze immutabili, comandi, versioni, hash e risultati in
+  `doc/verification/2026-09-27/baseline/`. Vivado 2026.1 disponibile fuori PATH;
+  nessun nuovo run fisico ancora eseguito.
+- Prossimo passo: F01, acquisizione della combinazione formale dal nixpkgs
+  già fissato, prova minima e controllo negativo prima degli interventi RTL.
+
+### Checkpoint 2026-09-28 / 02 — frontend formale e build incrementale
+
+- F01: acquisiti dal lock esistente GHDL 6.0.0, plugin
+  `1b97dc71377cea7e861be6625be4353c377a5fb5`, Yosys 0.67, SBY 0.61,
+  Yices 2.7.0. SBY Nix stampa `unknown version`: versione dal derivation,
+  senza inventare l'output dell'eseguibile.
+- Sul PE di produzione: reset, hold, NOP e CONST **PROVED** per induzione;
+  4 assertion e 1 assumption utente presenti nell'SMT. Proprietà falsa:
+  **FAIL** raggiungibile con trace; cover dell'uscita non nulla raggiunto.
+  Manifest e log in `doc/verification/2026-09-28/formal-smoke/`.
+- Specifica bit-vector indipendente dei 16 opcode: primo tentativo gerarchico
+  **TIMEOUT** a 120 s; flatten/wreduce/techmap/opt (nessuna riduzione del
+  dominio) consente **PROVED** per induzione in 5 s, profondità base 4.
+  Integrazione runner/target e proprietà controller ancora in corso.
+- A18: firma effettiva di compiler/flag/linker/dipendenze opzionali/percorsi
+  generati; invariata se gli input restano uguali. La regressione ha trovato
+  inoltre la propagazione accidentale dei flag CLI alla libreria quando
+  CFLAGS proviene dall'ambiente; isolati ora i flag originali del chiamante.
+  Recipe ricorsive marcate per conservare il jobserver anche in modalità pipe.
+- `make test-build`: **27** verifiche superate in copia isolata, incluse
+  installazione e compdb, compiler inesistente, rebuild necessario e no-op.
+  Log del fallimento intermedio e del run corretto conservati in
+  `doc/verification/2026-09-28/build/`. Nessun push/programmazione.
+
+### Checkpoint 2026-09-28 / 03 — CLI, prove reali e convoluzione
+
+- **A07 verificato:** tabella comandi/arità/opzioni prima degli effetti,
+  help/version, completion e shell con rifiuto integrale di righe/token
+  eccessivi, NUL e virgolette aperte. **47** regressioni aggiuntive, inclusa
+  sessione terminale PTY; fallback senza readline provato (42 controlli prima
+  delle ultime cinque verifiche completion/PTY). A01 preservato.
+- **A08 parziale:** main ridotto al punto d'ingresso; contesto esplicito,
+  parsing/dispatch, vettori, benchmark, discovery e shell separati. Restano
+  deadline/diagnostica in C07 e piani/server in C08.
+- **F01 verificato, F02/F03/F05 parziali:** full PE a 16 bit, mux e 16 opcode
+  **PROVED**; controller 1x1 DIV1/2/3/4 e cinque rettangoli fino a 16 PE
+  **PROVED** sulle proprietà descritte in `hw/formal/README.md`. Full usa
+  watchdog di produzione sui rettangoli. Negative control e due mutazioni
+  temporanee **FAIL atteso** con tracce. Cover entro 32 cicli: **BOUNDED_PASS**,
+  sola raggiungibilità. Mancano array, EXEC completo, UART e liveness.
+- Eseguiti `formal-fast/full/cover` e `nix build
+  .#checks.x86_64-linux.formal-fast --no-link`. Tre run accettati archiviati
+  con sorgenti effettivi in `doc/verification/2026-09-28/formal/archive/`.
+  Conservati anche timeout/errori intermedi; scoperti e corretti frontend
+  che ignorava generici fuori posizione e sostituzione fra vunit multiple.
+- **A09 verificato:** tile implicite limitate alla banda, nessun workspace
+  Toeplitz. 50 punti prima/dopo, v2/v3 e cinque geometrie; byte/transazioni/
+  step identici. Per n=4096,k=5 heap temporaneo 33.587.200 -> 0 byte; mediana
+  API sul modello 4x4 v3 104,037 -> 2,156 ms. Non sono prestazioni FPGA.
+- Dopo A09: **1240** controlli release e ASan/UBSan con LSan, GHDL completo
+  superato. Prima di A09: compdb **171**, installazione **12**, build **27**,
+  analyzer GCC15 CLI superati. Non sono percentuali di copertura.
+- Manuali e PDF costruiti; pagina convoluzione renderizzata e controllata.
+  Radice AGENTS aggiunta; uso da parte di Claude non ancora verificato.
+  Rimossa attribuzione MIT non supportata dai metadati Nix; licenza da autore.
+- Prossimo: diagnostiche GCC13.3 riprodotte sul commit storico in copia
+  isolata, poi C07/C08, benchmark completi e ampliamento delle prove RTL.
+  Nessun nuovo run Vivado, push o programmazione in questo checkpoint.
+
+### Checkpoint 2026-09-29 / 04 — trasporto C e server PTY
+
+- **C07/A08 verificati:** API additive per budget monotono della transazione
+  (scrittura, risposta e retry), diagnostica copiata con fase/errno/progresso,
+  CLOEXEC e apertura esclusiva opzionale. Timeout storico resta per risposta;
+  un kernel composto non acquisisce implicitamente una deadline globale.
+- **C08 parziale:** server configurabile v2/v3/geometria e cancellazione anche
+  con TX bloccato; CLI `emulate --rows --cols --protocol` con stop pulito su
+  SIGINT/SIGTERM. Corretto overflow della coda del modello per 100 ID ricevuti
+  consecutivamente. Il modello senza clock non verifica il watchdog RTL.
+  Restano i piani riutilizzabili e il contratto di configurazione residente.
+- Riprodotti su sorgenti storici GCC 13.3 `-Wstringop-overflow` e falso percorso
+  analyzer su g.rows. Limiti di serializzazione espliciti R+C<=MAX_PE+1 e
+  separazione dei kernel vettoriali: GCC 13.3 release e due analyzer passano,
+  senza soppressioni. Conversioni/shift del modello C resi definiti in C11.
+- **1323** controlli release e ASan/UBSan con LSan, GCC15 analyzer libreria e
+  GHDL completo: PASS con manifest e hash invariati durante ciascun gate in
+  `doc/verification/2026-09-28/transport/`. Il test iniziale di backpressure
+  aveva una race nella preparazione della PTY: fallimento conservato, setup
+  corretto e gate ripetuti; nessun allentamento della deadline in produzione.
+- GCC13.3 software/analyzer, Clang22 software, manuali/PDF, installazione **12**,
+  compdb **179**, build incrementale **27**: PASS, manifest separati in
+  `doc/verification/2026-09-29/`. Primo tentativo Docker bloccato dal socket
+  sandbox conservato; successiva esecuzione autorizzata separata.
+- F02 in corso: PE e array1x1 monolitici PROVED; array2x3 monolitico TIMEOUT
+  a 90 s, poi PROVED con composizione. Il contratto PE è provato sul vero RTL
+  nello stesso run, a 16 bit e su tutti gli opcode; l'array importato conserva
+  il wiring e usa quelle garanzie come assumption esplicite. Nessuna riduzione
+  del dominio. Full/cover e mutazione nord avviati prima di chiudere F02.
+- Nessun push, release, programmazione o nuovo risultato Vivado. Prossimi:
+  completare F02, UART/EXEC, piani, benchmark e blocchi; le fasi restanti
+  dell'incarico originale restano tutte attive.
+
+### Checkpoint 2026-09-29 / 05 — array e UART formali
+
+- **F02/F04 verificati nel perimetro dichiarato:** suite full con **23 task
+  PROVED** e **6 FAIL attesi** con controesempi; cover con obbligo PE PROVED
+  e **10 BOUNDED_PASS** di raggiungibilità. Sorgenti/monitor/log/tracce archiviati
+  in `doc/verification/2026-09-29/formal/`, inclusi tentativi falliti.
+- Array: otto forme enumerate; 1x1 monolitica, altre con composizione del
+  contratto PE provato sullo stesso RTL nello stesso run. Domini 16 bit e
+  opcode completi. Non è una prova parametrica di tutte le geometrie.
+- UART: TX/RX PROVED a divisori 3 e 868; cover sul divisore ridotto. Nuovo
+  generatore digitale indipendente in GHDL, fase variabile e periodo ±2%,
+  frame ravvicinati, glitch/stop/break/reset; 77 controlli dati/guasti per
+  divisore 16 e 868, più assertion valid. Nessuna garanzia analogica.
+- Matrice requisiti–test–proprietà–evidenza in `doc/verification-matrix.md`.
+  F03 resta parziale per risposta EXEC completa e liveness condizionata.
+- **A12 in corso:** job CI separati e check Nix eseguibili aggiunti; derivazioni
+  in esecuzione, nessun successo dedotto dalla sola configurazione. Supporto
+  dichiarato limitato a x86_64 Linux; matrice compiler CI GCC13/Clang18.
+- Restano attivi benchmark CLI/piani, protocollo a blocchi/memoria locale,
+  nuovi run Vivado e allineamento documentale. Nessun push o programmazione.
+
+### Checkpoint 2026-09-30 / 06 — benchmark e gate Nix eseguiti
+
+- **A10 verificato:** matvec/scan/conv tramite API pubbliche, riferimenti scalari
+  indipendenti, esempio custom riconosciuto per struttura; mapping arbitrari
+  senza oracolo restano skip. Un warm-up verificato e campioni API/CPU con
+  mediana/p95. Profilazione additiva opzionale separa I/O CFG, altro I/O e
+  restante tempo host; byte/transazioni/step richiesti/operazioni scalari distinti.
+- Schema JSON 2 con hash delle sorgenti, flag/compiler effettivi, piattaforma,
+  parametri e campioni. Ogni punto dello sweep è eseguito una sola volta e
+  conservato con hash/exit status; test conta le invocazioni reali. Report falliti
+  integri; nessun nuovo report conserva l'indice precedente.
+- **40 punti CLI PASS** su cinque forme a 16 PE e v2/v3; dataset con estremi e
+  zeri dichiarato distinto dagli input positivi della revisione. In particolare
+  matvec16x16/16x1 trasferisce 11565 byte, saltando un peso nullo: non forzato a
+  12336, già riprodotto con gli input originali nel confronto A09.
+- Release e ASan/UBSan/LSan: **1413 controlli PASS**. Primo tentativo sanitizer
+  fallito per ptrace della sandbox, conservato; run fuori sandbox passato con
+  LSan attivo. Analyzer GCC, **12 install / 179 compdb / 27 build**, docs PASS.
+- **A12 verificato localmente:** job separati software GCC13/Clang18, HDL/Tcl,
+  formal, documenti e Nix; actionlint PASS. Tutte e cinque le derivazioni Nix
+  correnti eseguite: pacchetto, software/analyzer/fallback senza readline,
+  GHDL/Tcl, formal-fast a 11 task, PDF. Hash degli input immutabili dello store
+  in `doc/verification/2026-09-30/benchmark/nix/`. Nessuna pretesa di esecuzione
+  remota GitHub Actions su modifiche non pubblicate. Piattaforma x86_64 Linux.
+- GCC13.3 e Clang18.1.3 eseguiti anche su Ubuntu 24.04: **1413 controlli
+  per compiler/profilo**, release e ASan/UBSan/LSan; analyzer GCC13 entrambi
+  PASS. Compiler-rt esplicito nell'immagine e in CI, ID immagine conservato.
+- Evidenze e riproduttore dei punti in `doc/verification/2026-09-30/benchmark/`.
+  F03, C08 piani, A04/A05 fisico e B01–B03 blocchi restano aperti. Si procede
+  con commit locali coesi e successivi interventi; nessun push/programmazione.
+- Commit locali: `00e44e2` build, `3754afd` convoluzione, `bff5c57` trasporto,
+  `df3504b` CLI, `7f2340c` benchmark, `b9ec58f` formale/CI. I primi quattro
+  gruppi verificati anche estraendo l'esatto indice Git in copie temporanee;
+  evidenze in `doc/verification/2026-09-30/atomic/`.
+
 ## Prossime correzioni senza scheda
 
-1. **A07:** completare la matrice delle opzioni non relative all'output,
-   arità dei comandi, help/version, completion e gestione dei limiti della shell.
+1. **F03/F05/C08:** completare EXEC/liveness e piani riutilizzabili;
+   preservare CLI e deadline già verificate nei checkpoint 03–04.
 2. **A03/A06/A14:** allineare README/commenti alle evidenze, definire il PDF
    di consegna e le istruzioni comuni per gli agenti.
 3. **A04/A05/H5:** dichiarare i sincronizzatori, controllare il netlist reale
@@ -437,8 +623,8 @@ Evidenze in [`doc/verification/2026-09-25/fixes/`](doc/verification/2026-09-25/f
 4. **H3/T3/A10/A11/A12:** completare la matrice di corruzione header/opcode, byte
    inseriti/persi e le verifiche sulle altre piattaforme; aggiungere
    oracoli benchmark per i mapping attualmente esclusi.
-5. **A09, convoluzione:** generare tile implicite senza allocare Toeplitz densa,
-   preservando ABI, semantica v2/v3, overflow, errori e confronti scalari.
+5. **A15:** completare confronto area/timing con Vivado sulle geometrie;
+   benchmark CLI e misure software sono chiusi in A09/A10.
 6. **T4/A16:** licenza del progetto da definire con
    l'autore; non dedurre una licenza dai soli metadati Nix.
 7. **Toolchain:** il Nixpkgs fissato segnala `texlive.combine` come deprecato
@@ -448,7 +634,7 @@ Evidenze in [`doc/verification/2026-09-25/fixes/`](doc/verification/2026-09-25/f
 
 ## Ottimizzazioni successive alla correttezza
 
-- [ ] Convoluzione con generazione implicita delle tile, senza Toeplitz densa.
+- [x] Convoluzione con generazione implicita delle tile, senza Toeplitz densa.
 - [ ] Piani compilati riutilizzabili con invalidazione esplicita.
 - [ ] Confronto delle geometrie a workload e risorse comparabili.
 - [ ] Protocollo oltre 16 PE con lunghezze, capability e framing definiti.

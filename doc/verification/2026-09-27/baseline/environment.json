@@ -1,0 +1,63 @@
+{
+  "head": "dc886d2376c2662a798c65ac86d0e97938ceb3fb",
+  "initial_status": "clean (git status observed before evidence creation)",
+  "platform": "Linux 6.18.52-1-lts",
+  "tools": {
+    "gcc": {
+      "path": "/nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/gcc",
+      "exit": 0,
+      "version": "gcc (GCC) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+    },
+    "clang": {
+      "path": "/usr/sbin/clang",
+      "exit": 0,
+      "version": "clang version 22.1.8\nTarget: x86_64-pc-linux-gnu\nThread model: posix\nInstalledDir: /usr/bin\n"
+    },
+    "make": {
+      "path": "/nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1/bin/make",
+      "exit": 0,
+      "version": "GNU Make 4.4.1\nBuilt for x86_64-pc-linux-gnu\nCopyright (C) 1988-2023 Free Software Foundation, Inc.\nLicense GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>\nThis is free software: you are free to change and redistribute it.\nThere is NO WARRANTY, to the extent permitted by law.\n"
+    },
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "exit": 0,
+      "version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+    },
+    "yosys": {
+      "available": false
+    },
+    "yosys-config": {
+      "available": false
+    },
+    "sby": {
+      "available": false
+    },
+    "z3": {
+      "available": false
+    },
+    "boolector": {
+      "available": false
+    },
+    "nix": {
+      "path": "/usr/sbin/nix",
+      "exit": 0,
+      "version": "nix (Nix) 2.35.2\n"
+    },
+    "docker": {
+      "path": "/usr/sbin/docker",
+      "exit": 0,
+      "version": "Docker version 29.8.0, build 88096ef005\n"
+    },
+    "latexmk": {
+      "path": "/nix/store/gygb8llwp0gwcs8hhlmvza693jpscn7f-texlive-combined-2025/bin/latexmk",
+      "exit": 0,
+      "version": "Latexmk, John Collins, 15 June 2025. Version 4.87\n"
+    },
+    "python3": {
+      "path": "/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/bin/python3",
+      "exit": 0,
+      "version": "Python 3.14.6\n"
+    }
+  },
+  "vivado_path_exists": true
+}

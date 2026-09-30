@@ -1,0 +1,11 @@
+make -C hw  -f hw.mk formal-cover
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 formal/run.py --suite cover
+F-PE-SMOKE-COVER: BOUNDED_PASS (0.584 s)
+F-PE-ALU-MUX-COVER: BOUNDED_PASS (2.816 s)
+F-CTRL-1x1-DIV1-COVER: BOUNDED_PASS (0.952 s)
+F-CTRL-1x1-DIV2-COVER: BOUNDED_PASS (0.998 s)
+F-CTRL-1x1-DIV3-COVER: BOUNDED_PASS (0.949 s)
+F-CTRL-1x1-DIV4-COVER: BOUNDED_PASS (0.999 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/cover-20260928T102605Z-306953/manifest.json; acceptance PASS
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'

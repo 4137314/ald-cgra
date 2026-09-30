@@ -1,0 +1,4 @@
+F-PE-ALU-MUX: PROVED (10.418 s)
+F-PE-ALU-MUX-COVER: BOUNDED_PASS (2.891 s)
+F-ARRAY-2x3-COVER: BOUNDED_PASS (10.713 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/cover-20260929T100657Z-63063/manifest.json; acceptance PASS

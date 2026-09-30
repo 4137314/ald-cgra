@@ -1,0 +1,68 @@
+{
+  "id": "F-UART-TX-C868",
+  "top": "uart_tx",
+  "kind": "tx",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "CLKS_PER_BIT": 868
+  },
+  "assertions": 18,
+  "assumptions": 0,
+  "covers": 3,
+  "result": "UNKNOWN",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=868 cgra_pkg.vhd uart_tx.vhd uart_tx_contract.psl -e uart_tx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/uart_tx.vhd": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+    "hw/formal/uart_tx_contract.psl": "e7421fd003c618372d74548aafb9640f1b78ac21d7c43232379c6b11337af4bc"
+  },
+  "parameter_check_sha256": "4328fa89db1c6f892cc65c5f7ab2f197da002c0a84029d61a3f16edb9f92859b",
+  "effective_properties_sha256": "20804ba62f2b3373bc2995de556210a722870910ba370dee4af34cb16d313f6f",
+  "checked_port_widths": {
+    "tx_data": 8,
+    "tx_serial": 1,
+    "tx_start": 1,
+    "tx_busy": 1
+  },
+  "exit_code": 4,
+  "solver_status": "UNKNOWN",
+  "property_cells": {
+    "cover": 3,
+    "assert": 18
+  },
+  "smt2_cells": {
+    "assert": 18,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "96eb9acabeb6da760fd9722d06a88239bc522efc9b9983a8149cc656ea771084",
+    "task/src/properties.json": "3f162e44e72d55dc88a8780bac8e9929d52c16efe3c8713e2f8d4b33cd6e91ce",
+    "task/model/design_smt2.smt2": "6b445720bebbb8d24eb751b6a2154af300b641f3c852016ed132fa29c015c0ea"
+  },
+  "traces": [
+    "task/engine_0/trace_induct.yw"
+  ],
+  "duration_seconds": 1.046
+}

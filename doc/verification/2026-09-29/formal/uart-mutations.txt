@@ -1,0 +1,3 @@
+M-UART-TX: FAIL (0.742 s) [expected negative]
+M-UART-RX: FAIL (2.315 s) [expected negative]
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/full-20260929T100907Z-68513/manifest.json; acceptance PASS

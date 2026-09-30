@@ -1,0 +1,30 @@
+SBY 12:00:43 [cover] Removing directory '/home/main/dev/git/ald-cgra/hw/build/formal-smoke/cover'.
+SBY 12:00:43 [cover] Copy '/home/main/dev/git/ald-cgra/hw/build/formal-smoke/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal-smoke/cover/src/dut.il'.
+SBY 12:00:43 [cover] Copy '/home/main/dev/git/ald-cgra/hw/formal/pe_smoke.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal-smoke/cover/src/pe_smoke.sv'.
+SBY 12:00:43 [cover] engine_0: smtbmc yices
+SBY 12:00:43 [cover] base: starting process "cd cover/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 12:00:43 [cover] base: finished (returncode=0)
+SBY 12:00:43 [cover] prep: starting process "cd cover/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 12:00:43 [cover] prep: finished (returncode=0)
+SBY 12:00:43 [cover] smt2: starting process "cd cover/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 12:00:43 [cover] smt2: finished (returncode=0)
+SBY 12:00:43 [cover] engine_0: starting process "cd cover; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 8  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Solver: yices
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Reached cover statement in step 3 at pe_smoke: pe_smoke.sv:24.13-24.34 (_witness_.check_cover_pe_smoke_sv_24_108)
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 12:00:43 [cover] engine_0: ##   0:00:00  Status: passed
+SBY 12:00:43 [cover] engine_0: finished (returncode=0)
+SBY 12:00:43 [cover] engine_0: Status returned by engine: pass
+SBY 12:00:43 [cover] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 12:00:43 [cover] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 12:00:43 [cover] summary: engine_0 (smtbmc yices) returned pass
+SBY 12:00:43 [cover] summary: cover trace: cover/engine_0/trace0.vcd
+SBY 12:00:43 [cover] summary:   reached cover statement pe_smoke._witness_.check_cover_pe_smoke_sv_24_108 at pe_smoke.sv:24.13-24.34 step 3
+SBY 12:00:43 [cover] DONE (PASS, rc=0)
