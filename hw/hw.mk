@@ -98,8 +98,13 @@ build/kernels_%.vec: $(GHDL_DIR)/gen_kernel_vectors
 	./$(GHDL_DIR)/gen_kernel_vectors $@.tmp $(word 1,$(subst x, ,$*)) $(word 2,$(subst x, ,$*))
 	mv $@.tmp $@
 
-VIVADO_DIR = build/vivado$(if $(filter 4x4,$(MESH_ROWS)x$(MESH_COLS)),,/$(MESH_ROWS)x$(MESH_COLS))
-BIT = $(VIVADO_DIR)/$(TOP)_$(BOARD).bit
+VIVADO_DIR ?= build/vivado
+# Programming always requires the manifest of an explicitly selected run.
+ARTIFACT ?=
+PHYSICAL = python3 scr/artifacts.py
+PHYSICAL_ARGS = --board '$(BOARD)' --period '$(PERIOD)' --step-div '$(STEP_DIV)' \
+                --rows '$(MESH_ROWS)' --cols '$(MESH_COLS)' --vivado '$(VIVADO)' \
+                --out '$(VIVADO_DIR)' $(if $(filter 1,$(FLOORPLAN)),--floorplan,)
 
 .PHONY: all sim test-scripts lint wave synth fmax bit sta prog prog-ofl clean
 
@@ -114,6 +119,7 @@ formal-smoke formal-fast formal-full formal-cover:
 # Offline checks of timing gates with synthetic Vivado replies.
 test-scripts:
 	$(TCLSH) test/test_timing.tcl
+	python3 test/test_artifacts.py
 
 $(GHDL_DIR):
 	mkdir -p $(GHDL_DIR)
@@ -167,27 +173,31 @@ wave: | $(GHDL_DIR)
 # faster than `bit`/`sta` (~seconds of tool work) -- the first Vivado check to
 # run after editing the RTL. Reports land in build/vivado/*_synth_$(BOARD).rpt.
 synth:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/synth.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
+	$(PHYSICAL) synth $(PHYSICAL_ARGS)
 
 # Binary-search the maximum frequency the design closes at and print the
 # limiting path (the thing to optimise next). Appends the result to
 # build/vivado/fmax_validated_history.csv for comparison of checked periods.
 fmax:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/fmax.tcl -tclargs $(BOARD) $(FMAX_LO) $(FMAX_HI) $(FMAX_IT) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
+	$(PHYSICAL) fmax $(PHYSICAL_ARGS) --fmax-lo '$(FMAX_LO)' --fmax-hi '$(FMAX_HI)' --fmax-iters '$(FMAX_IT)'
 
 bit:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/build.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
+	$(PHYSICAL) bit $(PHYSICAL_ARGS)
 
 # Static timing analysis gate: exits non-zero unless setup+hold timing is met,
 # under the applied constraints. Physical board validation is separate.
 sta:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/timing.tcl -tclargs $(BOARD) $(PERIOD) $(STEP_DIV) $(MESH_ROWS) $(MESH_COLS)
+	$(PHYSICAL) sta $(PHYSICAL_ARGS)
+
+.PHONY: check-artifact
+check-artifact:
+	$(PHYSICAL) check-artifact $(PHYSICAL_ARGS) --artifact '$(ARTIFACT)'
 
 prog:
-	$(VIVADO) -mode batch -nolog -nojournal -source scr/program.tcl -tclargs $(BIT)
+	$(PHYSICAL) prog $(PHYSICAL_ARGS) --artifact '$(ARTIFACT)'
 
 prog-ofl:
-	$(OFL) -b $(BOARD) $(BIT)
+	$(PHYSICAL) prog-ofl $(PHYSICAL_ARGS) --ofl '$(OFL)' --artifact '$(ARTIFACT)'
 
 clean:
 	rm -rf build *.o *.cf tb_pe tb_cgra_top e~*

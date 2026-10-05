@@ -21,13 +21,16 @@ The audit is a historical snapshot; consult the tracker for current status.
 └───────────────────────────────┘
 ```
 
-The fabric is a 4×4 mesh of 16-bit processing elements (PEs). Each PE has
+The fabric is an R×C mesh of 16-bit processing elements (PEs), defaulting to
+4×4. The legacy v2/v3 protocol supports at most 16 PEs; larger standalone
+arrays do not extend that wire contract. Each PE has
 two operand muxes (N/S/E/W neighbour, immediate, own register, zero), an
 ALU (add/sub/mul/mac/logic/shift/min/max/abs/…) and one output register.
 The host *reconfigures* the array by loading one 32-bit configuration word
 per PE, injects operands into the west (per-row) and north (per-column)
-edge registers, clocks the array a chosen number of steps and reads back
-all 16 PE registers.
+edge registers, advances the array a chosen number of steps and reads back
+the PE registers (or selected taps with v3). A step enables register capture;
+the system clock continues running between steps.
 
 Everything above the wire is UNIX-style: a `cgra` command-line tool drives the
 array through named **modes** and **pipelines** written in a small custom
@@ -92,8 +95,9 @@ make fmax                  # binary-search the max closing clock + name the wall
 make bit                   # timing-gated: no .bit unless setup+hold met
 make sta                   # static timing analysis gate on its own
 make sta FLOORPLAN=1       # any of the above, with the PE-array floorplan
-make prog                  # program via Vivado hw_server
-make prog-ofl              # alternative: openFPGALoader, no Vivado needed
+make check-artifact ARTIFACT=/path/to/run/manifest.json  # validate without hardware
+make prog ARTIFACT=/path/to/run/manifest.json            # Vivado hw_server
+make prog-ofl ARTIFACT=/path/to/run/manifest.json         # openFPGALoader
 ```
 
 `BOARD` defaults to `nexys_a7` (Digilent **Nexys 4 DDR** / Nexys A7-100T,
@@ -101,10 +105,14 @@ xc7a100t); pass `BOARD=basys3` for the Basys 3. `make bit` requires nonempty
 setup/hold paths and nonnegative slack before writing a new bitstream;
 `make sta` runs the timing check without writing one. Results depend on the
 applied constraints. The default target is 10 ns; `PERIOD=<ns>` changes the
-constraint, not the board oscillator. A previous build's files may remain
-after a failed run. New physical measurements are still needed after the RTL
-and constraint corrections. `make fmax` reports `1000 / period` only after a
-successful final run and records it in `fmax_validated_history.csv`.
+constraint, not the board oscillator. Each execution snapshots its inputs into
+`hw/build/vivado/runs/` and retains reports, hashes and a manifest. A failed run
+does not replace the corresponding pointer under `current/`. Programming
+requires an explicit successful bit-run manifest, matching board/geometry and
+STEP_DIV, intact hashes, and a constraint no weaker than the physical 10 ns
+clock. See [physical flow and evidence contract](doc/physical-flow.md).
+`make fmax` reports `1000 / period` after a successful final implementation;
+its CSV belongs to that isolated run. None of these gates is a board test.
 
 ## Install
 
@@ -211,10 +219,10 @@ the host discovers them through ID and adapts transfers and kernel tiling.
 ./sw/build/cgra show add -d sim:3x2
 make synth MESH_ROWS=2 MESH_COLS=3  # requires Vivado
 make bit MESH_ROWS=2 MESH_COLS=3
-make prog-ofl MESH_ROWS=2 MESH_COLS=3
+make prog-ofl MESH_ROWS=2 MESH_COLS=3 ARTIFACT=/path/to/run/manifest.json
 ```
 
-Nondefault Vivado outputs use `hw/build/vivado/RxC/`. C callers use
+Vivado outputs are isolated by run; each manifest records the geometry. C callers use
 `cgra_get_info` and the `_n` transfer functions with explicit buffer counts;
 legacy fixed-size primitives require 4x4. All public kernels adapt:
 `cgra_vec_*`, `cgra_dot`, `cgra_matvec`, `cgra_scan` and `cgra_conv`.

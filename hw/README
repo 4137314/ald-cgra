@@ -1,69 +1,74 @@
 hw/ - FPGA hardware for the UART-attached CGRA
 ==============================================
 
-Synthesisable VHDL-2008 for a 4x4 mesh of 16-bit processing elements, a
-UART, and the protocol controller that stitches them together. Simulate with
-GHDL; build/flash a bitstream with Vivado in batch mode (no GUI).
+VHDL-2008 for an R x C mesh of 16-bit processing elements (default 4x4,
+legacy device protocol up to 16 PEs), UART and protocol-v3 controller.
+Simulate with GHDL; synthesize and implement with Vivado batch mode.
 
-Default board is nexys_a7 = Digilent Nexys 4 DDR / Nexys A7-100T (xc7a100t);
-basys3 (xc7a35t) is also supported via BOARD=basys3.
+Boards
+------
+    nexys_a7    Nexys 4 DDR / Nexys A7-100T, xc7a100tcsg324-1 (default)
+    basys3      Basys 3, xc7a35tcpg236-1
+Both board constraints assume a 100 MHz physical oscillator. PERIOD changes
+only the timing constraint, never the oscillator or UART baud generator.
 
 Layout
 ------
-    rtl/    synthesisable sources (2 packages + UART, PE, array, controller, top)
-    sim/    GHDL testbenches
-    con/    board constraint files (.xdc) -- PHYSICAL only (pins/IO/config)
-    scr/    Vivado batch scripts; timing + floorplan factored into sourced procs
-    perf/   Fmax trajectory tracking (PERFLOG) -- where the timing wall is
+    rtl/        production VHDL
+    sim/        GHDL testbenches and C differential vector generators
+    formal/     executable production RTL properties, contract and runner
+    con/        physical pin, I/O standard and configuration constraints
+    scr/        Vivado flows, timing/structural checks and artifact runner
+    test/       offline flow/publication regression tests (not Vivado evidence)
+    perf/       historical Fmax trajectory; new measurements are per-run
 
-Build (make -f hw.mk <target>; BOARD defaults to nexys_a7)
----------------------------------------------------------
-    sim              analyse + elaborate + run every testbench (GHDL)
-    lint             analyse the RTL alone (syntax/elaboration check)
-    wave             run tb_cgra_top, dump build/tb_cgra_top.ghw (gtkwave)
-    synth            synthesis-only gate: fail on error/critical warning (fast)
-    fmax             binary-search the max closing frequency + report the wall
-    bit  [PERIOD=]   synthesise a bitstream, timing-gated at PERIOD ns (def 10)
-    sta  [PERIOD=]   static timing analysis gate: fail unless timing is met
-    prog             flash via the Vivado hw_server
-    prog-ofl         flash via openFPGALoader (no Vivado)
-    clean
-  Knobs: BOARD, PERIOD=<ns>, FLOORPLAN=1 (apply scr/floorplan.tcl in bit/sta/fmax).
+Commands (from hw/; make -f hw.mk TARGET)
+----------------------------------------
+    sim             all GHDL regressions
+    lint            analyze production RTL
+    wave            top-level testbench, build/tb_cgra_top.ghw
+    test-scripts    Tcl flow decisions and Python artifact regressions
+    formal-fast     required production PE/controller and selected RTL proofs
+    formal-full     extended instances and mutation checks
+    formal-cover    reachability, separately labelled from universal proofs
+    synth           synthesis and structural/constraint checks; no routing
+    sta             synthesis, placement, route and physical gates
+    bit             same physical gates, then bitstream generation
+    fmax            period search, followed by final route and physical gates
+    check-artifact  validate an explicit ARTIFACT manifest without hardware
+    prog            program selected artifact through Vivado hardware server
+    prog-ofl        program selected artifact through openFPGALoader
 
-Timing, a priori
-----------------
-scr/constraints.tcl constrains the clock (period is the knob) and false-paths
-the async UART/button/LED pins. `make bit` refuses to emit a bitstream unless
-setup and hold timing are met; `make sta` is the same check on its own; `make
-synth` is the quick synthesis-only pre-check. So a bitstream that exists is one
-that will run on the board -- certified by STA, not by staring at a waveform.
+Knobs: BOARD, MESH_ROWS, MESH_COLS, STEP_DIV, PERIOD, FLOORPLAN=1, VIVADO.
+Programming requires ARTIFACT=/path/to/a/successful/bit-run/manifest.json.
+Board, geometry and STEP_DIV must match; loose .bit files are not accepted.
+For an alternate part, pass BOARD explicitly, including during programming.
 
-The one non-obvious constraint: the PE ALU (operand mux -> DSP multiply ->
-accumulate -> op mux) is too deep to settle in 10 ns on a -1 Artix-7, so the
-controller issues 'step' on alternate clocks (cgra_ctrl.vhd S_RUN) and
-constraints.tcl declares the datapath a two-cycle multicycle path. This closes
-timing without pipelining the DSP, so one step still yields one result and the
-fabric stays bit-identical to lib/src/emu.c. Drop either half and setup fails by
-~1.8 ns at 100 MHz.
+Artifacts and guarantees
+------------------------
+Every Make physical run gets a fresh build/vivado/runs/MODE-ID directory
+with input copies, manifest, reports and tool log. Success updates a small
+pointer under build/vivado/current/. Failure retains its evidence and leaves
+the previous valid pointer intact. The manifest binds hashes of RTL, scripts,
+constraints, reports/checkpoints and bitstream to the actual parameters/tool.
+Read ../doc/physical-flow.md for the schema, gates and known limits.
 
-Pushing Fmax
-------------
-`make fmax` binary-searches the highest clock the design closes at and names the
-limiting path, so each optimisation starts from the actual wall (see perf/PERFLOG
-for the trajectory). FLOORPLAN=1 boxes the PE array over a DSP column to shorten
-the datapath routes. Because the fabric only advances when the UART-bound
-controller pulses 'step', a higher clock is headroom + a known limit, not raw
-throughput -- but it is the discipline that keeps the datapath honest.
+The datapath advances on a clock enable. STEP_DIV drives both the RTL generic
+and setup/hold multicycle factors. Constraints enumerate every register bit;
+only the PE D endpoints receive the exception. CE/reset remain single-cycle.
+Formal controller proofs check reset/first-step guard, spacing and CFG/WR to
+capture guard for the documented instances. Real Vivado checks the selected
+pins and actual timing requirements. Synchronizer ASYNC_REG preservation,
+first-stage fanout and pair placement are checked on the implemented netlist.
 
-Design in one breath
---------------------
-uart_rx/tx move bytes; cgra_ctrl is the protocol FSM (v2, checksum-protected)
-that loads per-PE config words, injects edge operands, pulses 'step' and reads
-the register file back; cgra_array wires G_ROWS*G_COLS instances of pe into a
-nearest-neighbour mesh. Everything runs in one clock domain.
+STA establishes slack under the applied model/constraints. It does not prove
+that a bitstream works on a board, certify analog metastability, or measure
+serial throughput. A clean synthesis is distinct from a routed timing pass;
+both are distinct from physical device tests. PERIOD>10 ns may be explored by
+sta/fmax, but cannot qualify a programmable artifact for these 100 MHz boards.
 
-Protocol note
+Wire contract
 -------------
-The command bytes and config-word layout in rtl/cgra_pkg.vhd are the contract.
-They are mirrored by the host in lib/include/cgra.h and lib/src/emu.c. Change
-one, change all three, or the emulator and the silicon drift apart.
+RTL constants in rtl/cgra_pkg.vhd align with ../lib/include/cgra.h and the
+C model. Legacy CFG/WR can partially update registers before a NACK; rejection
+is not rollback. The clockless C model does not model the temporal watchdog.

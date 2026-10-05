@@ -100,14 +100,16 @@ FPGA resource use, achievable frequency or physical serial-link performance.
 make synth MESH_ROWS=2 MESH_COLS=3
 make sta MESH_ROWS=2 MESH_COLS=3
 make bit MESH_ROWS=2 MESH_COLS=3
-make prog-ofl MESH_ROWS=2 MESH_COLS=3
+make prog-ofl MESH_ROWS=2 MESH_COLS=3 ARTIFACT=/path/to/run/manifest.json
 ```
 
-The same dimensions must be supplied when selecting the bitstream to program.
-Nondefault geometries use `hw/build/vivado/RxC/`, including their timing and
-Fmax reports, so they do not overwrite 4x4 artifacts. Defaults keep the original
-`hw/build/vivado/` paths. Tcl validates dimensions before synthesis. These
-flows require Vivado; new area/timing figures remain to be measured.
+The same dimensions, board and STEP_DIV must be supplied when selecting the
+manifest to program. Every geometry uses isolated `hw/build/vivado/runs/`
+directories, including its source snapshot, timing/Fmax reports and manifest.
+Failure leaves the last valid pointer untouched. Tcl checks every expected
+register bit against the elaborated geometry before applying the multicycle
+constraint. See [physical flow](physical-flow.md); equal PE counts do not imply
+equal area or frequency. Measurements must identify the actual run and hashes.
 
 ## What the geometry changes
 

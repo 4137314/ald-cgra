@@ -142,6 +142,10 @@ prog:
 prog-ofl:
 	+$(MAKE_HW) prog-ofl BOARD=$(BOARD)
 
+.PHONY: check-artifact
+check-artifact:
+	+$(MAKE_HW) check-artifact BOARD=$(BOARD)
+
 doc:
 	+$(MAKE_DOC)
 
