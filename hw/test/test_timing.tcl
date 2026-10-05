@@ -37,6 +37,14 @@ proc run_flow {script fault} {
         rename source real_source
         proc source {args} {
             set path [lindex $args end]
+            if {[file tail $path] eq "structural_checks.tcl"} {
+                # This suite tests flow decisions. Real netlist/CDC/placement
+                # checks are executed by Vivado, not certified by this mock.
+                proc cgra_physical_gate {args} {
+                    if {$::fault eq "structural"} {error "synthetic failed structural check"}
+                }
+                return
+            }
             if {[file tail $path] eq "geometry.tcl"} {
                 proc cgra_geometry {args} { return [list 4 4 $::outdir] }
                 return
@@ -44,19 +52,57 @@ proc run_flow {script fault} {
             uplevel 1 [list real_source {*}$args]
         }
         proc exit {code} { error "EXIT:$code" }
-        foreach cmd {read_vhdl read_xdc synth_design open_checkpoint opt_design place_design route_design create_clock set_false_path set_multicycle_path} {
+        foreach cmd {read_vhdl read_xdc synth_design open_checkpoint opt_design place_design route_design create_clock set_false_path} {
             proc $cmd {args} {}
+        }
+        proc set_multicycle_path {args} {
+            foreach key {-from -to} pin {C D} {
+                set list [lindex $args [expr {[lsearch -exact $args $key] + 1}]]
+                foreach object $list {
+                    if {![string match */$pin $object]} {error "multicycle includes non-$pin pin: $object"}
+                }
+            }
         }
         proc phys_opt_design {args} { set ::final 1 }
         proc write_checkpoint {args} { lappend ::checkpoints [lindex $args end] }
         proc write_bitstream {args} { set ::bit_written 1 }
+        proc get_msg_config {args} {return 0}
         proc get_ports {pattern} {
             if {$::fault eq "missing_port" && $pattern eq "clk"} { return {} }
             return [list $pattern]
         }
         proc get_cells {args} {
             if {$::fault eq "missing_cells"} { return {} }
-            return [list register]
+            set cells {}
+            for {set r 0} {$r < 4} {incr r} {
+                for {set c 0} {$c < 4} {incr c} {
+                    for {set b 0} {$b < 16} {incr b} {
+                        lappend cells [format {u_array/gen_rows[%d].gen_cols[%d].u_pe/r_reg[%d]} $r $c $b]
+                    }
+                    for {set b 0} {$b < 26} {incr b} {
+                        lappend cells [format {u_ctrl/cfg_r_reg[%d][%d]} [expr {4*$r+$c}] $b]
+                    }
+                }
+                foreach edge {west north} {
+                    for {set b 0} {$b < 16} {incr b} {
+                        lappend cells [format {u_ctrl/%s_r_reg[%d][%d]} $edge $r $b]
+                    }
+                }
+            }
+            set pattern [lindex [lindex $args end] end]
+            set result [lsearch -all -inline -glob $cells $pattern]
+            if {$::fault eq "missing_one_bit"} {set result [lrange $result 1 end]}
+            if {$::fault eq "wrong_bit"} {lset result 0 {u_ctrl/cfg_r_reg[99][0]}}
+            return $result
+        }
+        proc get_pins {args} {
+            set at [lsearch -exact $args -of_objects]
+            if {$at < 0} {return [list [lindex $args end]]}
+            set pin [lindex [lindex $args end] end]
+            set result {}
+            foreach cell [lindex $args [expr {$at+1}]] {lappend result $cell/$pin}
+            if {$::fault eq "missing_pin"} {return [lrange $result 1 end]}
+            return $result
         }
         proc get_timing_paths {args} {
             if {$::fault eq "missing_paths"} { return {} }
@@ -97,7 +143,7 @@ proc run_flow {script fault} {
 
 try {
     foreach script {fmax.tcl build.tcl timing.tcl} {
-        foreach fault {missing_paths missing_hold missing_cells missing_port final_setup final_hold} {
+        foreach fault {missing_paths missing_hold missing_cells missing_port missing_one_bit wrong_bit missing_pin final_setup final_hold structural} {
             lassign [run_flow $script $fault] status message bit
             check {$status && $message ne "EXIT:0" && !$bit} "$script rejects $fault ($message)"
             check {![file exists $tmp/fmax_validated_history.csv]} "failure publishes no successful frequency row"

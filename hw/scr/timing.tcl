@@ -6,9 +6,11 @@
 #
 # Runs synth + implementation at the given clock period (default 10 ns = 100 MHz)
 # then EXITS NON-ZERO unless both setup (WNS) and hold (WHS) slack are >= 0. A
-# zero exit means the design is timing-clean at that clock, so a bitstream from
-# the same sources is guaranteed to meet timing on the board. Set FLOORPLAN=1 to
-# apply scr/floorplan.tcl. To search the maximum frequency use scr/fmax.tcl.
+# zero exit reports closure for this implemented netlist under its constraints.
+# It does not validate a board, the constraints' completeness, analog CDC or a
+# separately generated bitstream. PERIOD changes the constraint, not the board
+# oscillator. Set FLOORPLAN=1 to apply scr/floorplan.tcl. Use scr/fmax.tcl to
+# search constrained periods, followed by its final implementation gate.
 #
 # Reports land in build/vivado/*_${board}.rpt.
 
@@ -39,8 +41,10 @@ puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
-synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols]
-cgra_timing_constraints $period $step_div
+source    scr/structural_checks.tcl
+synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
+cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
+report_utilization -file $outdir/utilization_synth.rpt
 if { [info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0" } {
     source scr/floorplan.tcl
     cgra_floorplan $board
@@ -49,6 +53,8 @@ opt_design
 place_design
 phys_opt_design
 route_design
+write_checkpoint -force $outdir/post_route.dcp
+report_utilization -file $outdir/utilization_impl.rpt
 
 # ---------------------------------------------------------------- reports
 report_timing_summary -file $outdir/timing_summary_${board}.rpt
@@ -56,6 +62,8 @@ report_timing -setup -max_paths 10 -nworst 1 -file $outdir/timing_setup_${board}
 report_timing -hold  -max_paths 10 -nworst 1 -file $outdir/timing_hold_${board}.rpt
 report_clock_interaction     -file $outdir/clock_interaction_${board}.rpt
 check_timing -verbose        -file $outdir/check_timing_${board}.rpt
+
+cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 1
 
 # ---------------------------------------------------------------- gate
 lassign [cgra_timing_slacks] wns whs

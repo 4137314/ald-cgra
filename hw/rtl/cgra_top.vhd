@@ -37,6 +37,8 @@ architecture rtl of cgra_top is
 
   signal rst_s1, rst_s2 : std_logic := '1';
   signal rst            : std_logic;
+  attribute ASYNC_REG : string;
+  attribute ASYNC_REG of rst_s1, rst_s2 : signal is "TRUE";
 
   signal rx_data  : std_logic_vector(7 downto 0);
   signal rx_valid : std_logic;

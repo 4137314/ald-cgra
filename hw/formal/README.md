@@ -96,6 +96,13 @@ reset; legal indices; step context and progress; independent pending capture
 count; RUN/EXEC completion with zero remaining captures; reset/first-capture
 guard and minimum capture spacing; checksum-rejected EXEC without step/reset;
 parser timeout; TX launch context and data stability during the handshake.
+`F_CTRL_CFG_CHANGE_CONTEXT` and `F_CTRL_INPUT_CHANGE_CONTEXT` restrict actual
+register changes to reset or their receive states. `F_CTRL_DATA_CAPTURE_GUARD`
+proves at least STEP_DIV-1 intervening cycles between CFG/WR receive events and
+a non-reset capture. Together with capture spacing/reset guard this supports
+the multicycle data constraint; CE/reset timing remains single-cycle. The
+`C_CTRL_DATA_CAPTURE` cover reaches a capture after actual changes to both CFG
+and input registers, preventing unchanged-zero data from satisfying that cover.
 DIV=1 permits consecutive captures. Reachable-state lemmas about return states,
 indices, phases and pending count are **asserted and proved**, never assumed.
 The capture budget covers the whole 8-bit request domain, including 0 and 255;

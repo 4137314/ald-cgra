@@ -45,7 +45,7 @@ def tasks(suite):
             result.append(dict(id=f"F-CTRL-1x1-DIV{div}", top="cgra_ctrl", kind="ctrl",
                                mode="prove", depth=16, parameters=dict(G_ROWS=1, G_COLS=1,
                                G_STEP_DIV=div, G_TIMEOUT_CYCLES=3),
-                               assertions=27 if div == 1 else 28, assumptions=0, covers=5))
+                               assertions=30 if div == 1 else 31, assumptions=0, covers=6))
         for rows, cols in ((1, 1), (2, 3)):
             result.append(dict(id=f"F-ARRAY-{rows}x{cols}", top="array_contract", kind="array",
                                mode="prove", depth=4, gates=True,
@@ -67,7 +67,7 @@ def tasks(suite):
             result.append(dict(id=f"F-CTRL-{rows}x{cols}-DIV2", top="cgra_ctrl", kind="ctrl",
                                mode="prove", depth=16, parameters=dict(G_ROWS=rows, G_COLS=cols,
                                G_STEP_DIV=2, G_TIMEOUT_CYCLES=100_000_000),
-                               assertions=28, assumptions=0, covers=5))
+                               assertions=31, assumptions=0, covers=6))
         for kind, count in (("tx", 19), ("rx", 31)):
             result.append(dict(id=f"F-UART-{kind.upper()}-C868", top=f"uart_{kind}", kind=kind,
                                mode="prove", depth=16, parameters=dict(CLKS_PER_BIT=868),

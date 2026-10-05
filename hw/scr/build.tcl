@@ -34,10 +34,11 @@ puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
+source    scr/structural_checks.tcl
 
 # ---------------------------------------------------------------- synthesis
-synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols]
-cgra_timing_constraints $period $step_div
+synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
+cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
 write_checkpoint  -force $outdir/post_synth.dcp
 report_utilization -file $outdir/utilization_synth.rpt
 
@@ -69,6 +70,11 @@ if { $wns < 0 || $whs < 0 } {
     exit 1
 }
 
+cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 1
+
 # ---------------------------------------------------------------- bitstream
 write_bitstream -force $outdir/${top}_${board}.bit
+if {[get_msg_config -severity ERROR -count] || [get_msg_config -severity {CRITICAL WARNING} -count]} {
+    error "bitstream generation emitted errors/critical warnings; artifact not publishable"
+}
 puts "OK: timing met; bitstream written to $outdir/${top}_${board}.bit"

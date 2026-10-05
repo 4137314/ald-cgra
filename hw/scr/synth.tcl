@@ -40,23 +40,26 @@ puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
+source    scr/structural_checks.tcl
 
 # ---------------------------------------------------------------- synthesis
 # -flatten_hierarchy none keeps the RTL hierarchy in the reports so a warning
 # points at the module it came from.
 if { [catch { synth_design -top $top -part $part -flatten_hierarchy none \
-                           -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols] } err] } {
+                           -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000] } err] } {
     puts "ERROR: synth_design failed: $err"
     exit 1
 }
 
 # Timing constraints resolve against the synthesised netlist (cell-based
 # multicycle exception needs real leaf registers). step_div matches the generic.
-cgra_timing_constraints $period $step_div
+cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
 
 write_checkpoint   -force $outdir/post_synth_${board}.dcp
 report_utilization -file  $outdir/utilization_synth_${board}.rpt
 report_timing_summary -max_paths 10 -file $outdir/timing_synth_${board}.rpt
+
+cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 0
 
 # ---------------------------------------------------------------- gate
 set n_err  [get_msg_config -severity {ERROR}            -count]

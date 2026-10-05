@@ -58,7 +58,7 @@ set use_fp [expr {[info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0"}]
 # Returns "wns whs" for the routed design constrained at $period ns.
 proc try_period {period synth_dcp use_fp board step_div} {
     open_checkpoint $synth_dcp
-    cgra_timing_constraints $period $step_div
+    cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
     if { $use_fp } { cgra_floorplan $board }
     opt_design -quiet
     place_design -quiet
@@ -70,8 +70,9 @@ proc try_period {period synth_dcp use_fp board step_div} {
 read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
+source    scr/structural_checks.tcl
 if { $use_fp } { source scr/floorplan.tcl }
-synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols]
+synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
 set synth_dcp $outdir/post_synth_fmax_${board}.dcp
 write_checkpoint -force $synth_dcp
 
@@ -93,7 +94,7 @@ for {set i 0} {$i < $iters} {incr i} {
 # -------------------------------------------------- final clean run @ best
 # Re-run at the best period WITH phys_opt + full reports, and analyse the wall.
 open_checkpoint $synth_dcp
-cgra_timing_constraints $best_period $step_div
+cgra_timing_constraints $best_period $step_div $mesh_rows $mesh_cols
 if { $use_fp } { cgra_floorplan $board }
 opt_design -quiet
 place_design -quiet
@@ -111,6 +112,8 @@ lassign [cgra_timing_slacks] wns whs
 set fmax [cgra_checked_frequency $best_period $wns $whs]
 set sp [cgra_nonempty [get_timing_paths -max_paths 1 -nworst 1 -setup] "final setup path"]
 write_checkpoint -force $outdir/fmax_validated_${board}.dcp
+
+cgra_physical_gate $outdir $best_period $step_div $mesh_rows $mesh_cols 1
 
 # limiting-path facts
 set src  [get_property STARTPOINT_PIN $sp]

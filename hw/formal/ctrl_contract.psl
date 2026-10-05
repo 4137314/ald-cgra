@@ -7,11 +7,36 @@ vunit ctrl_contract (cgra_ctrl(rtl)) {
   signal f_seen : boolean := false;
   signal f_pending : natural range 0 to 255 := 0;
   signal f_age : natural range 0 to G_STEP_DIV := G_STEP_DIV;
+  signal f_data_age : natural range 0 to G_STEP_DIV := G_STEP_DIV;
+  signal f_cfg : cfg_vec_t(0 to G_ROWS * G_COLS - 1) := (others => (others => '0'));
+  signal f_west : data_vec_t(0 to G_ROWS - 1) := (others => (others => '0'));
+  signal f_north : data_vec_t(0 to G_COLS - 1) := (others => (others => '0'));
+  signal f_cfg_write, f_input_write : boolean := false;
+  signal f_modified_cfg, f_modified_inputs : boolean := false;
 
   f_monitor : process(clk)
   begin
     if rising_edge(clk) then
       f_seen <= true;
+      f_cfg <= cfg;
+      f_west <= west_o;
+      f_north <= north_o;
+      f_cfg_write <= rst = '1' or (state = S_CFG and rx_valid = '1');
+      f_input_write <= rst = '1' or (state = S_WR and rx_valid = '1');
+      if rst = '1' then
+        f_modified_cfg <= false;
+        f_modified_inputs <= false;
+      else
+        f_modified_cfg <= f_modified_cfg or cfg /= f_cfg;
+        f_modified_inputs <= f_modified_inputs or west_o /= f_west or north_o /= f_north;
+      end if;
+      -- Count from the clock that can modify a launch register. The context
+      -- assertions below separately prove that these cover all such changes.
+      if rst = '1' or ((state = S_CFG or state = S_WR) and rx_valid = '1') then
+        f_data_age <= 0;
+      elsif f_data_age < G_STEP_DIV then
+        f_data_age <= f_data_age + 1;
+      end if;
       if rst = '1' then
         f_pending <= 0;
       elsif state = S_RUN_ARG and rx_valid = '1' then
@@ -74,6 +99,11 @@ vunit ctrl_contract (cgra_ctrl(rtl)) {
     ((state = S_EX_RD and ex_ok = '1') -> f_pending = 0);
   F_CTRL_CAPTURE_SPACING: assert always
     ((f_seen and rst = '0' and step = '1') -> f_age >= G_STEP_DIV - 1);
+  F_CTRL_CFG_CHANGE_CONTEXT: assert always ((f_seen and cfg /= f_cfg) -> f_cfg_write);
+  F_CTRL_INPUT_CHANGE_CONTEXT: assert always
+    ((f_seen and (west_o /= f_west or north_o /= f_north)) -> f_input_write);
+  F_CTRL_DATA_CAPTURE_GUARD: assert always
+    ((f_seen and rst = '0' and step = '1') -> f_data_age >= G_STEP_DIV - 1);
   F_CTRL_BAD_EXEC: assert always
     ((rst = '0' and state = S_EX_CK and rx_valid = '1' and unsigned(rx_data) /= cksum)
       -> next (step = '0' and dp_rst = '0' and ex_ok = '0' and state = S_EX_RD));
@@ -93,4 +123,5 @@ vunit ctrl_contract (cgra_ctrl(rtl)) {
   C_CTRL_ZERO: cover {state = S_RUN_ACK and f_pending = 0};
   C_CTRL_NACK: cover {tx_start = '1' and tx_data = RSP_NACK};
   C_CTRL_TIMEOUT: cover {wd = G_TIMEOUT_CYCLES and rx_valid = '0'; state = S_IDLE};
+  C_CTRL_DATA_CAPTURE: cover {f_modified_cfg and f_modified_inputs and rst = '0' and step = '1'};
 }

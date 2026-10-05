@@ -26,6 +26,10 @@ architecture rtl of uart_rx is
   signal data_r  : std_logic_vector(7 downto 0) := (others => '0');
   signal rx_s1   : std_logic := '1';
   signal rx_s2   : std_logic := '1';
+  -- Preserve both synchronizer stages and guide their physical placement.
+  -- This attribute does not model or prove analog metastability behavior.
+  attribute ASYNC_REG : string;
+  attribute ASYNC_REG of rx_s1, rx_s2 : signal is "TRUE";
 begin
 
   -- two-flop synchroniser for the asynchronous serial input
