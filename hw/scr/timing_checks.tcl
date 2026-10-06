@@ -13,6 +13,18 @@ proc cgra_timing_args {period step_div} {
     }
 }
 
+# Use an explicit 1 ps grid for requested periods. Vivado's timing object
+# properties/report requirements have picosecond precision in the tested flow.
+# Applying the same grid before create_clock avoids comparing a requested
+# fractional-ps period against a different effective clock. No slack tolerance
+# is added: negative setup/hold slack still fails.
+proc cgra_clock_period {period} {
+    cgra_positive_real $period period
+    set applied [format %.3f $period]
+    cgra_positive_real $applied applied_period
+    return $applied
+}
+
 proc cgra_nonempty {objects name} {
     if {[llength $objects] == 0} { error "no objects matched $name" }
     return $objects

@@ -23,7 +23,13 @@ Manifest schema 1 records command/cwd, commit and dirty status when Git is
 available, source SHA-256 hashes, board/part, all top-level generics, constrained
 period, floorplan/strategy, requested and resolved executable/version, elapsed
 time, exit status, gates, resource reports, setup/hold slack and artifact
-hashes. Synth and implemented resource counts have distinct report keys.
+hashes. `requested_period_ns` retains the caller's constraint; `period_ns`
+records the actual applied value (for Fmax, the final validated candidate).
+Periods are explicitly quantized to a 1 ps grid before `create_clock`, then
+checked against Vivado's clock object. The endpoint checks use that same
+period, without relaxing the nonnegative setup/hold criteria. This avoids
+comparing fractional-picosecond search requests with rounded tool requirements.
+Synth and implemented resource counts have distinct report keys.
 `hardware_test: NOT_RUN` is deliberate. The generated bitstream has its own
 hash; the C benchmark's optional bitstream ID is separate caller metadata.
 

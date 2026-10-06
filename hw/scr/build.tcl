@@ -38,7 +38,7 @@ source    scr/structural_checks.tcl
 
 # ---------------------------------------------------------------- synthesis
 synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
-cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
+set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
 write_checkpoint  -force $outdir/post_synth.dcp
 report_utilization -file $outdir/utilization_synth.rpt
 

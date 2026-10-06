@@ -1,0 +1,69 @@
+{
+  "id": "F-CTRL-1x1-DIV4",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_ROWS": 1,
+    "G_COLS": 1,
+    "G_STEP_DIV": 4,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 31,
+  "assumptions": 0,
+  "covers": 6,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=4 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "b384adcca5eda8b3d0b903fc8e01c4ff0d595a5097ebcd8dc2e477473ddf2b56"
+  },
+  "parameter_check_sha256": "539f8841540bba353f15c1843c274070f34731839f00b7a623b749a33bf0a259",
+  "effective_properties_sha256": "59ba47ba6461cc4cb5e2286e1d551cb0d259f0951cfce2f4e9c68c963f884ea8",
+  "checked_port_widths": {
+    "cfg": 32,
+    "pe_regs": 16,
+    "west_o": 16,
+    "north_o": 16
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 6,
+    "assert": 31
+  },
+  "smt2_cells": {
+    "assert": 31,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "655e4f463d97125c7aa2d0cea8eed8eb8352664e05986215d3b7e792a8d48eb4",
+    "task/src/properties.json": "eabf499e45bdca1ad7760c21aa3098fdc7da0341eb79609da7841c4a055ae04b",
+    "task/model/design_smt2.smt2": "af2a738c716e9376dd94a14baed94d9848644bf89ada1dab717d797788c61d3f"
+  },
+  "traces": [],
+  "duration_seconds": 2.459
+}

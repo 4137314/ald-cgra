@@ -1,0 +1,22 @@
+[options]
+mode prove
+depth 4
+timeout 90
+[engines]
+smtbmc yices
+[script]
+read_rtlil dut.il
+delete pe_Brtl
+read_verilog -formal  pe_spec.sv array_contract.sv pe_assume.sv
+chparam -set ROWS 1 -set COLS 2 array_contract
+prep -top array_contract -flatten
+wreduce
+opt -full
+techmap
+opt -full
+write_json properties.json
+[files]
+dut.il
+pe_spec.sv
+array_contract.sv
+pe_assume.sv

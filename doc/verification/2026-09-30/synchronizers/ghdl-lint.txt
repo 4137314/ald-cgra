@@ -1,0 +1,4 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+ghdl -a --std=08 --workdir=build/ghdl rtl/cgra_pkg.vhd rtl/cgra_comp_pkg.vhd rtl/uart_rx.vhd rtl/uart_tx.vhd rtl/pe.vhd rtl/cgra_array.vhd rtl/cgra_ctrl.vhd rtl/cgra_top.vhd
+lint: RTL analysed clean
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

@@ -43,7 +43,7 @@ read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
 source    scr/structural_checks.tcl
 synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
-cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
+set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
 report_utilization -file $outdir/utilization_synth.rpt
 if { [info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0" } {
     source scr/floorplan.tcl

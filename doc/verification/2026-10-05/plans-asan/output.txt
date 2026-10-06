@@ -1,0 +1,2450 @@
+make -C lib -f lib.mk PROFILE=asan
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/cgra.c -o build/asan/cgra.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/vector.c -o build/asan/vector.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/kernels.c -o build/asan/kernels.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/emu.c -o build/asan/emu.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -c src/serve.c -o build/asan/serve.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/asan/cgra.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/vector.c -o build/asan/vector.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/kernels.c -o build/asan/kernels.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/emu.c -o build/asan/emu.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -fPIC -c src/serve.c -o build/asan/serve.pic.o
+ar rcs build/asan/libcgra.a build/asan/cgra.o build/asan/vector.o build/asan/kernels.o build/asan/emu.o build/asan/serve.o
+gcc -shared -Wl,-soname,libcgra.so.0 -fsanitize=address,undefined -o build/asan/libcgra.so.0.1.0 build/asan/cgra.pic.o build/asan/vector.pic.o build/asan/kernels.pic.o build/asan/emu.pic.o build/asan/serve.pic.o
+ln -sf libcgra.so.0.1.0 build/asan/libcgra.so.0
+ln -sf libcgra.so.0.1.0 build/asan/libcgra.so
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C lib -f lib.mk PROFILE=asan test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_cgra.c build/asan/cgra.o build/asan/vector.o build/asan/kernels.o build/asan/emu.o build/asan/serve.o -fsanitize=address,undefined -o build/asan/test_cgra
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_transport.c build/asan/cgra.o build/asan/vector.o build/asan/kernels.o build/asan/emu.o build/asan/serve.o -fsanitize=address,undefined -Wl,--wrap=write -o build/asan/test_transport
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_kernels.c build/asan/libcgra.a -fsanitize=address,undefined -o build/asan/test_kernels
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_faults.c build/asan/libcgra.a -fsanitize=address,undefined -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk,--wrap=clock_gettime -o build/asan/test_faults
+In file included from test/test_transport.c:5:
+test/test_transport.c: In function ‘server_ready’:
+test/test_transport.c:428:12: warning: argument 2 is null but the corresponding size argument 3 value is [1, 9223372036854775806] [-Wnonnull]
+  428 |     assert(write(fd, path, strlen(path) + 1) == (ssize_t)strlen(path) + 1);
+      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from test/test_transport.c:18:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/unistd.h:378:16: note: in a call to function ‘write’ declared with attribute ‘access (read_only, 2, 3)’
+  378 | extern ssize_t write (int __fd, const void *__buf, size_t __n) __wur
+      |                ^~~~~
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -Iinclude -MMD -MP -UNDEBUG test/test_plans.c build/asan/libcgra.a -fsanitize=address,undefined -o build/asan/test_plans
+./build/asan/test_cgra
+ok 1 - open profiling device
+ok 2 - profiling is disabled by default
+ok 3 - identify before profiling
+ok 4 - profile configuration I/O
+ok 5 - profiling preserves successful transaction errno
+ok 6 - profile zero-step EXEC
+ok 7 - configuration and other transport intervals are separate; steps counted once
+ok 8 - commands remain usable with profiling disabled
+ok 9 - disabling profiling freezes collected values
+ok 10 - re-enabling starts a new profile
+ok 11 - open kernel validation device
+ok 12 - unsupported binary kernel op rejected
+ok 13 - unsupported immediate kernel op rejected
+ok 14 - unsupported binary kernel op rejected
+ok 15 - unsupported immediate kernel op rejected
+ok 16 - unsupported binary kernel op rejected
+ok 17 - unsupported immediate kernel op rejected
+ok 18 - unsupported binary kernel op rejected
+ok 19 - unsupported immediate kernel op rejected
+ok 20 - unsupported binary kernel op rejected
+ok 21 - unsupported immediate kernel op rejected
+ok 22 - unsupported binary kernel op rejected
+ok 23 - unsupported immediate kernel op rejected
+ok 24 - unsupported binary kernel op rejected
+ok 25 - unsupported immediate kernel op rejected
+ok 26 - unsupported binary kernel op rejected
+ok 27 - unsupported immediate kernel op rejected
+ok 28 - invalid op does not contact device or modify output
+ok 29 - open kernel validation device
+ok 30 - unsupported binary kernel op rejected
+ok 31 - unsupported immediate kernel op rejected
+ok 32 - unsupported binary kernel op rejected
+ok 33 - unsupported immediate kernel op rejected
+ok 34 - unsupported binary kernel op rejected
+ok 35 - unsupported immediate kernel op rejected
+ok 36 - unsupported binary kernel op rejected
+ok 37 - unsupported immediate kernel op rejected
+ok 38 - unsupported binary kernel op rejected
+ok 39 - unsupported immediate kernel op rejected
+ok 40 - unsupported binary kernel op rejected
+ok 41 - unsupported immediate kernel op rejected
+ok 42 - unsupported binary kernel op rejected
+ok 43 - unsupported immediate kernel op rejected
+ok 44 - unsupported binary kernel op rejected
+ok 45 - unsupported immediate kernel op rejected
+ok 46 - invalid op does not contact device or modify output
+# libcgra unit tests
+ok 47 - CFG imm field round-trips signed
+ok 48 - CFG opcode field
+ok 49 - CFG sel_a field
+ok 50 - CFG sel_b field
+ok 51 - CFG reserved bits are zero
+ok 52 - identify succeeds on sim:
+ok 53 - identify reports protocol version
+ok 54 - identify reports ROWS
+ok 55 - identify reports COLS
+ok 56 - identify reports datapath width
+ok 57 - configure ok
+ok 58 - write_inputs ok
+ok 59 - run ok
+ok 60 - read_regs ok
+ok 61 - PE(0,0)=north+west=42
+ok 62 - reset_datapath ok
+ok 63 - read after reset ok
+ok 64 - registers cleared by reset
+ok 65 - vec_add ok
+ok 66 - vec_add matches host reference
+ok 67 - vec_sub ok
+ok 68 - vec_sub matches host reference
+ok 69 - vec_mul ok
+ok 70 - vec_mul matches (16-bit wrap)
+ok 71 - vec_relu ok
+ok 72 - vec_relu = max(a,0)
+ok 73 - vec_addi ok
+ok 74 - vec_addi = a + imm
+ok 75 - vec_max (n=3, partial lane)
+ok 76 - vec_max tail chunk correct
+ok 77 - apply(shl) ok
+ok 78 - SHL of negative wraps (=-16)
+ok 79 - SHL uses modulo arithmetic for boundaries and all masked shift counts
+ok 80 - SHR matches floor division for boundaries and all masked shift counts
+ok 81 - dot ok
+ok 82 - dot product = 35
+ok 83 - sim: advertises protocol v3 (exec)
+ok 84 - exec: configure
+ok 85 - exec: single-tap transaction
+ok 86 - exec: tapped register holds 7 + 5
+ok 87 - exec: two-tap mask
+ok 88 - exec: taps come back in PE order
+ok 89 - exec: empty mask (write+run only)
+ok 90 - exec: empty mask still stepped the array
+ok 91 - exec: rejects ntaps != popcount(mask)
+ok 92 - exec: configure ACC
+ok 93 - exec: reset then accumulate
+ok 94 - exec: three accumulates of 5 from a cleared register
+ok 95 - exec: accumulate without reset
+ok 96 - exec: without the flag the accumulator carries over
+ok 97 - exec: accumulate with fused reset
+ok 98 - exec: fused reset cleared the accumulator first
+ok 99 - configure(NULL) -> ERR_ARG
+ok 100 - vec_add(b=NULL) -> ERR_ARG
+ok 101 - dot(b=NULL) -> ERR_ARG
+ok 102 - strerror returns non-empty text
+ok 103 - strerror returns non-empty text
+ok 104 - strerror returns non-empty text
+ok 105 - strerror returns non-empty text
+ok 106 - strerror returns non-empty text
+ok 107 - strerror returns non-empty text
+ok 108 - open sim:flaky
+ok 109 - vec_add recovers through the retry path
+ok 110 - flaky result still correct
+ok 111 - exactly two retries (first CFG + first EXEC/WR NACKed)
+ok 112 - transaction counter advanced
+ok 113 - reset_stats zeroes counters
+ok 114 - open sim:v2 (legacy device)
+ok 115 - sim:v2 identifies as protocol v2
+ok 116 - sim:v2 does not advertise exec
+ok 117 - cgra_exec refuses a pre-v3 device
+ok 118 - v2 fallback: vec_add runs
+ok 119 - v2 fallback: results identical to the fused path
+ok 120 - v2 fallback: dot identical to the fused path
+ok 121 - open both protocol backends
+ok 122 - fused path uses less than half the round trips
+ok 123 - fused path also moves fewer bytes
+ok 124 - sim:1x1
+ok 125 - ID reports actual geometry
+ok 126 - cached ID succeeds
+ok 127 - short configuration rejected
+ok 128 - long configuration rejected
+ok 129 - short west edge rejected
+ok 130 - long north edge rejected
+ok 131 - short register buffer rejected
+ok 132 - unknown EXEC flags rejected
+ok 133 - NULL input with nonzero length rejected
+ok 134 - tap count mismatch rejected
+ok 135 - mask selecting absent PE rejected
+ok 136 - legacy CFG requires 4x4
+ok 137 - legacy WR requires 4x4
+ok 138 - legacy RD requires 4x4
+ok 139 - legacy EXEC requires 4x4
+ok 140 - legacy apply requires 4x4
+ok 141 - invalid buffers/geometry perform no transfers after cached ID
+ok 142 - runtime CFG succeeds
+ok 143 - runtime WR succeeds
+ok 144 - runtime RUN succeeds
+ok 145 - runtime RD succeeds with exact capacity
+ok 146 - row-major results and read buffer canary intact
+ok 147 - last PE masked read and zero inputs
+ok 148 - sim:1x16
+ok 149 - ID reports actual geometry
+ok 150 - cached ID succeeds
+ok 151 - short configuration rejected
+ok 152 - long configuration rejected
+ok 153 - short west edge rejected
+ok 154 - long north edge rejected
+ok 155 - short register buffer rejected
+ok 156 - unknown EXEC flags rejected
+ok 157 - NULL input with nonzero length rejected
+ok 158 - tap count mismatch rejected
+ok 159 - legacy CFG requires 4x4
+ok 160 - legacy WR requires 4x4
+ok 161 - legacy RD requires 4x4
+ok 162 - legacy EXEC requires 4x4
+ok 163 - legacy apply requires 4x4
+ok 164 - invalid buffers/geometry perform no transfers after cached ID
+ok 165 - runtime CFG succeeds
+ok 166 - runtime WR succeeds
+ok 167 - runtime RUN succeeds
+ok 168 - runtime RD succeeds with exact capacity
+ok 169 - row-major results and read buffer canary intact
+ok 170 - last PE masked read and zero inputs
+ok 171 - sim:16x1
+ok 172 - ID reports actual geometry
+ok 173 - cached ID succeeds
+ok 174 - short configuration rejected
+ok 175 - long configuration rejected
+ok 176 - short west edge rejected
+ok 177 - long north edge rejected
+ok 178 - short register buffer rejected
+ok 179 - unknown EXEC flags rejected
+ok 180 - NULL input with nonzero length rejected
+ok 181 - tap count mismatch rejected
+ok 182 - legacy CFG requires 4x4
+ok 183 - legacy WR requires 4x4
+ok 184 - legacy RD requires 4x4
+ok 185 - legacy EXEC requires 4x4
+ok 186 - legacy apply requires 4x4
+ok 187 - invalid buffers/geometry perform no transfers after cached ID
+ok 188 - runtime CFG succeeds
+ok 189 - runtime WR succeeds
+ok 190 - runtime RUN succeeds
+ok 191 - runtime RD succeeds with exact capacity
+ok 192 - row-major results and read buffer canary intact
+ok 193 - last PE masked read and zero inputs
+ok 194 - sim:2x3
+ok 195 - ID reports actual geometry
+ok 196 - cached ID succeeds
+ok 197 - short configuration rejected
+ok 198 - long configuration rejected
+ok 199 - short west edge rejected
+ok 200 - long north edge rejected
+ok 201 - short register buffer rejected
+ok 202 - unknown EXEC flags rejected
+ok 203 - NULL input with nonzero length rejected
+ok 204 - tap count mismatch rejected
+ok 205 - mask selecting absent PE rejected
+ok 206 - legacy CFG requires 4x4
+ok 207 - legacy WR requires 4x4
+ok 208 - legacy RD requires 4x4
+ok 209 - legacy EXEC requires 4x4
+ok 210 - legacy apply requires 4x4
+ok 211 - invalid buffers/geometry perform no transfers after cached ID
+ok 212 - runtime CFG succeeds
+ok 213 - runtime WR succeeds
+ok 214 - runtime RUN succeeds
+ok 215 - runtime RD succeeds with exact capacity
+ok 216 - row-major results and read buffer canary intact
+ok 217 - last PE masked read and zero inputs
+ok 218 - sim:3x2
+ok 219 - ID reports actual geometry
+ok 220 - cached ID succeeds
+ok 221 - short configuration rejected
+ok 222 - long configuration rejected
+ok 223 - short west edge rejected
+ok 224 - long north edge rejected
+ok 225 - short register buffer rejected
+ok 226 - unknown EXEC flags rejected
+ok 227 - NULL input with nonzero length rejected
+ok 228 - tap count mismatch rejected
+ok 229 - mask selecting absent PE rejected
+ok 230 - legacy CFG requires 4x4
+ok 231 - legacy WR requires 4x4
+ok 232 - legacy RD requires 4x4
+ok 233 - legacy EXEC requires 4x4
+ok 234 - legacy apply requires 4x4
+ok 235 - invalid buffers/geometry perform no transfers after cached ID
+ok 236 - runtime CFG succeeds
+ok 237 - runtime WR succeeds
+ok 238 - runtime RUN succeeds
+ok 239 - runtime RD succeeds with exact capacity
+ok 240 - row-major results and read buffer canary intact
+ok 241 - last PE masked read and zero inputs
+ok 242 - sim:2x8
+ok 243 - ID reports actual geometry
+ok 244 - cached ID succeeds
+ok 245 - short configuration rejected
+ok 246 - long configuration rejected
+ok 247 - short west edge rejected
+ok 248 - long north edge rejected
+ok 249 - short register buffer rejected
+ok 250 - unknown EXEC flags rejected
+ok 251 - NULL input with nonzero length rejected
+ok 252 - tap count mismatch rejected
+ok 253 - legacy CFG requires 4x4
+ok 254 - legacy WR requires 4x4
+ok 255 - legacy RD requires 4x4
+ok 256 - legacy EXEC requires 4x4
+ok 257 - legacy apply requires 4x4
+ok 258 - invalid buffers/geometry perform no transfers after cached ID
+ok 259 - runtime CFG succeeds
+ok 260 - runtime WR succeeds
+ok 261 - runtime RUN succeeds
+ok 262 - runtime RD succeeds with exact capacity
+ok 263 - row-major results and read buffer canary intact
+ok 264 - last PE masked read and zero inputs
+ok 265 - sim:8x2
+ok 266 - ID reports actual geometry
+ok 267 - cached ID succeeds
+ok 268 - short configuration rejected
+ok 269 - long configuration rejected
+ok 270 - short west edge rejected
+ok 271 - long north edge rejected
+ok 272 - short register buffer rejected
+ok 273 - unknown EXEC flags rejected
+ok 274 - NULL input with nonzero length rejected
+ok 275 - tap count mismatch rejected
+ok 276 - legacy CFG requires 4x4
+ok 277 - legacy WR requires 4x4
+ok 278 - legacy RD requires 4x4
+ok 279 - legacy EXEC requires 4x4
+ok 280 - legacy apply requires 4x4
+ok 281 - invalid buffers/geometry perform no transfers after cached ID
+ok 282 - runtime CFG succeeds
+ok 283 - runtime WR succeeds
+ok 284 - runtime RUN succeeds
+ok 285 - runtime RD succeeds with exact capacity
+ok 286 - row-major results and read buffer canary intact
+ok 287 - last PE masked read and zero inputs
+ok 288 - sim:4x4
+ok 289 - ID reports actual geometry
+ok 290 - cached ID succeeds
+ok 291 - short configuration rejected
+ok 292 - long configuration rejected
+ok 293 - short west edge rejected
+ok 294 - long north edge rejected
+ok 295 - short register buffer rejected
+ok 296 - unknown EXEC flags rejected
+ok 297 - NULL input with nonzero length rejected
+ok 298 - tap count mismatch rejected
+ok 299 - invalid buffers/geometry perform no transfers after cached ID
+ok 300 - runtime CFG succeeds
+ok 301 - runtime WR succeeds
+ok 302 - runtime RUN succeeds
+ok 303 - runtime RD succeeds with exact capacity
+ok 304 - row-major results and read buffer canary intact
+ok 305 - last PE masked read and zero inputs
+ok 306 - invalid emulator geometry rejected
+ok 307 - invalid emulator geometry rejected
+ok 308 - invalid emulator geometry rejected
+ok 309 - invalid emulator geometry rejected
+ok 310 - invalid emulator geometry rejected
+ok 311 - invalid emulator geometry rejected
+1..311
+# 311 passed, 0 failed
+./build/asan/test_transport
+ok transport 1 - create PTY
+ok transport 2 - open serial library on PTY
+ok transport 3 - compile serial plan
+ok transport 4 - serial plan binding consumes ID and CFG acknowledgement
+ok transport 5 - drain exactly ID and CFG requests
+ok transport 6 - uncertain planned execution returns original timeout without output
+ok transport 7 - uncertain execution sent once, even with RESET
+ok transport 8 - poisoned plan cannot execute or rebind
+ok transport 9 - blocked plan performs no automatic recovery
+ok transport 10 - planned execution preserves owned wire failure diagnostic
+ok transport 11 - create PTY
+ok transport 12 - open serial library on PTY
+ok transport 13 - silent peer times out
+ok transport 14 - silent peer contributes no received bytes
+ok transport 15 - create PTY
+ok transport 16 - open serial library on PTY
+ok transport 17 - fork delayed peer
+ok transport 18 - fragments cannot restart the whole-reply deadline
+ok transport 19 - only bytes read before timeout are counted
+ok transport 20 - delayed peer delivered the complete reply
+ok transport 21 - create PTY
+ok transport 22 - open serial library on PTY
+ok transport 23 - disconnected PTY rejects write
+ok transport 24 - failed transfer does not invent byte counts
+ok transport 25 - create PTY
+ok transport 26 - open serial library on PTY
+ok transport 27 - establish geometry before injecting reply failure
+ok transport 28 - failing command preserves its original error
+ok transport 29 - uncertain request is sent once with no recovery byte
+ok transport 30 - peer observes exactly the original request
+ok transport 31 - all protocol entry points reject a desynchronized session
+ok transport 32 - blocked calls leave wire, counters and output untouched
+ok transport 33 - create PTY
+ok transport 34 - open serial library on PTY
+ok transport 35 - establish geometry before injecting reply failure
+ok transport 36 - failing command preserves its original error
+ok transport 37 - uncertain request is sent once with no recovery byte
+ok transport 38 - peer observes exactly the original request
+ok transport 39 - all protocol entry points reject a desynchronized session
+ok transport 40 - blocked calls leave wire, counters and output untouched
+ok transport 41 - create PTY
+ok transport 42 - open serial library on PTY
+ok transport 43 - establish geometry before injecting reply failure
+ok transport 44 - failing command preserves its original error
+ok transport 45 - uncertain request is sent once with no recovery byte
+ok transport 46 - peer observes exactly the original request
+ok transport 47 - all protocol entry points reject a desynchronized session
+ok transport 48 - blocked calls leave wire, counters and output untouched
+ok transport 49 - create PTY
+ok transport 50 - open serial library on PTY
+ok transport 51 - establish geometry before injecting reply failure
+ok transport 52 - failing command preserves its original error
+ok transport 53 - uncertain request is sent once with no recovery byte
+ok transport 54 - peer observes exactly the original request
+ok transport 55 - all protocol entry points reject a desynchronized session
+ok transport 56 - blocked calls leave wire, counters and output untouched
+ok transport 57 - create PTY
+ok transport 58 - open serial library on PTY
+ok transport 59 - establish geometry before injecting reply failure
+ok transport 60 - failing command preserves its original error
+ok transport 61 - uncertain request is sent once with no recovery byte
+ok transport 62 - peer observes exactly the original request
+ok transport 63 - all protocol entry points reject a desynchronized session
+ok transport 64 - blocked calls leave wire, counters and output untouched
+ok transport 65 - create PTY
+ok transport 66 - open serial library on PTY
+ok transport 67 - establish geometry before injecting reply failure
+ok transport 68 - inject malformed reply
+ok transport 69 - failing command preserves its original error
+ok transport 70 - uncertain request is sent once with no recovery byte
+ok transport 71 - peer observes exactly the original request
+ok transport 72 - all protocol entry points reject a desynchronized session
+ok transport 73 - blocked calls leave wire, counters and output untouched
+ok transport 74 - create PTY
+ok transport 75 - open serial library on PTY
+ok transport 76 - establish geometry before injecting reply failure
+ok transport 77 - inject malformed reply
+ok transport 78 - failing command preserves its original error
+ok transport 79 - uncertain request is sent once with no recovery byte
+ok transport 80 - peer observes exactly the original request
+ok transport 81 - all protocol entry points reject a desynchronized session
+ok transport 82 - blocked calls leave wire, counters and output untouched
+ok transport 83 - reserve descriptors through FD_SETSIZE
+ok transport 84 - create PTY
+ok transport 85 - open serial library on PTY
+ok transport 86 - serial descriptor is above the select bitmap limit
+ok transport 87 - high descriptor returns error instead of aborting
+ok transport 88 - create PTY
+ok transport 89 - open serial library on PTY
+ok transport 90 - identify kernel fault-injection peer
+ok transport 91 - queue mid-kernel protocol error
+ok transport 92 - kernel returns the original mid-execution error
+ok transport 93 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 94 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 95 - all nonempty kernels reject the stopped session
+ok transport 96 - stopped kernel session sends no retries or later kernel commands
+ok transport 97 - create PTY
+ok transport 98 - open serial library on PTY
+ok transport 99 - identify kernel fault-injection peer
+ok transport 100 - queue mid-kernel protocol error
+ok transport 101 - kernel returns the original mid-execution error
+ok transport 102 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 103 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 104 - all nonempty kernels reject the stopped session
+ok transport 105 - stopped kernel session sends no retries or later kernel commands
+ok transport 106 - create PTY
+ok transport 107 - open serial library on PTY
+ok transport 108 - identify kernel fault-injection peer
+ok transport 109 - queue mid-kernel protocol error
+ok transport 110 - kernel returns the original mid-execution error
+ok transport 111 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 112 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 113 - all nonempty kernels reject the stopped session
+ok transport 114 - stopped kernel session sends no retries or later kernel commands
+ok transport 115 - create PTY
+ok transport 116 - open serial library on PTY
+ok transport 117 - identify kernel fault-injection peer
+ok transport 118 - queue mid-kernel protocol error
+ok transport 119 - kernel returns the original mid-execution error
+ok transport 120 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 121 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 122 - all nonempty kernels reject the stopped session
+ok transport 123 - stopped kernel session sends no retries or later kernel commands
+ok transport 124 - create PTY
+ok transport 125 - open serial library on PTY
+ok transport 126 - identify kernel fault-injection peer
+ok transport 127 - queue mid-kernel protocol error
+ok transport 128 - kernel returns the original mid-execution error
+ok transport 129 - prefix/partial sums are explicit; dot and failed chunk remain unpublished
+ok transport 130 - discovery preserves output on failure; has_exec alone conflates errors with v2
+ok transport 131 - all nonempty kernels reject the stopped session
+ok transport 132 - stopped kernel session sends no retries or later kernel commands
+ok transport 133 - create PTY
+ok transport 134 - open serial library on PTY
+ok transport 135 - open same PTY to fill its transmit queue
+ok transport 136 - real PTY backpressure before the library write
+ok transport 137 - install interrupted-wait handler
+ok transport 138 - fork repeated signal source
+ok transport 139 - whole-transaction budget bounds a blocked write despite EINTR
+ok transport 140 - write deadline diagnostic records phase, cause, command and zero progress
+ok transport 141 - write timeout stops session without retry
+ok transport 142 - signals actually interrupted the wait
+ok transport 143 - diagnostic is an owned copy after closing the handle
+ok transport 144 - create PTY
+ok transport 145 - open serial library on PTY
+ok transport 146 - transaction budget also shortens the reply wait
+ok transport 147 - read deadline diagnostic distinguishes a transmitted request
+ok transport 148 - diagnostic can be cleared explicitly
+ok transport 149 - create PTY
+ok transport 150 - open serial library on PTY
+ok transport 151 - establish geometry for partial-write regression
+ok transport 152 - queue complete ACK
+ok transport 153 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 154 - fork delayed NACK source
+ok transport 155 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 156 - NACK source finished
+ok transport 157 - create PTY
+ok transport 158 - open serial library on PTY
+ok transport 159 - stat slave for descriptor inspection
+ok transport 160 - serial fd is nonblocking and close-on-exec
+ok transport 161 - serial descriptor does not survive exec
+ok transport 162 - optional exclusive serial open succeeds
+ok transport 163 - exclusive ownership rejects a subsequent ordinary open
+ok transport 164 - close releases exclusive access even while PTY master remains open
+ok transport 165 - unsupported open flag combinations fail before opening
+ok transport 166 - create server ready/cancellation channels
+ok transport 167 - fork configurable PTY service
+ok transport 168 - receive borrowed PTY path through callback
+ok transport 169 - configured v2/v3 geometry serves a real serial API workload
+ok transport 170 - open raw client for stream/backpressure cases
+ok transport 171 - request controlled stop
+ok transport 172 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 173 - create server ready/cancellation channels
+ok transport 174 - fork configurable PTY service
+ok transport 175 - receive borrowed PTY path through callback
+ok transport 176 - configured v2/v3 geometry serves a real serial API workload
+ok transport 177 - open raw client for stream/backpressure cases
+ok transport 178 - batch 100 consecutive ID commands
+ok transport 179 - all 500 response bytes survive without model FIFO overflow
+ok transport 180 - request controlled stop
+ok transport 181 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 182 - create server ready/cancellation channels
+ok transport 183 - fork configurable PTY service
+ok transport 184 - receive borrowed PTY path through callback
+ok transport 185 - configured v2/v3 geometry serves a real serial API workload
+ok transport 186 - open raw client for stream/backpressure cases
+ok transport 187 - leave a CFG frame incomplete before cancellation
+ok transport 188 - request controlled stop
+ok transport 189 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 190 - create server ready/cancellation channels
+ok transport 191 - fork configurable PTY service
+ok transport 192 - receive borrowed PTY path through callback
+ok transport 193 - configured v2/v3 geometry serves a real serial API workload
+ok transport 194 - open raw client for stream/backpressure cases
+ok transport 195 - flood readback requests without draining responses
+ok transport 196 - request controlled stop
+ok transport 197 - server stops cleanly from idle, incomplete RX or blocked TX; stop fd retained
+ok transport 198 - invalid service options rejected before callback/device creation
+ok transport 199 - complete NACK available for diagnostic persistence check
+ok transport 200 - NACK diagnostic is distinct from syscall failure
+ok transport 201 - subsequent success and invalid call do not overwrite last failure
+ok transport 202 - stored diagnostic survives later success
+# 202 transport checks passed
+./build/asan/test_kernels
+ok kernel 1 - open public contract test device
+ok kernel 2 - vector partial overlap rejected in both directions
+ok kernel 3 - immediate and scan partial overlap rejected
+ok kernel 4 - matrix output cannot overwrite A or x
+ok kernel 5 - convolution output cannot overwrite either input
+ok kernel 6 - new kernels enforce output capacities
+ok kernel 7 - matrix product, convolution sum and workspace overflow rejected
+ok kernel 8 - vector footprints must fit addressable storage
+ok kernel 9 - op validation also applies to empty input
+ok kernel 10 - nonempty input pointers are required
+ok kernel 11 - argument errors preserve output and perform no ID or compute I/O
+ok kernel 12 - empty vectors and scans accept NULL buffers
+ok kernel 13 - empty dot returns zero and still requires its result pointer
+ok kernel 14 - empty matrix rows are a no-op; zero columns write exactly rows zeros
+ok kernel 15 - either empty convolution input yields empty output
+ok kernel 16 - even empty kernels require a handle
+ok kernel 17 - empty operations do not discover or modify the device
+ok kernel 18 - NULL device reports EINVAL
+ok kernel 19 - invalid emulator reports EINVAL
+ok kernel 20 - unsupported serial baud reports EINVAL
+ok kernel 21 - serial open preserves tcgetattr errno
+ok kernel 22 - workspace allocation has a distinct error
+ok kernel 23 - sim:1x1:v2
+ok kernel 24 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 25 - public scan matches independent scalar fold and preserves output canary
+ok kernel 26 - scan supports exact in-place output
+ok kernel 27 - public scan matches independent scalar fold and preserves output canary
+ok kernel 28 - scan supports exact in-place output
+ok kernel 29 - public scan matches independent scalar fold and preserves output canary
+ok kernel 30 - scan supports exact in-place output
+ok kernel 31 - public scan matches independent scalar fold and preserves output canary
+ok kernel 32 - scan supports exact in-place output
+ok kernel 33 - public convolution matches scalar reference and preserves output canary
+ok kernel 34 - vector output may equal A
+ok kernel 35 - vector output may equal B
+ok kernel 36 - immediate vector supports in-place output
+ok kernel 37 - dot may store its result inside a consumed input
+ok kernel 38 - open convolution tile regression device
+ok kernel 39 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 40 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 41 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 42 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 43 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 44 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 45 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 46 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 47 - sim:1x1
+ok kernel 48 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 49 - public scan matches independent scalar fold and preserves output canary
+ok kernel 50 - scan supports exact in-place output
+ok kernel 51 - public scan matches independent scalar fold and preserves output canary
+ok kernel 52 - scan supports exact in-place output
+ok kernel 53 - public scan matches independent scalar fold and preserves output canary
+ok kernel 54 - scan supports exact in-place output
+ok kernel 55 - public scan matches independent scalar fold and preserves output canary
+ok kernel 56 - scan supports exact in-place output
+ok kernel 57 - public convolution matches scalar reference and preserves output canary
+ok kernel 58 - vector output may equal A
+ok kernel 59 - vector output may equal B
+ok kernel 60 - immediate vector supports in-place output
+ok kernel 61 - dot may store its result inside a consumed input
+ok kernel 62 - open convolution tile regression device
+ok kernel 63 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 64 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 65 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 66 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 67 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 68 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 69 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 70 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 71 - sim:1x16:v2
+ok kernel 72 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 73 - public scan matches independent scalar fold and preserves output canary
+ok kernel 74 - scan supports exact in-place output
+ok kernel 75 - public scan matches independent scalar fold and preserves output canary
+ok kernel 76 - scan supports exact in-place output
+ok kernel 77 - public scan matches independent scalar fold and preserves output canary
+ok kernel 78 - scan supports exact in-place output
+ok kernel 79 - public scan matches independent scalar fold and preserves output canary
+ok kernel 80 - scan supports exact in-place output
+ok kernel 81 - public convolution matches scalar reference and preserves output canary
+ok kernel 82 - vector output may equal A
+ok kernel 83 - vector output may equal B
+ok kernel 84 - immediate vector supports in-place output
+ok kernel 85 - dot may store its result inside a consumed input
+ok kernel 86 - open convolution tile regression device
+ok kernel 87 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 88 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 89 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 90 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 91 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 92 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 93 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 94 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 95 - sim:1x16
+ok kernel 96 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 97 - public scan matches independent scalar fold and preserves output canary
+ok kernel 98 - scan supports exact in-place output
+ok kernel 99 - public scan matches independent scalar fold and preserves output canary
+ok kernel 100 - scan supports exact in-place output
+ok kernel 101 - public scan matches independent scalar fold and preserves output canary
+ok kernel 102 - scan supports exact in-place output
+ok kernel 103 - public scan matches independent scalar fold and preserves output canary
+ok kernel 104 - scan supports exact in-place output
+ok kernel 105 - public convolution matches scalar reference and preserves output canary
+ok kernel 106 - vector output may equal A
+ok kernel 107 - vector output may equal B
+ok kernel 108 - immediate vector supports in-place output
+ok kernel 109 - dot may store its result inside a consumed input
+ok kernel 110 - open convolution tile regression device
+ok kernel 111 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 112 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 113 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 114 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 115 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 116 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 117 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 118 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 119 - sim:16x1:v2
+ok kernel 120 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 121 - public scan matches independent scalar fold and preserves output canary
+ok kernel 122 - scan supports exact in-place output
+ok kernel 123 - public scan matches independent scalar fold and preserves output canary
+ok kernel 124 - scan supports exact in-place output
+ok kernel 125 - public scan matches independent scalar fold and preserves output canary
+ok kernel 126 - scan supports exact in-place output
+ok kernel 127 - public scan matches independent scalar fold and preserves output canary
+ok kernel 128 - scan supports exact in-place output
+ok kernel 129 - public convolution matches scalar reference and preserves output canary
+ok kernel 130 - vector output may equal A
+ok kernel 131 - vector output may equal B
+ok kernel 132 - immediate vector supports in-place output
+ok kernel 133 - dot may store its result inside a consumed input
+ok kernel 134 - open convolution tile regression device
+ok kernel 135 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 136 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 137 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 138 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 139 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 140 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 141 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 142 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 143 - sim:16x1
+ok kernel 144 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 145 - public scan matches independent scalar fold and preserves output canary
+ok kernel 146 - scan supports exact in-place output
+ok kernel 147 - public scan matches independent scalar fold and preserves output canary
+ok kernel 148 - scan supports exact in-place output
+ok kernel 149 - public scan matches independent scalar fold and preserves output canary
+ok kernel 150 - scan supports exact in-place output
+ok kernel 151 - public scan matches independent scalar fold and preserves output canary
+ok kernel 152 - scan supports exact in-place output
+ok kernel 153 - public convolution matches scalar reference and preserves output canary
+ok kernel 154 - vector output may equal A
+ok kernel 155 - vector output may equal B
+ok kernel 156 - immediate vector supports in-place output
+ok kernel 157 - dot may store its result inside a consumed input
+ok kernel 158 - open convolution tile regression device
+ok kernel 159 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 160 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 161 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 162 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 163 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 164 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 165 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 166 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 167 - sim:2x3:v2
+ok kernel 168 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 169 - public scan matches independent scalar fold and preserves output canary
+ok kernel 170 - scan supports exact in-place output
+ok kernel 171 - public scan matches independent scalar fold and preserves output canary
+ok kernel 172 - scan supports exact in-place output
+ok kernel 173 - public scan matches independent scalar fold and preserves output canary
+ok kernel 174 - scan supports exact in-place output
+ok kernel 175 - public scan matches independent scalar fold and preserves output canary
+ok kernel 176 - scan supports exact in-place output
+ok kernel 177 - public convolution matches scalar reference and preserves output canary
+ok kernel 178 - vector output may equal A
+ok kernel 179 - vector output may equal B
+ok kernel 180 - immediate vector supports in-place output
+ok kernel 181 - dot may store its result inside a consumed input
+ok kernel 182 - open convolution tile regression device
+ok kernel 183 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 184 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 185 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 186 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 187 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 188 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 189 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 190 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 191 - sim:2x3
+ok kernel 192 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 193 - public scan matches independent scalar fold and preserves output canary
+ok kernel 194 - scan supports exact in-place output
+ok kernel 195 - public scan matches independent scalar fold and preserves output canary
+ok kernel 196 - scan supports exact in-place output
+ok kernel 197 - public scan matches independent scalar fold and preserves output canary
+ok kernel 198 - scan supports exact in-place output
+ok kernel 199 - public scan matches independent scalar fold and preserves output canary
+ok kernel 200 - scan supports exact in-place output
+ok kernel 201 - public convolution matches scalar reference and preserves output canary
+ok kernel 202 - vector output may equal A
+ok kernel 203 - vector output may equal B
+ok kernel 204 - immediate vector supports in-place output
+ok kernel 205 - dot may store its result inside a consumed input
+ok kernel 206 - open convolution tile regression device
+ok kernel 207 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 208 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 209 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 210 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 211 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 212 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 213 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 214 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 215 - sim:3x2:v2
+ok kernel 216 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 217 - public scan matches independent scalar fold and preserves output canary
+ok kernel 218 - scan supports exact in-place output
+ok kernel 219 - public scan matches independent scalar fold and preserves output canary
+ok kernel 220 - scan supports exact in-place output
+ok kernel 221 - public scan matches independent scalar fold and preserves output canary
+ok kernel 222 - scan supports exact in-place output
+ok kernel 223 - public scan matches independent scalar fold and preserves output canary
+ok kernel 224 - scan supports exact in-place output
+ok kernel 225 - public convolution matches scalar reference and preserves output canary
+ok kernel 226 - vector output may equal A
+ok kernel 227 - vector output may equal B
+ok kernel 228 - immediate vector supports in-place output
+ok kernel 229 - dot may store its result inside a consumed input
+ok kernel 230 - open convolution tile regression device
+ok kernel 231 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 232 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 233 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 234 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 235 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 236 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 237 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 238 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 239 - sim:3x2
+ok kernel 240 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 241 - public scan matches independent scalar fold and preserves output canary
+ok kernel 242 - scan supports exact in-place output
+ok kernel 243 - public scan matches independent scalar fold and preserves output canary
+ok kernel 244 - scan supports exact in-place output
+ok kernel 245 - public scan matches independent scalar fold and preserves output canary
+ok kernel 246 - scan supports exact in-place output
+ok kernel 247 - public scan matches independent scalar fold and preserves output canary
+ok kernel 248 - scan supports exact in-place output
+ok kernel 249 - public convolution matches scalar reference and preserves output canary
+ok kernel 250 - vector output may equal A
+ok kernel 251 - vector output may equal B
+ok kernel 252 - immediate vector supports in-place output
+ok kernel 253 - dot may store its result inside a consumed input
+ok kernel 254 - open convolution tile regression device
+ok kernel 255 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 256 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 257 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 258 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 259 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 260 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 261 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 262 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 263 - sim:2x8:v2
+ok kernel 264 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 265 - public scan matches independent scalar fold and preserves output canary
+ok kernel 266 - scan supports exact in-place output
+ok kernel 267 - public scan matches independent scalar fold and preserves output canary
+ok kernel 268 - scan supports exact in-place output
+ok kernel 269 - public scan matches independent scalar fold and preserves output canary
+ok kernel 270 - scan supports exact in-place output
+ok kernel 271 - public scan matches independent scalar fold and preserves output canary
+ok kernel 272 - scan supports exact in-place output
+ok kernel 273 - public convolution matches scalar reference and preserves output canary
+ok kernel 274 - vector output may equal A
+ok kernel 275 - vector output may equal B
+ok kernel 276 - immediate vector supports in-place output
+ok kernel 277 - dot may store its result inside a consumed input
+ok kernel 278 - open convolution tile regression device
+ok kernel 279 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 280 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 281 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 282 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 283 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 284 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 285 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 286 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 287 - sim:2x8
+ok kernel 288 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 289 - public scan matches independent scalar fold and preserves output canary
+ok kernel 290 - scan supports exact in-place output
+ok kernel 291 - public scan matches independent scalar fold and preserves output canary
+ok kernel 292 - scan supports exact in-place output
+ok kernel 293 - public scan matches independent scalar fold and preserves output canary
+ok kernel 294 - scan supports exact in-place output
+ok kernel 295 - public scan matches independent scalar fold and preserves output canary
+ok kernel 296 - scan supports exact in-place output
+ok kernel 297 - public convolution matches scalar reference and preserves output canary
+ok kernel 298 - vector output may equal A
+ok kernel 299 - vector output may equal B
+ok kernel 300 - immediate vector supports in-place output
+ok kernel 301 - dot may store its result inside a consumed input
+ok kernel 302 - open convolution tile regression device
+ok kernel 303 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 304 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 305 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 306 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 307 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 308 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 309 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 310 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 311 - sim:8x2:v2
+ok kernel 312 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 313 - public scan matches independent scalar fold and preserves output canary
+ok kernel 314 - scan supports exact in-place output
+ok kernel 315 - public scan matches independent scalar fold and preserves output canary
+ok kernel 316 - scan supports exact in-place output
+ok kernel 317 - public scan matches independent scalar fold and preserves output canary
+ok kernel 318 - scan supports exact in-place output
+ok kernel 319 - public scan matches independent scalar fold and preserves output canary
+ok kernel 320 - scan supports exact in-place output
+ok kernel 321 - public convolution matches scalar reference and preserves output canary
+ok kernel 322 - vector output may equal A
+ok kernel 323 - vector output may equal B
+ok kernel 324 - immediate vector supports in-place output
+ok kernel 325 - dot may store its result inside a consumed input
+ok kernel 326 - open convolution tile regression device
+ok kernel 327 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 328 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 329 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 330 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 331 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 332 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 333 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 334 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 335 - sim:8x2
+ok kernel 336 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 337 - public scan matches independent scalar fold and preserves output canary
+ok kernel 338 - scan supports exact in-place output
+ok kernel 339 - public scan matches independent scalar fold and preserves output canary
+ok kernel 340 - scan supports exact in-place output
+ok kernel 341 - public scan matches independent scalar fold and preserves output canary
+ok kernel 342 - scan supports exact in-place output
+ok kernel 343 - public scan matches independent scalar fold and preserves output canary
+ok kernel 344 - scan supports exact in-place output
+ok kernel 345 - public convolution matches scalar reference and preserves output canary
+ok kernel 346 - vector output may equal A
+ok kernel 347 - vector output may equal B
+ok kernel 348 - immediate vector supports in-place output
+ok kernel 349 - dot may store its result inside a consumed input
+ok kernel 350 - open convolution tile regression device
+ok kernel 351 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 352 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 353 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 354 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 355 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 356 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 357 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 358 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 359 - sim:4x4:v2
+ok kernel 360 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 361 - public scan matches independent scalar fold and preserves output canary
+ok kernel 362 - scan supports exact in-place output
+ok kernel 363 - public scan matches independent scalar fold and preserves output canary
+ok kernel 364 - scan supports exact in-place output
+ok kernel 365 - public scan matches independent scalar fold and preserves output canary
+ok kernel 366 - scan supports exact in-place output
+ok kernel 367 - public scan matches independent scalar fold and preserves output canary
+ok kernel 368 - scan supports exact in-place output
+ok kernel 369 - public convolution matches scalar reference and preserves output canary
+ok kernel 370 - vector output may equal A
+ok kernel 371 - vector output may equal B
+ok kernel 372 - immediate vector supports in-place output
+ok kernel 373 - dot may store its result inside a consumed input
+ok kernel 374 - open convolution tile regression device
+ok kernel 375 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 376 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 377 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 378 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 379 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 380 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 381 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 382 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 383 - sim:4x4
+ok kernel 384 - public matvec matches scalar wrap-around reference with rectangular tails
+ok kernel 385 - public scan matches independent scalar fold and preserves output canary
+ok kernel 386 - scan supports exact in-place output
+ok kernel 387 - public scan matches independent scalar fold and preserves output canary
+ok kernel 388 - scan supports exact in-place output
+ok kernel 389 - public scan matches independent scalar fold and preserves output canary
+ok kernel 390 - scan supports exact in-place output
+ok kernel 391 - public scan matches independent scalar fold and preserves output canary
+ok kernel 392 - scan supports exact in-place output
+ok kernel 393 - public convolution matches scalar reference and preserves output canary
+ok kernel 394 - vector output may equal A
+ok kernel 395 - vector output may equal B
+ok kernel 396 - immediate vector supports in-place output
+ok kernel 397 - dot may store its result inside a consumed input
+ok kernel 398 - open convolution tile regression device
+ok kernel 399 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 400 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 401 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 402 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 403 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 404 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 405 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+ok kernel 406 - implicit convolution matches scalar oracle at band/tile boundaries and sparse zeros
+# 406 public kernel checks passed
+./build/asan/test_faults
+ok fault 1 - open before injecting allocation failures
+ok fault 2 - profiling clock failure preserves emulator transaction and errno
+ok fault 3 - clock failure marks profile invalid, never zero-time success
+ok fault 4 - plan allocation failure returns no owned object
+ok fault 5 - allocate plan before fault injection
+ok fault 6 - plan bind and execution require no heap allocations
+ok fault 7 - implicit convolution needs no heap allocation after open
+ok fault 8 - allocation-free convolution executes on the device
+ok fault 9 - open allocation failure reports ENOMEM
+ok fault 10 - server allocation failure returns NOMEM before readiness callback
+ok fault 11 - server retries EINTR and reports the subsequent read failure
+# 11 injected fault checks passed
+./build/asan/test_plans
+ok plan 1 - open plan device
+ok plan 2 - compile plan without device I/O
+ok plan 3 - compile independent equivalent plan
+ok plan 4 - new handle is unbound
+ok plan 5 - stale execution has no ID or output side effects
+ok plan 6 - bind explicitly identifies and loads CFG
+ok plan 7 - cached identity keeps binding
+ok plan 8 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 9 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 10 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 11 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 12 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 13 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 14 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 15 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 16 - repeated calls send no extra CFG
+ok plan 17 - wrong input count rejected
+ok plan 18 - wrong tap count rejected
+ok plan 19 - argument rejection retains binding; output can alias inputs
+ok plan 20 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 21 - explicitly rebind before raw command
+ok plan 22 - raw operation succeeds
+ok plan 23 - every raw command invalidates resident binding
+ok plan 24 - invalidated execution neither reloads nor changes output
+ok plan 25 - explicitly rebind before raw command
+ok plan 26 - raw operation succeeds
+ok plan 27 - every raw command invalidates resident binding
+ok plan 28 - invalidated execution neither reloads nor changes output
+ok plan 29 - explicitly rebind before raw command
+ok plan 30 - raw operation succeeds
+ok plan 31 - every raw command invalidates resident binding
+ok plan 32 - invalidated execution neither reloads nor changes output
+ok plan 33 - explicitly rebind before raw command
+ok plan 34 - raw operation succeeds
+ok plan 35 - every raw command invalidates resident binding
+ok plan 36 - invalidated execution neither reloads nor changes output
+ok plan 37 - explicitly rebind before raw command
+ok plan 38 - raw operation succeeds
+ok plan 39 - every raw command invalidates resident binding
+ok plan 40 - invalidated execution neither reloads nor changes output
+ok plan 41 - explicitly rebind before raw command
+ok plan 42 - raw operation succeeds
+ok plan 43 - every raw command invalidates resident binding
+ok plan 44 - invalidated execution neither reloads nor changes output
+ok plan 45 - explicitly rebind before raw command
+ok plan 46 - raw operation succeeds
+ok plan 47 - every raw command invalidates resident binding
+ok plan 48 - invalidated execution neither reloads nor changes output
+ok plan 49 - bind before explicit invalidation
+ok plan 50 - out-of-band invalidation is explicit
+ok plan 51 - plan outlives handle but reconnection never inherits residency
+ok plan 52 - open plan device
+ok plan 53 - compile plan without device I/O
+ok plan 54 - compile independent equivalent plan
+ok plan 55 - new handle is unbound
+ok plan 56 - stale execution has no ID or output side effects
+ok plan 57 - bind explicitly identifies and loads CFG
+ok plan 58 - cached identity keeps binding
+ok plan 59 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 60 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 61 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 62 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 63 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 64 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 65 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 66 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 67 - repeated calls send no extra CFG
+ok plan 68 - wrong input count rejected
+ok plan 69 - wrong tap count rejected
+ok plan 70 - argument rejection retains binding; output can alias inputs
+ok plan 71 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 72 - explicitly rebind before raw command
+ok plan 73 - raw operation succeeds
+ok plan 74 - every raw command invalidates resident binding
+ok plan 75 - invalidated execution neither reloads nor changes output
+ok plan 76 - explicitly rebind before raw command
+ok plan 77 - raw operation succeeds
+ok plan 78 - every raw command invalidates resident binding
+ok plan 79 - invalidated execution neither reloads nor changes output
+ok plan 80 - explicitly rebind before raw command
+ok plan 81 - raw operation succeeds
+ok plan 82 - every raw command invalidates resident binding
+ok plan 83 - invalidated execution neither reloads nor changes output
+ok plan 84 - explicitly rebind before raw command
+ok plan 85 - raw operation succeeds
+ok plan 86 - every raw command invalidates resident binding
+ok plan 87 - invalidated execution neither reloads nor changes output
+ok plan 88 - explicitly rebind before raw command
+ok plan 89 - raw operation succeeds
+ok plan 90 - every raw command invalidates resident binding
+ok plan 91 - invalidated execution neither reloads nor changes output
+ok plan 92 - explicitly rebind before raw command
+ok plan 93 - raw operation succeeds
+ok plan 94 - every raw command invalidates resident binding
+ok plan 95 - invalidated execution neither reloads nor changes output
+ok plan 96 - explicitly rebind before raw command
+ok plan 97 - raw operation succeeds
+ok plan 98 - every raw command invalidates resident binding
+ok plan 99 - invalidated execution neither reloads nor changes output
+ok plan 100 - bind before explicit invalidation
+ok plan 101 - out-of-band invalidation is explicit
+ok plan 102 - plan outlives handle but reconnection never inherits residency
+ok plan 103 - open plan device
+ok plan 104 - compile plan without device I/O
+ok plan 105 - compile independent equivalent plan
+ok plan 106 - new handle is unbound
+ok plan 107 - stale execution has no ID or output side effects
+ok plan 108 - bind explicitly identifies and loads CFG
+ok plan 109 - cached identity keeps binding
+ok plan 110 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 111 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 112 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 113 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 114 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 115 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 116 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 117 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 118 - repeated calls send no extra CFG
+ok plan 119 - wrong input count rejected
+ok plan 120 - wrong tap count rejected
+ok plan 121 - argument rejection retains binding; output can alias inputs
+ok plan 122 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 123 - explicitly rebind before raw command
+ok plan 124 - raw operation succeeds
+ok plan 125 - every raw command invalidates resident binding
+ok plan 126 - invalidated execution neither reloads nor changes output
+ok plan 127 - explicitly rebind before raw command
+ok plan 128 - raw operation succeeds
+ok plan 129 - every raw command invalidates resident binding
+ok plan 130 - invalidated execution neither reloads nor changes output
+ok plan 131 - explicitly rebind before raw command
+ok plan 132 - raw operation succeeds
+ok plan 133 - every raw command invalidates resident binding
+ok plan 134 - invalidated execution neither reloads nor changes output
+ok plan 135 - explicitly rebind before raw command
+ok plan 136 - raw operation succeeds
+ok plan 137 - every raw command invalidates resident binding
+ok plan 138 - invalidated execution neither reloads nor changes output
+ok plan 139 - explicitly rebind before raw command
+ok plan 140 - raw operation succeeds
+ok plan 141 - every raw command invalidates resident binding
+ok plan 142 - invalidated execution neither reloads nor changes output
+ok plan 143 - explicitly rebind before raw command
+ok plan 144 - raw operation succeeds
+ok plan 145 - every raw command invalidates resident binding
+ok plan 146 - invalidated execution neither reloads nor changes output
+ok plan 147 - explicitly rebind before raw command
+ok plan 148 - raw operation succeeds
+ok plan 149 - every raw command invalidates resident binding
+ok plan 150 - invalidated execution neither reloads nor changes output
+ok plan 151 - bind before explicit invalidation
+ok plan 152 - out-of-band invalidation is explicit
+ok plan 153 - plan outlives handle but reconnection never inherits residency
+ok plan 154 - open plan device
+ok plan 155 - compile plan without device I/O
+ok plan 156 - compile independent equivalent plan
+ok plan 157 - new handle is unbound
+ok plan 158 - stale execution has no ID or output side effects
+ok plan 159 - bind explicitly identifies and loads CFG
+ok plan 160 - cached identity keeps binding
+ok plan 161 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 162 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 163 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 164 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 165 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 166 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 167 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 168 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 169 - repeated calls send no extra CFG
+ok plan 170 - wrong input count rejected
+ok plan 171 - wrong tap count rejected
+ok plan 172 - argument rejection retains binding; output can alias inputs
+ok plan 173 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 174 - explicitly rebind before raw command
+ok plan 175 - raw operation succeeds
+ok plan 176 - every raw command invalidates resident binding
+ok plan 177 - invalidated execution neither reloads nor changes output
+ok plan 178 - explicitly rebind before raw command
+ok plan 179 - raw operation succeeds
+ok plan 180 - every raw command invalidates resident binding
+ok plan 181 - invalidated execution neither reloads nor changes output
+ok plan 182 - explicitly rebind before raw command
+ok plan 183 - raw operation succeeds
+ok plan 184 - every raw command invalidates resident binding
+ok plan 185 - invalidated execution neither reloads nor changes output
+ok plan 186 - explicitly rebind before raw command
+ok plan 187 - raw operation succeeds
+ok plan 188 - every raw command invalidates resident binding
+ok plan 189 - invalidated execution neither reloads nor changes output
+ok plan 190 - explicitly rebind before raw command
+ok plan 191 - raw operation succeeds
+ok plan 192 - every raw command invalidates resident binding
+ok plan 193 - invalidated execution neither reloads nor changes output
+ok plan 194 - explicitly rebind before raw command
+ok plan 195 - raw operation succeeds
+ok plan 196 - every raw command invalidates resident binding
+ok plan 197 - invalidated execution neither reloads nor changes output
+ok plan 198 - explicitly rebind before raw command
+ok plan 199 - raw operation succeeds
+ok plan 200 - every raw command invalidates resident binding
+ok plan 201 - invalidated execution neither reloads nor changes output
+ok plan 202 - bind before explicit invalidation
+ok plan 203 - out-of-band invalidation is explicit
+ok plan 204 - plan outlives handle but reconnection never inherits residency
+ok plan 205 - open plan device
+ok plan 206 - compile plan without device I/O
+ok plan 207 - compile independent equivalent plan
+ok plan 208 - new handle is unbound
+ok plan 209 - stale execution has no ID or output side effects
+ok plan 210 - bind explicitly identifies and loads CFG
+ok plan 211 - cached identity keeps binding
+ok plan 212 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 213 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 214 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 215 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 216 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 217 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 218 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 219 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 220 - repeated calls send no extra CFG
+ok plan 221 - wrong input count rejected
+ok plan 222 - wrong tap count rejected
+ok plan 223 - argument rejection retains binding; output can alias inputs
+ok plan 224 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 225 - explicitly rebind before raw command
+ok plan 226 - raw operation succeeds
+ok plan 227 - every raw command invalidates resident binding
+ok plan 228 - invalidated execution neither reloads nor changes output
+ok plan 229 - explicitly rebind before raw command
+ok plan 230 - raw operation succeeds
+ok plan 231 - every raw command invalidates resident binding
+ok plan 232 - invalidated execution neither reloads nor changes output
+ok plan 233 - explicitly rebind before raw command
+ok plan 234 - raw operation succeeds
+ok plan 235 - every raw command invalidates resident binding
+ok plan 236 - invalidated execution neither reloads nor changes output
+ok plan 237 - explicitly rebind before raw command
+ok plan 238 - raw operation succeeds
+ok plan 239 - every raw command invalidates resident binding
+ok plan 240 - invalidated execution neither reloads nor changes output
+ok plan 241 - explicitly rebind before raw command
+ok plan 242 - raw operation succeeds
+ok plan 243 - every raw command invalidates resident binding
+ok plan 244 - invalidated execution neither reloads nor changes output
+ok plan 245 - explicitly rebind before raw command
+ok plan 246 - raw operation succeeds
+ok plan 247 - every raw command invalidates resident binding
+ok plan 248 - invalidated execution neither reloads nor changes output
+ok plan 249 - explicitly rebind before raw command
+ok plan 250 - raw operation succeeds
+ok plan 251 - every raw command invalidates resident binding
+ok plan 252 - invalidated execution neither reloads nor changes output
+ok plan 253 - bind before explicit invalidation
+ok plan 254 - out-of-band invalidation is explicit
+ok plan 255 - plan outlives handle but reconnection never inherits residency
+ok plan 256 - open plan device
+ok plan 257 - compile plan without device I/O
+ok plan 258 - compile independent equivalent plan
+ok plan 259 - new handle is unbound
+ok plan 260 - stale execution has no ID or output side effects
+ok plan 261 - bind explicitly identifies and loads CFG
+ok plan 262 - cached identity keeps binding
+ok plan 263 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 264 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 265 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 266 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 267 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 268 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 269 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 270 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 271 - repeated calls send no extra CFG
+ok plan 272 - wrong input count rejected
+ok plan 273 - wrong tap count rejected
+ok plan 274 - argument rejection retains binding; output can alias inputs
+ok plan 275 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 276 - explicitly rebind before raw command
+ok plan 277 - raw operation succeeds
+ok plan 278 - every raw command invalidates resident binding
+ok plan 279 - invalidated execution neither reloads nor changes output
+ok plan 280 - explicitly rebind before raw command
+ok plan 281 - raw operation succeeds
+ok plan 282 - every raw command invalidates resident binding
+ok plan 283 - invalidated execution neither reloads nor changes output
+ok plan 284 - explicitly rebind before raw command
+ok plan 285 - raw operation succeeds
+ok plan 286 - every raw command invalidates resident binding
+ok plan 287 - invalidated execution neither reloads nor changes output
+ok plan 288 - explicitly rebind before raw command
+ok plan 289 - raw operation succeeds
+ok plan 290 - every raw command invalidates resident binding
+ok plan 291 - invalidated execution neither reloads nor changes output
+ok plan 292 - explicitly rebind before raw command
+ok plan 293 - raw operation succeeds
+ok plan 294 - every raw command invalidates resident binding
+ok plan 295 - invalidated execution neither reloads nor changes output
+ok plan 296 - explicitly rebind before raw command
+ok plan 297 - raw operation succeeds
+ok plan 298 - every raw command invalidates resident binding
+ok plan 299 - invalidated execution neither reloads nor changes output
+ok plan 300 - explicitly rebind before raw command
+ok plan 301 - raw operation succeeds
+ok plan 302 - every raw command invalidates resident binding
+ok plan 303 - invalidated execution neither reloads nor changes output
+ok plan 304 - bind before explicit invalidation
+ok plan 305 - out-of-band invalidation is explicit
+ok plan 306 - plan outlives handle but reconnection never inherits residency
+ok plan 307 - open plan device
+ok plan 308 - compile plan without device I/O
+ok plan 309 - compile independent equivalent plan
+ok plan 310 - new handle is unbound
+ok plan 311 - stale execution has no ID or output side effects
+ok plan 312 - bind explicitly identifies and loads CFG
+ok plan 313 - cached identity keeps binding
+ok plan 314 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 315 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 316 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 317 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 318 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 319 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 320 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 321 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 322 - repeated calls send no extra CFG
+ok plan 323 - wrong input count rejected
+ok plan 324 - wrong tap count rejected
+ok plan 325 - argument rejection retains binding; output can alias inputs
+ok plan 326 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 327 - explicitly rebind before raw command
+ok plan 328 - raw operation succeeds
+ok plan 329 - every raw command invalidates resident binding
+ok plan 330 - invalidated execution neither reloads nor changes output
+ok plan 331 - explicitly rebind before raw command
+ok plan 332 - raw operation succeeds
+ok plan 333 - every raw command invalidates resident binding
+ok plan 334 - invalidated execution neither reloads nor changes output
+ok plan 335 - explicitly rebind before raw command
+ok plan 336 - raw operation succeeds
+ok plan 337 - every raw command invalidates resident binding
+ok plan 338 - invalidated execution neither reloads nor changes output
+ok plan 339 - explicitly rebind before raw command
+ok plan 340 - raw operation succeeds
+ok plan 341 - every raw command invalidates resident binding
+ok plan 342 - invalidated execution neither reloads nor changes output
+ok plan 343 - explicitly rebind before raw command
+ok plan 344 - raw operation succeeds
+ok plan 345 - every raw command invalidates resident binding
+ok plan 346 - invalidated execution neither reloads nor changes output
+ok plan 347 - explicitly rebind before raw command
+ok plan 348 - raw operation succeeds
+ok plan 349 - every raw command invalidates resident binding
+ok plan 350 - invalidated execution neither reloads nor changes output
+ok plan 351 - explicitly rebind before raw command
+ok plan 352 - raw operation succeeds
+ok plan 353 - every raw command invalidates resident binding
+ok plan 354 - invalidated execution neither reloads nor changes output
+ok plan 355 - bind before explicit invalidation
+ok plan 356 - out-of-band invalidation is explicit
+ok plan 357 - plan outlives handle but reconnection never inherits residency
+ok plan 358 - open plan device
+ok plan 359 - compile plan without device I/O
+ok plan 360 - compile independent equivalent plan
+ok plan 361 - new handle is unbound
+ok plan 362 - stale execution has no ID or output side effects
+ok plan 363 - bind explicitly identifies and loads CFG
+ok plan 364 - cached identity keeps binding
+ok plan 365 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 366 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 367 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 368 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 369 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 370 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 371 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 372 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 373 - repeated calls send no extra CFG
+ok plan 374 - wrong input count rejected
+ok plan 375 - wrong tap count rejected
+ok plan 376 - argument rejection retains binding; output can alias inputs
+ok plan 377 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 378 - explicitly rebind before raw command
+ok plan 379 - raw operation succeeds
+ok plan 380 - every raw command invalidates resident binding
+ok plan 381 - invalidated execution neither reloads nor changes output
+ok plan 382 - explicitly rebind before raw command
+ok plan 383 - raw operation succeeds
+ok plan 384 - every raw command invalidates resident binding
+ok plan 385 - invalidated execution neither reloads nor changes output
+ok plan 386 - explicitly rebind before raw command
+ok plan 387 - raw operation succeeds
+ok plan 388 - every raw command invalidates resident binding
+ok plan 389 - invalidated execution neither reloads nor changes output
+ok plan 390 - explicitly rebind before raw command
+ok plan 391 - raw operation succeeds
+ok plan 392 - every raw command invalidates resident binding
+ok plan 393 - invalidated execution neither reloads nor changes output
+ok plan 394 - explicitly rebind before raw command
+ok plan 395 - raw operation succeeds
+ok plan 396 - every raw command invalidates resident binding
+ok plan 397 - invalidated execution neither reloads nor changes output
+ok plan 398 - explicitly rebind before raw command
+ok plan 399 - raw operation succeeds
+ok plan 400 - every raw command invalidates resident binding
+ok plan 401 - invalidated execution neither reloads nor changes output
+ok plan 402 - explicitly rebind before raw command
+ok plan 403 - raw operation succeeds
+ok plan 404 - every raw command invalidates resident binding
+ok plan 405 - invalidated execution neither reloads nor changes output
+ok plan 406 - bind before explicit invalidation
+ok plan 407 - out-of-band invalidation is explicit
+ok plan 408 - plan outlives handle but reconnection never inherits residency
+ok plan 409 - open stateful plan device
+ok plan 410 - bind accumulator plan without reset
+ok plan 411 - first MAC
+ok plan 412 - second MAC retains PE state
+ok plan 413 - compile different transfer for same resident CFG
+ok plan 414 - reset plus 255 exact captures
+ok plan 415 - reset with zero captures
+ok plan 416 - zero tap transfer
+ok plan 417 - open NACK plan device
+ok plan 418 - compile NACK plan
+ok plan 419 - failed binding retains original wire error
+ok plan 420 - failed CFG never establishes residency even if partial writes occurred
+ok plan 421 - explicit rebind after complete NACK
+ok plan 422 - failed planned input transaction preserves output and original error
+ok plan 423 - NACK invalidates plan; next call does not silently retry or reload
+ok plan 424 - explicit rebind resumes only a session with known frame boundaries
+ok plan 425 - open plan device
+ok plan 426 - compile plan without device I/O
+ok plan 427 - compile independent equivalent plan
+ok plan 428 - new handle is unbound
+ok plan 429 - stale execution has no ID or output side effects
+ok plan 430 - bind explicitly identifies and loads CFG
+ok plan 431 - cached identity keeps binding
+ok plan 432 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 433 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 434 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 435 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 436 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 437 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 438 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 439 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 440 - repeated calls send no extra CFG
+ok plan 441 - wrong input count rejected
+ok plan 442 - wrong tap count rejected
+ok plan 443 - argument rejection retains binding; output can alias inputs
+ok plan 444 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 445 - explicitly rebind before raw command
+ok plan 446 - raw operation succeeds
+ok plan 447 - every raw command invalidates resident binding
+ok plan 448 - invalidated execution neither reloads nor changes output
+ok plan 449 - explicitly rebind before raw command
+ok plan 450 - raw operation succeeds
+ok plan 451 - every raw command invalidates resident binding
+ok plan 452 - invalidated execution neither reloads nor changes output
+ok plan 453 - explicitly rebind before raw command
+ok plan 454 - raw operation succeeds
+ok plan 455 - every raw command invalidates resident binding
+ok plan 456 - invalidated execution neither reloads nor changes output
+ok plan 457 - explicitly rebind before raw command
+ok plan 458 - raw operation succeeds
+ok plan 459 - every raw command invalidates resident binding
+ok plan 460 - invalidated execution neither reloads nor changes output
+ok plan 461 - explicitly rebind before raw command
+ok plan 462 - raw operation succeeds
+ok plan 463 - every raw command invalidates resident binding
+ok plan 464 - invalidated execution neither reloads nor changes output
+ok plan 465 - explicitly rebind before raw command
+ok plan 466 - raw operation succeeds
+ok plan 467 - every raw command invalidates resident binding
+ok plan 468 - invalidated execution neither reloads nor changes output
+ok plan 469 - explicitly rebind before raw command
+ok plan 470 - raw operation succeeds
+ok plan 471 - every raw command invalidates resident binding
+ok plan 472 - invalidated execution neither reloads nor changes output
+ok plan 473 - bind before explicit invalidation
+ok plan 474 - out-of-band invalidation is explicit
+ok plan 475 - plan outlives handle but reconnection never inherits residency
+ok plan 476 - open plan device
+ok plan 477 - compile plan without device I/O
+ok plan 478 - compile independent equivalent plan
+ok plan 479 - new handle is unbound
+ok plan 480 - stale execution has no ID or output side effects
+ok plan 481 - bind explicitly identifies and loads CFG
+ok plan 482 - cached identity keeps binding
+ok plan 483 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 484 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 485 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 486 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 487 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 488 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 489 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 490 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 491 - repeated calls send no extra CFG
+ok plan 492 - wrong input count rejected
+ok plan 493 - wrong tap count rejected
+ok plan 494 - argument rejection retains binding; output can alias inputs
+ok plan 495 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 496 - explicitly rebind before raw command
+ok plan 497 - raw operation succeeds
+ok plan 498 - every raw command invalidates resident binding
+ok plan 499 - invalidated execution neither reloads nor changes output
+ok plan 500 - explicitly rebind before raw command
+ok plan 501 - raw operation succeeds
+ok plan 502 - every raw command invalidates resident binding
+ok plan 503 - invalidated execution neither reloads nor changes output
+ok plan 504 - explicitly rebind before raw command
+ok plan 505 - raw operation succeeds
+ok plan 506 - every raw command invalidates resident binding
+ok plan 507 - invalidated execution neither reloads nor changes output
+ok plan 508 - explicitly rebind before raw command
+ok plan 509 - raw operation succeeds
+ok plan 510 - every raw command invalidates resident binding
+ok plan 511 - invalidated execution neither reloads nor changes output
+ok plan 512 - explicitly rebind before raw command
+ok plan 513 - raw operation succeeds
+ok plan 514 - every raw command invalidates resident binding
+ok plan 515 - invalidated execution neither reloads nor changes output
+ok plan 516 - explicitly rebind before raw command
+ok plan 517 - raw operation succeeds
+ok plan 518 - every raw command invalidates resident binding
+ok plan 519 - invalidated execution neither reloads nor changes output
+ok plan 520 - explicitly rebind before raw command
+ok plan 521 - raw operation succeeds
+ok plan 522 - every raw command invalidates resident binding
+ok plan 523 - invalidated execution neither reloads nor changes output
+ok plan 524 - bind before explicit invalidation
+ok plan 525 - out-of-band invalidation is explicit
+ok plan 526 - plan outlives handle but reconnection never inherits residency
+ok plan 527 - open plan device
+ok plan 528 - compile plan without device I/O
+ok plan 529 - compile independent equivalent plan
+ok plan 530 - new handle is unbound
+ok plan 531 - stale execution has no ID or output side effects
+ok plan 532 - bind explicitly identifies and loads CFG
+ok plan 533 - cached identity keeps binding
+ok plan 534 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 535 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 536 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 537 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 538 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 539 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 540 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 541 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 542 - repeated calls send no extra CFG
+ok plan 543 - wrong input count rejected
+ok plan 544 - wrong tap count rejected
+ok plan 545 - argument rejection retains binding; output can alias inputs
+ok plan 546 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 547 - explicitly rebind before raw command
+ok plan 548 - raw operation succeeds
+ok plan 549 - every raw command invalidates resident binding
+ok plan 550 - invalidated execution neither reloads nor changes output
+ok plan 551 - explicitly rebind before raw command
+ok plan 552 - raw operation succeeds
+ok plan 553 - every raw command invalidates resident binding
+ok plan 554 - invalidated execution neither reloads nor changes output
+ok plan 555 - explicitly rebind before raw command
+ok plan 556 - raw operation succeeds
+ok plan 557 - every raw command invalidates resident binding
+ok plan 558 - invalidated execution neither reloads nor changes output
+ok plan 559 - explicitly rebind before raw command
+ok plan 560 - raw operation succeeds
+ok plan 561 - every raw command invalidates resident binding
+ok plan 562 - invalidated execution neither reloads nor changes output
+ok plan 563 - explicitly rebind before raw command
+ok plan 564 - raw operation succeeds
+ok plan 565 - every raw command invalidates resident binding
+ok plan 566 - invalidated execution neither reloads nor changes output
+ok plan 567 - explicitly rebind before raw command
+ok plan 568 - raw operation succeeds
+ok plan 569 - every raw command invalidates resident binding
+ok plan 570 - invalidated execution neither reloads nor changes output
+ok plan 571 - explicitly rebind before raw command
+ok plan 572 - raw operation succeeds
+ok plan 573 - every raw command invalidates resident binding
+ok plan 574 - invalidated execution neither reloads nor changes output
+ok plan 575 - bind before explicit invalidation
+ok plan 576 - out-of-band invalidation is explicit
+ok plan 577 - plan outlives handle but reconnection never inherits residency
+ok plan 578 - open plan device
+ok plan 579 - compile plan without device I/O
+ok plan 580 - compile independent equivalent plan
+ok plan 581 - new handle is unbound
+ok plan 582 - stale execution has no ID or output side effects
+ok plan 583 - bind explicitly identifies and loads CFG
+ok plan 584 - cached identity keeps binding
+ok plan 585 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 586 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 587 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 588 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 589 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 590 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 591 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 592 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 593 - repeated calls send no extra CFG
+ok plan 594 - wrong input count rejected
+ok plan 595 - wrong tap count rejected
+ok plan 596 - argument rejection retains binding; output can alias inputs
+ok plan 597 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 598 - explicitly rebind before raw command
+ok plan 599 - raw operation succeeds
+ok plan 600 - every raw command invalidates resident binding
+ok plan 601 - invalidated execution neither reloads nor changes output
+ok plan 602 - explicitly rebind before raw command
+ok plan 603 - raw operation succeeds
+ok plan 604 - every raw command invalidates resident binding
+ok plan 605 - invalidated execution neither reloads nor changes output
+ok plan 606 - explicitly rebind before raw command
+ok plan 607 - raw operation succeeds
+ok plan 608 - every raw command invalidates resident binding
+ok plan 609 - invalidated execution neither reloads nor changes output
+ok plan 610 - explicitly rebind before raw command
+ok plan 611 - raw operation succeeds
+ok plan 612 - every raw command invalidates resident binding
+ok plan 613 - invalidated execution neither reloads nor changes output
+ok plan 614 - explicitly rebind before raw command
+ok plan 615 - raw operation succeeds
+ok plan 616 - every raw command invalidates resident binding
+ok plan 617 - invalidated execution neither reloads nor changes output
+ok plan 618 - explicitly rebind before raw command
+ok plan 619 - raw operation succeeds
+ok plan 620 - every raw command invalidates resident binding
+ok plan 621 - invalidated execution neither reloads nor changes output
+ok plan 622 - explicitly rebind before raw command
+ok plan 623 - raw operation succeeds
+ok plan 624 - every raw command invalidates resident binding
+ok plan 625 - invalidated execution neither reloads nor changes output
+ok plan 626 - bind before explicit invalidation
+ok plan 627 - out-of-band invalidation is explicit
+ok plan 628 - plan outlives handle but reconnection never inherits residency
+ok plan 629 - open plan device
+ok plan 630 - compile plan without device I/O
+ok plan 631 - compile independent equivalent plan
+ok plan 632 - new handle is unbound
+ok plan 633 - stale execution has no ID or output side effects
+ok plan 634 - bind explicitly identifies and loads CFG
+ok plan 635 - cached identity keeps binding
+ok plan 636 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 637 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 638 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 639 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 640 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 641 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 642 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 643 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 644 - repeated calls send no extra CFG
+ok plan 645 - wrong input count rejected
+ok plan 646 - wrong tap count rejected
+ok plan 647 - argument rejection retains binding; output can alias inputs
+ok plan 648 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 649 - explicitly rebind before raw command
+ok plan 650 - raw operation succeeds
+ok plan 651 - every raw command invalidates resident binding
+ok plan 652 - invalidated execution neither reloads nor changes output
+ok plan 653 - explicitly rebind before raw command
+ok plan 654 - raw operation succeeds
+ok plan 655 - every raw command invalidates resident binding
+ok plan 656 - invalidated execution neither reloads nor changes output
+ok plan 657 - explicitly rebind before raw command
+ok plan 658 - raw operation succeeds
+ok plan 659 - every raw command invalidates resident binding
+ok plan 660 - invalidated execution neither reloads nor changes output
+ok plan 661 - explicitly rebind before raw command
+ok plan 662 - raw operation succeeds
+ok plan 663 - every raw command invalidates resident binding
+ok plan 664 - invalidated execution neither reloads nor changes output
+ok plan 665 - explicitly rebind before raw command
+ok plan 666 - raw operation succeeds
+ok plan 667 - every raw command invalidates resident binding
+ok plan 668 - invalidated execution neither reloads nor changes output
+ok plan 669 - explicitly rebind before raw command
+ok plan 670 - raw operation succeeds
+ok plan 671 - every raw command invalidates resident binding
+ok plan 672 - invalidated execution neither reloads nor changes output
+ok plan 673 - explicitly rebind before raw command
+ok plan 674 - raw operation succeeds
+ok plan 675 - every raw command invalidates resident binding
+ok plan 676 - invalidated execution neither reloads nor changes output
+ok plan 677 - bind before explicit invalidation
+ok plan 678 - out-of-band invalidation is explicit
+ok plan 679 - plan outlives handle but reconnection never inherits residency
+ok plan 680 - open plan device
+ok plan 681 - compile plan without device I/O
+ok plan 682 - compile independent equivalent plan
+ok plan 683 - new handle is unbound
+ok plan 684 - stale execution has no ID or output side effects
+ok plan 685 - bind explicitly identifies and loads CFG
+ok plan 686 - cached identity keeps binding
+ok plan 687 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 688 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 689 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 690 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 691 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 692 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 693 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 694 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 695 - repeated calls send no extra CFG
+ok plan 696 - wrong input count rejected
+ok plan 697 - wrong tap count rejected
+ok plan 698 - argument rejection retains binding; output can alias inputs
+ok plan 699 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 700 - explicitly rebind before raw command
+ok plan 701 - raw operation succeeds
+ok plan 702 - every raw command invalidates resident binding
+ok plan 703 - invalidated execution neither reloads nor changes output
+ok plan 704 - explicitly rebind before raw command
+ok plan 705 - raw operation succeeds
+ok plan 706 - every raw command invalidates resident binding
+ok plan 707 - invalidated execution neither reloads nor changes output
+ok plan 708 - explicitly rebind before raw command
+ok plan 709 - raw operation succeeds
+ok plan 710 - every raw command invalidates resident binding
+ok plan 711 - invalidated execution neither reloads nor changes output
+ok plan 712 - explicitly rebind before raw command
+ok plan 713 - raw operation succeeds
+ok plan 714 - every raw command invalidates resident binding
+ok plan 715 - invalidated execution neither reloads nor changes output
+ok plan 716 - explicitly rebind before raw command
+ok plan 717 - raw operation succeeds
+ok plan 718 - every raw command invalidates resident binding
+ok plan 719 - invalidated execution neither reloads nor changes output
+ok plan 720 - explicitly rebind before raw command
+ok plan 721 - raw operation succeeds
+ok plan 722 - every raw command invalidates resident binding
+ok plan 723 - invalidated execution neither reloads nor changes output
+ok plan 724 - explicitly rebind before raw command
+ok plan 725 - raw operation succeeds
+ok plan 726 - every raw command invalidates resident binding
+ok plan 727 - invalidated execution neither reloads nor changes output
+ok plan 728 - bind before explicit invalidation
+ok plan 729 - out-of-band invalidation is explicit
+ok plan 730 - plan outlives handle but reconnection never inherits residency
+ok plan 731 - open plan device
+ok plan 732 - compile plan without device I/O
+ok plan 733 - compile independent equivalent plan
+ok plan 734 - new handle is unbound
+ok plan 735 - stale execution has no ID or output side effects
+ok plan 736 - bind explicitly identifies and loads CFG
+ok plan 737 - cached identity keeps binding
+ok plan 738 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 739 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 740 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 741 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 742 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 743 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 744 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 745 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 746 - repeated calls send no extra CFG
+ok plan 747 - wrong input count rejected
+ok plan 748 - wrong tap count rejected
+ok plan 749 - argument rejection retains binding; output can alias inputs
+ok plan 750 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 751 - explicitly rebind before raw command
+ok plan 752 - raw operation succeeds
+ok plan 753 - every raw command invalidates resident binding
+ok plan 754 - invalidated execution neither reloads nor changes output
+ok plan 755 - explicitly rebind before raw command
+ok plan 756 - raw operation succeeds
+ok plan 757 - every raw command invalidates resident binding
+ok plan 758 - invalidated execution neither reloads nor changes output
+ok plan 759 - explicitly rebind before raw command
+ok plan 760 - raw operation succeeds
+ok plan 761 - every raw command invalidates resident binding
+ok plan 762 - invalidated execution neither reloads nor changes output
+ok plan 763 - explicitly rebind before raw command
+ok plan 764 - raw operation succeeds
+ok plan 765 - every raw command invalidates resident binding
+ok plan 766 - invalidated execution neither reloads nor changes output
+ok plan 767 - explicitly rebind before raw command
+ok plan 768 - raw operation succeeds
+ok plan 769 - every raw command invalidates resident binding
+ok plan 770 - invalidated execution neither reloads nor changes output
+ok plan 771 - explicitly rebind before raw command
+ok plan 772 - raw operation succeeds
+ok plan 773 - every raw command invalidates resident binding
+ok plan 774 - invalidated execution neither reloads nor changes output
+ok plan 775 - explicitly rebind before raw command
+ok plan 776 - raw operation succeeds
+ok plan 777 - every raw command invalidates resident binding
+ok plan 778 - invalidated execution neither reloads nor changes output
+ok plan 779 - bind before explicit invalidation
+ok plan 780 - out-of-band invalidation is explicit
+ok plan 781 - plan outlives handle but reconnection never inherits residency
+ok plan 782 - open plan device
+ok plan 783 - compile plan without device I/O
+ok plan 784 - compile independent equivalent plan
+ok plan 785 - new handle is unbound
+ok plan 786 - stale execution has no ID or output side effects
+ok plan 787 - bind explicitly identifies and loads CFG
+ok plan 788 - cached identity keeps binding
+ok plan 789 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 790 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 791 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 792 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 793 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 794 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 795 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 796 - repeated plan execution uses copied CFG/spec and wraps signed addition
+ok plan 797 - repeated calls send no extra CFG
+ok plan 798 - wrong input count rejected
+ok plan 799 - wrong tap count rejected
+ok plan 800 - argument rejection retains binding; output can alias inputs
+ok plan 801 - handle owns configuration; equivalent plan survives original free and accepts zero inputs
+ok plan 802 - explicitly rebind before raw command
+ok plan 803 - raw operation succeeds
+ok plan 804 - every raw command invalidates resident binding
+ok plan 805 - invalidated execution neither reloads nor changes output
+ok plan 806 - explicitly rebind before raw command
+ok plan 807 - raw operation succeeds
+ok plan 808 - every raw command invalidates resident binding
+ok plan 809 - invalidated execution neither reloads nor changes output
+ok plan 810 - explicitly rebind before raw command
+ok plan 811 - raw operation succeeds
+ok plan 812 - every raw command invalidates resident binding
+ok plan 813 - invalidated execution neither reloads nor changes output
+ok plan 814 - explicitly rebind before raw command
+ok plan 815 - raw operation succeeds
+ok plan 816 - every raw command invalidates resident binding
+ok plan 817 - invalidated execution neither reloads nor changes output
+ok plan 818 - explicitly rebind before raw command
+ok plan 819 - raw operation succeeds
+ok plan 820 - every raw command invalidates resident binding
+ok plan 821 - invalidated execution neither reloads nor changes output
+ok plan 822 - explicitly rebind before raw command
+ok plan 823 - raw operation succeeds
+ok plan 824 - every raw command invalidates resident binding
+ok plan 825 - invalidated execution neither reloads nor changes output
+ok plan 826 - explicitly rebind before raw command
+ok plan 827 - raw operation succeeds
+ok plan 828 - every raw command invalidates resident binding
+ok plan 829 - invalidated execution neither reloads nor changes output
+ok plan 830 - bind before explicit invalidation
+ok plan 831 - out-of-band invalidation is explicit
+ok plan 832 - plan outlives handle but reconnection never inherits residency
+ok plan 833 - open stateful plan device
+ok plan 834 - bind accumulator plan without reset
+ok plan 835 - first MAC
+ok plan 836 - second MAC retains PE state
+ok plan 837 - compile different transfer for same resident CFG
+ok plan 838 - reset plus 255 exact captures
+ok plan 839 - reset with zero captures
+ok plan 840 - zero tap transfer
+ok plan 841 - open NACK plan device
+ok plan 842 - compile NACK plan
+ok plan 843 - failed binding retains original wire error
+ok plan 844 - failed CFG never establishes residency even if partial writes occurred
+ok plan 845 - explicit rebind after complete NACK
+ok plan 846 - failed planned input transaction preserves output and original error
+ok plan 847 - NACK invalidates plan; next call does not silently retry or reload
+ok plan 848 - explicit rebind resumes only a session with known frame boundaries
+ok plan 849 - reject absent tap
+ok plan 850 - reject unsupported plan geometry
+ok plan 851 - reject unknown flags
+ok plan 852 - reject missing spec
+ok plan 853 - open plan measurement device
+ok plan 854 - exclude initial ID from both measurements
+ok plan 855 - compile measurement mapping
+ok plan 856 - legacy repeated configuration reference
+ok plan 857 - legacy repeated configuration reference
+ok plan 858 - legacy repeated configuration reference
+ok plan 859 - legacy repeated configuration reference
+ok plan 860 - legacy repeated configuration reference
+ok plan 861 - legacy repeated configuration reference
+ok plan 862 - legacy repeated configuration reference
+ok plan 863 - legacy repeated configuration reference
+ok plan 864 - include single binding in planned measurement
+ok plan 865 - planned measurement checks each result
+ok plan 866 - planned measurement checks each result
+ok plan 867 - planned measurement checks each result
+ok plan 868 - planned measurement checks each result
+ok plan 869 - planned measurement checks each result
+ok plan 870 - planned measurement checks each result
+ok plan 871 - planned measurement checks each result
+ok plan 872 - planned measurement checks each result
+ok plan 873 - identical mapping/input/taps: 744 to 275 bytes and 16 to 9 transactions including binding
+ok plan 874 - same size but different configuration cannot reuse binding
+# 874 plan checks passed
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C sw  -f sw.mk  PROFILE=asan test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=asan static
+make[2]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c dsl.c -o build/asan/dsl.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c compile.c -o build/asan/compile.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c main.c -o build/asan/main.o
+make[2]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c cli.c -o build/asan/cli.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c vector_io.c -o build/asan/vector_io.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c device.c -o build/asan/device.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c shell.c -o build/asan/shell.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c bench_ref.c -o build/asan/bench_ref.o
+python3 ../scripts/build-provenance.py build/asan/build_provenance.h build/asan/.build-config.json ../lib/build/asan/.build-config.json
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -UNDEBUG test/test_sw.c build/asan/dsl.o build/asan/compile.o ../lib/build/asan/libcgra.a -fsanitize=address,undefined -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/asan/test_sw
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h -c bench.c -o build/asan/bench.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O1 -g -fno-omit-frame-pointer -fsanitize=address,undefined -I. -Ibuild/asan -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/asan/install_paths.h build/asan/main.o build/asan/cli.o build/asan/vector_io.o build/asan/bench.o build/asan/device.o build/asan/shell.o build/asan/dsl.o build/asan/compile.o build/asan/bench_ref.o ../lib/build/asan/libcgra.a -fsanitize=address,undefined -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -lreadline -o build/asan/cgra
+./build/asan/cgra selftest
+-- protocol v3 (fused exec) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+-- protocol v2 (write/run/read) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+ok    retry-on-nack (retries=2)
+all tests PASSED
+--- CLI smoke tests (device sim) ---
+11 22 33 44 55 66 77 88
+0 0 0 2 5
+./build/asan/cgra run muli -d sim --imm 10 --a "1 2 3 4" --io hex
+0x000A 0x0014 0x001E 0x0028
+./build/asan/cgra pipe saxpy -d sim --a "1 2 3 4"
+10 13 16 19
+./build/asan/cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+10 26 42 58
+./build/asan/cgra scan -d sim --a "3 1 4 1 5 9 2 6"
+3 4 8 9 14 23 25 31
+./build/asan/cgra scan -d sim --op max --a "3 1 4 1 5 9 2 6"
+3 3 4 4 5 9 9 9
+./build/asan/cgra conv -d sim -m "1 2 3" --x "4 5 6 7 8"
+4 13 28 34 40 37 24
+./build/asan/cgra run add -d sim:flaky --a "1 2 3 4" --b "10 20 30 40"   # retry recovers
+11 22 33 44
+./build/asan/cgra run add -d sim:v2 --a "1 2 3 4" --b "10 20 30 40"      # pre-v3 fallback
+11 22 33 44
+./build/asan/cgra scan -d sim:v2 --a "3 1 4 1 5 9 2 6"                   # pre-v3 fallback
+3 4 8 9 14 23 25 31
+./build/asan/cgra run add -d sim --a "1 2 3" --b "10 20 30" --json
+{"count": 3, "result": [11, 22, 33]}
+CGRA_PATH=config/stdlib ./build/asan/cgra run square -d sim --a "2 3 4 5"   # stdlib via CGRA_PATH
+4 9 16 25
+./build/asan/cgra show relu -v | head -1
+mode relu (pattern diagonal):
+./build/asan/cgra show add >/dev/null && echo "show ok"
+show ok
+./build/asan/cgra probe -d sim:2x3
+device: protocol v3, 2x3 array, 16-bit datapath
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+device OK
+./build/asan/cgra show add -d sim:3x2 >/dev/null
+./build/asan/test_sw
+# cgra CLI unit tests (DSL + compiler)
+ok 1 - dsl_parse accepts a valid config
+ok 2 - device 'lab' found
+ok 3 - device port parsed
+ok 4 - device baud parsed
+ok 5 - mode 'amplify' found
+ok 6 - mode op parsed
+ok 7 - variable $GAIN expanded to 7
+ok 8 - pipeline 'chain' has two stages
+ok 9 - io profile 'hx' found
+ok 10 - unknown directive is rejected
+ok 11 - directive outside any section is rejected
+ok 12 - unknown section type is rejected
+ok 13 - built-in defaults parse
+ok 14 - core modes present in defaults
+ok 15 - sim device in defaults
+ok 16 - strict parser defaults
+ok 17 - invalid token/value rejected without changing configuration
+ok 18 - invalid token/value rejected without changing configuration
+ok 19 - invalid token/value rejected without changing configuration
+ok 20 - invalid token/value rejected without changing configuration
+ok 21 - invalid token/value rejected without changing configuration
+ok 22 - invalid token/value rejected without changing configuration
+ok 23 - invalid token/value rejected without changing configuration
+ok 24 - invalid token/value rejected without changing configuration
+ok 25 - invalid token/value rejected without changing configuration
+ok 26 - invalid token/value rejected without changing configuration
+ok 27 - invalid token/value rejected without changing configuration
+ok 28 - invalid token/value rejected without changing configuration
+ok 29 - invalid token/value rejected without changing configuration
+ok 30 - invalid token/value rejected without changing configuration
+ok 31 - invalid token/value rejected without changing configuration
+ok 32 - invalid token/value rejected without changing configuration
+ok 33 - invalid token/value rejected without changing configuration
+ok 34 - invalid token/value rejected without changing configuration
+ok 35 - invalid token/value rejected without changing configuration
+ok 36 - invalid token/value rejected without changing configuration
+ok 37 - invalid token/value rejected without changing configuration
+ok 38 - variable capacity overflow rolls back
+ok 39 - literal dollar, braced variable and explicit zero timeout accepted
+ok 40 - invalid output selector is not silently ignored
+ok 41 - invalid output selector is not silently ignored
+ok 42 - invalid output selector is not silently ignored
+ok 43 - invalid output selector is not silently ignored
+ok 44 - validation defaults
+ok 45 - malformed override rejected
+ok 46 - failed override leaves the original mode intact
+ok 47 - diagnostic counts blank lines
+ok 48 - unknown PE field rejected
+ok 49 - failed parse creates no partial mode
+ok 50 - stage immediate requires complete integer
+ok 51 - invalid step count rejected
+ok 52 - invalid step count rejected
+ok 53 - invalid step count rejected
+ok 54 - invalid step count rejected
+ok 55 - explicit zero steps is valid
+ok 56 - 255 steps is valid
+ok 57 - malformed immediate rejected
+ok 58 - malformed immediate rejected
+ok 59 - malformed immediate rejected
+ok 60 - malformed immediate rejected
+ok 61 - malformed immediate rejected
+ok 62 - two different diagonal immediates rejected
+ok 63 - override sets both constant operands
+ok 64 - two different reduction immediates rejected
+ok 65 - two different custom immediates rejected
+ok 66 - equivalent signed and unsigned immediates accepted
+ok 67 - pipeline syntax parses before semantic validation
+ok 68 - binary later pipeline stage rejected
+ok 69 - open validation device
+ok 70 - reduction capacity rejected before execution
+ok 71 - missing B rejected by the C engine
+ok 72 - convolution length overflow rejected before arithmetic
+ok 73 - unsupported scan operation rejected instead of becoming ADD
+ok 74 - invalid engine arguments leave device and output untouched
+ok 75 - binding defaults
+ok 76 - load actual arithmetic standard library
+ok 77 - parse reversed operands
+ok 78 - sim:
+ok 79 - stdlib neg uses A even in ALU operand B
+ok 80 - both north operands read A
+ok 81 - swapped subtraction reads B minus A
+ok 82 - reduction injects B into ALU operand A
+ok 83 - sim:v2
+ok 84 - stdlib neg uses A even in ALU operand B
+ok 85 - both north operands read A
+ok 86 - swapped subtraction reads B minus A
+ok 87 - reduction injects B into ALU operand A
+ok 88 - sim:2x3
+ok 89 - stdlib neg uses A even in ALU operand B
+ok 90 - both north operands read A
+ok 91 - swapped subtraction reads B minus A
+ok 92 - reduction injects B into ALU operand A
+ok 93 - sim:2x3:v2
+ok 94 - stdlib neg uses A even in ALU operand B
+ok 95 - both north operands read A
+ok 96 - swapped subtraction reads B minus A
+ok 97 - reduction injects B into ALU operand A
+ok 98 - sim:3x2
+ok 99 - stdlib neg uses A even in ALU operand B
+ok 100 - both north operands read A
+ok 101 - swapped subtraction reads B minus A
+ok 102 - reduction injects B into ALU operand A
+ok 103 - sim:1x16
+ok 104 - stdlib neg uses A even in ALU operand B
+ok 105 - both north operands read A
+ok 106 - swapped subtraction reads B minus A
+ok 107 - reduction injects B into ALU operand A
+ok 108 - open reset semantics device
+ok 109 - identify reset semantics device
+ok 110 - seed stale registers before mode invocation
+ok 111 - default once clears stale state and accumulates across chunks
+ok 112 - explicit once starts a new invocation from zero
+ok 113 - read full state after reset once
+ok 114 - initial reset also clears untapped NOP registers
+ok 115 - each clears the accumulator for every chunk
+ok 116 - open reset semantics device
+ok 117 - identify reset semantics device
+ok 118 - seed stale registers before mode invocation
+ok 119 - default once clears stale state and accumulates across chunks
+ok 120 - explicit once starts a new invocation from zero
+ok 121 - read full state after reset once
+ok 122 - initial reset also clears untapped NOP registers
+ok 123 - each clears the accumulator for every chunk
+ok 124 - open reset semantics device
+ok 125 - identify reset semantics device
+ok 126 - seed stale registers before mode invocation
+ok 127 - default once clears stale state and accumulates across chunks
+ok 128 - explicit once starts a new invocation from zero
+ok 129 - read full state after reset once
+ok 130 - initial reset also clears untapped NOP registers
+ok 131 - each clears the accumulator for every chunk
+ok 132 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 133 - zero steps returns cleared registers even after a previous execution
+ok 134 - open reset semantics device
+ok 135 - identify reset semantics device
+ok 136 - seed stale registers before mode invocation
+ok 137 - default once clears stale state and accumulates across chunks
+ok 138 - explicit once starts a new invocation from zero
+ok 139 - read full state after reset once
+ok 140 - initial reset also clears untapped NOP registers
+ok 141 - each clears the accumulator for every chunk
+ok 142 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 143 - zero steps returns cleared registers even after a previous execution
+ok 144 - open reset semantics device
+ok 145 - identify reset semantics device
+ok 146 - seed stale registers before mode invocation
+ok 147 - default once clears stale state and accumulates across chunks
+ok 148 - explicit once starts a new invocation from zero
+ok 149 - read full state after reset once
+ok 150 - initial reset also clears untapped NOP registers
+ok 151 - each clears the accumulator for every chunk
+ok 152 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 153 - zero steps returns cleared registers even after a previous execution
+ok 154 - open reset semantics device
+ok 155 - identify reset semantics device
+ok 156 - seed stale registers before mode invocation
+ok 157 - default once clears stale state and accumulates across chunks
+ok 158 - explicit once starts a new invocation from zero
+ok 159 - read full state after reset once
+ok 160 - initial reset also clears untapped NOP registers
+ok 161 - each clears the accumulator for every chunk
+ok 162 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 163 - zero steps returns cleared registers even after a previous execution
+ok 164 - open pattern validation device
+ok 165 - field syntax remains independent of final merged pattern
+ok 166 - compile and execution reject an ignored field without changing output
+ok 167 - field syntax remains independent of final merged pattern
+ok 168 - compile and execution reject an ignored field without changing output
+ok 169 - field syntax remains independent of final merged pattern
+ok 170 - compile and execution reject an ignored field without changing output
+ok 171 - field syntax remains independent of final merged pattern
+ok 172 - compile and execution reject an ignored field without changing output
+ok 173 - field syntax remains independent of final merged pattern
+ok 174 - compile and execution reject an ignored field without changing output
+ok 175 - field syntax remains independent of final merged pattern
+ok 176 - compile and execution reject an ignored field without changing output
+ok 177 - field syntax remains independent of final merged pattern
+ok 178 - compile and execution reject an ignored field without changing output
+ok 179 - field syntax remains independent of final merged pattern
+ok 180 - compile and execution reject an ignored field without changing output
+ok 181 - field syntax remains independent of final merged pattern
+ok 182 - compile and execution reject an ignored field without changing output
+ok 183 - field syntax remains independent of final merged pattern
+ok 184 - compile and execution reject an ignored field without changing output
+ok 185 - field syntax remains independent of final merged pattern
+ok 186 - compile and execution reject an ignored field without changing output
+ok 187 - field syntax remains independent of final merged pattern
+ok 188 - compile and execution reject an ignored field without changing output
+ok 189 - field syntax remains independent of final merged pattern
+ok 190 - compile and execution reject an ignored field without changing output
+ok 191 - inapplicable fields issue no configuration/reset/run commands
+ok 192 - compile 'add' ok
+ok 193 - PE(0,0) opcode = ADD
+ok 194 - PE(0,0) sel_a = north
+ok 195 - PE(0,0) sel_b = west
+ok 196 - cfg_decode names the opcode
+ok 197 - open sim: for engine tests
+ok 198 - matvec_run ok
+ok 199 - matvec matches host reference (6x5)
+ok 200 - scan_run returns n
+ok 201 - scan matches host reference
+ok 202 - conv_run returns n+k-1
+ok 203 - conv matches host reference
+ok 204 - open both protocol backends
+ok 205 - matvec v3 ok
+ok 206 - matvec v2 ok
+ok 207 - matvec identical across protocols
+ok 208 - scan v3 ok
+ok 209 - scan v2 ok
+ok 210 - scan identical across protocols
+ok 211 - scan: fused path uses fewer round trips
+ok 212 - scan: fused path moves fewer bytes
+ok 213 - open sim: for the sparse-skip test
+ok 214 - conv 3*48 runs
+ok 215 - conv still matches the host reference
+ok 216 - dense matvec runs
+ok 217 - conv skips the Toeplitz zero blocks (>4x fewer round trips)
+ok 218 - sim:1x1:v2
+ok 219 - rectangular kernels match scalar reference
+ok 220 - sim:1x1
+ok 221 - rectangular kernels match scalar reference
+ok 222 - sim:1x16:v2
+ok 223 - rectangular kernels match scalar reference
+ok 224 - sim:1x16
+ok 225 - rectangular kernels match scalar reference
+ok 226 - sim:16x1:v2
+ok 227 - rectangular kernels match scalar reference
+ok 228 - sim:16x1
+ok 229 - rectangular kernels match scalar reference
+ok 230 - sim:2x3:v2
+ok 231 - rectangular kernels match scalar reference
+ok 232 - sim:2x3
+ok 233 - rectangular kernels match scalar reference
+ok 234 - sim:3x2:v2
+ok 235 - rectangular kernels match scalar reference
+ok 236 - sim:3x2
+ok 237 - rectangular kernels match scalar reference
+ok 238 - sim:2x8:v2
+ok 239 - rectangular kernels match scalar reference
+ok 240 - sim:2x8
+ok 241 - rectangular kernels match scalar reference
+ok 242 - sim:8x2:v2
+ok 243 - rectangular kernels match scalar reference
+ok 244 - sim:8x2
+ok 245 - rectangular kernels match scalar reference
+ok 246 - sim:4x4:v2
+ok 247 - rectangular kernels match scalar reference
+ok 248 - sim:4x4
+ok 249 - rectangular kernels match scalar reference
+ok 250 - parse custom coordinate beyond default 4x4
+ok 251 - custom coordinate valid on 1x16
+ok 252 - custom coordinate rejected on 2x3
+ok 253 - out-of-range output tap rejected
+1..253
+# 253 passed, 0 failed
+sh test/test_cli.sh ./build/asan/cgra
+ok CLI 1 - reject run add -d sim: --a 1 2 --b 3 4 --steps 256
+ok CLI 2 - reject run add -d sim: --a 1 2 --b 3 4 --steps -1
+ok CLI 3 - reject run add -d sim: --a 1 2 --b 3 4 --steps 1junk
+ok CLI 4 - reject run add -d sim: --a 1 2 --b 3 4 --steps 999999999999999999999999
+ok CLI 5 - reject run addi -d sim: --a 1 --imm 4junk
+ok CLI 6 - explicit zero steps
+ok CLI 7 - reject run add -d sim: --a 2 --b 3
+ok CLI 8 - reject check
+ok CLI 9 - reject check
+ok CLI 10 - reject -c /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/pipeline.cgra pipe invalid -d sim: --a 1 2 3
+error: pipeline invalid: stage mul requires unavailable vector B
+1 error(s)
+ok CLI 11 - check validates pipeline arity
+ok CLI 12 - same input and output file keeps data until read
+ok CLI 13 - hard-linked input and output
+ok CLI 14 - reject run missing -d sim: --a 1 -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 15 - failed command preserves existing output
+ok CLI 16 - reject run addi -d sim: --a 1 -o /dev/full
+ok CLI 17 - file output matches stdout: ping -d sim:
+ok CLI 18 - file output matches stdout: show add -d sim:2x3
+ok CLI 19 - file output matches stdout: show add -d sim:3x2 -v
+ok CLI 20 - file output matches stdout: modes
+ok CLI 21 - file output matches stdout: devices
+ok CLI 22 - file output matches stdout: pipelines
+ok CLI 23 - file output matches stdout: io
+ok CLI 24 - file output matches stdout: config
+ok CLI 25 - file output matches stdout: check
+ok CLI 26 - file output matches stdout: dump -d sim:2x3
+ok CLI 27 - file output matches stdout: run add -d sim: --a 1 2 --b 3 4 --json
+ok CLI 28 - file output matches stdout: pipe saxpy -d sim: --a 1 2
+ok CLI 29 - file output matches stdout: matvec -d sim: -m 1 2 3 4 --x 1 2
+ok CLI 30 - file output matches stdout: conv -d sim: -m 1 2 --x 3 4
+ok CLI 31 - file output matches stdout: scan -d sim: --a 1 2 --dtype u16
+ok CLI 32 - reject init -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 33 - reject reset -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 34 - reject probe -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 35 - reject emulate -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 36 - reject selftest -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 37 - reject shell -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 38 - reject ping --json -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 39 - reject show --dtype s16 -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 40 - reject modes --io hex -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 41 - reject bench --dtype s16 -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 42 - reject benchall --io hex -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 43 - reject -c /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/pipeline.cgra check -o /tmp/nix-shell.5YNUbT/tmp.OA9AMxEbGu/result
+ok CLI 44 - failed check preserves file and diagnoses on stderr
+ok CLI 45 - reject ping -d sim: -o /dev/full
+ok CLI 46 - reject show add -d sim: -o /dev/full
+# 46 CLI regression checks passed
+python3 test/test_contract.py ./build/asan/cgra
+ok contract 1 - reject unused input: ping -d sim unexpected
+ok contract 2 - reject unused input: run add --a 1 --b 2 -d sim --cols 4
+ok contract 3 - reject unused input: show add extra
+ok contract 4 - reject unused input: bench add extra
+ok contract 5 - reject unused input: scan --a 1 2
+ok contract 6 - reject unused input: run relu --a 1 --b 2
+ok contract 7 - reject unused input: conv --a 1 -m 2 --x 3
+ok contract 8 - reject unused input: matvec -m 1 --x 2 --b 3
+ok contract 9 - ping: validate option before configuration or external effects
+ok contract 10 - reset: validate option before configuration or external effects
+ok contract 11 - dump: validate option before configuration or external effects
+ok contract 12 - run: validate option before configuration or external effects
+ok contract 13 - pipe: validate option before configuration or external effects
+ok contract 14 - conv: validate option before configuration or external effects
+ok contract 15 - scan: validate option before configuration or external effects
+ok contract 16 - bench: validate option before configuration or external effects
+ok contract 17 - benchall: validate option before configuration or external effects
+ok contract 18 - show: validate option before configuration or external effects
+ok contract 19 - probe: validate option before configuration or external effects
+ok contract 20 - modes: validate option before configuration or external effects
+ok contract 21 - devices: validate option before configuration or external effects
+ok contract 22 - pipelines: validate option before configuration or external effects
+ok contract 23 - io: validate option before configuration or external effects
+ok contract 24 - config: validate option before configuration or external effects
+ok contract 25 - check: validate option before configuration or external effects
+ok contract 26 - init: validate option before configuration or external effects
+ok contract 27 - emulate: validate option before configuration or external effects
+ok contract 28 - selftest: validate option before configuration or external effects
+ok contract 29 - shell: validate option before configuration or external effects
+ok contract 30 - stdout/success for --help
+ok contract 31 - stdout/success for run --help
+ok contract 32 - stdout/success for --version
+ok contract 33 - negative positional operands remain valid
+ok contract 34 - reject whole shell line: unclosed
+ok contract 35 - reject whole shell line: argument limit
+ok contract 36 - reject whole shell line: token too long
+ok contract 37 - reject whole shell line: line too long
+ok contract 38 - reject whole shell line: contains NUL
+ok contract 39 - shell quotes and negative numbers round-trip
+ok contract 40 - oversized line is drained before the next command
+ok contract 41 - shell retains inherited configuration
+ok contract 42 - per-line configuration overrides inherited configuration
+ok contract 43 - completion lists shell and benchall
+ok contract 44 - completion follows run options after a global device option
+ok contract 45 - completion exposes matvec dimensions
+ok contract 46 - completion exposes version
+ok contract 47 - terminal shell rejects an unclosed quote before dispatch
+ok contract 48 - PTY service publishes readiness
+ok contract 49 - emulate accepts selected geometry/protocol
+ok contract 50 - CLI reaches configurable server over real serial transport
+ok contract 51 - SIGTERM shuts down service with success and no error
+ok contract 52 - PTY service publishes readiness
+ok contract 53 - emulate accepts selected geometry/protocol
+ok contract 54 - CLI reaches configurable server over real serial transport
+ok contract 55 - SIGTERM shuts down service with success and no error
+ok contract 56 - invalid service geometry/options rejected
+ok contract 57 - invalid service geometry/options rejected
+ok contract 58 - invalid service geometry/options rejected
+# 58 command/shell contract checks passed
+python3 test/test_bench.py ./build/asan/cgra
+ok benchmark 1 - benchmark metadata describes the actual backend and geometry
+ok benchmark 2 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 3 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 4 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 5 - dedicated public API workloads execute and match independent references
+ok benchmark 6 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 7 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 8 - benchmark metadata describes the actual backend and geometry
+ok benchmark 9 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 10 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 11 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 12 - dedicated public API workloads execute and match independent references
+ok benchmark 13 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 14 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 15 - benchmark metadata describes the actual backend and geometry
+ok benchmark 16 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x8: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x8 mesh\n'
+ok benchmark 17 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 18 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 19 - dedicated public API workloads execute and match independent references
+ok benchmark 20 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 21 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 22 - benchmark metadata describes the actual backend and geometry
+ok benchmark 23 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x8:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x8 mesh\n'
+ok benchmark 24 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 25 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 26 - dedicated public API workloads execute and match independent references
+ok benchmark 27 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 28 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 29 - benchmark metadata describes the actual backend and geometry
+ok benchmark 30 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4: b''
+ok benchmark 31 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 32 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 33 - dedicated public API workloads execute and match independent references
+ok benchmark 34 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 35 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 36 - benchmark metadata describes the actual backend and geometry
+ok benchmark 37 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4:v2: b''
+ok benchmark 38 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 39 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 40 - dedicated public API workloads execute and match independent references
+ok benchmark 41 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 42 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 43 - benchmark metadata describes the actual backend and geometry
+ok benchmark 44 - stdlib scalar checks pass; fixed custom template is diagnosed on 8x2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 8x2 mesh\n'
+ok benchmark 45 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 46 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 47 - dedicated public API workloads execute and match independent references
+ok benchmark 48 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 49 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 50 - benchmark metadata describes the actual backend and geometry
+ok benchmark 51 - stdlib scalar checks pass; fixed custom template is diagnosed on 8x2:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 8x2 mesh\n'
+ok benchmark 52 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 53 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 54 - dedicated public API workloads execute and match independent references
+ok benchmark 55 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 56 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 57 - benchmark metadata describes the actual backend and geometry
+ok benchmark 58 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 59 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 60 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 61 - dedicated public API workloads execute and match independent references
+ok benchmark 62 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 63 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 64 - benchmark metadata describes the actual backend and geometry
+ok benchmark 65 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 66 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 67 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 68 - dedicated public API workloads execute and match independent references
+ok benchmark 69 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 70 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 71 - benchmark metadata describes the actual backend and geometry
+ok benchmark 72 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 73 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 74 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 75 - dedicated public API workloads execute and match independent references
+ok benchmark 76 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 77 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 78 - benchmark metadata describes the actual backend and geometry
+ok benchmark 79 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 80 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 81 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 82 - dedicated public API workloads execute and match independent references
+ok benchmark 83 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 84 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 85 - benchmark metadata describes the actual backend and geometry
+ok benchmark 86 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 87 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 88 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 89 - dedicated public API workloads execute and match independent references
+ok benchmark 90 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 91 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 92 - benchmark metadata describes the actual backend and geometry
+ok benchmark 93 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 94 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 95 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 96 - dedicated public API workloads execute and match independent references
+ok benchmark 97 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 98 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 99 - matvec benchmark handles size 1
+ok benchmark 100 - matvec benchmark handles size 4096
+ok benchmark 101 - conv benchmark handles size 1
+ok benchmark 102 - conv benchmark handles size 4096
+ok benchmark 103 - scan benchmark handles size 1
+ok benchmark 104 - scan benchmark handles size 4096
+ok benchmark 105 - reject --size=0
+ok benchmark 106 - reject --size=-1
+ok benchmark 107 - reject --size=4097
+ok benchmark 108 - reject --size=2junk
+ok benchmark 109 - reject --repeat=0
+ok benchmark 110 - reject --repeat=-1
+ok benchmark 111 - reject --repeat=2junk
+ok benchmark 112 - reject --repeat=999999999999999999999
+ok benchmark 113 - reject --cols=0
+ok benchmark 114 - reject --cols=4097
+ok benchmark 115 - reject --cols=2junk
+ok benchmark 116 - reject malformed/out-of-range vector 32768junk
+ok benchmark 117 - reject malformed/out-of-range vector 65536
+ok benchmark 118 - reject malformed/out-of-range vector -32769
+ok benchmark 119 - reject malformed/out-of-range vector 1-2
+ok benchmark 120 - reject malformed/out-of-range vector 999999999999999999999999999
+ok benchmark 121 - reject unknown formatting ('--dtype', 'u8')
+ok benchmark 122 - reject unknown formatting ('--io', 'missing')
+ok benchmark 123 - failed sweep returns nonzero and publishes its complete JSON artifact
+ok benchmark 124 - escaped names round-trip; invalid modes and patterns are never omitted
+ok benchmark 125 - known custom ADD routing is checked against its scalar reference
+ok benchmark 126 - an arbitrary compilable custom mapping remains an explicit skip
+ok benchmark 127 - a changed custom example cannot inherit validation from its name
+ok benchmark 128 - valid single benchmark JSON
+ok benchmark 129 - invalid UTF-8 bytes cannot invalidate JSON
+ok benchmark 130 - embedded NUL in configuration rejected
+ok benchmark 131 - embedded NUL in vector input rejected
+ok benchmark 132 - CGRA_PATH longer than the old fixed buffer is fully searched
+ok benchmark 133 - CGRA_BAUD requires a complete integer
+ok benchmark 134 - oversized configuration path is rejected instead of truncated
+ok benchmark 135 - configuration file capacity overflow is explicit
+ok benchmark 136 - sweep retains each failing point and propagates nonzero status
+ok benchmark 137 - a sweep producing no report preserves the previous artifact
+ok benchmark 138 - one actual benchmark invocation per sweep point
+ok benchmark 139 - checksum-valid wrong hardware output fails scalar validation: []
+# 139 benchmark/CLI checks passed
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'

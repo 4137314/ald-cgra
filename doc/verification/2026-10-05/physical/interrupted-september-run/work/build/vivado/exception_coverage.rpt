@@ -1,0 +1,23 @@
+Copyright 1986-2022 Xilinx, Inc. All Rights Reserved. Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+---------------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2026.1 (lin64) Build 6511674 Tue Jun 16 11:01:26 MDT 2026
+| Date         : Wed Sep 30 16:27:01 2026
+| Host         : 4137314 running 64-bit unknown
+| Command      : report_exceptions -coverage -file build/vivado/exception_coverage.rpt
+| Design       : cgra_top
+| Device       : 7a100t-csg324
+| Speed File   : -1  PRODUCTION 1.23 2018-06-13
+| Design State : Routed
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+Exceptions Report
+
+Position  Type             Setup     Hold      From      Through  To        Endpoints  From (%)  Through (%)  To (%)
+--------  ---------------  --------  --------  --------  -------  --------  ---------  --------  -----------  ------
+2         False Path       false     false     1 ports            1 pins    1          100.00                 100.00
+3         False Path       false     false                        1 ports   1                                 100.00
+4         False Path       false     false     1 ports            1 pins    1          100.00                 100.00
+5         False Path       false     false                        4 ports   4                                 100.00
+6         Multicycle Path  cycles=2  -         800 pins           256 pins  256        100.00                 100.00
+7         Multicycle Path  -         cycles=1  800 pins           256 pins  256        100.00                 100.00
+

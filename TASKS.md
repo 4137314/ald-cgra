@@ -16,7 +16,7 @@ Le verifiche in simulazione non attestano timing/area della FPGA.
 | H2 | P1 | Recupero dopo richieste incomplete senza interpretare RST come payload | VERIFICATO |
 | H3 | P2 | Contratto dei guasti, framing, header corrotti e retry verificati | PARZIALE |
 | H4 | P2 | Scartare frame UART con stop bit invalido e verificare recupero | VERIFICATO |
-| H5 | P1 | Fmax da periodo verificato, gate finale e controllo percorsi/vincoli | PARZIALE |
+| H5 | P1 | Fmax da periodo verificato, gate finale e controllo percorsi/vincoli | VERIFICATO (4×4/DIV2) |
 | S1 | P1 | Ingressi DSL corretti anche per negazione, operandi scambiati e rettangoli | VERIFICATO |
 | S2 | P2 | Rifiutare due immediati diversi sullo stesso PE | VERIFICATO |
 | S3 | P2 | Parsing rigoroso, step entro protocollo e validazione semantica condivisa | VERIFICATO |
@@ -57,8 +57,8 @@ A01 estende S6 alla matrice comando/opzione, A10 estende gli oracoli di S7.
 | A01 | P1 | `--out` coerente per tutti i comandi ammessi; nessun file svuotato da uno stream inutilizzato; regressioni | VERIFICATO |
 | A02 | P2 | `.pc` coerente con `libdir`/`includedir`; client esterno con directory custom e DESTDIR | VERIFICATO |
 | A03 | P1 | README/commenti hardware coerenti con protocollo, geometria e prove; nessuna garanzia di funzionamento derivata dalla sola STA | DA FARE |
-| A04 | P1 | `ASYNC_REG`, verifica netlist/placement e copertura dei vincoli con Vivado reale; estensione H5 | DA FARE |
-| A05 | P1/P2 | Manifest e pubblicazione per run Vivado; programmazione associata all'artefatto verificato | DA FARE |
+| A04 | P1 | `ASYNC_REG`, verifica netlist/placement e copertura dei vincoli con Vivado reale; estensione H5 | VERIFICATO (4×4/10 ns/DIV2) |
+| A05 | P1/P2 | Manifest e pubblicazione per run Vivado; programmazione associata all'artefatto verificato | VERIFICATO (senza programmazione) |
 | A06 | P2/P3 | PDF di consegna unico, commit/manifest e bibliografia ribilanciata dopo layout finale; estensione T4/R6 | DA FARE |
 | A07 | P2 | Arity/opzioni CLI, help/version, completion e limiti shell verificati; opzioni output completate | VERIFICATO |
 | A08 | P2 | Separazione dei domini CLI e contesto di invocazione; definire estensioni diagnostica/deadline mantenendo ABI | VERIFICATO |
@@ -68,7 +68,7 @@ A01 estende S6 alla matrice comando/opzione, A10 estende gli oracoli di S7.
 | A12 | P2 | CI per domini, GCC/Clang, artifact e `checks` Nix; supporto piattaforme esplicito | VERIFICATO |
 | A13 | P2/P3 | Manuali/esempi coerenti, claim→fonte, integrità CSV distinta da attualità dei sorgenti | DA FARE |
 | A14 | P2 | Guida AGENTS nella radice, caricamento verificato in Codex/Claude e indice operativo breve | PARZIALE |
-| A15 | P2 | Confronto forme a 16 PE con workload/risorse comparabili e run Vivado selezionati | PARZIALE |
+| A15 | P2 | Confronto forme a 16 PE con workload/risorse comparabili e run Vivado selezionati | VERIFICATO (cinque forme/10 ns/DIV2) |
 | A16 | P2 | Licenza scelta dall'autore e metadati Nix coerenti; estensione T4 | PARZIALE |
 | A17 | P2 | Compilation database JSON valido con percorsi speciali e flag coerenti con la build | VERIFICATO |
 | A18 | P2 | Oggetti invalidati quando cambiano compiler/flag nello stesso profilo | VERIFICATO |
@@ -443,7 +443,7 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 | B02 | Memoria locale e sequencer RTL, modello, API e CLI con workload end-to-end e regressioni legacy | DA FARE |
 | B03 | Prove buffer/sequencer, misura traffico/round trip, sintesi reale e limiti fisici documentati | DA FARE |
 | C07 | Deadline dell'intera transazione, diagnostica additiva, CLOEXEC/apertura esclusiva opzionale | VERIFICATO |
-| C08 | Server PTY configurabile/arrestabile e piani riutilizzabili con invalidazione esplicita | PARZIALE |
+| C08 | Server PTY configurabile/arrestabile e piani riutilizzabili con invalidazione esplicita | VERIFICATO |
 
 ### Checkpoint 2026-09-27 / 01 — baseline completata
 
@@ -612,14 +612,99 @@ release o programmazione della scheda è autorizzato da questo ciclo.
   gruppi verificati anche estraendo l'esatto indice Git in copie temporanee;
   evidenze in `doc/verification/2026-09-30/atomic/`.
 
+### Checkpoint 2026-10-05 / 07 — vincoli e artefatti fisici
+
+- **A04 verificato su 4×4/10 ns/STEP_DIV=2:** nuova baseline Vivado 2026.1
+  reale rileva due CDC-2 senza ASYNC_REG e 512 endpoint dell'eccezione applicata
+  a celle. Attributi aggiunti a RX/reset; eccezione limitata da C dei registri
+  di lancio a D dei PE, senza rilassare CE/reset. Verifica bit per bit del set
+  atteso, non soltanto conteggio o wildcard non vuota.
+- Il primo tentativo usava Q come startpoint, rifiutato realmente da Vivado:
+  log conservato. Run routed corretto del 30 settembre: **WNS +1.862 ns,
+  WHS +0.098 ns**, 4971 LUT/1034 FF/16 DSP implementati; ASYNC_REG preservato,
+  due CDC-3 Info, primi stadi senza fanout aggiuntivo e coppie nella stessa
+  slice; percorsi CE/reset controllati a singolo ciclo. Sintesi baseline
+  separata: 5016 LUT/1034 FF/16 DSP. Nessuna prova sulla scheda.
+- **F03 esteso:** cambio CFG/input limitato al contesto di scrittura/reset,
+  guardia dati prima della cattura; cover dopo modifiche effettive sia CFG sia
+  input. Full **23 PROVED + 6 FAIL attesi**, cover un obbligo PROVED e dieci
+  BOUNDED_PASS. Prima discrepanza nel conteggio delle assertion per DIV1
+  conservata come ERROR e corretta nel controllo frontend, senza rimuovere
+  proprietà. EXEC risposta completa/liveness restano aperti.
+- Evidenze immutabili del 30 settembre in
+  `doc/verification/2026-09-30/{vivado-baseline,synchronizers}/`, incluse copie
+  dei modelli formali archiviati alla ripresa del 5 ottobre.
+- **A05 verificato:** runner integrato con snapshot per run, manifest/schema 1,
+  pubblicazione atomica solo su successo e programmazione tramite manifest
+  esplicito. **80 test Tcl + 30 test artefatti PASS**, dichiaratamente sintetici.
+  Il run bit del 30 settembre ha log positivo del tool ma manifest incompleto
+  e handle non più presente: non pubblicabile, non retroattivamente marcato
+  PASS. Nuovo run del 5 ottobre **PASS**: manifest completo, bitstream con
+  hash, pubblicazione e `make check-artifact` realmente eseguiti. Sintesi
+  default 4999 LUT, implementazione 4971 LUT; 1034 FF, 16 DSP, zero BRAM.
+  WNS +1.862 ns, WHS +0.098 ns. Evidenze in
+  `doc/verification/2026-10-05/physical/`; A05 chiuso nel perimetro senza
+  accesso hardware. GHDL completo PASS; test artefatti saliti a **31** con
+  il caso Git indisponibile, necessario per le sorgenti unpacked Nix.
+- Sweep A15 reale avviato in `hw/build/physical-sweep-20261005/`, cinque
+  istanze 1×16/2×8/4×4/8×2/16×1, DIV2/10 ns, sorgenti e tool confrontati
+  per identità. Ogni punto conserva il proprio manifest anche se fallisce.
+- Restano A15/sweep geometrie e Fmax, F03 risposta/liveness, C08 piani e
+  B01–B03 estensione a blocchi; nessun ridimensionamento dell'incarico.
+  Nessun push, release o programmazione hardware.
+
+### Checkpoint 2026-10-06 / 08 — piani, regressione PTY e cinque geometrie
+
+- **C08 verificato:** API additiva `cgra_plan_create/bind/execute_n/invalidate/free`,
+  configurazione posseduta per valore, niente allocazioni in bind/execute,
+  invalidazione prima dei comandi raw e degli errori di trasporto. Nessuna cache
+  implicita oltre una riconnessione. v2 mantiene i comandi separati, v3 usa EXEC.
+  Otto geometrie × due versioni, aliasing, step 0/255, stato MAC, NACK,
+  disconnessione/incertezza, client installato: **874 controlli piani**.
+- Un bind e otto esecuzioni sul mapping ADD 4×4: **275 byte / 9 transazioni**
+  contro **744 / 16** con CFG ogni volta; ID iniziale escluso, CFG inclusa,
+  risultato controllato ogni volta. Conteggi wire, non prestazioni FPGA.
+- Gate locali del 5 ottobre: **2300 controlli release e ASan/UBSan/LSan**;
+  analyzer GCC e manuale PASS; installazione **12**, compdb **187**, build **27**.
+  Primo inventario atteso compdb incompleto conservato come FAIL, poi corretto.
+  Evidenze in `doc/verification/2026-10-05/plans-*`, codice `ceff842`.
+- GCC13 ha rivelato un difetto del test: una singola read PTY restituiva 1 dei
+  6 byte già trasmessi correttamente. Riprodotto prima della correzione; helper
+  di lettura completa e oracolo dell'intero frame aggiunti, senza cambiare il
+  trasporto. **100 ripetizioni / 800 controlli PASS**, commit `2ffe045`.
+  Matrice finale GCC13.3/Clang18.1.3: **2295 controlli per compiler/profilo**,
+  release e sanitizer con LSan; cinque controlli high-fd esplicitamente saltati
+  per limite del container (eseguiti nei gate locali). Analyzer GCC13 di lib e
+  CLI PASS. Fallimento e log originali conservati il 6 ottobre.
+- **A15 verificato:** Vivado 2026.1 reale, stessi hash RTL/vincoli/script/tool,
+  cinque forme a 16 PE, Nexys A7/DIV2/10 ns. Tutti PASS, 16 DSP e zero BRAM.
+  LUT routed/FF/WNS/WHS: 1×16 **4999/1179/+2.433/+0.081**;
+  2×8 **4974/1066/+0.775/+0.105**; 4×4 **4971/1034/+1.862/+0.098**;
+  8×2 **4975/1066/+2.350/+0.130**; 16×1 **4993/1179/+1.247/+0.098**.
+  Un run distinto per punto, manifest e report in
+  `doc/verification/2026-10-05/geometry-physical/`. Non sono misure su scheda.
+- **H5 in verifica:** il run Fmax reale precedente ha rivelato confronto fra
+  periodo richiesto 5.859375 ns e requisito tool 5.859 ns. Conservato FAIL;
+  introdotta griglia esplicita di 1 ps, periodo applicato verificato nel clock
+  object e manifest, senza tolleranza sugli slack. **83 Tcl + 31 artefatti PASS**;
+  nuovo sweep reale **PASS**, 5.859 ns (170.677590 MHz da periodo), WNS
+  **+0.177 ns**, WHS **+0.122 ns**, 4975 LUT/1034 FF/16 DSP, zero BRAM.
+  H5 verificato su 4×4/DIV2. Evidenze in `doc/verification/2026-10-06/fmax/`.
+  Frequenza vincolata euristica, oscillatore fisico invariato a 100 MHz.
+- **F03 in corso:** monitor atomico EXEC aggiunto al vunit esistente; primi
+  tentativi bounded positivi ma induzione UNKNOWN, conservati. Rafforzamento
+  delle invarianti provate senza assumption aggiuntive. Risposta completa e
+  liveness non ancora dichiarate verificate. B01–B03 e report finale restano
+  aperti; nessun push, release o programmazione hardware.
+
 ## Prossime correzioni senza scheda
 
 1. **F03/F05/C08:** completare EXEC/liveness e piani riutilizzabili;
    preservare CLI e deadline già verificate nei checkpoint 03–04.
 2. **A03/A06/A14:** allineare README/commenti alle evidenze, definire il PDF
    di consegna e le istruzioni comuni per gli agenti.
-3. **A04/A05/H5:** dichiarare i sincronizzatori, controllare il netlist reale
-   e rendere gli artefatti Vivado identificabili per run.
+3. **A05/H5/A15:** completare la verifica del runner fisico e dei manifest,
+   estendere i run reali a geometrie comparabili e allo sweep Fmax.
 4. **H3/T3/A10/A11/A12:** completare la matrice di corruzione header/opcode, byte
    inseriti/persi e le verifiche sulle altre piattaforme; aggiungere
    oracoli benchmark per i mapping attualmente esclusi.
@@ -635,8 +720,8 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 ## Ottimizzazioni successive alla correttezza
 
 - [x] Convoluzione con generazione implicita delle tile, senza Toeplitz densa.
-- [ ] Piani compilati riutilizzabili con invalidazione esplicita.
-- [ ] Confronto delle geometrie a workload e risorse comparabili.
+- [x] Piani compilati riutilizzabili con invalidazione esplicita.
+- [x] Confronto delle geometrie a workload e risorse comparabili.
 - [ ] Protocollo oltre 16 PE con lunghezze, capability e framing definiti.
 - [x] Primo gate Vivado reale dopo le correzioni: synth e STA 4×4/10 ns/STEP_DIV=2.
 - [ ] Estendere misure Vivado a Fmax e configurazioni comparabili; poi prove su scheda.

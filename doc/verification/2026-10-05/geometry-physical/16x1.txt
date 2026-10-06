@@ -1,0 +1,1 @@
+PASS: /home/main/dev/git/ald-cgra/hw/build/physical-sweep-20261005/16x1/runs/sta-20261005T141323Z-c086f83d/manifest.json

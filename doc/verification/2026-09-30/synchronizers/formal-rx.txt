@@ -1,0 +1,4 @@
+F-UART-RX-C3: PROVED (1.349 s)
+F-UART-RX-C868: PROVED (2.342 s)
+M-UART-RX: FAIL (2.258 s) [expected negative]
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/full-20260930T135350Z-2/manifest.json; acceptance PASS

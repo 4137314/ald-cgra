@@ -55,15 +55,15 @@ puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 set use_fp [expr {[info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0"}]
 
 # -------------------------------------------------- one place+route at a period
-# Returns "wns whs" for the routed design constrained at $period ns.
+# Returns "wns whs applied_period"; the clock uses an explicit 1 ps grid.
 proc try_period {period synth_dcp use_fp board step_div} {
     open_checkpoint $synth_dcp
-    cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
+    set applied [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
     if { $use_fp } { cgra_floorplan $board }
     opt_design -quiet
     place_design -quiet
     route_design -quiet
-    return [cgra_timing_slacks]
+    return [concat [cgra_timing_slacks] [list $applied]]
 }
 
 # -------------------------------------------------- synthesise once
@@ -78,23 +78,23 @@ write_checkpoint -force $synth_dcp
 
 # -------------------------------------------------- binary search
 # Establish an actually passing upper endpoint before narrowing the interval.
-lassign [try_period $hi $synth_dcp $use_fp $board $step_div] wns whs
-cgra_checked_frequency $hi $wns $whs
-set best_period $hi
+lassign [try_period $hi $synth_dcp $use_fp $board $step_div] wns whs applied
+cgra_checked_frequency $applied $wns $whs
+set best_period $applied
 puts "=========== Fmax search: $top on $board ($part), step_div=$step_div ==========="
 puts [format "  %-8s %-10s %-10s %s" period(ns) WNS(ns) WHS(ns) result]
 for {set i 0} {$i < $iters} {incr i} {
     set mid [expr {($lo + $hi) / 2.0}]
-    lassign [try_period $mid $synth_dcp $use_fp $board $step_div] wns whs
+    lassign [try_period $mid $synth_dcp $use_fp $board $step_div] wns whs applied
     set pass [expr {$wns >= 0 && $whs >= 0}]
-    puts [format "  %-8.3f %-10.3f %-10.3f %s" $mid $wns $whs [expr {$pass ? "PASS" : "fail"}]]
-    if { $pass } { set best_period $mid; set hi $mid } else { set lo $mid }
+    puts [format "  %-8.3f %-10.3f %-10.3f %s" $applied $wns $whs [expr {$pass ? "PASS" : "fail"}]]
+    if { $pass } { set best_period $applied; set hi $mid } else { set lo $mid }
 }
 
 # -------------------------------------------------- final clean run @ best
 # Re-run at the best period WITH phys_opt + full reports, and analyse the wall.
 open_checkpoint $synth_dcp
-cgra_timing_constraints $best_period $step_div $mesh_rows $mesh_cols
+set best_period [cgra_timing_constraints $best_period $step_div $mesh_rows $mesh_cols]
 if { $use_fp } { cgra_floorplan $board }
 opt_design -quiet
 place_design -quiet

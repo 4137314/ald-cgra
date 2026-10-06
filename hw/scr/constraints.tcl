@@ -59,11 +59,14 @@ proc cgra_datapath_registers {rows cols} {
 
 proc cgra_timing_constraints {period_ns {step_div 2} {rows 4} {cols 4}} {
     cgra_timing_args $period_ns $step_div
+    set period_ns [cgra_clock_period $period_ns]
     foreach port {clk uart_rx_i uart_tx_o btn_rst {led[*]}} {
         cgra_nonempty [get_ports $port] "port $port"
     }
     # ---- system clock (board oscillator pin) ----------------------------
     create_clock -period $period_ns -name sys_clk [get_ports clk]
+    set actual [get_property PERIOD [cgra_nonempty [get_clocks sys_clk] {system clock}]]
+    if {abs($actual - $period_ns) > 0.000001} {error "clock period differs from applied constraint: $actual vs $period_ns"}
 
     # ---- asynchronous I/O: excluded from timing -------------------------
     set_false_path -from [get_ports uart_rx_i] -to [cgra_nonempty [get_pins u_rx/rx_s1_reg/D] {RX first stage D}]
@@ -98,4 +101,5 @@ proc cgra_timing_constraints {period_ns {step_div 2} {rows 4} {cols 4}} {
         set_multicycle_path $step_div              -setup -from $src -to $dst
         set_multicycle_path [expr {$step_div - 1}] -hold  -from $src -to $dst
     }
+    return $period_ns
 }

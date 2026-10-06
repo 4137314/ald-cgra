@@ -1,0 +1,69 @@
+{
+  "id": "F-CTRL-1x1-DIV4",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_ROWS": 1,
+    "G_COLS": 1,
+    "G_STEP_DIV": 4,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 31,
+  "assumptions": 0,
+  "covers": 5,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=4 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "3828db27226e98ba16d5e4d82fde1470d3acecdfd9ba5a70c92fdda759ec47de"
+  },
+  "parameter_check_sha256": "539f8841540bba353f15c1843c274070f34731839f00b7a623b749a33bf0a259",
+  "effective_properties_sha256": "e6f7610a7a03900ce8cfbaec0c73dca88fada00e27f843f6f714595483b141f3",
+  "checked_port_widths": {
+    "cfg": 32,
+    "pe_regs": 16,
+    "west_o": 16,
+    "north_o": 16
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 5,
+    "assert": 31
+  },
+  "smt2_cells": {
+    "assert": 31,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "3b29aa6da503b0d12285dfd4219443e2ec722c709c14d2469d80103067e262f6",
+    "task/src/properties.json": "248fdc94e6ea5ef911c0c924c0b038b238ab3da109c350fe7d3a5f28eede1dbe",
+    "task/model/design_smt2.smt2": "634e29ebea004bcccc0718134bbe9d5ef1e2b3664e31149252e5fec41afdbe9e"
+  },
+  "traces": [],
+  "duration_seconds": 2.271
+}

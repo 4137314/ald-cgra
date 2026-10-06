@@ -1,0 +1,58 @@
+{
+  "id": "F-CTRL-1x1-DIV1",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_ROWS": 1,
+    "G_COLS": 1,
+    "G_STEP_DIV": 1,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 29,
+  "assumptions": 0,
+  "covers": 5,
+  "result": "ERROR",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=1 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "3828db27226e98ba16d5e4d82fde1470d3acecdfd9ba5a70c92fdda759ec47de"
+  },
+  "parameter_check_sha256": "1aaa482de264fc16cd5f6039cb5df9b849c1a3d4259ed906404753073bed5b10",
+  "effective_properties_sha256": "700aeeb92143421f1d2608f76913055e252dff37661f697a0ed79966748aa19e",
+  "checked_port_widths": {
+    "cfg": 32,
+    "pe_regs": 16,
+    "west_o": 16,
+    "north_o": 16
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 5,
+    "assert": 30
+  },
+  "error": "property loss/change: assert expected 29, found 30",
+  "duration_seconds": 1.751
+}

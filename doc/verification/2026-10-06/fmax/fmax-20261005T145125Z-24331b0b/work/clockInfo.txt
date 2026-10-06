@@ -1,0 +1,10 @@
+-------------------------------------
+| Tool Version : Vivado v.2026.1
+| Date         : Mon Oct  5 17:09:19 2026
+| Host         : 4137314
+| Design       : checkpoint_post_synth_fmax_nexys_a7
+| Device       : xc7a100t-csg324-1--
+-------------------------------------
+
+For more information on clockInfo.txt clock routing debug file see https://support.xilinx.com/s/article/000035660?language=en_US
+

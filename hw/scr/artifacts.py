@@ -145,7 +145,8 @@ def run_build(args):
          "started_utc": datetime.now(timezone.utc).isoformat(), "source_sha256": source_hashes,
          "parameters": {"board": args.board, "part": PARTS[args.board], "top": "cgra_top",
                         "rows": args.rows, "cols": args.cols, "step_div": args.step_div,
-                        "period_ns": args.period, "floorplan": args.floorplan,
+                        "period_ns": args.period, "requested_period_ns": args.period,
+                        "floorplan": args.floorplan,
                         "clock_hz": 100000000, "baud": 115200, "timeout_cycles": 100000000},
          "strategy": "synth default; opt/place/phys_opt/route default (synth-only uses hierarchy none)",
          "hardware_test": "NOT_RUN", "gates": {}, "metrics": {}, "artifact_sha256": {},
@@ -191,8 +192,7 @@ def run_build(args):
         report = read_gates(work, args.mode)
         m.update(gates=report["gates"], metrics=report["metrics"])
         m["metrics"]["resources_by_report"] = resources(work)
-        if args.mode == "fmax":
-            m["parameters"]["period_ns"] = report["period_ns"]
+        m["parameters"]["period_ns"] = report["period_ns"]
         m["status"] = "PASS"
     except subprocess.TimeoutExpired:
         m.update(status="TIMEOUT", error=f"tool exceeded timeout ({args.timeout}s for implementation)")

@@ -16,8 +16,13 @@ Evidence aliases (all paths are relative to this document):
   full GHDL suite, including the independent UART source.
 - **FORMAL**: [`verification/2026-09-29/formal/`](verification/2026-09-29/formal/)
   archived full/cover manifests, effective sources, logs and counterexamples.
+- **PHYS**: [`verification/2026-09-30/synchronizers/`](verification/2026-09-30/synchronizers/)
+  actual routed/CDC runs and full/cover proofs including CFG/WR capture guards.
 - **CONV**: [`verification/2026-09-28/implicit-conv/`](verification/2026-09-28/implicit-conv/)
   and its linked 50-point before/after measurements.
+- **PLANS**: [`verification/2026-10-05/plans-release/`](verification/2026-10-05/plans-release/)
+  and [`verification/2026-10-06/plans-compiler-fixed/`](verification/2026-10-06/plans-compiler-fixed/):
+  874 plan checks; compiler/profile counts and explicit container skips are recorded.
 - **PKG**: [`verification/2026-09-29/packaging/`](verification/2026-09-29/packaging/)
   12 installation, 179 compdb and 27 build checks.
 
@@ -40,6 +45,7 @@ Evidence aliases (all paths are relative to this document):
 |---|---|---|---|
 | RUN/EXEC captures 0..255; guard and spacing for DIV1/2/3/4 | `gen_protocol_vectors`, `tb_protocol_diff` | `F_CTRL_CAPTURE_*`, pending count and legal-state invariants: PROVED | HDL, FORMAL; 255 request cover reached, 255 completion not claimed from short covers |
 | EXEC bad checksum causes no datapath reset/step | C/RTL transcript checksum cases | `F_CTRL_BAD_EXEC`: PROVED, external reset considered | HDL, FORMAL; payload edge-register writes remain permitted |
+| CFG/WR changes precede capture by the required guard | Protocol replay and meaningful changed-data cover | `F_CTRL_CFG_CHANGE_CONTEXT`, `F_CTRL_INPUT_CHANGE_CONTEXT`, `F_CTRL_DATA_CAPTURE_GUARD`: PROVED | PHYS full/cover; no rollback assumption; CE/reset must remain single-cycle |
 | Legacy CFG/WR partial writes survive NACK | C model oracle and protocol differential replay | Not an atomic-commit guarantee | HDL; NACK is not rollback |
 | Masks, ascending taps, response status/checksum | Protocol replay, kernel UART benches | Full independent EXEC response proof NOT_RUN | HDL; F03 remains open |
 | Parser index legality, TX launch and stable handshake data | Controller/array replay under TX busy | `F_CTRL_*` safety invariants: PROVED | FORMAL; no fairness assumptions in current safety proof |
@@ -49,6 +55,7 @@ Evidence aliases (all paths are relative to this document):
 | Whole transaction budget includes TX/backpressure/EINTR | PTY write/read/retry budgets, injected partial writes | No host formal claim | SW; response timeout is separate, multi-command kernels have per-command budgets |
 | Diagnostic ownership, CLOEXEC and optional exclusive open | `test_diagnostic_persistence`, real exec/PTY flag checks | No host formal claim | SW, CC; diagnostics are copied values, not borrowed strings |
 | Configurable/stoppable PTY and consecutive frames | v2/v3 rectangles, cancellation and 100 consecutive ID requests | Clockless model has no watchdog timing model | SW; cancelled TX backpressure and partial request tested |
+| Reusable plans, resident binding, ownership and invalidation | `test_plans`, PTY uncertainty, injected allocation faults and installed external client | No C formal claim | PLANS; v2/v3 and eight shapes, 0/255 steps, stale calls emit no bytes, no implicit rebind after uncertainty |
 | Systematic corrupted header/opcode, inserted/lost byte matrix | Existing selected malformed/checksum cases | Arbitrary bytes covered for controller safety only | **Partial** H3/A11: arbitrary-byte safety does not prove resynchronization or functional recovery for every corruption |
 
 ## UART and delivery
@@ -62,7 +69,10 @@ Evidence aliases (all paths are relative to this document):
 | Compiler/flags/optional dependencies invalidate build | `scripts/test_build.py` | No formal claim | PKG; unchanged signature does not rebuild, nonexistent compiler must fail |
 | Packaging, compdb, compiler diagnostics | Installation external client, compdb actual flags, GCC analyzer | No formal claim | PKG, CC; GCC13 and Clang22 executed locally, CI compiler matrix is separate evidence |
 | Benchmark kernels, CPU statistics, every sweep point retained | CLI public APIs, scalar references, launch-count regression, 40 geometry points | No formal claim for timings | [30 September benchmark evidence](verification/2026-09-30/benchmark/); schema 2 retains samples, provenance and every point |
-| CDC attributes, endpoint coverage, routed timing, current bitstream manifest | Historical Vivado only | Formal excludes CDC/analog/STA | A04/A05 remain open; no new Vivado result from these software/formal runs |
+| CDC attributes, endpoint coverage and routed timing | Actual Vivado 2026.1, 4×4/DIV2/10 ns: WNS +1.862 ns, WHS +0.098 ns; two recognized synchronizers | Formal guards support multicycle premises, exclude CDC/analog/STA | PHYS: source hashes and separate baseline; no board claim |
+| Isolated bitstream manifest and publication | 80 Tcl / 31 artifact regressions; real bit run and `check-artifact` PASS | No formal software guarantee | [5 October physical evidence](verification/2026-10-05/physical/); no programming performed |
+| Matched five-shape physical comparison | Five actual Vivado STA runs at 10 ns/DIV2, identical source/tool hashes | Not a parametric timing theorem | [5 October sweep](verification/2026-10-05/geometry-physical/); each run retains its own reports and resource counts |
+| Final Fmax candidate and period precision | Actual final reroute at 5.859 ns, WNS +0.177/WHS +0.122; 83 Tcl / 31 artifact checks | No claim of global maximum or changed oscillator | [6 October Fmax](verification/2026-10-06/fmax/); first precision-mismatch failure retained |
 | Block framing/CRC/dedup, local memory and sequencer | NOT_RUN | NOT_RUN | B01–B03; no new protocol capability advertised |
 
 Historical counts and hashes remain in their original directories. Later

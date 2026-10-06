@@ -1,0 +1,12 @@
+[options]
+mode cover
+depth 32
+timeout 90
+[engines]
+smtbmc yices
+[script]
+read_rtlil dut.il
+prep -top cgra_ctrl -flatten
+write_json properties.json
+[files]
+dut.il

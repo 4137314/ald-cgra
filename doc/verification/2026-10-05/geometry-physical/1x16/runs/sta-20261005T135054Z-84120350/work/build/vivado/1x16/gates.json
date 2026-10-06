@@ -1,0 +1,1 @@
+{"schema_version":1,"period_ns":10.0,"gates":{"synthesis":"PASS","synchronizers":"PASS","endpoint_coverage":"PASS","control_timing":"PASS","cdc":"PASS","constraints":"PASS","drc":"PASS","setup":"PASS","hold":"PASS"},"metrics":{"launch_registers":944,"data_endpoints":256,"wns_ns":2.433,"whs_ns":0.081}}

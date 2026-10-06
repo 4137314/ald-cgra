@@ -1,0 +1,5 @@
+F-CTRL-1x1-DIV1: ERROR (1.751 s)
+F-CTRL-1x1-DIV2: PROVED (1.917 s)
+F-CTRL-1x1-DIV3: PROVED (1.96 s)
+F-CTRL-1x1-DIV4: PROVED (2.271 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/fast-20260930T140027Z-2/manifest.json; acceptance FAIL

@@ -13,6 +13,9 @@ foreach period {0 -1 Inf NaN abc {}} {
 foreach div {0 -1 1.5 abc} {
     check {[catch {cgra_timing_args 10 $div}]} "reject invalid divider '$div'"
 }
+check {[cgra_clock_period 5.859375] == 5.859} "fractional-picosecond period is applied on an explicit 1 ps grid"
+check {[cgra_clock_period 6.484375] == 6.484} "all sweep candidates use the same period precision"
+check {[catch {cgra_clock_period 0.0001}]} "period rounding to zero is rejected"
 check {[cgra_checked_frequency 8 1.5 0.1] == 125.0} "frequency uses actual period, not slack extrapolation"
 foreach slacks {{-0.1 0} {0 -0.1} {NaN 0} {0 Inf} {{} 0}} {
     check {[catch {cgra_checked_frequency 8 {*}$slacks}]} "reject invalid/failing slack $slacks"
@@ -52,9 +55,11 @@ proc run_flow {script fault} {
             uplevel 1 [list real_source {*}$args]
         }
         proc exit {code} { error "EXIT:$code" }
-        foreach cmd {read_vhdl read_xdc synth_design open_checkpoint opt_design place_design route_design create_clock set_false_path} {
+        foreach cmd {read_vhdl read_xdc synth_design open_checkpoint opt_design place_design route_design set_false_path} {
             proc $cmd {args} {}
         }
+        proc create_clock {args} {set ::period [lindex $args [expr {[lsearch -exact $args -period]+1}]]}
+        proc get_clocks {args} {return sys_clk}
         proc set_multicycle_path {args} {
             foreach key {-from -to} pin {C D} {
                 set list [lindex $args [expr {[lsearch -exact $args $key] + 1}]]
@@ -116,6 +121,7 @@ proc run_flow {script fault} {
                 return 0.5
             }
             switch $name {
+                PERIOD {return $::period}
                 STARTPOINT_PIN { return a/Q }
                 ENDPOINT_PIN { return b/D }
                 LOGIC_LEVELS { return 2 }

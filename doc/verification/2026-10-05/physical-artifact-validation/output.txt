@@ -1,0 +1,5 @@
+make -C hw  -f hw.mk check-artifact BOARD=nexys_a7
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 scr/artifacts.py check-artifact --board 'nexys_a7' --period '10.000' --step-div '2' --rows '4' --cols '4' --vivado 'vivado' --out 'build/vivado'  --artifact '/home/main/dev/git/ald-cgra/hw/build/vivado/runs/bit-20261005T133942Z-0bc27739/manifest.json'
+/home/main/dev/git/ald-cgra/hw/build/vivado/runs/bit-20261005T133942Z-0bc27739/work/build/vivado/cgra_top_nexys_a7.bit
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'

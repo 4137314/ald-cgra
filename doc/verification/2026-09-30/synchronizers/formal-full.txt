@@ -1,0 +1,30 @@
+F-PE-SMOKE: PROVED (0.638 s)
+F-PE-NEGATIVE: FAIL (0.587 s) [expected negative]
+F-PE-ALU-MUX: PROVED (6.438 s)
+F-CTRL-1x1-DIV1: PROVED (1.918 s)
+F-CTRL-1x1-DIV2: PROVED (2.105 s)
+F-CTRL-1x1-DIV3: PROVED (2.111 s)
+F-CTRL-1x1-DIV4: PROVED (2.459 s)
+F-ARRAY-1x1: PROVED (5.683 s)
+F-ARRAY-2x3: PROVED (6.088 s)
+F-UART-TX-C3: PROVED (0.788 s)
+F-UART-RX-C3: PROVED (1.049 s)
+F-ARRAY-1x2: PROVED (2.306 s)
+F-ARRAY-2x1: PROVED (2.342 s)
+F-ARRAY-3x2: PROVED (5.891 s)
+F-ARRAY-4x4: PROVED (16.612 s)
+F-ARRAY-1x16: PROVED (14.805 s)
+F-ARRAY-16x1: PROVED (14.814 s)
+F-CTRL-2x3-DIV2: PROVED (4.04 s)
+F-CTRL-3x2-DIV2: PROVED (3.894 s)
+F-CTRL-4x4-DIV2: PROVED (15.551 s)
+F-CTRL-1x16-DIV2: PROVED (18.459 s)
+F-CTRL-16x1-DIV2: PROVED (18.776 s)
+F-UART-TX-C868: PROVED (0.746 s)
+F-UART-RX-C868: PROVED (1.049 s)
+M-PE-ADD: FAIL (1.63 s) [expected negative]
+M-CTRL-STEP: FAIL (0.859 s) [expected negative]
+M-ARRAY-NORTH: FAIL (1.307 s) [expected negative]
+M-UART-TX: FAIL (0.641 s) [expected negative]
+M-UART-RX: FAIL (1.981 s) [expected negative]
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/full-20260930T140233Z-2/manifest.json; acceptance PASS

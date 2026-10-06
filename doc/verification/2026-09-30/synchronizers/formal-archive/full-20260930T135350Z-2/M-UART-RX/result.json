@@ -1,0 +1,72 @@
+{
+  "id": "M-UART-RX",
+  "top": "uart_rx",
+  "kind": "rx",
+  "mode": "bmc",
+  "depth": 40,
+  "parameters": {
+    "CLKS_PER_BIT": 3
+  },
+  "assertions": 31,
+  "assumptions": 0,
+  "covers": 4,
+  "negative": true,
+  "mutation": "rx-accept-bad-stop",
+  "result": "FAIL",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=3 cgra_pkg.vhd uart_rx.vhd uart_rx_contract.psl -e uart_rx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/uart_rx.vhd": "249b607ae8139d9a4a854fedc09c9da1dea9766a4f284915cdae0c39c15c2e28",
+    "hw/formal/uart_rx_contract.psl": "fa934f57b5214942ec4970e8ba0765a204350c86defaee13a26ae7ed68688673"
+  },
+  "mutated_source_sha256": {
+    "uart_rx.vhd": "6eb767b3991e5e9fe184e9ba6dcebdbcef09084762f69d0efc7a054e64148a72"
+  },
+  "parameter_check_sha256": "7f0942e4cc4dcffc48fac05449e88bbf44e58405f8425bb032541f7013d05fb9",
+  "effective_properties_sha256": "5b889706a518dc246d3e90cb53622be5b3849d5ed2dec997f0d659f815c71879",
+  "checked_port_widths": {
+    "rx_data": 8,
+    "rx_serial": 1,
+    "rx_valid": 1
+  },
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "cover": 4,
+    "assert": 31
+  },
+  "smt2_cells": {
+    "assert": 31,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "5717c1c14db4ac1c56e3c68b98af1c655b68702bcfaf2e2243961138dd6feb64",
+    "task/src/properties.json": "ec01d24f546852bf3bb9655bfe33d1f95eff144d60e092d80647d66b2328b82a",
+    "task/model/design_smt2.smt2": "739f3cc486d8b549fb7a5c7950d8a7feb2f91281fad241d7dcd095c3bc5cf7f1"
+  },
+  "traces": [
+    "task/engine_0/trace.yw"
+  ],
+  "duration_seconds": 2.258
+}

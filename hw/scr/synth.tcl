@@ -53,7 +53,7 @@ if { [catch { synth_design -top $top -part $part -flatten_hierarchy none \
 
 # Timing constraints resolve against the synthesised netlist (cell-based
 # multicycle exception needs real leaf registers). step_div matches the generic.
-cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols
+set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
 
 write_checkpoint   -force $outdir/post_synth_${board}.dcp
 report_utilization -file  $outdir/utilization_synth_${board}.rpt

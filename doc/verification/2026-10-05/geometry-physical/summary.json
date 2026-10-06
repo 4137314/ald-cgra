@@ -1,0 +1,313 @@
+{
+  "schema_version": 1,
+  "kind": "real-vivado-geometry-sweep",
+  "points": [
+    {
+      "rows": 1,
+      "cols": 16,
+      "command": [
+        "/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/bin/python3",
+        "/home/main/dev/git/ald-cgra/hw/scr/artifacts.py",
+        "sta",
+        "--out",
+        "/home/main/dev/git/ald-cgra/hw/build/physical-sweep-20261005/1x16",
+        "--vivado",
+        "/opt/Xilinx/2026.1/Vivado/bin/vivado",
+        "--board",
+        "nexys_a7",
+        "--period",
+        "10",
+        "--step-div",
+        "2",
+        "--rows",
+        "1",
+        "--cols",
+        "16"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "manifest": "1x16/runs/sta-20261005T135054Z-84120350/manifest.json",
+      "manifest_sha256": "3432dba2849bde1f844d5fbab0e4602cc24e98d7a07e12357eb8c1ed7759cd24",
+      "parameters": {
+        "board": "nexys_a7",
+        "part": "xc7a100tcsg324-1",
+        "top": "cgra_top",
+        "rows": 1,
+        "cols": 16,
+        "step_div": 2,
+        "period_ns": 10.0,
+        "floorplan": false,
+        "clock_hz": 100000000,
+        "baud": 115200,
+        "timeout_cycles": 100000000
+      },
+      "metrics": {
+        "launch_registers": 944,
+        "data_endpoints": 256,
+        "wns_ns": 2.433,
+        "whs_ns": 0.081,
+        "resources_by_report": {
+          "build/vivado/1x16/utilization_synth.rpt": {
+            "lut": 5017.0,
+            "registers": 1179.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          },
+          "build/vivado/1x16/utilization_impl.rpt": {
+            "lut": 4999.0,
+            "registers": 1179.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          }
+        }
+      },
+      "comparable_inputs": true
+    },
+    {
+      "rows": 2,
+      "cols": 8,
+      "command": [
+        "/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/bin/python3",
+        "/home/main/dev/git/ald-cgra/hw/scr/artifacts.py",
+        "sta",
+        "--out",
+        "/home/main/dev/git/ald-cgra/hw/build/physical-sweep-20261005/2x8",
+        "--vivado",
+        "/opt/Xilinx/2026.1/Vivado/bin/vivado",
+        "--board",
+        "nexys_a7",
+        "--period",
+        "10",
+        "--step-div",
+        "2",
+        "--rows",
+        "2",
+        "--cols",
+        "8"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "manifest": "2x8/runs/sta-20261005T135612Z-d35f31a9/manifest.json",
+      "manifest_sha256": "c07feca246b86f3ccee0a4c7adf08b79363f56b1ea9104c4b13328b50b99f7c4",
+      "parameters": {
+        "board": "nexys_a7",
+        "part": "xc7a100tcsg324-1",
+        "top": "cgra_top",
+        "rows": 2,
+        "cols": 8,
+        "step_div": 2,
+        "period_ns": 10.0,
+        "floorplan": false,
+        "clock_hz": 100000000,
+        "baud": 115200,
+        "timeout_cycles": 100000000
+      },
+      "metrics": {
+        "launch_registers": 832,
+        "data_endpoints": 256,
+        "wns_ns": 0.775,
+        "whs_ns": 0.105,
+        "resources_by_report": {
+          "build/vivado/2x8/utilization_synth.rpt": {
+            "lut": 5003.0,
+            "registers": 1066.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          },
+          "build/vivado/2x8/utilization_impl.rpt": {
+            "lut": 4974.0,
+            "registers": 1066.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          }
+        }
+      },
+      "comparable_inputs": true
+    },
+    {
+      "rows": 4,
+      "cols": 4,
+      "command": [
+        "/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/bin/python3",
+        "/home/main/dev/git/ald-cgra/hw/scr/artifacts.py",
+        "sta",
+        "--out",
+        "/home/main/dev/git/ald-cgra/hw/build/physical-sweep-20261005/4x4",
+        "--vivado",
+        "/opt/Xilinx/2026.1/Vivado/bin/vivado",
+        "--board",
+        "nexys_a7",
+        "--period",
+        "10",
+        "--step-div",
+        "2",
+        "--rows",
+        "4",
+        "--cols",
+        "4"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "manifest": "4x4/runs/sta-20261005T140136Z-31627950/manifest.json",
+      "manifest_sha256": "6805be7f445e1fa955db64b34318dc5c90f3300dfc885427e691f60e738cf5b2",
+      "parameters": {
+        "board": "nexys_a7",
+        "part": "xc7a100tcsg324-1",
+        "top": "cgra_top",
+        "rows": 4,
+        "cols": 4,
+        "step_div": 2,
+        "period_ns": 10.0,
+        "floorplan": false,
+        "clock_hz": 100000000,
+        "baud": 115200,
+        "timeout_cycles": 100000000
+      },
+      "metrics": {
+        "launch_registers": 800,
+        "data_endpoints": 256,
+        "wns_ns": 1.862,
+        "whs_ns": 0.098,
+        "resources_by_report": {
+          "build/vivado/utilization_synth.rpt": {
+            "lut": 4999.0,
+            "registers": 1034.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          },
+          "build/vivado/utilization_impl.rpt": {
+            "lut": 4971.0,
+            "registers": 1034.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          }
+        }
+      },
+      "comparable_inputs": true
+    },
+    {
+      "rows": 8,
+      "cols": 2,
+      "command": [
+        "/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/bin/python3",
+        "/home/main/dev/git/ald-cgra/hw/scr/artifacts.py",
+        "sta",
+        "--out",
+        "/home/main/dev/git/ald-cgra/hw/build/physical-sweep-20261005/8x2",
+        "--vivado",
+        "/opt/Xilinx/2026.1/Vivado/bin/vivado",
+        "--board",
+        "nexys_a7",
+        "--period",
+        "10",
+        "--step-div",
+        "2",
+        "--rows",
+        "8",
+        "--cols",
+        "2"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "manifest": "8x2/runs/sta-20261005T140704Z-a6ce263e/manifest.json",
+      "manifest_sha256": "3398bb5287cd6ae09c628afb1aab808716bd175f5b665231425b4ed30e9ec4f5",
+      "parameters": {
+        "board": "nexys_a7",
+        "part": "xc7a100tcsg324-1",
+        "top": "cgra_top",
+        "rows": 8,
+        "cols": 2,
+        "step_div": 2,
+        "period_ns": 10.0,
+        "floorplan": false,
+        "clock_hz": 100000000,
+        "baud": 115200,
+        "timeout_cycles": 100000000
+      },
+      "metrics": {
+        "launch_registers": 832,
+        "data_endpoints": 256,
+        "wns_ns": 2.35,
+        "whs_ns": 0.13,
+        "resources_by_report": {
+          "build/vivado/8x2/utilization_synth.rpt": {
+            "lut": 5002.0,
+            "registers": 1066.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          },
+          "build/vivado/8x2/utilization_impl.rpt": {
+            "lut": 4975.0,
+            "registers": 1066.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          }
+        }
+      },
+      "comparable_inputs": true
+    },
+    {
+      "rows": 16,
+      "cols": 1,
+      "command": [
+        "/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/bin/python3",
+        "/home/main/dev/git/ald-cgra/hw/scr/artifacts.py",
+        "sta",
+        "--out",
+        "/home/main/dev/git/ald-cgra/hw/build/physical-sweep-20261005/16x1",
+        "--vivado",
+        "/opt/Xilinx/2026.1/Vivado/bin/vivado",
+        "--board",
+        "nexys_a7",
+        "--period",
+        "10",
+        "--step-div",
+        "2",
+        "--rows",
+        "16",
+        "--cols",
+        "1"
+      ],
+      "exit_code": 0,
+      "status": "PASS",
+      "manifest": "16x1/runs/sta-20261005T141323Z-c086f83d/manifest.json",
+      "manifest_sha256": "ffe17f9d0775fef186792b3068645b2cd0ca4ef20439a05f0b0ea99d14836e78",
+      "parameters": {
+        "board": "nexys_a7",
+        "part": "xc7a100tcsg324-1",
+        "top": "cgra_top",
+        "rows": 16,
+        "cols": 1,
+        "step_div": 2,
+        "period_ns": 10.0,
+        "floorplan": false,
+        "clock_hz": 100000000,
+        "baud": 115200,
+        "timeout_cycles": 100000000
+      },
+      "metrics": {
+        "launch_registers": 944,
+        "data_endpoints": 256,
+        "wns_ns": 1.247,
+        "whs_ns": 0.098,
+        "resources_by_report": {
+          "build/vivado/16x1/utilization_synth.rpt": {
+            "lut": 5010.0,
+            "registers": 1179.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          },
+          "build/vivado/16x1/utilization_impl.rpt": {
+            "lut": 4993.0,
+            "registers": 1179.0,
+            "dsp": 16.0,
+            "bram_tiles": 0.0
+          }
+        }
+      },
+      "comparable_inputs": true
+    }
+  ],
+  "hardware_test": "NOT_RUN",
+  "status": "PASS"
+}

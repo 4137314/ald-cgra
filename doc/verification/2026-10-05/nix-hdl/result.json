@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "exit_code": 0,
+  "derivation": "/nix/store/5wraygbrj1f3097szx9j5v2ma0fi3kk2-cgra-hdl-check.drv",
+  "output": "/nix/store/sf2s4kgya42c4sv7kvbbxv4h15wl7808-cgra-hdl-check",
+  "logs_sha256": {
+    "output.txt": "a65c6f23c2a0217b7321a1eb4a12d0940dd013c5a8a224a35b7d7c7ff071f232",
+    "output-unrestricted.txt": "953f80e19f3405aba2f5c2d3184e7ecf2a0fb5bf990c9cb9c0022fc2341b349b",
+    "ghdl.txt": "41335985aafec6aa60b3778a88315373c0df3615847aa850e3417e2e7a0d3d48",
+    "tcl.txt": "e55fb7cf1f5efccc707bd05576647202c5f0413c3ee4354f4ea5ef579e5bd0ee"
+  },
+  "scope": "HDL and script check; immutable Nix source predates reusable plan work"
+}

@@ -1,0 +1,77 @@
+{
+  "id": "F-CTRL-1x1-DIV1-COVER",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "cover",
+  "depth": 32,
+  "parameters": {
+    "G_ROWS": 1,
+    "G_COLS": 1,
+    "G_STEP_DIV": 1,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 30,
+  "assumptions": 0,
+  "covers": 6,
+  "result": "BOUNDED_PASS",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=1 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "b384adcca5eda8b3d0b903fc8e01c4ff0d595a5097ebcd8dc2e477473ddf2b56"
+  },
+  "parameter_check_sha256": "1aaa482de264fc16cd5f6039cb5df9b849c1a3d4259ed906404753073bed5b10",
+  "effective_properties_sha256": "5f89018d32aa528e5e0326d14d45f75140bed93990ae4f8bf7b7351ca547b269",
+  "checked_port_widths": {
+    "cfg": 32,
+    "pe_regs": 16,
+    "west_o": 16,
+    "north_o": 16
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 6,
+    "assert": 30
+  },
+  "smt2_cells": {
+    "assert": 0,
+    "assume": 1,
+    "cover": 6
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "555e251d2f900585190c29e7c6e303f8784764d21722d27d01716e2aa2b178ea",
+    "task/src/properties.json": "e91e04f8b0340475587926545d1b71638aa6ae06c778171906c7de7f94ac05cd",
+    "task/model/design_smt2.smt2": "e75619c8215872e8f8c6e853170461f14ef72b845a2aaba6ad256d911aa4155b"
+  },
+  "traces": [
+    "task/engine_0/trace0.yw",
+    "task/engine_0/trace1.yw",
+    "task/engine_0/trace2.yw",
+    "task/engine_0/trace3.yw",
+    "task/engine_0/trace4.yw",
+    "task/engine_0/trace5.yw"
+  ],
+  "meaning": "bounded reachability only; no universal guarantee",
+  "duration_seconds": 5.917
+}
