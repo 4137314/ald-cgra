@@ -1,0 +1,66 @@
+{
+  "id": "F-UART-TX-C868",
+  "top": "uart_tx",
+  "kind": "tx",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "CLKS_PER_BIT": 868
+  },
+  "assertions": 21,
+  "assumptions": 0,
+  "covers": 3,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=868 cgra_pkg.vhd uart_tx.vhd uart_tx_contract.psl -e uart_tx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/uart_tx.vhd": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+    "hw/formal/uart_tx_contract.psl": "c82ae61c073633662cb54931e767f05fad2610ca58e66174af33f3d34e0b38db"
+  },
+  "parameter_check_sha256": "4328fa89db1c6f892cc65c5f7ab2f197da002c0a84029d61a3f16edb9f92859b",
+  "effective_properties_sha256": "b1aacba2317e2e1f3357b4054a9a394d0bcd1c50fb27b20aabc74e71cc7ac83f",
+  "checked_port_widths": {
+    "tx_data": 8,
+    "tx_serial": 1,
+    "tx_start": 1,
+    "tx_busy": 1
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 3,
+    "assert": 21
+  },
+  "smt2_cells": {
+    "assert": 21,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "aabb7bb9e996c3b1804474d5a206ee22d23ee257a3ee14667b163f0069607b65",
+    "task/src/properties.json": "e24b65877a1b2f0320dff020c2a8fa994b2f12320441ee62169fa17fc80e668d",
+    "task/model/design_smt2.smt2": "9b2b6a93f9cadb879a68723af1ee05186cbcf5159059baaabb46886ed765252d"
+  },
+  "traces": [],
+  "duration_seconds": 0.899
+}

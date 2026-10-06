@@ -1,0 +1,99 @@
+{
+  "commit": "09536195e4afab911895484f3b3cedc89c8e426c",
+  "dirty": true,
+  "sources_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_comp_pkg.vhd": "df833600c2edd6bb80d36ea2e1c225bf370ffa64664e04f249d43775c7da4b7e",
+    "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+    "hw/rtl/cgra_array.vhd": "0d84bdc23743a1c1b69821979ca7d9588e0e630e359811911997139e3e95c2c4",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/sim/tb_protocol_diff.vhd": "a7112f6fb5b47fbb43f57ddb4ca3d455f9afcb6454c97f6c559d1214eab9485e",
+    "hw/sim/gen_protocol_vectors.c": "6ee81f1085a3a42cbe21fb2ccc0d67a9cdbcaf6a0272b59054069b0f7061fb73",
+    "lib/src/emu.c": "544090f7b745102eea69e59ff20f08f4d3d427f8bfdec434e3571e6e8de07d84",
+    "lib/src/emu.h": "8a07a851f3f3915367c4495cda7f848695c9caa1d02a29a050c717a2290c9510",
+    "lib/src/bitvec.h": "36be589e4cf81ec17f0d4ab6db636b2abbd7966e3e0cdaf7e483541ba0d9b387",
+    "lib/include/cgra.h": "d000d33b8b22bc5bb8adb6fb0cb721debe1dda9a3c670d1c2f0cf6e687a3bead"
+  },
+  "tools": {
+    "ghdl": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n",
+    "cc": "gcc (GCC) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"
+  },
+  "runs": [
+    {
+      "mutation": false,
+      "commands": [
+        [
+          "ghdl",
+          "-a",
+          "--std=08",
+          "cgra_pkg.vhd",
+          "cgra_comp_pkg.vhd",
+          "pe.vhd",
+          "cgra_array.vhd",
+          "cgra_ctrl.vhd",
+          "tb_protocol_diff.vhd"
+        ],
+        [
+          "ghdl",
+          "-e",
+          "--std=08",
+          "tb_protocol_diff"
+        ],
+        [
+          "ghdl",
+          "-r",
+          "--std=08",
+          "tb_protocol_diff",
+          "-gG_VECTOR_FILE=/tmp/nix-shell.5YNUbT/cgra-exec-replay-3dce1jq7/protocol.vec",
+          "--assert-level=error"
+        ]
+      ],
+      "exit_code": 1,
+      "status": "FAIL",
+      "acceptance_passed": false,
+      "duration_seconds": 0.04153704999771435,
+      "log": "production.txt"
+    },
+    {
+      "mutation": true,
+      "commands": [
+        [
+          "ghdl",
+          "-a",
+          "--std=08",
+          "cgra_pkg.vhd",
+          "cgra_comp_pkg.vhd",
+          "pe.vhd",
+          "cgra_array.vhd",
+          "cgra_ctrl.vhd",
+          "tb_protocol_diff.vhd"
+        ],
+        [
+          "ghdl",
+          "-e",
+          "--std=08",
+          "tb_protocol_diff"
+        ],
+        [
+          "ghdl",
+          "-r",
+          "--std=08",
+          "tb_protocol_diff",
+          "-gG_VECTOR_FILE=/tmp/nix-shell.5YNUbT/cgra-exec-replay-3dce1jq7/protocol.vec",
+          "--assert-level=error"
+        ]
+      ],
+      "exit_code": 1,
+      "status": "FAIL",
+      "acceptance_passed": true,
+      "duration_seconds": 0.04006054101046175,
+      "log": "mutated.txt"
+    }
+  ],
+  "vector_sha256": "98796988b235c1997ea26d030ce5e279214c6457f0dbd3bbd8dc4404a7fc3633",
+  "mutation": {
+    "before": "elsif byte_idx = 0 then\n              tx_byte   <= std_logic_vector(rd_word(7 downto 0));",
+    "after": "elsif byte_idx = 0 then\n              tx_byte   <= std_logic_vector(rd_word(15 downto 8));",
+    "sha256": "c3ddd8425c41e75feb8364db0de8e547810f39dd2a7c00c0dad40d8dbf835f52"
+  }
+}

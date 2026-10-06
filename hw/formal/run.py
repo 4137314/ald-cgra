@@ -45,14 +45,14 @@ def tasks(suite):
             result.append(dict(id=f"F-CTRL-1x1-DIV{div}", top="cgra_ctrl", kind="ctrl",
                                mode="prove", depth=16, parameters=dict(G_ROWS=1, G_COLS=1,
                                G_STEP_DIV=div, G_TIMEOUT_CYCLES=3),
-                               assertions=30 if div == 1 else 31, assumptions=0, covers=6))
+                               assertions=77 if div == 1 else 78, assumptions=0, covers=9))
         for rows, cols in ((1, 1), (2, 3)):
             result.append(dict(id=f"F-ARRAY-{rows}x{cols}", top="array_contract", kind="array",
                                mode="prove", depth=4, gates=True,
                                parameters=dict(G_ROWS=rows, G_COLS=cols),
                                assertions=rows*cols, assumptions=1 if rows*cols == 1 else 1+rows*cols,
                                covers=5, composition=rows*cols != 1))
-        for kind, count in (("tx", 19), ("rx", 31)):
+        for kind, count in (("tx", 21), ("rx", 31)):
             result.append(dict(id=f"F-UART-{kind.upper()}-C3", top=f"uart_{kind}", kind=kind,
                                mode="prove", depth=16, parameters=dict(CLKS_PER_BIT=3),
                                assertions=count, assumptions=0, covers=3 if kind == "tx" else 4))
@@ -67,13 +67,16 @@ def tasks(suite):
             result.append(dict(id=f"F-CTRL-{rows}x{cols}-DIV2", top="cgra_ctrl", kind="ctrl",
                                mode="prove", depth=16, parameters=dict(G_ROWS=rows, G_COLS=cols,
                                G_STEP_DIV=2, G_TIMEOUT_CYCLES=100_000_000),
-                               assertions=31, assumptions=0, covers=6))
-        for kind, count in (("tx", 19), ("rx", 31)):
+                               assertions=78, assumptions=0, covers=10))
+        for kind, count in (("tx", 21), ("rx", 31)):
             result.append(dict(id=f"F-UART-{kind.upper()}-C868", top=f"uart_{kind}", kind=kind,
                                mode="prove", depth=16, parameters=dict(CLKS_PER_BIT=868),
                                assertions=count, assumptions=0, covers=3 if kind == "tx" else 4))
         result.append(dict(result[2], id="M-PE-ADD", mode="bmc", negative=True, mutation="pe-add-to-sub"))
         result.append(dict(result[4], id="M-CTRL-STEP", mode="bmc", negative=True, mutation="ctrl-drop-step"))
+        ctrl = next(t for t in result if t['id'] == 'F-CTRL-1x1-DIV2')
+        result.append(dict(ctrl, id="M-EXEC-BYTE", mode="bmc", depth=40, negative=True,
+                           mutation="exec-byte-swap"))
         array = next(t for t in result if t['id'] == 'F-ARRAY-2x3')
         result.append(dict(array, id="M-ARRAY-NORTH", mode="bmc", depth=6, negative=True,
                            mutation="array-north-self"))
@@ -82,7 +85,12 @@ def tasks(suite):
             result.append(dict(original, id=f"M-UART-{kind.upper()}", mode="bmc", depth=40,
                                negative=True, mutation=mutation))
     if suite == "cover":
-        result = [dict(t, id=t["id"] + "-COVER", mode="cover", depth=80 if t["kind"] in ("tx", "rx") else 32)
+        result.append(dict(id="F-CTRL-2x3-DIV2", top="cgra_ctrl", kind="ctrl",
+                           mode="prove", depth=16, parameters=dict(G_ROWS=2, G_COLS=3,
+                           G_STEP_DIV=2, G_TIMEOUT_CYCLES=3),
+                           assertions=78, assumptions=6, covers=4, exec_witness=True))
+        result = [dict(t, id=t["id"] + "-COVER", mode="cover", depth=80 if t["kind"] in ("tx", "rx") else
+                       96 if t["kind"] == "ctrl" and t["parameters"]["G_ROWS"] * t["parameters"]["G_COLS"] > 1 else 40)
                   for t in result if not t.get("negative")]
     return result
 
@@ -109,7 +117,8 @@ def run_task(task, directory, budget):
         entity = task["top"]
         paths += [f"hw/rtl/{entity}.vhd", f"hw/formal/{entity}_contract.psl"]
     else:
-        paths += ["hw/rtl/cgra_ctrl.vhd", "hw/formal/ctrl_contract.psl"]
+        paths += ["hw/rtl/cgra_ctrl.vhd", "hw/formal/ctrl_contract.psl", "hw/formal/exec_contract.psl"]
+        if task.get("exec_witness"): paths += ["hw/formal/exec_cover.psl"]
         entity = "cgra_ctrl"
     result["source_sha256"] = {p: hashlib.sha256((ROOT / p).read_bytes()).hexdigest() for p in paths}
     # Copy exact input bytes, so results remain reproducible after source edits.
@@ -119,6 +128,9 @@ def run_task(task, directory, budget):
         filename, before, after = {
             "pe-add-to-sub": ("pe.vhd", "when OP_ADD   => res := a + b;", "when OP_ADD   => res := a - b;"),
             "ctrl-drop-step": ("cgra_ctrl.vhd", "step <= '1';", "step <= '0';"),
+            "exec-byte-swap": ("cgra_ctrl.vhd",
+                "elsif byte_idx = 0 then\n              tx_byte   <= std_logic_vector(rd_word(7 downto 0));",
+                "elsif byte_idx = 0 then\n              tx_byte   <= std_logic_vector(rd_word(15 downto 8));"),
             "array-north-self": ("cgra_array.vhd", "q((r - 1) * G_COLS + c)", "q(r * G_COLS + c)"),
             "tx-msb-first": ("uart_tx.vhd", "tx_serial <= data_r(bit_idx);", "tx_serial <= data_r(7 - bit_idx);"),
             "rx-accept-bad-stop": ("uart_rx.vhd", "if rx_s2 = '1' then\n                rx_data",
@@ -140,7 +152,7 @@ def run_task(task, directory, budget):
                                   timeout=budget + 30).returncode
 
     try:
-        vhdl = " ".join(Path(p).name for p in paths if not p.endswith(".sv"))
+        vhdl = " ".join(Path(p).name for p in paths if not p.endswith(".sv") and Path(p).name not in ("exec_contract.psl", "exec_cover.psl"))
         generics = " ".join(f"-g{k}={v}" for k, v in task.get("parameters", {}).items())
         # GHDL's analysis/elaboration syntax requires options BEFORE sources.
         # A misplaced -g after sources is silently ignored by this frontend.
@@ -155,6 +167,20 @@ def run_task(task, directory, budget):
             property_file = directory / (property_name + ".psl")
             original = property_file.read_text()
             shutil.copy2(property_file, directory / (property_name + ".source.psl"))
+            if task["kind"] == "ctrl":
+                fragment = (directory / "exec_contract.psl").read_text()
+                if task["parameters"]["G_ROWS"] * task["parameters"]["G_COLS"] > 1:
+                    fragment += ("\n  C_EXEC_SPARSE: cover {f_exec and state = S_IDLE and "
+                                 "f_mask(0) = '1' and f_mask(G_ROWS * G_COLS - 1) = '1' and "
+                                 "f_length < 2 * G_ROWS * G_COLS};\n")
+                original = original.rstrip().removesuffix("}") + fragment + "\n}\n"
+                if task.get("exec_witness"):
+                    original = re.sub(r"  C_CTRL_\w+: cover \{[^}]*\};\n", "", original)
+                    witness = (directory / "exec_cover.psl").read_text()
+                    original = original.rstrip().removesuffix("}") + witness + "\n}\n"
+                    result["environment"] = ("reachability-only stimulus: no reset; EXEC-only; prompt RX; "
+                        "one step; ideal prompt TX handshake; mask, payload and checksum symbolic")
+                    result["scope"] = "EXEC covers only; these assumptions do not apply to any proof task"
             parameter_check = f"\n  F_SELECTED: assert always ({checks});\n"
             effective = original.replace("  default clock is rising_edge(clk);",
                                          "  default clock is rising_edge(clk);" + parameter_check)

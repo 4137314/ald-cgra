@@ -1,0 +1,3 @@
+tb_protocol_diff.vhd:100:10:error: cannot open file: build/protocol_diff.vec
+    file vectors : text open read_mode is G_VECTOR_FILE;
+         ^

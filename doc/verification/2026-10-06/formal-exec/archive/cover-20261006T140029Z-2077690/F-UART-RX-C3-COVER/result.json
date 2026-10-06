@@ -1,0 +1,71 @@
+{
+  "id": "F-UART-RX-C3-COVER",
+  "top": "uart_rx",
+  "kind": "rx",
+  "mode": "cover",
+  "depth": 80,
+  "parameters": {
+    "CLKS_PER_BIT": 3
+  },
+  "assertions": 31,
+  "assumptions": 0,
+  "covers": 4,
+  "result": "BOUNDED_PASS",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gCLKS_PER_BIT=3 cgra_pkg.vhd uart_rx.vhd uart_rx_contract.psl -e uart_rx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/uart_rx.vhd": "249b607ae8139d9a4a854fedc09c9da1dea9766a4f284915cdae0c39c15c2e28",
+    "hw/formal/uart_rx_contract.psl": "fa934f57b5214942ec4970e8ba0765a204350c86defaee13a26ae7ed68688673"
+  },
+  "parameter_check_sha256": "7f0942e4cc4dcffc48fac05449e88bbf44e58405f8425bb032541f7013d05fb9",
+  "effective_properties_sha256": "5b889706a518dc246d3e90cb53622be5b3849d5ed2dec997f0d659f815c71879",
+  "checked_port_widths": {
+    "rx_data": 8,
+    "rx_serial": 1,
+    "rx_valid": 1
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 4,
+    "assert": 31
+  },
+  "smt2_cells": {
+    "assert": 0,
+    "assume": 1,
+    "cover": 4
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "9737bc2a89eceb064e4db8cdbb8d4c4c672c2a2132d8008d02141ea980b2ed23",
+    "task/src/properties.json": "90c0e72f2e06813436d01457e6305bc2f618a2d29686905825663e99500c8b58",
+    "task/model/design_smt2.smt2": "4602cde07c10d87cca216f328bdda7d8031413abfb7a66e5e89d7c0d1fb6c0dd"
+  },
+  "traces": [
+    "task/engine_0/trace0.yw",
+    "task/engine_0/trace1.yw",
+    "task/engine_0/trace2.yw",
+    "task/engine_0/trace3.yw"
+  ],
+  "meaning": "bounded reachability only; no universal guarantee",
+  "duration_seconds": 1.044
+}

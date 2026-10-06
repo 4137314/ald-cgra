@@ -1,0 +1,117 @@
+{
+  "derivations": {
+    "64k1v905nzbnd9lyjgw4pvdra08rs7bi-cgra-software-check.drv": {
+      "args": [
+        "-e",
+        "/nix/store/l622p70vy8k5sh7y5wizi5f2mic6ynpg-source-stdenv.sh",
+        "/nix/store/shkw4qm9qcw5sc5n1k5jznc83ny02r39-default-builder.sh"
+      ],
+      "builder": "/nix/store/v8llyqw71lygr2llhmcc8ya5bdlzq45v-bash-5.3p9/bin/bash",
+      "env": {
+        "__structuredAttrs": "",
+        "buildCommand": "cp -r /nix/store/10hph3yqbpscl3i1vkikp2qqcvg00nzy-pqx3jm1flhcw0bf4acbhsih083krp0ha-source source\nchmod -R u+w source\ncd source\nmkdir -p $out\ntrap 'cat $out/*.txt' ERR\nmake -j4 test > $out/software.txt 2>&1\nmake test-install test-compdb test-build > $out/packaging.txt 2>&1\nmake -C lib -f lib.mk analyze > $out/analyzer-lib.txt 2>&1\nmake -C sw -f sw.mk analyze > $out/analyzer-cli.txt 2>&1\nmake -C sw -f sw.mk HAVE_READLINE=0 test > $out/no-readline.txt 2>&1\n",
+        "buildInputs": "",
+        "builder": "/nix/store/v8llyqw71lygr2llhmcc8ya5bdlzq45v-bash-5.3p9/bin/bash",
+        "cmakeFlags": "",
+        "configureFlags": "",
+        "depsBuildBuild": "",
+        "depsBuildBuildPropagated": "",
+        "depsBuildTarget": "",
+        "depsBuildTargetPropagated": "",
+        "depsHostHost": "",
+        "depsHostHostPropagated": "",
+        "depsTargetTarget": "",
+        "depsTargetTargetPropagated": "",
+        "doCheck": "",
+        "doInstallCheck": "",
+        "enableParallelBuilding": "1",
+        "enableParallelChecking": "1",
+        "enableParallelInstalling": "1",
+        "mesonFlags": "",
+        "name": "cgra-software-check",
+        "nativeBuildInputs": "/nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0 /nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1 /nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6 /nix/store/sn8r7j6q1js540y5briylnb62203zxq5-pkg-config-wrapper-0.29.2 /nix/store/cyrj805hm6kkxbmknf363sn6pfr9i0xj-texinfo-7.2 /nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev /nix/store/8mp5f2yh8p5xicpiv9s449zl94yhqw7v-bash-interactive-5.3p9-dev",
+        "out": "/nix/store/p89jbz3l6g0ykmzlcmi0qzymim4hfbsy-cgra-software-check",
+        "outputs": "out",
+        "passAsFile": "buildCommand",
+        "patches": "",
+        "propagatedBuildInputs": "",
+        "propagatedNativeBuildInputs": "",
+        "stdenv": "/nix/store/gikfyrrg5a864lkr2px8rgkgd4b61ri2-stdenv-linux-no-cc",
+        "strictDeps": "",
+        "system": "x86_64-linux"
+      },
+      "inputs": {
+        "drvs": {
+          "2jy4bx2mibv2as3g0c0wyphyv3f3a5l6-stdenv-linux-no-cc.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "out"
+            ]
+          },
+          "3s4gq2x35j0yy6mzs2yb431mlhmx6cqf-gnumake-4.4.1.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "out"
+            ]
+          },
+          "487dcvjf77ap05c5bjsx0zphdzmfbr2g-texinfo-7.2.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "out"
+            ]
+          },
+          "6fmq7bi1f7xwj7ns4prb2p1wd51bbci6-python3-3.14.6.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "out"
+            ]
+          },
+          "8wf253v4xmm0d42gw7msj9pwi8yp6l3i-bash-interactive-5.3p9.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "dev"
+            ]
+          },
+          "9jpgwpgghvjlwg0fg2870hlsilmf7w01-readline-8.3p3.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "dev"
+            ]
+          },
+          "jbgrm10yfxwqfxi6mhpi0aq43dpczng2-pkg-config-wrapper-0.29.2.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "out"
+            ]
+          },
+          "q78xs1xfvmjrsj9aj4kaicv13qgp67ip-gcc-wrapper-15.2.0.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "out"
+            ]
+          },
+          "smin6kpg77sgrjzdxihi5q8lyafmas2i-bash-5.3p9.drv": {
+            "dynamicOutputs": {},
+            "outputs": [
+              "out"
+            ]
+          }
+        },
+        "srcs": [
+          "10hph3yqbpscl3i1vkikp2qqcvg00nzy-pqx3jm1flhcw0bf4acbhsih083krp0ha-source",
+          "l622p70vy8k5sh7y5wizi5f2mic6ynpg-source-stdenv.sh",
+          "shkw4qm9qcw5sc5n1k5jznc83ny02r39-default-builder.sh"
+        ]
+      },
+      "name": "cgra-software-check",
+      "outputs": {
+        "out": {
+          "path": "p89jbz3l6g0ykmzlcmi0qzymim4hfbsy-cgra-software-check"
+        }
+      },
+      "system": "x86_64-linux",
+      "version": 4
+    }
+  },
+  "version": 4
+}

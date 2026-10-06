@@ -1,0 +1,2 @@
+tb_protocol_diff.vhd:176:5:@803140ns:(report note): tb_protocol_diff PASSED (504 transactions, 4x4, STEP_DIV=2, watchdog recovery)
+simulation finished @803140ns

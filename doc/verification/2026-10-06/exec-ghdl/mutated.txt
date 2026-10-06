@@ -1,0 +1,5 @@
+tb_protocol_diff.vhd:150:9:@69990ns:(assertion failure): protocol mismatch transaction=50 byte=0 expected=51 got=191
+ghdl:error: assertion failed
+  instance: /tb_protocol_diff/stimulus
+  from: process work.tb_protocol_diff(sim).stimulus at tb_protocol_diff.vhd:150
+ghdl:error: simulation failed

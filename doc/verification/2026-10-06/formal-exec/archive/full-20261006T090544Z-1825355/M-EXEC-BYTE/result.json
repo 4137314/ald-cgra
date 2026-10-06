@@ -1,0 +1,77 @@
+{
+  "id": "M-EXEC-BYTE",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "bmc",
+  "depth": 40,
+  "parameters": {
+    "G_ROWS": 1,
+    "G_COLS": 1,
+    "G_STEP_DIV": 2,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 65,
+  "assumptions": 0,
+  "covers": 9,
+  "negative": true,
+  "mutation": "exec-byte-swap",
+  "result": "FAIL",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "b384adcca5eda8b3d0b903fc8e01c4ff0d595a5097ebcd8dc2e477473ddf2b56",
+    "hw/formal/exec_contract.psl": "49c88fcc089d6e57e1d148864e2037a6cf338c7b0a0856e8a7faac42ad0ae52c"
+  },
+  "mutated_source_sha256": {
+    "cgra_ctrl.vhd": "c3ddd8425c41e75feb8364db0de8e547810f39dd2a7c00c0dad40d8dbf835f52"
+  },
+  "parameter_check_sha256": "13d5543ee57a570bb5f6aa4fefcf9b6c59f1e281ef1bd46ff611572a8dc6819c",
+  "effective_properties_sha256": "86f516649913b3e633977c565171be920fa261f0d9aa5ccf15145ea9487c48e2",
+  "checked_port_widths": {
+    "cfg": 32,
+    "pe_regs": 16,
+    "west_o": 16,
+    "north_o": 16
+  },
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "cover": 9,
+    "assert": 65
+  },
+  "smt2_cells": {
+    "assert": 65,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "2ce455aae71b11f590d41922087730da54a24a843505031e1d11d1731052dd49",
+    "task/src/properties.json": "ff1c20c356fc7f0643bc2781cf85b7b3e4224df0bf6022d3ed96dffb59189da4",
+    "task/model/design_smt2.smt2": "617b2f493bf9a6a8724014827f67c19e97bda40ff3741c3de1f0128bf0919b42"
+  },
+  "traces": [
+    "task/engine_0/trace.yw"
+  ],
+  "duration_seconds": 2.877
+}

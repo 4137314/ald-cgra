@@ -436,7 +436,7 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 |---|---|---|
 | F01 | Toolchain fissata, prova del PE VHDL di produzione, proprietà presenti nel solver e controllo negativo raggiungibile | VERIFICATO |
 | F02 | PE completo a 16 bit e wiring/sincronia array sulle istanze dichiarate, cover e mutazioni mirate | VERIFICATO |
-| F03 | Controller: RUN/EXEC, indici, STEP_DIV 1/2/3/4, handshake, watchdog con ipotesi esplicite | PARZIALE |
+| F03 | Controller: RUN/EXEC, indici, STEP_DIV 1/2/3/4, handshake, watchdog con ipotesi esplicite | VERIFICATO (istanze e completamento condizionale documentati) |
 | F04 | UART TX/RX nel modello digitale dichiarato, prove e cover | VERIFICATO |
 | F05 | Target fast/full/cover, manifest JSON, matrice requisiti–test–proprietà–evidenza e CI/Nix eseguiti | VERIFICATO |
 | B01 | Contratto sperimentale a blocchi versionato, CRC/framing/sequence e deduplicazione delimitata | DA FARE |
@@ -697,25 +697,69 @@ release o programmazione della scheda è autorizzato da questo ciclo.
   liveness non ancora dichiarate verificate. B01–B03 e report finale restano
   aperti; nessun push, release o programmazione hardware.
 
+### Checkpoint 2026-10-06 / 09 — EXEC formale e certificati di progresso
+
+- **F03 verificato nel perimetro delle istanze dichiarate.** Il frammento
+  `exec_contract.psl` si integra nel vunit del controller di produzione: somma
+  indipendente della richiesta, ordine dei tap mediante conteggio dei bit
+  precedenti nella maschera, byte low/high, checksum/status, numero esatto di
+  byte e consumo singolo dei byte accodati. Rifiuto checksum senza reset/step
+  durante tutta la risposta. Nessuna assumption aggiunta ai task di prova.
+- Provate funzioni intere nonnegative che decrescono durante ricezione, RUN,
+  risposta EXEC e TX UART. Completamento **condizionale** mediante certificato
+  ben fondato e argomento esplicito: nessun reset intermedio, consegna entro
+  watchdog e servizio del TX. Obblighi TX provati separatamente a divisori
+  3/868. Non è un run di motore LTL né assenza incondizionata di deadlock.
+  Contratto completo in `hw/formal/completion.md`.
+- `make formal-fast` realmente PASS: **10 PROVED + 1 FAIL atteso**.
+  `make formal-full`: **23 PROVED + 7 FAIL attesi**, incluso nuovo scambio dei
+  byte EXEC su copia temporanea. `make formal-cover`: obbligo PE PROVED e
+  **11 BOUNDED_PASS**, profondità 40/80/96 a seconda del task. Cover non è
+  garanzia universale. 1×1/DIV1–4 e cinque forme ulteriori/DIV2 con tutti i bit,
+  opcode, maschere e contatori 0..255; nessun teorema parametrico implicito.
+- Primi tentativi UNKNOWN conservati; le invarianti che chiudono l'induzione
+  sono asserite e provate. Errore atteso nel conteggio proprietà corretto
+  verificando quelle realmente presenti nel solver, senza rimuovere proprietà.
+  Cover 2×3 non guidato TIMEOUT conservato; quello aggiuntivo finale usa sei
+  vincoli di stimolo espliciti **soltanto per la raggiungibilità** (EXEC, uno
+  step, consegna/TX rapidi, niente reset), mai nelle prove universali.
+- Mutazione endian rilevata anche dalla regressione GHDL esistente; sorgenti
+  originali: **504 transazioni PASS** e recupero watchdog. Copia mutata:
+  assertion a transazione 50, byte 0, atteso 51/ricevuto 191. Primo tentativo
+  con file vettori mancante all'elaborazione conservato come errore di setup,
+  non prova negativa. Evidenze `doc/verification/2026-10-06/formal-exec/`
+  e `exec-ghdl/`, con hash, versioni, sorgenti effettive e controesempi.
+- Nuovi check Nix software e formal-fast realmente PASS: **2300 controlli**,
+  **12 install / 187 compdb / 27 build**, analyzer lib/CLI e fallback readline;
+  formal-fast 10 PROVED + un FAIL atteso. Derivazioni/input store conservati
+  in `doc/verification/2026-10-06/nix-final/`. LSan attivo nella matrice compiler
+  separata, nessun trasferimento dei limiti locali alla CI.
+- Commit precedenti: `2ffe045` regressione PTY, `0953619` periodo applicato e
+  archivio fisico. La cache locale clangd viene esclusa dagli input Git per
+  evitare di attribuire indici dell'editor alle sorgenti verificabili.
+- **Ripresa:** B01–B03 (contratto a blocchi, memoria/sequencer e percorso
+  RTL–modello–API–CLI completo), matrice A11 di corruzione sistematica,
+  report/PDF unico A06 e allineamento finale A03/A14. Il percorso legacy resta
+  funzionante; nessuna capability a blocchi è pubblicizzata o verificata.
+  Nessun push, release o programmazione hardware.
+
 ## Prossime correzioni senza scheda
 
-1. **F03/F05/C08:** completare EXEC/liveness e piani riutilizzabili;
-   preservare CLI e deadline già verificate nei checkpoint 03–04.
-2. **A03/A06/A14:** allineare README/commenti alle evidenze, definire il PDF
-   di consegna e le istruzioni comuni per gli agenti.
-3. **A05/H5/A15:** completare la verifica del runner fisico e dei manifest,
-   estendere i run reali a geometrie comparabili e allo sweep Fmax.
-4. **H3/T3/A10/A11/A12:** completare la matrice di corruzione header/opcode, byte
-   inseriti/persi e le verifiche sulle altre piattaforme; aggiungere
-   oracoli benchmark per i mapping attualmente esclusi.
-5. **A15:** completare confronto area/timing con Vivado sulle geometrie;
-   benchmark CLI e misure software sono chiusi in A09/A10.
-6. **T4/A16:** licenza del progetto da definire con
-   l'autore; non dedurre una licenza dai soli metadati Nix.
-7. **Toolchain:** il Nixpkgs fissato segnala `texlive.combine` come deprecato
-   verso 27.05; migrare prima di aggiornare il lock file. La build corrente
-   riesce. H5: estendere i run Vivado oltre il punto 4×4/10 ns appena verificato,
-   controllando eccezioni, generici e sweep Fmax finale.
+1. **B01–B03:** implementare il contratto sperimentale a blocchi e un workload
+   completo con memoria locale, modello, API/CLI, proprietà e sintesi reale.
+   V2/v3 e ABI esistente devono continuare a funzionare.
+2. **H3/A11:** completare la matrice di corruzione header/opcode, byte inseriti/
+   persi, disconnessioni e recupero; preservare NACK senza rollback legacy.
+3. **A03/A06/A14:** allineare report/README/commenti alle nuove evidenze,
+   definire il PDF corrente e archivio storico, istruzioni comuni degli agenti.
+4. **T4/A16:** licenza del progetto da definire con l'autore; non dedurla dai
+   metadati Nix. Nessuna autorizzazione a inventare una licenza.
+5. **Verifica finale:** gate pertinenti sui sorgenti finali e nuove evidenze
+   per la futura estensione; i risultati di ciascun checkpoint restano
+   associati ai propri hash. Altre piattaforme non ancora dichiarate supportate.
+6. **Toolchain:** Nixpkgs segnala `texlive.combine` deprecato verso 27.05;
+   migrare prima di aggiornare il lock file. Le build correnti riescono.
+   Le prove sulla scheda richiedono disponibilità e autorizzazione separata.
 
 ## Ottimizzazioni successive alla correttezza
 
@@ -724,4 +768,5 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 - [x] Confronto delle geometrie a workload e risorse comparabili.
 - [ ] Protocollo oltre 16 PE con lunghezze, capability e framing definiti.
 - [x] Primo gate Vivado reale dopo le correzioni: synth e STA 4×4/10 ns/STEP_DIV=2.
-- [ ] Estendere misure Vivado a Fmax e configurazioni comparabili; poi prove su scheda.
+- [x] Estendere misure Vivado a Fmax e configurazioni comparabili.
+- [ ] Prove sulla scheda (non eseguite né implicitamente autorizzate).

@@ -2,7 +2,8 @@
 
 This directory proves selected properties of **production VHDL**. It does not
 certify the complete system, C software, CDC metastability, analog UART timing
-or place and route. Remaining properties are tracked in F03/B03 in `TASKS.md`.
+or place and route. Remaining integration/corruption work and block properties are tracked in
+A11/B03 in `TASKS.md`. The conditional EXEC contract is qualified below.
 
 ## Run
 
@@ -82,8 +83,8 @@ initialization/reset model is not a claim of these proofs.
 | F-ARRAY-1x1 | Initial reset, otherwise all inputs unrestricted; complete production RTL | BMC base and induction, depth 4 |
 | F-ARRAY-2x3 (fast); 1x2, 2x1, 3x2, 4x4, 1x16, 16x1 (full) | Initial reset; imported production array wiring; proved PE transitions as component guarantees | BMC base and induction, depth 4, assume-guarantee composition |
 | F-UART-TX/RX-C3 (fast), C868 (full) | All sampled digital inputs and resets unrestricted; production initial registers | BMC base and induction, depth 16 |
-| M-PE-ADD, M-CTRL-STEP, M-ARRAY-NORTH, M-UART-TX/RX | Temporary DUT copies with targeted mutations | Must FAIL with trace; original RTL unchanged |
-| Cover suite | PE, four 1x1 controllers, 1x1/2x3 arrays, C3 UARTs | All explicit covers within 32 cycles (UART: 80); includes the universal PE obligation |
+| M-PE-ADD, M-CTRL-STEP, M-EXEC-BYTE, M-ARRAY-NORTH, M-UART-TX/RX | Temporary DUT copies with targeted mutations | Must FAIL with trace; original RTL unchanged |
+| Cover suite | PE, four 1x1 controllers, 1x1/2x3 arrays, C3 UARTs; extra 2x3 EXEC witness | All explicit covers within 40 cycles (UART: 80; EXEC 2x3: 96); includes the universal PE obligation |
 
 The PE contract includes modulo wraparound, low-half MUL/MAC, ABS(-32768),
 signed MIN/MAX, arithmetic right shift and four-bit masked shift amounts.
@@ -106,11 +107,11 @@ and input registers, preventing unchanged-zero data from satisfying that cover.
 DIV=1 permits consecutive captures. Reachable-state lemmas about return states,
 indices, phases and pending count are **asserted and proved**, never assumed.
 The capture budget covers the whole 8-bit request domain, including 0 and 255;
-the current 32-cycle cover does not demonstrate completion of a 255-step run.
+the current 40-cycle cover does not demonstrate completion of a 255-step run.
 
 No unconditional liveness claim is made: TX busy may stay high or low forever.
-The parser timeout assertion is a next-state safety property once the timeout
-condition holds. The production timeout counter is present in full tasks;
+The watchdog range/tick/clear invariants and next-state timeout assertion
+prove the counter progress and return to idle once the timeout condition holds. The production timeout counter is present in full tasks;
 reaching 100000000 timeout cycles is not attempted by the short cover suite.
 The enumerated geometric instances are not a parameterized theorem.
 
@@ -159,16 +160,32 @@ without the DUT transmitter at divisors 16 and 868, with 12 phase/bit-period
 combinations (nominal and ±2%), adjacent frames, glitch, invalid stop, break
 and reset. Neither proof nor digital simulation certifies metastability.
 
-**Still to implement under F03:** complete EXEC tap ordering/response
-checksum properties, composition for transaction completion under explicit
-delivery/transmitter progress obligations.
+## EXEC response and conditional completion
+
+`exec_contract.psl` extends the same controller vunit with independent request
+checksum, response prefix count, queued-byte content/checksum/status and exact
+length monitors. All PE bits, mask bits and RX bytes remain symbolic. No
+assumptions are added to the controller proof tasks. Natural-valued progress
+ranks are proved for request reception, RUN, EXEC response and the production
+UART TX. Under explicit byte-delivery and transmitter-service obligations,
+these well-founded ranks establish conditional completion. This is a ranking
+certificate plus its mathematical argument, not a separate LTL-liveness run.
+
+See [completion.md](completion.md) for the exact ranks, sampling points,
+component obligations and reset/fairness limits. An external producer may
+change PE inputs; the controller proof checks each byte's mux sample. The
+separately proved array hold contract gives a stable response in the integrated
+RTL. The extra 2x3 cover uses six explicit witness-only assumptions; universal
+proofs do not use them. A low/high-byte mutation must yield a counterexample.
+
 The dedicated formal CI job runs the pinned dependency check and fast suite,
 retaining models, logs and counterexamples on failure. Software, HDL/scripts,
 documents and Nix packaging have separate jobs.
 The Nix `checks.x86_64-linux.formal-fast` derivation executes the fast suite;
 it has also been built successfully, independently of the development shell.
-The current `full` target expands the PE/array/controller/UART contracts; it
-does not pretend these remaining properties have been executed.
+The `full` target expands the PE/array/controller/UART contracts, including
+the complete EXEC response and ranking invariants. It does not certify
+end-to-end host/line delivery or the experimental block extension.
 
 ## Artifacts and status
 

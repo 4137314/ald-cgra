@@ -51,6 +51,7 @@ result
 result-*
 
 # editor / OS
+**/.cache/clangd/
 __pycache__/
 *.pyc
 .vscode/

@@ -20,6 +20,9 @@ Evidence aliases (all paths are relative to this document):
   actual routed/CDC runs and full/cover proofs including CFG/WR capture guards.
 - **CONV**: [`verification/2026-09-28/implicit-conv/`](verification/2026-09-28/implicit-conv/)
   and its linked 50-point before/after measurements.
+- **EXEC**: [`verification/2026-10-06/formal-exec/`](verification/2026-10-06/formal-exec/)
+  new full/fast/cover executions, response properties and well-founded ranks;
+  [`exec-ghdl/`](verification/2026-10-06/exec-ghdl/) replays the byte mutation.
 - **PLANS**: [`verification/2026-10-05/plans-release/`](verification/2026-10-05/plans-release/)
   and [`verification/2026-10-06/plans-compiler-fixed/`](verification/2026-10-06/plans-compiler-fixed/):
   874 plan checks; compiler/profile counts and explicit container skips are recorded.
@@ -47,10 +50,10 @@ Evidence aliases (all paths are relative to this document):
 | EXEC bad checksum causes no datapath reset/step | C/RTL transcript checksum cases | `F_CTRL_BAD_EXEC`: PROVED, external reset considered | HDL, FORMAL; payload edge-register writes remain permitted |
 | CFG/WR changes precede capture by the required guard | Protocol replay and meaningful changed-data cover | `F_CTRL_CFG_CHANGE_CONTEXT`, `F_CTRL_INPUT_CHANGE_CONTEXT`, `F_CTRL_DATA_CAPTURE_GUARD`: PROVED | PHYS full/cover; no rollback assumption; CE/reset must remain single-cycle |
 | Legacy CFG/WR partial writes survive NACK | C model oracle and protocol differential replay | Not an atomic-commit guarantee | HDL; NACK is not rollback |
-| Masks, ascending taps, response status/checksum | Protocol replay, kernel UART benches | Full independent EXEC response proof NOT_RUN | HDL; F03 remains open |
+| Masks, ascending taps, response status/checksum | Protocol replay, kernel UART benches; temporary byte-swap mutation | `F_EXEC_*`: PROVED on enumerated controller instances | EXEC; all mask/data bits symbolic; per-byte input sampling and array hold composition specified in the contract |
 | Parser index legality, TX launch and stable handshake data | Controller/array replay under TX busy | `F_CTRL_*` safety invariants: PROVED | FORMAL; no fairness assumptions in current safety proof |
-| Watchdog returns parser to idle | Reduced-timeout RTL replay | Timeout next-state assertion PROVED | FORMAL; full instances retain production counter, short covers use reduced timeout |
-| Transaction eventually completes | Finite successful protocol replays | Conditional liveness proof NOT_RUN | Requires explicit byte-delivery and TX-progress obligations; no unconditional deadlock claim |
+| Watchdog returns parser to idle | Reduced-timeout RTL replay | Counter range/tick/clear and timeout assertions PROVED | EXEC; full instances retain production counter, short covers use reduced timeout |
+| Transaction eventually completes under delivery/service obligations | Protocol replay; nonempty full, sparse, empty and NACK covers | Request/RUN/EXEC/TX natural ranking certificates PROVED | EXEC; [conditional completion argument](../hw/formal/completion.md), no separate LTL engine or unconditional deadlock claim |
 | Uncertain reply poisons session; no duplicate retry | PTY `test_uncertain_session`, truncated/bad replies, disconnect | No host formal claim | SW; next calls fail DESYNC without sending bytes |
 | Whole transaction budget includes TX/backpressure/EINTR | PTY write/read/retry budgets, injected partial writes | No host formal claim | SW; response timeout is separate, multi-command kernels have per-command budgets |
 | Diagnostic ownership, CLOEXEC and optional exclusive open | `test_diagnostic_persistence`, real exec/PTY flag checks | No host formal claim | SW, CC; diagnostics are copied values, not borrowed strings |
@@ -64,7 +67,7 @@ Evidence aliases (all paths are relative to this document):
 |---|---|---|---|
 | TX idle/start/data/stop, bit count and LSB order | `tb_uart`, independent downstream kernel protocol checks | `F-UART-TX-C3/C868`: PROVED | FORMAL; no fairness on start requests, reset may interrupt |
 | RX start confirmation, sampled bits, stop rejection, valid pulse | `tb_uart_async`: 12 phase/period combinations, adjacent frames, ±2%, glitch, bad stop, break, reset/recovery | `F-UART-RX-C3/C868`: PROVED digital sample model | HDL: 77 data/fault checks per divisor 16/868; not an analog metastability certification |
-| Nonvacuous properties / broken DUT detected | Explicit reset/opcode/timeout/NACK/completion covers and temporary mutations | 10 cover tasks BOUNDED_PASS; six negative tasks FAIL as required | FORMAL; all positive full tasks PROVED. Cover is not universal proof |
+| Nonvacuous properties / broken DUT detected | Explicit reset/opcode/timeout/NACK/completion covers and temporary mutations | 11 cover tasks BOUNDED_PASS; seven negative tasks FAIL as required | EXEC; all positive full tasks PROVED. Cover is not universal proof |
 | CLI validation before effects; whole-line shell parsing | `test_contract.py`, CLI/output regressions | No formal claim | SW, PKG; quoted negatives, option arity, long lines/tokens/NUL and PTY signals |
 | Compiler/flags/optional dependencies invalidate build | `scripts/test_build.py` | No formal claim | PKG; unchanged signature does not rebuild, nonexistent compiler must fail |
 | Packaging, compdb, compiler diagnostics | Installation external client, compdb actual flags, GCC analyzer | No formal claim | PKG, CC; GCC13 and Clang22 executed locally, CI compiler matrix is separate evidence |

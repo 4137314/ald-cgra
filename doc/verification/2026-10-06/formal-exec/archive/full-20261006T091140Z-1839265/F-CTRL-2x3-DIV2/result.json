@@ -1,0 +1,70 @@
+{
+  "id": "F-CTRL-2x3-DIV2",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_ROWS": 2,
+    "G_COLS": 3,
+    "G_STEP_DIV": 2,
+    "G_TIMEOUT_CYCLES": 100000000
+  },
+  "assertions": 75,
+  "assumptions": 0,
+  "covers": 10,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=2 -gG_COLS=3 -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=100000000 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "b384adcca5eda8b3d0b903fc8e01c4ff0d595a5097ebcd8dc2e477473ddf2b56",
+    "hw/formal/exec_contract.psl": "cbaa7cdda38c4da462f0e1587bdb7aeb35e293d2e69db8e8bb5530e506759cf8"
+  },
+  "parameter_check_sha256": "0b835b2198f3d9fbf5928dc9eb8deebb0f14fc71a1bbd84899664f75878712d1",
+  "effective_properties_sha256": "696bfc4e2f3900e10f028ddd7a8f2a5f953e7239fba288b4199f7c27b850f8ff",
+  "checked_port_widths": {
+    "cfg": 192,
+    "pe_regs": 96,
+    "west_o": 32,
+    "north_o": 48
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 10,
+    "assert": 75
+  },
+  "smt2_cells": {
+    "assert": 75,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "ff473eb775008cf87b788902491cb4ede5df423aea0f296da6c0938d884a9acb",
+    "task/src/properties.json": "1238c2c14a52704ae915782562b47e47e4282424c0f9cd073f0d1528a1cc4072",
+    "task/model/design_smt2.smt2": "0e6428ca6a7e581c32f8aa845031264436be458158d8a1ae16f9bcabf98b0c6b"
+  },
+  "traces": [],
+  "duration_seconds": 11.376
+}

@@ -1,0 +1,599 @@
+make: Entering directory '/build/source/sw'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c dsl.c -o build/dsl.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c compile.c -o build/compile.o
+CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=release static
+make[1]: Entering directory '/build/source/lib'
+make[1]: Leaving directory '/build/source/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -UNDEBUG test/test_sw.c build/dsl.o build/compile.o ../lib/build/libcgra.a   -o build/test_sw
+./build/test_sw
+# cgra CLI unit tests (DSL + compiler)
+ok 1 - dsl_parse accepts a valid config
+ok 2 - device 'lab' found
+ok 3 - device port parsed
+ok 4 - device baud parsed
+ok 5 - mode 'amplify' found
+ok 6 - mode op parsed
+ok 7 - variable $GAIN expanded to 7
+ok 8 - pipeline 'chain' has two stages
+ok 9 - io profile 'hx' found
+ok 10 - unknown directive is rejected
+ok 11 - directive outside any section is rejected
+ok 12 - unknown section type is rejected
+ok 13 - built-in defaults parse
+ok 14 - core modes present in defaults
+ok 15 - sim device in defaults
+ok 16 - strict parser defaults
+ok 17 - invalid token/value rejected without changing configuration
+ok 18 - invalid token/value rejected without changing configuration
+ok 19 - invalid token/value rejected without changing configuration
+ok 20 - invalid token/value rejected without changing configuration
+ok 21 - invalid token/value rejected without changing configuration
+ok 22 - invalid token/value rejected without changing configuration
+ok 23 - invalid token/value rejected without changing configuration
+ok 24 - invalid token/value rejected without changing configuration
+ok 25 - invalid token/value rejected without changing configuration
+ok 26 - invalid token/value rejected without changing configuration
+ok 27 - invalid token/value rejected without changing configuration
+ok 28 - invalid token/value rejected without changing configuration
+ok 29 - invalid token/value rejected without changing configuration
+ok 30 - invalid token/value rejected without changing configuration
+ok 31 - invalid token/value rejected without changing configuration
+ok 32 - invalid token/value rejected without changing configuration
+ok 33 - invalid token/value rejected without changing configuration
+ok 34 - invalid token/value rejected without changing configuration
+ok 35 - invalid token/value rejected without changing configuration
+ok 36 - invalid token/value rejected without changing configuration
+ok 37 - invalid token/value rejected without changing configuration
+ok 38 - variable capacity overflow rolls back
+ok 39 - literal dollar, braced variable and explicit zero timeout accepted
+ok 40 - invalid output selector is not silently ignored
+ok 41 - invalid output selector is not silently ignored
+ok 42 - invalid output selector is not silently ignored
+ok 43 - invalid output selector is not silently ignored
+ok 44 - validation defaults
+ok 45 - malformed override rejected
+ok 46 - failed override leaves the original mode intact
+ok 47 - diagnostic counts blank lines
+ok 48 - unknown PE field rejected
+ok 49 - failed parse creates no partial mode
+ok 50 - stage immediate requires complete integer
+ok 51 - invalid step count rejected
+ok 52 - invalid step count rejected
+ok 53 - invalid step count rejected
+ok 54 - invalid step count rejected
+ok 55 - explicit zero steps is valid
+ok 56 - 255 steps is valid
+ok 57 - malformed immediate rejected
+ok 58 - malformed immediate rejected
+ok 59 - malformed immediate rejected
+ok 60 - malformed immediate rejected
+ok 61 - malformed immediate rejected
+ok 62 - two different diagonal immediates rejected
+ok 63 - override sets both constant operands
+ok 64 - two different reduction immediates rejected
+ok 65 - two different custom immediates rejected
+ok 66 - equivalent signed and unsigned immediates accepted
+ok 67 - pipeline syntax parses before semantic validation
+ok 68 - binary later pipeline stage rejected
+ok 69 - open validation device
+ok 70 - reduction capacity rejected before execution
+ok 71 - missing B rejected by the C engine
+ok 72 - convolution length overflow rejected before arithmetic
+ok 73 - unsupported scan operation rejected instead of becoming ADD
+ok 74 - invalid engine arguments leave device and output untouched
+ok 75 - binding defaults
+ok 76 - load actual arithmetic standard library
+ok 77 - parse reversed operands
+ok 78 - sim:
+ok 79 - stdlib neg uses A even in ALU operand B
+ok 80 - both north operands read A
+ok 81 - swapped subtraction reads B minus A
+ok 82 - reduction injects B into ALU operand A
+ok 83 - sim:v2
+ok 84 - stdlib neg uses A even in ALU operand B
+ok 85 - both north operands read A
+ok 86 - swapped subtraction reads B minus A
+ok 87 - reduction injects B into ALU operand A
+ok 88 - sim:2x3
+ok 89 - stdlib neg uses A even in ALU operand B
+ok 90 - both north operands read A
+ok 91 - swapped subtraction reads B minus A
+ok 92 - reduction injects B into ALU operand A
+ok 93 - sim:2x3:v2
+ok 94 - stdlib neg uses A even in ALU operand B
+ok 95 - both north operands read A
+ok 96 - swapped subtraction reads B minus A
+ok 97 - reduction injects B into ALU operand A
+ok 98 - sim:3x2
+ok 99 - stdlib neg uses A even in ALU operand B
+ok 100 - both north operands read A
+ok 101 - swapped subtraction reads B minus A
+ok 102 - reduction injects B into ALU operand A
+ok 103 - sim:1x16
+ok 104 - stdlib neg uses A even in ALU operand B
+ok 105 - both north operands read A
+ok 106 - swapped subtraction reads B minus A
+ok 107 - reduction injects B into ALU operand A
+ok 108 - open reset semantics device
+ok 109 - identify reset semantics device
+ok 110 - seed stale registers before mode invocation
+ok 111 - default once clears stale state and accumulates across chunks
+ok 112 - explicit once starts a new invocation from zero
+ok 113 - read full state after reset once
+ok 114 - initial reset also clears untapped NOP registers
+ok 115 - each clears the accumulator for every chunk
+ok 116 - open reset semantics device
+ok 117 - identify reset semantics device
+ok 118 - seed stale registers before mode invocation
+ok 119 - default once clears stale state and accumulates across chunks
+ok 120 - explicit once starts a new invocation from zero
+ok 121 - read full state after reset once
+ok 122 - initial reset also clears untapped NOP registers
+ok 123 - each clears the accumulator for every chunk
+ok 124 - open reset semantics device
+ok 125 - identify reset semantics device
+ok 126 - seed stale registers before mode invocation
+ok 127 - default once clears stale state and accumulates across chunks
+ok 128 - explicit once starts a new invocation from zero
+ok 129 - read full state after reset once
+ok 130 - initial reset also clears untapped NOP registers
+ok 131 - each clears the accumulator for every chunk
+ok 132 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 133 - zero steps returns cleared registers even after a previous execution
+ok 134 - open reset semantics device
+ok 135 - identify reset semantics device
+ok 136 - seed stale registers before mode invocation
+ok 137 - default once clears stale state and accumulates across chunks
+ok 138 - explicit once starts a new invocation from zero
+ok 139 - read full state after reset once
+ok 140 - initial reset also clears untapped NOP registers
+ok 141 - each clears the accumulator for every chunk
+ok 142 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 143 - zero steps returns cleared registers even after a previous execution
+ok 144 - open reset semantics device
+ok 145 - identify reset semantics device
+ok 146 - seed stale registers before mode invocation
+ok 147 - default once clears stale state and accumulates across chunks
+ok 148 - explicit once starts a new invocation from zero
+ok 149 - read full state after reset once
+ok 150 - initial reset also clears untapped NOP registers
+ok 151 - each clears the accumulator for every chunk
+ok 152 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 153 - zero steps returns cleared registers even after a previous execution
+ok 154 - open reset semantics device
+ok 155 - identify reset semantics device
+ok 156 - seed stale registers before mode invocation
+ok 157 - default once clears stale state and accumulates across chunks
+ok 158 - explicit once starts a new invocation from zero
+ok 159 - read full state after reset once
+ok 160 - initial reset also clears untapped NOP registers
+ok 161 - each clears the accumulator for every chunk
+ok 162 - underscheduled diagonal retains routing state between chunks on v2/v3
+ok 163 - zero steps returns cleared registers even after a previous execution
+ok 164 - open pattern validation device
+ok 165 - field syntax remains independent of final merged pattern
+ok 166 - compile and execution reject an ignored field without changing output
+ok 167 - field syntax remains independent of final merged pattern
+ok 168 - compile and execution reject an ignored field without changing output
+ok 169 - field syntax remains independent of final merged pattern
+ok 170 - compile and execution reject an ignored field without changing output
+ok 171 - field syntax remains independent of final merged pattern
+ok 172 - compile and execution reject an ignored field without changing output
+ok 173 - field syntax remains independent of final merged pattern
+ok 174 - compile and execution reject an ignored field without changing output
+ok 175 - field syntax remains independent of final merged pattern
+ok 176 - compile and execution reject an ignored field without changing output
+ok 177 - field syntax remains independent of final merged pattern
+ok 178 - compile and execution reject an ignored field without changing output
+ok 179 - field syntax remains independent of final merged pattern
+ok 180 - compile and execution reject an ignored field without changing output
+ok 181 - field syntax remains independent of final merged pattern
+ok 182 - compile and execution reject an ignored field without changing output
+ok 183 - field syntax remains independent of final merged pattern
+ok 184 - compile and execution reject an ignored field without changing output
+ok 185 - field syntax remains independent of final merged pattern
+ok 186 - compile and execution reject an ignored field without changing output
+ok 187 - field syntax remains independent of final merged pattern
+ok 188 - compile and execution reject an ignored field without changing output
+ok 189 - field syntax remains independent of final merged pattern
+ok 190 - compile and execution reject an ignored field without changing output
+ok 191 - inapplicable fields issue no configuration/reset/run commands
+ok 192 - compile 'add' ok
+ok 193 - PE(0,0) opcode = ADD
+ok 194 - PE(0,0) sel_a = north
+ok 195 - PE(0,0) sel_b = west
+ok 196 - cfg_decode names the opcode
+ok 197 - open sim: for engine tests
+ok 198 - matvec_run ok
+ok 199 - matvec matches host reference (6x5)
+ok 200 - scan_run returns n
+ok 201 - scan matches host reference
+ok 202 - conv_run returns n+k-1
+ok 203 - conv matches host reference
+ok 204 - open both protocol backends
+ok 205 - matvec v3 ok
+ok 206 - matvec v2 ok
+ok 207 - matvec identical across protocols
+ok 208 - scan v3 ok
+ok 209 - scan v2 ok
+ok 210 - scan identical across protocols
+ok 211 - scan: fused path uses fewer round trips
+ok 212 - scan: fused path moves fewer bytes
+ok 213 - open sim: for the sparse-skip test
+ok 214 - conv 3*48 runs
+ok 215 - conv still matches the host reference
+ok 216 - dense matvec runs
+ok 217 - conv skips the Toeplitz zero blocks (>4x fewer round trips)
+ok 218 - sim:1x1:v2
+ok 219 - rectangular kernels match scalar reference
+ok 220 - sim:1x1
+ok 221 - rectangular kernels match scalar reference
+ok 222 - sim:1x16:v2
+ok 223 - rectangular kernels match scalar reference
+ok 224 - sim:1x16
+ok 225 - rectangular kernels match scalar reference
+ok 226 - sim:16x1:v2
+ok 227 - rectangular kernels match scalar reference
+ok 228 - sim:16x1
+ok 229 - rectangular kernels match scalar reference
+ok 230 - sim:2x3:v2
+ok 231 - rectangular kernels match scalar reference
+ok 232 - sim:2x3
+ok 233 - rectangular kernels match scalar reference
+ok 234 - sim:3x2:v2
+ok 235 - rectangular kernels match scalar reference
+ok 236 - sim:3x2
+ok 237 - rectangular kernels match scalar reference
+ok 238 - sim:2x8:v2
+ok 239 - rectangular kernels match scalar reference
+ok 240 - sim:2x8
+ok 241 - rectangular kernels match scalar reference
+ok 242 - sim:8x2:v2
+ok 243 - rectangular kernels match scalar reference
+ok 244 - sim:8x2
+ok 245 - rectangular kernels match scalar reference
+ok 246 - sim:4x4:v2
+ok 247 - rectangular kernels match scalar reference
+ok 248 - sim:4x4
+ok 249 - rectangular kernels match scalar reference
+ok 250 - parse custom coordinate beyond default 4x4
+ok 251 - custom coordinate valid on 1x16
+ok 252 - custom coordinate rejected on 2x3
+ok 253 - out-of-range output tap rejected
+1..253
+# 253 passed, 0 failed
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c main.c -o build/main.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c cli.c -o build/cli.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c vector_io.c -o build/vector_io.o
+python3 ../scripts/build-provenance.py build/build_provenance.h build/.build-config.json ../lib/build/.build-config.json
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c bench.c -o build/bench.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c device.c -o build/device.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c shell.c -o build/shell.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h -c bench_ref.c -o build/bench_ref.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include  -MMD -MP -include build/install_paths.h build/main.o build/cli.o build/vector_io.o build/bench.o build/device.o build/shell.o build/dsl.o build/compile.o build/bench_ref.o ../lib/build/libcgra.a   -o build/cgra
+./build/cgra selftest
+-- protocol v3 (fused exec) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+-- protocol v2 (write/run/read) --
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+ok    retry-on-nack (retries=2)
+all tests PASSED
+--- CLI smoke tests (device sim) ---
+11 22 33 44 55 66 77 88
+0 0 0 2 5
+./build/cgra run muli -d sim --imm 10 --a "1 2 3 4" --io hex
+0x000A 0x0014 0x001E 0x0028
+./build/cgra pipe saxpy -d sim --a "1 2 3 4"
+10 13 16 19
+./build/cgra matvec -d sim -m "1 2 3 4  5 6 7 8  9 10 11 12  13 14 15 16" --x "1 1 1 1"
+10 26 42 58
+./build/cgra scan -d sim --a "3 1 4 1 5 9 2 6"
+3 4 8 9 14 23 25 31
+./build/cgra scan -d sim --op max --a "3 1 4 1 5 9 2 6"
+3 3 4 4 5 9 9 9
+./build/cgra conv -d sim -m "1 2 3" --x "4 5 6 7 8"
+4 13 28 34 40 37 24
+./build/cgra run add -d sim:flaky --a "1 2 3 4" --b "10 20 30 40"   # retry recovers
+11 22 33 44
+./build/cgra run add -d sim:v2 --a "1 2 3 4" --b "10 20 30 40"      # pre-v3 fallback
+11 22 33 44
+./build/cgra scan -d sim:v2 --a "3 1 4 1 5 9 2 6"                   # pre-v3 fallback
+3 4 8 9 14 23 25 31
+./build/cgra run add -d sim --a "1 2 3" --b "10 20 30" --json
+{"count": 3, "result": [11, 22, 33]}
+CGRA_PATH=config/stdlib ./build/cgra run square -d sim --a "2 3 4 5"   # stdlib via CGRA_PATH
+4 9 16 25
+./build/cgra show relu -v | head -1
+mode relu (pattern diagonal):
+./build/cgra show add >/dev/null && echo "show ok"
+show ok
+./build/cgra probe -d sim:2x3
+device: protocol v3, 2x3 array, 16-bit datapath
+ok    add   
+ok    sub   
+ok    mul   
+ok    min   
+ok    max   
+ok    relu  
+ok    addi  
+ok    muli  
+ok    dot = 1320
+ok    matvec 6x5
+ok    scan(9)
+ok    conv 3*5
+device OK
+./build/cgra show add -d sim:3x2 >/dev/null
+sh test/test_cli.sh ./build/cgra
+ok CLI 1 - reject run add -d sim: --a 1 2 --b 3 4 --steps 256
+ok CLI 2 - reject run add -d sim: --a 1 2 --b 3 4 --steps -1
+ok CLI 3 - reject run add -d sim: --a 1 2 --b 3 4 --steps 1junk
+ok CLI 4 - reject run add -d sim: --a 1 2 --b 3 4 --steps 999999999999999999999999
+ok CLI 5 - reject run addi -d sim: --a 1 --imm 4junk
+ok CLI 6 - explicit zero steps
+ok CLI 7 - reject run add -d sim: --a 2 --b 3
+ok CLI 8 - reject check
+ok CLI 9 - reject check
+ok CLI 10 - reject -c /build/tmp.XXBh5u37JR/pipeline.cgra pipe invalid -d sim: --a 1 2 3
+error: pipeline invalid: stage mul requires unavailable vector B
+1 error(s)
+ok CLI 11 - check validates pipeline arity
+ok CLI 12 - same input and output file keeps data until read
+ok CLI 13 - hard-linked input and output
+ok CLI 14 - reject run missing -d sim: --a 1 -o /build/tmp.XXBh5u37JR/result
+ok CLI 15 - failed command preserves existing output
+ok CLI 16 - reject run addi -d sim: --a 1 -o /dev/full
+ok CLI 17 - file output matches stdout: ping -d sim:
+ok CLI 18 - file output matches stdout: show add -d sim:2x3
+ok CLI 19 - file output matches stdout: show add -d sim:3x2 -v
+ok CLI 20 - file output matches stdout: modes
+ok CLI 21 - file output matches stdout: devices
+ok CLI 22 - file output matches stdout: pipelines
+ok CLI 23 - file output matches stdout: io
+ok CLI 24 - file output matches stdout: config
+ok CLI 25 - file output matches stdout: check
+ok CLI 26 - file output matches stdout: dump -d sim:2x3
+ok CLI 27 - file output matches stdout: run add -d sim: --a 1 2 --b 3 4 --json
+ok CLI 28 - file output matches stdout: pipe saxpy -d sim: --a 1 2
+ok CLI 29 - file output matches stdout: matvec -d sim: -m 1 2 3 4 --x 1 2
+ok CLI 30 - file output matches stdout: conv -d sim: -m 1 2 --x 3 4
+ok CLI 31 - file output matches stdout: scan -d sim: --a 1 2 --dtype u16
+ok CLI 32 - reject init -o /build/tmp.XXBh5u37JR/result
+ok CLI 33 - reject reset -o /build/tmp.XXBh5u37JR/result
+ok CLI 34 - reject probe -o /build/tmp.XXBh5u37JR/result
+ok CLI 35 - reject emulate -o /build/tmp.XXBh5u37JR/result
+ok CLI 36 - reject selftest -o /build/tmp.XXBh5u37JR/result
+ok CLI 37 - reject shell -o /build/tmp.XXBh5u37JR/result
+ok CLI 38 - reject ping --json -o /build/tmp.XXBh5u37JR/result
+ok CLI 39 - reject show --dtype s16 -o /build/tmp.XXBh5u37JR/result
+ok CLI 40 - reject modes --io hex -o /build/tmp.XXBh5u37JR/result
+ok CLI 41 - reject bench --dtype s16 -o /build/tmp.XXBh5u37JR/result
+ok CLI 42 - reject benchall --io hex -o /build/tmp.XXBh5u37JR/result
+ok CLI 43 - reject -c /build/tmp.XXBh5u37JR/pipeline.cgra check -o /build/tmp.XXBh5u37JR/result
+ok CLI 44 - failed check preserves file and diagnoses on stderr
+ok CLI 45 - reject ping -d sim: -o /dev/full
+ok CLI 46 - reject show add -d sim: -o /dev/full
+# 46 CLI regression checks passed
+python3 test/test_contract.py ./build/cgra
+ok contract 1 - reject unused input: ping -d sim unexpected
+ok contract 2 - reject unused input: run add --a 1 --b 2 -d sim --cols 4
+ok contract 3 - reject unused input: show add extra
+ok contract 4 - reject unused input: bench add extra
+ok contract 5 - reject unused input: scan --a 1 2
+ok contract 6 - reject unused input: run relu --a 1 --b 2
+ok contract 7 - reject unused input: conv --a 1 -m 2 --x 3
+ok contract 8 - reject unused input: matvec -m 1 --x 2 --b 3
+ok contract 9 - ping: validate option before configuration or external effects
+ok contract 10 - reset: validate option before configuration or external effects
+ok contract 11 - dump: validate option before configuration or external effects
+ok contract 12 - run: validate option before configuration or external effects
+ok contract 13 - pipe: validate option before configuration or external effects
+ok contract 14 - conv: validate option before configuration or external effects
+ok contract 15 - scan: validate option before configuration or external effects
+ok contract 16 - bench: validate option before configuration or external effects
+ok contract 17 - benchall: validate option before configuration or external effects
+ok contract 18 - show: validate option before configuration or external effects
+ok contract 19 - probe: validate option before configuration or external effects
+ok contract 20 - modes: validate option before configuration or external effects
+ok contract 21 - devices: validate option before configuration or external effects
+ok contract 22 - pipelines: validate option before configuration or external effects
+ok contract 23 - io: validate option before configuration or external effects
+ok contract 24 - config: validate option before configuration or external effects
+ok contract 25 - check: validate option before configuration or external effects
+ok contract 26 - init: validate option before configuration or external effects
+ok contract 27 - emulate: validate option before configuration or external effects
+ok contract 28 - selftest: validate option before configuration or external effects
+ok contract 29 - shell: validate option before configuration or external effects
+ok contract 30 - stdout/success for --help
+ok contract 31 - stdout/success for run --help
+ok contract 32 - stdout/success for --version
+ok contract 33 - negative positional operands remain valid
+ok contract 34 - reject whole shell line: unclosed
+ok contract 35 - reject whole shell line: argument limit
+ok contract 36 - reject whole shell line: token too long
+ok contract 37 - reject whole shell line: line too long
+ok contract 38 - reject whole shell line: contains NUL
+ok contract 39 - shell quotes and negative numbers round-trip
+ok contract 40 - oversized line is drained before the next command
+ok contract 41 - shell retains inherited configuration
+ok contract 42 - per-line configuration overrides inherited configuration
+ok contract 43 - completion lists shell and benchall
+ok contract 44 - completion follows run options after a global device option
+ok contract 45 - completion exposes matvec dimensions
+ok contract 46 - completion exposes version
+ok contract 47 - terminal shell rejects an unclosed quote before dispatch
+ok contract 48 - PTY service publishes readiness
+ok contract 49 - emulate accepts selected geometry/protocol
+ok contract 50 - CLI reaches configurable server over real serial transport
+ok contract 51 - SIGTERM shuts down service with success and no error
+ok contract 52 - PTY service publishes readiness
+ok contract 53 - emulate accepts selected geometry/protocol
+ok contract 54 - CLI reaches configurable server over real serial transport
+ok contract 55 - SIGTERM shuts down service with success and no error
+ok contract 56 - invalid service geometry/options rejected
+ok contract 57 - invalid service geometry/options rejected
+ok contract 58 - invalid service geometry/options rejected
+# 58 command/shell contract checks passed
+python3 test/test_bench.py ./build/cgra
+ok benchmark 1 - benchmark metadata describes the actual backend and geometry
+ok benchmark 2 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 3 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 4 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 5 - dedicated public API workloads execute and match independent references
+ok benchmark 6 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 7 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 8 - benchmark metadata describes the actual backend and geometry
+ok benchmark 9 - stdlib scalar checks pass; fixed custom template is diagnosed on 1x16:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 1x16 mesh\n'
+ok benchmark 10 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 11 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 12 - dedicated public API workloads execute and match independent references
+ok benchmark 13 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 14 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 15 - benchmark metadata describes the actual backend and geometry
+ok benchmark 16 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x8: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x8 mesh\n'
+ok benchmark 17 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 18 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 19 - dedicated public API workloads execute and match independent references
+ok benchmark 20 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 21 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 22 - benchmark metadata describes the actual backend and geometry
+ok benchmark 23 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x8:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x8 mesh\n'
+ok benchmark 24 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 25 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 26 - dedicated public API workloads execute and match independent references
+ok benchmark 27 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 28 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 29 - benchmark metadata describes the actual backend and geometry
+ok benchmark 30 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4: b''
+ok benchmark 31 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 32 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 33 - dedicated public API workloads execute and match independent references
+ok benchmark 34 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 35 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 36 - benchmark metadata describes the actual backend and geometry
+ok benchmark 37 - stdlib scalar checks pass; fixed custom template is diagnosed on 4x4:v2: b''
+ok benchmark 38 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 39 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 40 - dedicated public API workloads execute and match independent references
+ok benchmark 41 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 42 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 43 - benchmark metadata describes the actual backend and geometry
+ok benchmark 44 - stdlib scalar checks pass; fixed custom template is diagnosed on 8x2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 8x2 mesh\n'
+ok benchmark 45 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 46 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 47 - dedicated public API workloads execute and match independent references
+ok benchmark 48 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 49 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 50 - benchmark metadata describes the actual backend and geometry
+ok benchmark 51 - stdlib scalar checks pass; fixed custom template is diagnosed on 8x2:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 8x2 mesh\n'
+ok benchmark 52 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 53 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 54 - dedicated public API workloads execute and match independent references
+ok benchmark 55 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 56 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 57 - benchmark metadata describes the actual backend and geometry
+ok benchmark 58 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 59 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 60 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 61 - dedicated public API workloads execute and match independent references
+ok benchmark 62 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 63 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 64 - benchmark metadata describes the actual backend and geometry
+ok benchmark 65 - stdlib scalar checks pass; fixed custom template is diagnosed on 16x1:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 1,1 outside 16x1 mesh\n'
+ok benchmark 66 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 67 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 68 - dedicated public API workloads execute and match independent references
+ok benchmark 69 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 70 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 71 - benchmark metadata describes the actual backend and geometry
+ok benchmark 72 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 73 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 74 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 75 - dedicated public API workloads execute and match independent references
+ok benchmark 76 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 77 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 78 - benchmark metadata describes the actual backend and geometry
+ok benchmark 79 - stdlib scalar checks pass; fixed custom template is diagnosed on 2x3:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 2x3 mesh\n'
+ok benchmark 80 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 81 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 82 - dedicated public API workloads execute and match independent references
+ok benchmark 83 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 84 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 85 - benchmark metadata describes the actual backend and geometry
+ok benchmark 86 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 87 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 88 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 89 - dedicated public API workloads execute and match independent references
+ok benchmark 90 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 91 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 92 - benchmark metadata describes the actual backend and geometry
+ok benchmark 93 - stdlib scalar checks pass; fixed custom template is diagnosed on 3x2:v2: b'cgra: benchmark custom_example failed: mode custom_example: PE 2,2 outside 3x2 mesh\n'
+ok benchmark 94 - report accounts for every mode and distinguishes scalar checks from skips
+ok benchmark 95 - measured samples, CPU baseline and build provenance are complete
+ok benchmark 96 - dedicated public API workloads execute and match independent references
+ok benchmark 97 - configuration, communication, requested steps and useful arithmetic stay distinct
+ok benchmark 98 - reported two-sample median and nearest-rank p95 match retained measurements
+ok benchmark 99 - matvec benchmark handles size 1
+ok benchmark 100 - matvec benchmark handles size 4096
+ok benchmark 101 - conv benchmark handles size 1
+ok benchmark 102 - conv benchmark handles size 4096
+ok benchmark 103 - scan benchmark handles size 1
+ok benchmark 104 - scan benchmark handles size 4096
+ok benchmark 105 - reject --size=0
+ok benchmark 106 - reject --size=-1
+ok benchmark 107 - reject --size=4097
+ok benchmark 108 - reject --size=2junk
+ok benchmark 109 - reject --repeat=0
+ok benchmark 110 - reject --repeat=-1
+ok benchmark 111 - reject --repeat=2junk
+ok benchmark 112 - reject --repeat=999999999999999999999
+ok benchmark 113 - reject --cols=0
+ok benchmark 114 - reject --cols=4097
+ok benchmark 115 - reject --cols=2junk
+ok benchmark 116 - reject malformed/out-of-range vector 32768junk
+ok benchmark 117 - reject malformed/out-of-range vector 65536
+ok benchmark 118 - reject malformed/out-of-range vector -32769
+ok benchmark 119 - reject malformed/out-of-range vector 1-2
+ok benchmark 120 - reject malformed/out-of-range vector 999999999999999999999999999
+ok benchmark 121 - reject unknown formatting ('--dtype', 'u8')
+ok benchmark 122 - reject unknown formatting ('--io', 'missing')
+ok benchmark 123 - failed sweep returns nonzero and publishes its complete JSON artifact
+ok benchmark 124 - escaped names round-trip; invalid modes and patterns are never omitted
+ok benchmark 125 - known custom ADD routing is checked against its scalar reference
+ok benchmark 126 - an arbitrary compilable custom mapping remains an explicit skip
+ok benchmark 127 - a changed custom example cannot inherit validation from its name
+ok benchmark 128 - valid single benchmark JSON
+ok benchmark 129 - invalid UTF-8 bytes cannot invalidate JSON
+ok benchmark 130 - embedded NUL in configuration rejected
+ok benchmark 131 - embedded NUL in vector input rejected
+ok benchmark 132 - CGRA_PATH longer than the old fixed buffer is fully searched
+ok benchmark 133 - CGRA_BAUD requires a complete integer
+ok benchmark 134 - oversized configuration path is rejected instead of truncated
+ok benchmark 135 - configuration file capacity overflow is explicit
+ok benchmark 136 - sweep retains each failing point and propagates nonzero status
+ok benchmark 137 - a sweep producing no report preserves the previous artifact
+ok benchmark 138 - one actual benchmark invocation per sweep point
+ok benchmark 139 - checksum-valid wrong hardware output fails scalar validation: []
+# 139 benchmark/CLI checks passed
+make: Leaving directory '/build/source/sw'

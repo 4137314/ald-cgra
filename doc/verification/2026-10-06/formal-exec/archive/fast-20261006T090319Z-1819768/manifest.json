@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "run_id": "20261006T090319Z-1819768",
+  "suite": "fast",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "2ffe045a41c8eea6a361119c61e46389b2447656",
+  "dirty": true,
+  "runner_sha256": "8728aa882cf9681b4d47b841adfb6bd68f9f1e8cba36ab7c8d51c007e720276f",
+  "tasks": [
+    {
+      "id": "F-CTRL-1x1-DIV2",
+      "top": "cgra_ctrl",
+      "kind": "ctrl",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_ROWS": 1,
+        "G_COLS": 1,
+        "G_STEP_DIV": 2,
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 59,
+      "assumptions": 0,
+      "covers": 9,
+      "result": "UNKNOWN",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_ROWS=1 -gG_COLS=1 -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+        "hw/formal/ctrl_contract.psl": "b384adcca5eda8b3d0b903fc8e01c4ff0d595a5097ebcd8dc2e477473ddf2b56",
+        "hw/formal/exec_contract.psl": "30abebb4b0913e35345305873ffc406a8f7d77c2bef20e3b3645dc00d13fb1b6"
+      },
+      "parameter_check_sha256": "13d5543ee57a570bb5f6aa4fefcf9b6c59f1e281ef1bd46ff611572a8dc6819c",
+      "effective_properties_sha256": "7afd82ab5b0e6130b01f0d62e19b5091b1cc23a17e2dbebfc019ece62e5216c8",
+      "checked_port_widths": {
+        "cfg": 32,
+        "pe_regs": 16,
+        "west_o": 16,
+        "north_o": 16
+      },
+      "exit_code": 4,
+      "solver_status": "UNKNOWN",
+      "property_cells": {
+        "cover": 9,
+        "assert": 59
+      },
+      "smt2_cells": {
+        "assert": 59,
+        "assume": 1,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 0,
+      "model_sha256": {
+        "dut.il": "ecd419da595417668f01d4c399a53d52cf5fd781397e0f9a286f07e161f80234",
+        "task/src/properties.json": "f29e274eafd2e142851ffae47933177e29624737656da5c27164ee8118ed50de",
+        "task/model/design_smt2.smt2": "91406e385c397040ce3c759d89f966ed1db93218dc59ff5cab033d896679ef5a"
+      },
+      "traces": [
+        "task/engine_0/trace_induct.yw"
+      ],
+      "duration_seconds": 6.809
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-CTRL-1x1-DIV2"
+  ]
+}

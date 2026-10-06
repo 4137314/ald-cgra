@@ -1,0 +1,242 @@
+-- Appended inside ctrl_contract's vunit by run.py. This is a monitor of the
+-- production controller, not a replacement state machine. No assumptions.
+-- The response contract samples PE inputs via a separately monitored one-cycle
+-- mux pipeline; inputs may change arbitrarily. In the integrated array they
+-- hold between captures, as separately proved by the universal PE contract.
+
+  function f_prefix(mask : std_logic_vector(15 downto 0); limit : natural)
+    return natural is
+    variable count : natural := 0;
+  begin
+    for i in 0 to G_ROWS * G_COLS - 1 loop
+      if i < limit and mask(i) = '1' then count := count + 1; end if;
+    end loop;
+    return count;
+  end function;
+
+  signal f_exec : boolean := false;
+  signal f_did_capture : boolean := false;
+  signal f_request_remaining : natural range 0 to 5 + 2 * (G_ROWS + G_COLS) := 0;
+  signal f_run_remaining : natural range 0 to 257 * G_STEP_DIV := 0;
+  signal f_receiving : boolean := false;
+  signal f_request_sum : natural range 0 to 255 := 0;
+  signal f_mask : std_logic_vector(15 downto 0) := (others => '0');
+  signal f_ok : boolean := false;
+  signal f_sent : natural range 0 to 2 * G_ROWS * G_COLS + 2 := 0;
+  signal f_sum : unsigned(7 downto 0) := (others => '0');
+  signal f_queued : boolean := false;
+  signal f_expected : std_logic_vector(7 downto 0) := (others => '0');
+  signal f_old_pe : data_vec_t(0 to G_ROWS * G_COLS - 1) := (others => (others => '0'));
+  signal f_old_index : natural range 0 to max_size(G_ROWS * G_COLS, G_ROWS + G_COLS) - 1 := 0;
+  signal f_rank : natural range 0 to 2 * G_ROWS * G_COLS + 3;
+  -- Natural-valued ranking certificate. Fair service of SEND and SEND_WAIT
+  -- is the environment obligation needed to turn this into completion.
+  signal f_remaining : natural range 0 to 8 * G_ROWS * G_COLS + 10 + 257 * G_STEP_DIV := 0;
+  signal f_progress : boolean;
+  signal f_length : natural range 0 to 2 * G_ROWS * G_COLS;
+
+  f_length <= 2 * f_prefix(f_mask, G_ROWS * G_COLS);
+  f_rank <= 2 * f_prefix(f_mask, word_idx) + byte_idx;
+
+  f_progress <= state /= S_IDLE and
+    ((state /= S_SEND and state /= S_SEND_WAIT) or
+     (state = S_SEND and tx_busy = '0') or (state = S_SEND_WAIT and tx_busy = '1'));
+  f_rank_monitor : process(all)
+  begin
+    f_remaining <= 0;
+    if f_exec and word_idx < G_ROWS * G_COLS then
+      case state is
+        when S_RUN =>
+          f_remaining <= 8 * G_ROWS * G_COLS + 10 +
+            to_integer(run_cnt) * G_STEP_DIV + run_wait + G_STEP_DIV - 1 - run_phase;
+        when S_EX_RD =>
+          f_remaining <= 8 * (G_ROWS * G_COLS - word_idx) + 8 - 3 * byte_idx;
+          if rd_settle = '1' then
+            f_remaining <= 8 * (G_ROWS * G_COLS - word_idx) + 9 - 3 * byte_idx;
+          end if;
+        when S_EX_CKTX => f_remaining <= 8;
+        when S_EX_ST => f_remaining <= 5;
+        when S_SEND | S_SEND_WAIT =>
+          case ret_state is
+            when S_EX_RD =>
+              f_remaining <= 8 * (G_ROWS * G_COLS - word_idx) + 9 - 3 * byte_idx;
+              if state = S_SEND then
+                f_remaining <= 8 * (G_ROWS * G_COLS - word_idx) + 10 - 3 * byte_idx;
+              end if;
+            when S_EX_CKTX =>
+              f_remaining <= 9;
+              if state = S_SEND then f_remaining <= 10; end if;
+            when S_EX_ST =>
+              f_remaining <= 6;
+              if state = S_SEND then f_remaining <= 7; end if;
+            when others =>
+              f_remaining <= 1;
+              if state = S_SEND then f_remaining <= 2; end if;
+          end case;
+        when others => null;
+      end case;
+    end if;
+  end process;
+
+  f_request_rank : process(all)
+  begin
+    f_request_remaining <= 0;
+    if f_receiving then
+      if state = S_EX_HDR then
+        f_request_remaining <= 5 + 2 * (G_ROWS + G_COLS) - hdr_idx;
+      elsif state = S_WR and word_idx < G_ROWS + G_COLS then
+        f_request_remaining <= 2 * (G_ROWS + G_COLS - word_idx) + 1 - byte_idx;
+      elsif state = S_EX_CK then
+        f_request_remaining <= 1;
+      end if;
+    end if;
+    f_run_remaining <= 0;
+    if state = S_RUN then
+      f_run_remaining <= to_integer(run_cnt) * G_STEP_DIV + run_wait + G_STEP_DIV - run_phase;
+    end if;
+  end process;
+
+  f_exec_monitor : process(clk)
+  begin
+    if rising_edge(clk) then
+      -- Independent integer sum modulo 256 over the request payload only.
+      if rst = '1' then
+        f_receiving <= false;
+        f_request_sum <= 0;
+      elsif state = S_IDLE then
+        f_receiving <= rx_valid = '1' and rx_data = CMD_EXEC;
+        f_request_sum <= 0;
+      elsif f_receiving and rx_valid = '1' then
+        if state = S_EX_CK then
+          f_receiving <= false;
+        elsif state = S_EX_HDR or state = S_WR then
+          f_request_sum <= (f_request_sum + to_integer(unsigned(rx_data))) mod 256;
+        end if;
+      end if;
+      f_old_pe <= pe_regs;
+      f_old_index <= word_idx;
+      if rst = '1' then
+        f_exec <= false;
+        f_did_capture <= false;
+        f_queued <= false;
+        f_sent <= 0;
+        f_sum <= (others => '0');
+      elsif state = S_EX_CK and rx_valid = '1' then
+        f_exec <= true;
+        f_did_capture <= false;
+        f_mask <= ex_mask;
+        f_ok <= to_integer(unsigned(rx_data)) = f_request_sum;
+        f_sent <= 0;
+        f_sum <= (others => '0');
+        f_queued <= false;
+      elsif f_exec then
+        if step = '1' then f_did_capture <= true; end if;
+        if state = S_IDLE then f_exec <= false; end if;
+        if tx_start = '1' then
+          f_queued <= false;
+          if f_sent < 2 * G_ROWS * G_COLS + 2 then
+            f_sent <= f_sent + 1;
+          end if;
+          if f_sent < f_length then f_sum <= f_sum + unsigned(tx_data); end if;
+        end if;
+        if state = S_EX_RD and rd_settle = '0' and ex_mask(word_idx) = '1' then
+          f_queued <= true;
+          if f_old_index < G_ROWS * G_COLS then
+            if byte_idx = 0 then
+              f_expected <= std_logic_vector(f_old_pe(f_old_index)(7 downto 0));
+            else
+              f_expected <= std_logic_vector(f_old_pe(f_old_index)(15 downto 8));
+            end if;
+          end if;
+        elsif state = S_EX_CKTX then
+          f_queued <= true;
+          f_expected <= std_logic_vector(f_sum);
+        elsif state = S_EX_ST then
+          f_queued <= true;
+          if f_ok then f_expected <= RSP_ACK; else f_expected <= RSP_NACK; end if;
+        end if;
+      end if;
+    end if;
+  end process;
+
+  -- Request decode, independent per-field obligations. All 256 byte values,
+  -- all 16 mask bits and ignored flag bits stay symbolic.
+  F_EXEC_HEADER_STEPS: assert always ((rst = '0' and state = S_EX_HDR and
+    rx_valid = '1' and hdr_idx = 0) -> next (ex_steps = unsigned(prev(rx_data))));
+  F_EXEC_HEADER_FLAGS: assert always ((rst = '0' and state = S_EX_HDR and
+    rx_valid = '1' and hdr_idx = 1) -> next (ex_flags = prev(rx_data)));
+  F_EXEC_HEADER_MASK_LO: assert always ((rst = '0' and state = S_EX_HDR and
+    rx_valid = '1' and hdr_idx = 2) -> next (ex_mask(7 downto 0) = prev(rx_data)));
+  F_EXEC_HEADER_MASK_HI: assert always ((rst = '0' and state = S_EX_HDR and
+    rx_valid = '1' and hdr_idx = 3) -> next (ex_mask(15 downto 8) = prev(rx_data)));
+
+  F_EXEC_RECEIVE_CONTEXT: assert always ((state = S_EX_HDR or state = S_EX_CK or
+    (state = S_WR and wr_ret = S_EX_CK)) -> f_receiving);
+  F_EXEC_REQUEST_SUM: assert always ((f_receiving and state /= S_IDLE) -> cksum = to_unsigned(f_request_sum, 8));
+  F_EXEC_RECEIVE_STATES: assert always (f_receiving -> (state = S_IDLE or state = S_EX_HDR or
+    state = S_EX_CK or (state = S_WR and wr_ret = S_EX_CK)));
+  F_EXEC_MUX: assert always ((f_seen and f_old_index < G_ROWS * G_COLS) ->
+    rd_word = f_old_pe(f_old_index));
+  F_EXEC_SETTLED: assert always ((state = S_EX_RD and rd_settle = '0') ->
+    f_old_index = word_idx);
+  F_EXEC_ACTIVE_STATE: assert always (f_exec ->
+    (state = S_RUN or state = S_EX_RD or state = S_EX_CKTX or state = S_EX_ST or
+     state = S_SEND or state = S_SEND_WAIT or state = S_IDLE));
+  F_EXEC_MASK_STABLE: assert always (f_exec -> ex_mask = f_mask);
+  F_EXEC_VERDICT: assert always (f_exec -> (ex_ok = '1') = f_ok);
+  F_EXEC_BYTE_INDEX: assert always ((f_exec and state /= S_IDLE) -> byte_idx <= 1);
+  F_EXEC_BAD_NO_CAPTURE: assert always ((f_exec and not f_ok) -> step = '0' and dp_rst = '0');
+  F_EXEC_TAP_INDEX: assert always (f_exec -> word_idx < G_ROWS * G_COLS);
+  F_EXEC_HIGH_SELECTED: assert always ((f_exec and byte_idx = 1) -> ex_mask(word_idx) = '1');
+  F_EXEC_SETTLE_LOW: assert always ((f_exec and rd_settle = '1') -> byte_idx = 0);
+  F_EXEC_SENT_BOUND: assert always (f_exec -> f_sent <= f_length + 2);
+  F_EXEC_RUN_EMPTY: assert always ((f_exec and state = S_RUN) -> f_sent = 0 and not f_queued and run_ret = S_EX_RD and f_ok and
+    byte_idx = 0 and f_sum = 0 and rd_settle = '1');
+  F_EXEC_READ_RANK: assert always ((f_exec and state = S_EX_RD) -> f_sent = f_rank and not f_queued);
+  F_EXEC_CKSUM_RANK: assert always ((f_exec and state = S_EX_CKTX) -> f_sent = f_length and not f_queued);
+  F_EXEC_STATUS_RANK: assert always ((f_exec and state = S_EX_ST) -> f_sent = f_length + 1 and not f_queued);
+  F_EXEC_COMPLETE_LENGTH: assert always ((f_exec and state = S_IDLE) -> f_sent = f_length + 2 and not f_queued);
+
+  -- Rank is the number of bytes preceding the next tap byte in row-major
+  -- mask order. A prepared byte is either queued or already launched once.
+  F_EXEC_DATA_IN_FLIGHT: assert always ((f_exec and (state = S_SEND or state = S_SEND_WAIT)
+    and ret_state = S_EX_RD) ->
+    ((f_queued and f_sent + 1 = f_rank) or (not f_queued and f_sent = f_rank)));
+  F_EXEC_LAST_IN_FLIGHT: assert always ((f_exec and (state = S_SEND or state = S_SEND_WAIT)
+    and ret_state = S_EX_CKTX) ->
+    ((f_queued and f_sent + 1 = f_length) or (not f_queued and f_sent = f_length)));
+  F_EXEC_CKSUM_IN_FLIGHT: assert always ((f_exec and (state = S_SEND or state = S_SEND_WAIT)
+    and ret_state = S_EX_ST) ->
+    ((f_queued and f_sent = f_length) or (not f_queued and f_sent = f_length + 1)));
+  F_EXEC_STATUS_IN_FLIGHT: assert always ((f_exec and (state = S_SEND or state = S_SEND_WAIT)
+    and ret_state = S_IDLE) ->
+    ((f_queued and f_sent = f_length + 1) or (not f_queued and f_sent = f_length + 2)));
+  F_EXEC_QUEUE_WAIT: assert always ((f_exec and state = S_SEND_WAIT) -> f_queued = (tx_start = '1'));
+  F_EXEC_QUEUE_SEND: assert always ((f_exec and state = S_SEND) -> f_queued);
+  F_EXEC_SEND_RETURN: assert always ((f_exec and (state = S_SEND or state = S_SEND_WAIT)) ->
+    (ret_state = S_EX_RD or ret_state = S_EX_CKTX or ret_state = S_EX_ST or ret_state = S_IDLE));
+  F_EXEC_SUM: assert always ((f_exec and not (f_queued and f_sent < f_length)) -> cksum = f_sum);
+  F_EXEC_SUM_QUEUED: assert always ((f_exec and f_queued and f_sent < f_length) ->
+    cksum = f_sum + unsigned(tx_data));
+  F_EXEC_BYTE_CONTENT: assert always ((f_exec and f_queued) -> tx_data = f_expected);
+  F_EXEC_TX_ONCE: assert always ((f_exec and tx_start = '1') -> f_queued and f_sent < f_length + 2);
+
+  F_EXEC_INPUT_BYTE_INDEX: assert always (state = S_WR -> byte_idx <= 1);
+  F_EXEC_REQUEST_POSITIVE: assert always ((f_receiving and state /= S_IDLE) -> f_request_remaining > 0);
+  F_EXEC_REQUEST_NONINCREASING: assert always ((f_receiving and state /= S_IDLE and rst = '0') -> next
+    (f_request_remaining <= prev(f_request_remaining)));
+  F_EXEC_REQUEST_PROGRESS: assert always ((f_receiving and state /= S_IDLE and rst = '0' and rx_valid = '1') -> next
+    (f_request_remaining < prev(f_request_remaining)));
+  F_RUN_RANK_POSITIVE: assert always (state = S_RUN -> f_run_remaining > 0);
+  F_RUN_RANK_PROGRESS: assert always ((state = S_RUN and rst = '0') -> next
+    (f_run_remaining < prev(f_run_remaining)));
+  F_EXEC_SEND_SETTLED: assert always ((f_exec and (state = S_SEND or state = S_SEND_WAIT)) -> rd_settle = '0');
+  F_EXEC_RANK_POSITIVE: assert always ((f_exec and state /= S_IDLE) -> f_remaining > 0);
+  F_EXEC_RANK_NONINCREASING: assert always ((f_exec and rst = '0') -> next
+    (f_remaining <= prev(f_remaining)));
+  F_EXEC_RANK_PROGRESS: assert always ((f_exec and rst = '0' and f_progress) -> next
+    (f_remaining < prev(f_remaining)));
+
+  C_EXEC_EMPTY: cover {f_exec and f_length = 0 and state = S_IDLE};
+  C_EXEC_FULL: cover {f_exec and f_length = 2 * G_ROWS * G_COLS and f_ok and f_did_capture and state = S_IDLE};
+  C_EXEC_NACK_COMPLETE: cover {f_exec and not f_ok and state = S_IDLE};

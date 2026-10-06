@@ -5,6 +5,16 @@ vunit uart_tx_contract (uart_tx(rtl)) {
   signal f_seen : boolean := false;
   signal f_word : std_logic_vector(7 downto 0) := (others => '0');
   signal f_sent : natural range 0 to 8 := 0;
+  signal f_remaining : natural range 0 to 10 * CLKS_PER_BIT := 0;
+  f_rank : process(all)
+  begin
+    case state is
+      when S_START => f_remaining <= 10 * CLKS_PER_BIT - clk_cnt;
+      when S_DATA => f_remaining <= (9 - bit_idx) * CLKS_PER_BIT - clk_cnt;
+      when S_STOP => f_remaining <= CLKS_PER_BIT - clk_cnt;
+      when others => f_remaining <= 0;
+    end case;
+  end process;
   f_monitor : process(clk)
   begin
     if rising_edge(clk) then
@@ -47,6 +57,9 @@ vunit uart_tx_contract (uart_tx(rtl)) {
     -> next (state = S_STOP and clk_cnt = 0));
   F_TX_FRAME_END: assert always ((rst = '0' and state = S_STOP and clk_cnt = CLKS_PER_BIT - 1)
     -> next (state = S_IDLE and clk_cnt = 0));
+  F_TX_RANK_POSITIVE: assert always (state /= S_IDLE -> f_remaining > 0);
+  F_TX_RANK_PROGRESS: assert always ((rst = '0' and state /= S_IDLE) -> next
+    (f_remaining < prev(f_remaining)));
   C_TX_NONEMPTY: cover {f_seen and state = S_DATA and f_word /= x"00"};
   C_TX_COMPLETE: cover {state = S_STOP and clk_cnt = CLKS_PER_BIT - 1 and rst = '0'; state = S_IDLE};
   C_TX_RESET: cover {state = S_DATA and rst = '1'; state = S_IDLE and tx_busy = '0'};

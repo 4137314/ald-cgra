@@ -1,0 +1,6 @@
+warning: Git tree '/home/main/dev/git/ald-cgra' is dirty
+these 2 derivations will be built:
+  /nix/store/64k1v905nzbnd9lyjgw4pvdra08rs7bi-cgra-software-check.drv
+  /nix/store/rlr9l91qq9n5vndymamjrrc0wbmvzf9f-cgra-formal-fast.drv
+building '/nix/store/rlr9l91qq9n5vndymamjrrc0wbmvzf9f-cgra-formal-fast.drv'...
+building '/nix/store/64k1v905nzbnd9lyjgw4pvdra08rs7bi-cgra-software-check.drv'...
