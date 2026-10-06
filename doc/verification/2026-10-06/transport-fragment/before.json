@@ -1,0 +1,17 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "-v",
+    "/tmp/nix-shell.5YNUbT/cgra-plans-toolchain-1_907n1x:/src:ro",
+    "-v",
+    "/home/main/dev/git/ald-cgra/doc/verification/2026-10-06/transport-fragment:/repro:ro",
+    "cgra-ci:review",
+    "python3",
+    "/repro/reproduce.py"
+  ],
+  "exit_code": 1,
+  "duration_seconds": 4.7847276579996105,
+  "scope": "Reproduction only; original library, temporary test instrumentation"
+}

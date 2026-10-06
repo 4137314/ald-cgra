@@ -1,0 +1,36 @@
+[
+  {
+    "compiler": "gcc-13",
+    "command": [
+      "docker",
+      "run",
+      "--rm",
+      "-v",
+      "/tmp/nix-shell.5YNUbT/cgra-plans-toolchain-1_907n1x:/src:ro",
+      "sha256:c3649cca2305a4bfcab418350466f7a3da6be212a2ac28633435b282708fdad3",
+      "python3",
+      "/src/runner.py",
+      "gcc-13"
+    ],
+    "exit_code": 1,
+    "status": "FAIL",
+    "duration_seconds": 4.994840914005181
+  },
+  {
+    "compiler": "clang-18",
+    "command": [
+      "docker",
+      "run",
+      "--rm",
+      "-v",
+      "/tmp/nix-shell.5YNUbT/cgra-plans-toolchain-1_907n1x:/src:ro",
+      "sha256:c3649cca2305a4bfcab418350466f7a3da6be212a2ac28633435b282708fdad3",
+      "python3",
+      "/src/runner.py",
+      "clang-18"
+    ],
+    "exit_code": 0,
+    "status": "PASS",
+    "duration_seconds": 16.78404987900285
+  }
+]

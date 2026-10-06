@@ -1,0 +1,845 @@
+make: Entering directory '/tmp/cgra-fragment-fixed-64_iftp5/lib'
+mkdir -p build
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/vector.c -o build/vector.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/kernels.c -o build/kernels.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/emu.c -o build/emu.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/serve.c -o build/serve.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_transport.c build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o  -Wl,--wrap=write -o build/test_transport
+test/test_transport.c:541:13: warning: ‘test_plan_uncertain’ defined but not used [-Wunused-function]
+  541 | static void test_plan_uncertain(void)
+      |             ^~~~~~~~~~~~~~~~~~~
+test/test_transport.c:521:13: warning: ‘test_diagnostic_persistence’ defined but not used [-Wunused-function]
+  521 | static void test_diagnostic_persistence(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:450:13: warning: ‘test_configurable_server’ defined but not used [-Wunused-function]
+  450 | static void test_configurable_server(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:406:13: warning: ‘test_open_flags’ defined but not used [-Wunused-function]
+  406 | static void test_open_flags(const char *self)
+      |             ^~~~~~~~~~~~~~~
+test/test_transport.c:335:13: warning: ‘test_transaction_read_budget’ defined but not used [-Wunused-function]
+  335 | static void test_transaction_read_budget(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:279:13: warning: ‘test_write_budget’ defined but not used [-Wunused-function]
+  279 | static void test_write_budget(void)
+      |             ^~~~~~~~~~~~~~~~~
+test/test_transport.c:214:13: warning: ‘test_kernel_partial_output’ defined but not used [-Wunused-function]
+  214 | static void test_kernel_partial_output(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:188:13: warning: ‘test_high_descriptor’ defined but not used [-Wunused-function]
+  188 | static void test_high_descriptor(void)
+      |             ^~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:124:13: warning: ‘test_uncertain_session’ defined but not used [-Wunused-function]
+  124 | static void test_uncertain_session(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:112:13: warning: ‘test_failed_write’ defined but not used [-Wunused-function]
+  112 | static void test_failed_write(void)
+      |             ^~~~~~~~~~~~~~~~~
+test/test_transport.c:79:13: warning: ‘test_fragmented_reply’ defined but not used [-Wunused-function]
+   79 | static void test_fragmented_reply(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:66:13: warning: ‘test_silent_reply’ defined but not used [-Wunused-function]
+   66 | static void test_silent_reply(void)
+      |             ^~~~~~~~~~~~~~~~~
+make: Leaving directory '/tmp/cgra-fragment-fixed-64_iftp5/lib'
+ok transport 1 - create PTY
+ok transport 2 - open serial library on PTY
+ok transport 3 - establish geometry for partial-write regression
+ok transport 4 - queue complete ACK
+ok transport 5 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 6 - fork delayed NACK source
+ok transport 7 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 8 - NACK source finished
+ok transport 9 - create PTY
+ok transport 10 - open serial library on PTY
+ok transport 11 - establish geometry for partial-write regression
+ok transport 12 - queue complete ACK
+ok transport 13 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 14 - fork delayed NACK source
+ok transport 15 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 16 - NACK source finished
+ok transport 17 - create PTY
+ok transport 18 - open serial library on PTY
+ok transport 19 - establish geometry for partial-write regression
+ok transport 20 - queue complete ACK
+ok transport 21 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 22 - fork delayed NACK source
+ok transport 23 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 24 - NACK source finished
+ok transport 25 - create PTY
+ok transport 26 - open serial library on PTY
+ok transport 27 - establish geometry for partial-write regression
+ok transport 28 - queue complete ACK
+ok transport 29 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 30 - fork delayed NACK source
+ok transport 31 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 32 - NACK source finished
+ok transport 33 - create PTY
+ok transport 34 - open serial library on PTY
+ok transport 35 - establish geometry for partial-write regression
+ok transport 36 - queue complete ACK
+ok transport 37 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 38 - fork delayed NACK source
+ok transport 39 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 40 - NACK source finished
+ok transport 41 - create PTY
+ok transport 42 - open serial library on PTY
+ok transport 43 - establish geometry for partial-write regression
+ok transport 44 - queue complete ACK
+ok transport 45 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 46 - fork delayed NACK source
+ok transport 47 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 48 - NACK source finished
+ok transport 49 - create PTY
+ok transport 50 - open serial library on PTY
+ok transport 51 - establish geometry for partial-write regression
+ok transport 52 - queue complete ACK
+ok transport 53 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 54 - fork delayed NACK source
+ok transport 55 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 56 - NACK source finished
+ok transport 57 - create PTY
+ok transport 58 - open serial library on PTY
+ok transport 59 - establish geometry for partial-write regression
+ok transport 60 - queue complete ACK
+ok transport 61 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 62 - fork delayed NACK source
+ok transport 63 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 64 - NACK source finished
+ok transport 65 - create PTY
+ok transport 66 - open serial library on PTY
+ok transport 67 - establish geometry for partial-write regression
+ok transport 68 - queue complete ACK
+ok transport 69 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 70 - fork delayed NACK source
+ok transport 71 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 72 - NACK source finished
+ok transport 73 - create PTY
+ok transport 74 - open serial library on PTY
+ok transport 75 - establish geometry for partial-write regression
+ok transport 76 - queue complete ACK
+ok transport 77 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 78 - fork delayed NACK source
+ok transport 79 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 80 - NACK source finished
+ok transport 81 - create PTY
+ok transport 82 - open serial library on PTY
+ok transport 83 - establish geometry for partial-write regression
+ok transport 84 - queue complete ACK
+ok transport 85 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 86 - fork delayed NACK source
+ok transport 87 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 88 - NACK source finished
+ok transport 89 - create PTY
+ok transport 90 - open serial library on PTY
+ok transport 91 - establish geometry for partial-write regression
+ok transport 92 - queue complete ACK
+ok transport 93 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 94 - fork delayed NACK source
+ok transport 95 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 96 - NACK source finished
+ok transport 97 - create PTY
+ok transport 98 - open serial library on PTY
+ok transport 99 - establish geometry for partial-write regression
+ok transport 100 - queue complete ACK
+ok transport 101 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 102 - fork delayed NACK source
+ok transport 103 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 104 - NACK source finished
+ok transport 105 - create PTY
+ok transport 106 - open serial library on PTY
+ok transport 107 - establish geometry for partial-write regression
+ok transport 108 - queue complete ACK
+ok transport 109 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 110 - fork delayed NACK source
+ok transport 111 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 112 - NACK source finished
+ok transport 113 - create PTY
+ok transport 114 - open serial library on PTY
+ok transport 115 - establish geometry for partial-write regression
+ok transport 116 - queue complete ACK
+ok transport 117 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 118 - fork delayed NACK source
+ok transport 119 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 120 - NACK source finished
+ok transport 121 - create PTY
+ok transport 122 - open serial library on PTY
+ok transport 123 - establish geometry for partial-write regression
+ok transport 124 - queue complete ACK
+ok transport 125 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 126 - fork delayed NACK source
+ok transport 127 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 128 - NACK source finished
+ok transport 129 - create PTY
+ok transport 130 - open serial library on PTY
+ok transport 131 - establish geometry for partial-write regression
+ok transport 132 - queue complete ACK
+ok transport 133 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 134 - fork delayed NACK source
+ok transport 135 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 136 - NACK source finished
+ok transport 137 - create PTY
+ok transport 138 - open serial library on PTY
+ok transport 139 - establish geometry for partial-write regression
+ok transport 140 - queue complete ACK
+ok transport 141 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 142 - fork delayed NACK source
+ok transport 143 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 144 - NACK source finished
+ok transport 145 - create PTY
+ok transport 146 - open serial library on PTY
+ok transport 147 - establish geometry for partial-write regression
+ok transport 148 - queue complete ACK
+ok transport 149 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 150 - fork delayed NACK source
+ok transport 151 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 152 - NACK source finished
+ok transport 153 - create PTY
+ok transport 154 - open serial library on PTY
+ok transport 155 - establish geometry for partial-write regression
+ok transport 156 - queue complete ACK
+ok transport 157 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 158 - fork delayed NACK source
+ok transport 159 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 160 - NACK source finished
+ok transport 161 - create PTY
+ok transport 162 - open serial library on PTY
+ok transport 163 - establish geometry for partial-write regression
+ok transport 164 - queue complete ACK
+ok transport 165 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 166 - fork delayed NACK source
+ok transport 167 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 168 - NACK source finished
+ok transport 169 - create PTY
+ok transport 170 - open serial library on PTY
+ok transport 171 - establish geometry for partial-write regression
+ok transport 172 - queue complete ACK
+ok transport 173 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 174 - fork delayed NACK source
+ok transport 175 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 176 - NACK source finished
+ok transport 177 - create PTY
+ok transport 178 - open serial library on PTY
+ok transport 179 - establish geometry for partial-write regression
+ok transport 180 - queue complete ACK
+ok transport 181 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 182 - fork delayed NACK source
+ok transport 183 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 184 - NACK source finished
+ok transport 185 - create PTY
+ok transport 186 - open serial library on PTY
+ok transport 187 - establish geometry for partial-write regression
+ok transport 188 - queue complete ACK
+ok transport 189 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 190 - fork delayed NACK source
+ok transport 191 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 192 - NACK source finished
+ok transport 193 - create PTY
+ok transport 194 - open serial library on PTY
+ok transport 195 - establish geometry for partial-write regression
+ok transport 196 - queue complete ACK
+ok transport 197 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 198 - fork delayed NACK source
+ok transport 199 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 200 - NACK source finished
+ok transport 201 - create PTY
+ok transport 202 - open serial library on PTY
+ok transport 203 - establish geometry for partial-write regression
+ok transport 204 - queue complete ACK
+ok transport 205 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 206 - fork delayed NACK source
+ok transport 207 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 208 - NACK source finished
+ok transport 209 - create PTY
+ok transport 210 - open serial library on PTY
+ok transport 211 - establish geometry for partial-write regression
+ok transport 212 - queue complete ACK
+ok transport 213 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 214 - fork delayed NACK source
+ok transport 215 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 216 - NACK source finished
+ok transport 217 - create PTY
+ok transport 218 - open serial library on PTY
+ok transport 219 - establish geometry for partial-write regression
+ok transport 220 - queue complete ACK
+ok transport 221 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 222 - fork delayed NACK source
+ok transport 223 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 224 - NACK source finished
+ok transport 225 - create PTY
+ok transport 226 - open serial library on PTY
+ok transport 227 - establish geometry for partial-write regression
+ok transport 228 - queue complete ACK
+ok transport 229 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 230 - fork delayed NACK source
+ok transport 231 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 232 - NACK source finished
+ok transport 233 - create PTY
+ok transport 234 - open serial library on PTY
+ok transport 235 - establish geometry for partial-write regression
+ok transport 236 - queue complete ACK
+ok transport 237 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 238 - fork delayed NACK source
+ok transport 239 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 240 - NACK source finished
+ok transport 241 - create PTY
+ok transport 242 - open serial library on PTY
+ok transport 243 - establish geometry for partial-write regression
+ok transport 244 - queue complete ACK
+ok transport 245 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 246 - fork delayed NACK source
+ok transport 247 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 248 - NACK source finished
+ok transport 249 - create PTY
+ok transport 250 - open serial library on PTY
+ok transport 251 - establish geometry for partial-write regression
+ok transport 252 - queue complete ACK
+ok transport 253 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 254 - fork delayed NACK source
+ok transport 255 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 256 - NACK source finished
+ok transport 257 - create PTY
+ok transport 258 - open serial library on PTY
+ok transport 259 - establish geometry for partial-write regression
+ok transport 260 - queue complete ACK
+ok transport 261 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 262 - fork delayed NACK source
+ok transport 263 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 264 - NACK source finished
+ok transport 265 - create PTY
+ok transport 266 - open serial library on PTY
+ok transport 267 - establish geometry for partial-write regression
+ok transport 268 - queue complete ACK
+ok transport 269 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 270 - fork delayed NACK source
+ok transport 271 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 272 - NACK source finished
+ok transport 273 - create PTY
+ok transport 274 - open serial library on PTY
+ok transport 275 - establish geometry for partial-write regression
+ok transport 276 - queue complete ACK
+ok transport 277 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 278 - fork delayed NACK source
+ok transport 279 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 280 - NACK source finished
+ok transport 281 - create PTY
+ok transport 282 - open serial library on PTY
+ok transport 283 - establish geometry for partial-write regression
+ok transport 284 - queue complete ACK
+ok transport 285 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 286 - fork delayed NACK source
+ok transport 287 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 288 - NACK source finished
+ok transport 289 - create PTY
+ok transport 290 - open serial library on PTY
+ok transport 291 - establish geometry for partial-write regression
+ok transport 292 - queue complete ACK
+ok transport 293 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 294 - fork delayed NACK source
+ok transport 295 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 296 - NACK source finished
+ok transport 297 - create PTY
+ok transport 298 - open serial library on PTY
+ok transport 299 - establish geometry for partial-write regression
+ok transport 300 - queue complete ACK
+ok transport 301 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 302 - fork delayed NACK source
+ok transport 303 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 304 - NACK source finished
+ok transport 305 - create PTY
+ok transport 306 - open serial library on PTY
+ok transport 307 - establish geometry for partial-write regression
+ok transport 308 - queue complete ACK
+ok transport 309 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 310 - fork delayed NACK source
+ok transport 311 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 312 - NACK source finished
+ok transport 313 - create PTY
+ok transport 314 - open serial library on PTY
+ok transport 315 - establish geometry for partial-write regression
+ok transport 316 - queue complete ACK
+ok transport 317 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 318 - fork delayed NACK source
+ok transport 319 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 320 - NACK source finished
+ok transport 321 - create PTY
+ok transport 322 - open serial library on PTY
+ok transport 323 - establish geometry for partial-write regression
+ok transport 324 - queue complete ACK
+ok transport 325 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 326 - fork delayed NACK source
+ok transport 327 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 328 - NACK source finished
+ok transport 329 - create PTY
+ok transport 330 - open serial library on PTY
+ok transport 331 - establish geometry for partial-write regression
+ok transport 332 - queue complete ACK
+ok transport 333 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 334 - fork delayed NACK source
+ok transport 335 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 336 - NACK source finished
+ok transport 337 - create PTY
+ok transport 338 - open serial library on PTY
+ok transport 339 - establish geometry for partial-write regression
+ok transport 340 - queue complete ACK
+ok transport 341 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 342 - fork delayed NACK source
+ok transport 343 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 344 - NACK source finished
+ok transport 345 - create PTY
+ok transport 346 - open serial library on PTY
+ok transport 347 - establish geometry for partial-write regression
+ok transport 348 - queue complete ACK
+ok transport 349 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 350 - fork delayed NACK source
+ok transport 351 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 352 - NACK source finished
+ok transport 353 - create PTY
+ok transport 354 - open serial library on PTY
+ok transport 355 - establish geometry for partial-write regression
+ok transport 356 - queue complete ACK
+ok transport 357 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 358 - fork delayed NACK source
+ok transport 359 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 360 - NACK source finished
+ok transport 361 - create PTY
+ok transport 362 - open serial library on PTY
+ok transport 363 - establish geometry for partial-write regression
+ok transport 364 - queue complete ACK
+ok transport 365 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 366 - fork delayed NACK source
+ok transport 367 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 368 - NACK source finished
+ok transport 369 - create PTY
+ok transport 370 - open serial library on PTY
+ok transport 371 - establish geometry for partial-write regression
+ok transport 372 - queue complete ACK
+ok transport 373 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 374 - fork delayed NACK source
+ok transport 375 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 376 - NACK source finished
+ok transport 377 - create PTY
+ok transport 378 - open serial library on PTY
+ok transport 379 - establish geometry for partial-write regression
+ok transport 380 - queue complete ACK
+ok transport 381 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 382 - fork delayed NACK source
+ok transport 383 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 384 - NACK source finished
+ok transport 385 - create PTY
+ok transport 386 - open serial library on PTY
+ok transport 387 - establish geometry for partial-write regression
+ok transport 388 - queue complete ACK
+ok transport 389 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 390 - fork delayed NACK source
+ok transport 391 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 392 - NACK source finished
+ok transport 393 - create PTY
+ok transport 394 - open serial library on PTY
+ok transport 395 - establish geometry for partial-write regression
+ok transport 396 - queue complete ACK
+ok transport 397 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 398 - fork delayed NACK source
+ok transport 399 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 400 - NACK source finished
+ok transport 401 - create PTY
+ok transport 402 - open serial library on PTY
+ok transport 403 - establish geometry for partial-write regression
+ok transport 404 - queue complete ACK
+ok transport 405 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 406 - fork delayed NACK source
+ok transport 407 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 408 - NACK source finished
+ok transport 409 - create PTY
+ok transport 410 - open serial library on PTY
+ok transport 411 - establish geometry for partial-write regression
+ok transport 412 - queue complete ACK
+ok transport 413 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 414 - fork delayed NACK source
+ok transport 415 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 416 - NACK source finished
+ok transport 417 - create PTY
+ok transport 418 - open serial library on PTY
+ok transport 419 - establish geometry for partial-write regression
+ok transport 420 - queue complete ACK
+ok transport 421 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 422 - fork delayed NACK source
+ok transport 423 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 424 - NACK source finished
+ok transport 425 - create PTY
+ok transport 426 - open serial library on PTY
+ok transport 427 - establish geometry for partial-write regression
+ok transport 428 - queue complete ACK
+ok transport 429 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 430 - fork delayed NACK source
+ok transport 431 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 432 - NACK source finished
+ok transport 433 - create PTY
+ok transport 434 - open serial library on PTY
+ok transport 435 - establish geometry for partial-write regression
+ok transport 436 - queue complete ACK
+ok transport 437 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 438 - fork delayed NACK source
+ok transport 439 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 440 - NACK source finished
+ok transport 441 - create PTY
+ok transport 442 - open serial library on PTY
+ok transport 443 - establish geometry for partial-write regression
+ok transport 444 - queue complete ACK
+ok transport 445 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 446 - fork delayed NACK source
+ok transport 447 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 448 - NACK source finished
+ok transport 449 - create PTY
+ok transport 450 - open serial library on PTY
+ok transport 451 - establish geometry for partial-write regression
+ok transport 452 - queue complete ACK
+ok transport 453 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 454 - fork delayed NACK source
+ok transport 455 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 456 - NACK source finished
+ok transport 457 - create PTY
+ok transport 458 - open serial library on PTY
+ok transport 459 - establish geometry for partial-write regression
+ok transport 460 - queue complete ACK
+ok transport 461 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 462 - fork delayed NACK source
+ok transport 463 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 464 - NACK source finished
+ok transport 465 - create PTY
+ok transport 466 - open serial library on PTY
+ok transport 467 - establish geometry for partial-write regression
+ok transport 468 - queue complete ACK
+ok transport 469 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 470 - fork delayed NACK source
+ok transport 471 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 472 - NACK source finished
+ok transport 473 - create PTY
+ok transport 474 - open serial library on PTY
+ok transport 475 - establish geometry for partial-write regression
+ok transport 476 - queue complete ACK
+ok transport 477 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 478 - fork delayed NACK source
+ok transport 479 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 480 - NACK source finished
+ok transport 481 - create PTY
+ok transport 482 - open serial library on PTY
+ok transport 483 - establish geometry for partial-write regression
+ok transport 484 - queue complete ACK
+ok transport 485 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 486 - fork delayed NACK source
+ok transport 487 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 488 - NACK source finished
+ok transport 489 - create PTY
+ok transport 490 - open serial library on PTY
+ok transport 491 - establish geometry for partial-write regression
+ok transport 492 - queue complete ACK
+ok transport 493 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 494 - fork delayed NACK source
+ok transport 495 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 496 - NACK source finished
+ok transport 497 - create PTY
+ok transport 498 - open serial library on PTY
+ok transport 499 - establish geometry for partial-write regression
+ok transport 500 - queue complete ACK
+ok transport 501 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 502 - fork delayed NACK source
+ok transport 503 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 504 - NACK source finished
+ok transport 505 - create PTY
+ok transport 506 - open serial library on PTY
+ok transport 507 - establish geometry for partial-write regression
+ok transport 508 - queue complete ACK
+ok transport 509 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 510 - fork delayed NACK source
+ok transport 511 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 512 - NACK source finished
+ok transport 513 - create PTY
+ok transport 514 - open serial library on PTY
+ok transport 515 - establish geometry for partial-write regression
+ok transport 516 - queue complete ACK
+ok transport 517 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 518 - fork delayed NACK source
+ok transport 519 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 520 - NACK source finished
+ok transport 521 - create PTY
+ok transport 522 - open serial library on PTY
+ok transport 523 - establish geometry for partial-write regression
+ok transport 524 - queue complete ACK
+ok transport 525 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 526 - fork delayed NACK source
+ok transport 527 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 528 - NACK source finished
+ok transport 529 - create PTY
+ok transport 530 - open serial library on PTY
+ok transport 531 - establish geometry for partial-write regression
+ok transport 532 - queue complete ACK
+ok transport 533 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 534 - fork delayed NACK source
+ok transport 535 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 536 - NACK source finished
+ok transport 537 - create PTY
+ok transport 538 - open serial library on PTY
+ok transport 539 - establish geometry for partial-write regression
+ok transport 540 - queue complete ACK
+ok transport 541 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 542 - fork delayed NACK source
+ok transport 543 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 544 - NACK source finished
+ok transport 545 - create PTY
+ok transport 546 - open serial library on PTY
+ok transport 547 - establish geometry for partial-write regression
+ok transport 548 - queue complete ACK
+ok transport 549 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 550 - fork delayed NACK source
+ok transport 551 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 552 - NACK source finished
+ok transport 553 - create PTY
+ok transport 554 - open serial library on PTY
+ok transport 555 - establish geometry for partial-write regression
+ok transport 556 - queue complete ACK
+ok transport 557 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 558 - fork delayed NACK source
+ok transport 559 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 560 - NACK source finished
+ok transport 561 - create PTY
+ok transport 562 - open serial library on PTY
+ok transport 563 - establish geometry for partial-write regression
+ok transport 564 - queue complete ACK
+ok transport 565 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 566 - fork delayed NACK source
+ok transport 567 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 568 - NACK source finished
+ok transport 569 - create PTY
+ok transport 570 - open serial library on PTY
+ok transport 571 - establish geometry for partial-write regression
+ok transport 572 - queue complete ACK
+ok transport 573 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 574 - fork delayed NACK source
+ok transport 575 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 576 - NACK source finished
+ok transport 577 - create PTY
+ok transport 578 - open serial library on PTY
+ok transport 579 - establish geometry for partial-write regression
+ok transport 580 - queue complete ACK
+ok transport 581 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 582 - fork delayed NACK source
+ok transport 583 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 584 - NACK source finished
+ok transport 585 - create PTY
+ok transport 586 - open serial library on PTY
+ok transport 587 - establish geometry for partial-write regression
+ok transport 588 - queue complete ACK
+ok transport 589 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 590 - fork delayed NACK source
+ok transport 591 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 592 - NACK source finished
+ok transport 593 - create PTY
+ok transport 594 - open serial library on PTY
+ok transport 595 - establish geometry for partial-write regression
+ok transport 596 - queue complete ACK
+ok transport 597 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 598 - fork delayed NACK source
+ok transport 599 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 600 - NACK source finished
+ok transport 601 - create PTY
+ok transport 602 - open serial library on PTY
+ok transport 603 - establish geometry for partial-write regression
+ok transport 604 - queue complete ACK
+ok transport 605 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 606 - fork delayed NACK source
+ok transport 607 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 608 - NACK source finished
+ok transport 609 - create PTY
+ok transport 610 - open serial library on PTY
+ok transport 611 - establish geometry for partial-write regression
+ok transport 612 - queue complete ACK
+ok transport 613 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 614 - fork delayed NACK source
+ok transport 615 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 616 - NACK source finished
+ok transport 617 - create PTY
+ok transport 618 - open serial library on PTY
+ok transport 619 - establish geometry for partial-write regression
+ok transport 620 - queue complete ACK
+ok transport 621 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 622 - fork delayed NACK source
+ok transport 623 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 624 - NACK source finished
+ok transport 625 - create PTY
+ok transport 626 - open serial library on PTY
+ok transport 627 - establish geometry for partial-write regression
+ok transport 628 - queue complete ACK
+ok transport 629 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 630 - fork delayed NACK source
+ok transport 631 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 632 - NACK source finished
+ok transport 633 - create PTY
+ok transport 634 - open serial library on PTY
+ok transport 635 - establish geometry for partial-write regression
+ok transport 636 - queue complete ACK
+ok transport 637 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 638 - fork delayed NACK source
+ok transport 639 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 640 - NACK source finished
+ok transport 641 - create PTY
+ok transport 642 - open serial library on PTY
+ok transport 643 - establish geometry for partial-write regression
+ok transport 644 - queue complete ACK
+ok transport 645 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 646 - fork delayed NACK source
+ok transport 647 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 648 - NACK source finished
+ok transport 649 - create PTY
+ok transport 650 - open serial library on PTY
+ok transport 651 - establish geometry for partial-write regression
+ok transport 652 - queue complete ACK
+ok transport 653 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 654 - fork delayed NACK source
+ok transport 655 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 656 - NACK source finished
+ok transport 657 - create PTY
+ok transport 658 - open serial library on PTY
+ok transport 659 - establish geometry for partial-write regression
+ok transport 660 - queue complete ACK
+ok transport 661 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 662 - fork delayed NACK source
+ok transport 663 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 664 - NACK source finished
+ok transport 665 - create PTY
+ok transport 666 - open serial library on PTY
+ok transport 667 - establish geometry for partial-write regression
+ok transport 668 - queue complete ACK
+ok transport 669 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 670 - fork delayed NACK source
+ok transport 671 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 672 - NACK source finished
+ok transport 673 - create PTY
+ok transport 674 - open serial library on PTY
+ok transport 675 - establish geometry for partial-write regression
+ok transport 676 - queue complete ACK
+ok transport 677 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 678 - fork delayed NACK source
+ok transport 679 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 680 - NACK source finished
+ok transport 681 - create PTY
+ok transport 682 - open serial library on PTY
+ok transport 683 - establish geometry for partial-write regression
+ok transport 684 - queue complete ACK
+ok transport 685 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 686 - fork delayed NACK source
+ok transport 687 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 688 - NACK source finished
+ok transport 689 - create PTY
+ok transport 690 - open serial library on PTY
+ok transport 691 - establish geometry for partial-write regression
+ok transport 692 - queue complete ACK
+ok transport 693 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 694 - fork delayed NACK source
+ok transport 695 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 696 - NACK source finished
+ok transport 697 - create PTY
+ok transport 698 - open serial library on PTY
+ok transport 699 - establish geometry for partial-write regression
+ok transport 700 - queue complete ACK
+ok transport 701 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 702 - fork delayed NACK source
+ok transport 703 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 704 - NACK source finished
+ok transport 705 - create PTY
+ok transport 706 - open serial library on PTY
+ok transport 707 - establish geometry for partial-write regression
+ok transport 708 - queue complete ACK
+ok transport 709 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 710 - fork delayed NACK source
+ok transport 711 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 712 - NACK source finished
+ok transport 713 - create PTY
+ok transport 714 - open serial library on PTY
+ok transport 715 - establish geometry for partial-write regression
+ok transport 716 - queue complete ACK
+ok transport 717 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 718 - fork delayed NACK source
+ok transport 719 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 720 - NACK source finished
+ok transport 721 - create PTY
+ok transport 722 - open serial library on PTY
+ok transport 723 - establish geometry for partial-write regression
+ok transport 724 - queue complete ACK
+ok transport 725 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 726 - fork delayed NACK source
+ok transport 727 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 728 - NACK source finished
+ok transport 729 - create PTY
+ok transport 730 - open serial library on PTY
+ok transport 731 - establish geometry for partial-write regression
+ok transport 732 - queue complete ACK
+ok transport 733 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 734 - fork delayed NACK source
+ok transport 735 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 736 - NACK source finished
+ok transport 737 - create PTY
+ok transport 738 - open serial library on PTY
+ok transport 739 - establish geometry for partial-write regression
+ok transport 740 - queue complete ACK
+ok transport 741 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 742 - fork delayed NACK source
+ok transport 743 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 744 - NACK source finished
+ok transport 745 - create PTY
+ok transport 746 - open serial library on PTY
+ok transport 747 - establish geometry for partial-write regression
+ok transport 748 - queue complete ACK
+ok transport 749 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 750 - fork delayed NACK source
+ok transport 751 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 752 - NACK source finished
+ok transport 753 - create PTY
+ok transport 754 - open serial library on PTY
+ok transport 755 - establish geometry for partial-write regression
+ok transport 756 - queue complete ACK
+ok transport 757 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 758 - fork delayed NACK source
+ok transport 759 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 760 - NACK source finished
+ok transport 761 - create PTY
+ok transport 762 - open serial library on PTY
+ok transport 763 - establish geometry for partial-write regression
+ok transport 764 - queue complete ACK
+ok transport 765 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 766 - fork delayed NACK source
+ok transport 767 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 768 - NACK source finished
+ok transport 769 - create PTY
+ok transport 770 - open serial library on PTY
+ok transport 771 - establish geometry for partial-write regression
+ok transport 772 - queue complete ACK
+ok transport 773 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 774 - fork delayed NACK source
+ok transport 775 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 776 - NACK source finished
+ok transport 777 - create PTY
+ok transport 778 - open serial library on PTY
+ok transport 779 - establish geometry for partial-write regression
+ok transport 780 - queue complete ACK
+ok transport 781 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 782 - fork delayed NACK source
+ok transport 783 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 784 - NACK source finished
+ok transport 785 - create PTY
+ok transport 786 - open serial library on PTY
+ok transport 787 - establish geometry for partial-write regression
+ok transport 788 - queue complete ACK
+ok transport 789 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 790 - fork delayed NACK source
+ok transport 791 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 792 - NACK source finished
+ok transport 793 - create PTY
+ok transport 794 - open serial library on PTY
+ok transport 795 - establish geometry for partial-write regression
+ok transport 796 - queue complete ACK
+ok transport 797 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 798 - fork delayed NACK source
+ok transport 799 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 800 - NACK source finished

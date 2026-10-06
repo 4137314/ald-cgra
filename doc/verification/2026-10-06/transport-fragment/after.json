@@ -1,0 +1,20 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "-v",
+    "/tmp/nix-shell.5YNUbT/cgra-fixed-toolchain-xd7_s8oo:/src:ro",
+    "-v",
+    "/home/main/dev/git/ald-cgra/doc/verification/2026-10-06/transport-fragment:/repro:ro",
+    "sha256:c3649cca2305a4bfcab418350466f7a3da6be212a2ac28633435b282708fdad3",
+    "python3",
+    "/repro/repeat-fixed.py"
+  ],
+  "exit_code": 0,
+  "status": "PASS",
+  "duration_seconds": 13.314986206998583,
+  "iterations": 100,
+  "inputs": "../plans-compiler-fixed/inputs.json",
+  "test_sha256": "6259d1f1819b0415cf03d3f84ac391f9377a276911d7344076465f6616a49f74"
+}

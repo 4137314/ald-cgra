@@ -1,0 +1,112 @@
+make: Entering directory '/tmp/cgra-fragment-repro-4yy3u4_6/lib'
+mkdir -p build
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/vector.c -o build/vector.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/kernels.c -o build/kernels.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/emu.c -o build/emu.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/serve.c -o build/serve.o
+gcc-13  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_transport.c build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o  -Wl,--wrap=write -o build/test_transport
+test/test_transport.c:524:13: warning: ‘test_plan_uncertain’ defined but not used [-Wunused-function]
+  524 | static void test_plan_uncertain(void)
+      |             ^~~~~~~~~~~~~~~~~~~
+test/test_transport.c:504:13: warning: ‘test_diagnostic_persistence’ defined but not used [-Wunused-function]
+  504 | static void test_diagnostic_persistence(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:433:13: warning: ‘test_configurable_server’ defined but not used [-Wunused-function]
+  433 | static void test_configurable_server(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:389:13: warning: ‘test_open_flags’ defined but not used [-Wunused-function]
+  389 | static void test_open_flags(const char *self)
+      |             ^~~~~~~~~~~~~~~
+test/test_transport.c:320:13: warning: ‘test_transaction_read_budget’ defined but not used [-Wunused-function]
+  320 | static void test_transaction_read_budget(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:264:13: warning: ‘test_write_budget’ defined but not used [-Wunused-function]
+  264 | static void test_write_budget(void)
+      |             ^~~~~~~~~~~~~~~~~
+test/test_transport.c:199:13: warning: ‘test_kernel_partial_output’ defined but not used [-Wunused-function]
+  199 | static void test_kernel_partial_output(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:173:13: warning: ‘test_high_descriptor’ defined but not used [-Wunused-function]
+  173 | static void test_high_descriptor(void)
+      |             ^~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:109:13: warning: ‘test_uncertain_session’ defined but not used [-Wunused-function]
+  109 | static void test_uncertain_session(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:97:13: warning: ‘test_failed_write’ defined but not used [-Wunused-function]
+   97 | static void test_failed_write(void)
+      |             ^~~~~~~~~~~~~~~~~
+test/test_transport.c:64:13: warning: ‘test_fragmented_reply’ defined but not used [-Wunused-function]
+   64 | static void test_fragmented_reply(void)
+      |             ^~~~~~~~~~~~~~~~~~~~~
+test/test_transport.c:51:13: warning: ‘test_silent_reply’ defined but not used [-Wunused-function]
+   51 | static void test_silent_reply(void)
+      |             ^~~~~~~~~~~~~~~~~
+make: Leaving directory '/tmp/cgra-fragment-repro-4yy3u4_6/lib'
+ok transport 1 - create PTY
+ok transport 2 - open serial library on PTY
+ok transport 3 - establish geometry for partial-write regression
+ok transport 4 - queue complete ACK
+ok transport 5 - partial writes, EINTR and EAGAIN preserve each serialized byte
+fragmented PTY read=6 (expected 6), rc=0, EINTR_pending=0, EAGAIN_pending=0
+ok transport 6 - fork delayed NACK source
+ok transport 7 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 8 - NACK source finished
+ok transport 9 - create PTY
+ok transport 10 - open serial library on PTY
+ok transport 11 - establish geometry for partial-write regression
+ok transport 12 - queue complete ACK
+ok transport 13 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 14 - fork delayed NACK source
+fragmented PTY read=6 (expected 6), rc=0, EINTR_pending=0, EAGAIN_pending=0
+ok transport 15 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 16 - NACK source finished
+ok transport 17 - create PTY
+ok transport 18 - open serial library on PTY
+ok transport 19 - establish geometry for partial-write regression
+ok transport 20 - queue complete ACK
+fragmented PTY read=6 (expected 6), rc=0, EINTR_pending=0, EAGAIN_pending=0
+ok transport 21 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 22 - fork delayed NACK source
+ok transport 23 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 24 - NACK source finished
+ok transport 25 - create PTY
+ok transport 26 - open serial library on PTY
+ok transport 27 - establish geometry for partial-write regression
+ok transport 28 - queue complete ACK
+fragmented PTY read=6 (expected 6), rc=0, EINTR_pending=0, EAGAIN_pending=0
+ok transport 29 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 30 - fork delayed NACK source
+ok transport 31 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 32 - NACK source finished
+ok transport 33 - create PTY
+ok transport 34 - open serial library on PTY
+ok transport 35 - establish geometry for partial-write regression
+ok transport 36 - queue complete ACK
+fragmented PTY read=6 (expected 6), rc=0, EINTR_pending=0, EAGAIN_pending=0
+ok transport 37 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 38 - fork delayed NACK source
+ok transport 39 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 40 - NACK source finished
+ok transport 41 - create PTY
+ok transport 42 - open serial library on PTY
+ok transport 43 - establish geometry for partial-write regression
+fragmented PTY read=6 (expected 6), rc=0, EINTR_pending=0, EAGAIN_pending=0
+ok transport 44 - queue complete ACK
+ok transport 45 - partial writes, EINTR and EAGAIN preserve each serialized byte
+ok transport 46 - fork delayed NACK source
+ok transport 47 - NACK retry shares original budget and diagnostic cumulative progress
+ok transport 48 - NACK source finished
+ok transport 49 - create PTY
+ok transport 50 - open serial library on PTY
+ok transport 51 - establish geometry for partial-write regression
+ok transport 52 - queue complete ACK
+fragmented PTY read=1 (expected 6), rc=0, EINTR_pending=0, EAGAIN_pending=0
+test_transport: test/test_transport.c:357: test_partial_write_and_retry_budget: Assertion `passed' failed.
+not ok transport 53 - partial writes, EINTR and EAGAIN preserve each serialized byte
+Traceback (most recent call last):
+  File "/repro/reproduce.py", line 14, in <module>
+    subprocess.run([str(root/"lib/build/test_transport")],check=True)
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/tmp/cgra-fragment-repro-4yy3u4_6/lib/build/test_transport']' died with <Signals.SIGABRT: 6>.

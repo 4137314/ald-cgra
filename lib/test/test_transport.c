@@ -42,6 +42,21 @@ static cgra_t *open_peer(int *master)
     return dev;
 }
 
+/* A PTY is a byte stream: even after the sender completed six writes, one
+ * read may return only the first fragment. The suite alarm bounds a broken
+ * peer; never infer a packet boundary from a successful short read. */
+static ssize_t read_peer_exact(int fd, unsigned char *buffer, size_t size)
+{
+    size_t got = 0;
+    while (got < size) {
+        ssize_t n = read(fd, buffer + got, size - got);
+        if (n < 0 && errno == EINTR) continue;
+        if (n <= 0) return n;
+        got += (size_t)n;
+    }
+    return (ssize_t)got;
+}
+
 static void pause_ms(long ms)
 {
     struct timespec delay = {.tv_sec = ms / 1000, .tv_nsec = (ms % 1000) * 1000000};
@@ -148,7 +163,7 @@ static void test_uncertain_session(void)
         cgra_get_stats(dev, &before);
         CHECK(before.tx_bytes == 1 + expected && before.retries == 0,
               "uncertain request is sent once with no recovery byte");
-        CHECK(read(master, wire, sizeof(wire)) == (ssize_t)expected,
+        CHECK(read_peer_exact(master, wire, expected) == (ssize_t)expected,
               "peer observes exactly the original request");
         CHECK(cgra_get_info(dev, NULL) == CGRA_ERR_DESYNC &&
               cgra_identify(dev, NULL) == CGRA_ERR_DESYNC &&
@@ -352,8 +367,12 @@ static void test_partial_write_and_retry_budget(void)
     fragment_writes = inject_interrupt = inject_again = 1;
     int rc = cgra_configure_n(dev, &cfg, 1);
     fragment_writes = 0;
+    const unsigned char expected[] = {2, 0x85, 0xff, 0x0f, 0, 0x93};
+    cgra_stats_t stats;
+    cgra_get_stats(dev, &stats);
     CHECK(rc == CGRA_OK && !inject_interrupt && !inject_again &&
-          read(master, wire, sizeof(wire)) == 6 && wire[0] == 2 && wire[1] == 0x85,
+          read_peer_exact(master, wire, sizeof(expected)) == (ssize_t)sizeof(expected) &&
+          memcmp(wire, expected, sizeof(expected)) == 0 && stats.tx_bytes == 7,
           "partial writes, EINTR and EAGAIN preserve each serialized byte");
     cgra_set_transaction_timeout(dev, 30);
     cgra_set_timeout(dev, 1000);
@@ -530,11 +549,11 @@ static void test_plan_uncertain(void)
     CHECK(write(master,ready,sizeof(ready))==sizeof(ready) && cgra_plan_bind(dev,plan)==CGRA_OK,
           "serial plan binding consumes ID and CFG acknowledgement");
     unsigned char wire[64];
-    CHECK(read(master,wire,sizeof(wire))==7,"drain exactly ID and CFG requests");
+    CHECK(read_peer_exact(master,wire,7)==7,"drain exactly ID and CFG requests");
     int16_t out=123;
     CHECK(cgra_plan_execute_n(dev,plan,NULL,0,NULL,0,&out,1)==CGRA_ERR_TIMEOUT && out==123,
           "uncertain planned execution returns original timeout without output");
-    CHECK(read(master,wire,sizeof(wire))==10,"uncertain execution sent once, even with RESET");
+    CHECK(read_peer_exact(master,wire,10)==10,"uncertain execution sent once, even with RESET");
     cgra_stats_t before,after; cgra_get_stats(dev,&before);
     CHECK(cgra_plan_execute_n(dev,plan,NULL,0,NULL,0,&out,1)==CGRA_ERR_DESYNC &&
           cgra_plan_bind(dev,plan)==CGRA_ERR_DESYNC,"poisoned plan cannot execute or rebind");
