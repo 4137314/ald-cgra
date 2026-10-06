@@ -1,50 +1,41 @@
 lib/src/ - implementation
 =========================
 
-    cgra.c    serial transport (termios), the v3 protocol, retry/session error
-              logic, and the accelerated kernels (diagonal element-wise,
-              MAC dot product). The public entry points from cgra.h.
-              cgra_exec() is the fused transaction; cgra_has_exec() caches
-              one ID handshake so kernels can pick it per chunk and fall
-              back to WR/RUN/RD on a pre-v3 bitstream.
-    kernels.c geometry-aware matrix-vector, prefix scan and convolution;
-              installed public API, also used by the CLI adapters. Convolution
-              still allocates a dense Toeplitz matrix before skipping zero tiles.
-    buffers.h internal array-footprint and overlap validation shared by kernels.
-    emu.h     internal interface to the emulator (emu_push/emu_pop + the bulk
-              emu_feed/emu_drain used by the hot transport path).
-    emu.c     the "sim:" device: a byte-accurate model of cgra_ctrl.vhd +
-              the PE mesh. GOLDEN REFERENCE for the RTL. "sim:flaky" NACKs
-              the first CFG and the first input-carrying transaction to
-              exercise host retries; "sim:v2" reports protocol v2 and
-              rejects EXEC, which keeps the fallback path tested and makes
-              the fused transaction's saving measurable side by side.
-    serve.c   cgra_emulate_pty(): expose the emulator on a POSIX pseudo-
-              terminal so external serial tools can drive a virtual CGRA.
+    cgra.c       POSIX serial transport, legacy v2/v3 primitives, monotonic
+                 transaction budgets, owned diagnostics and explicit plans.
+    vector.c     Element-wise kernels, ReLU and MAC dot product.
+    kernels.c    Geometry-aware matvec, scan and implicit convolution tiles;
+                 convolution has bounded stack workspace, no dense Toeplitz.
+    buffers.h    Shared array-footprint and overlap checks.
+    bitvec.h     Defined conversions and 16-bit modular arithmetic helpers.
+    emu.[ch]     Clockless functional model of the legacy parser and PE mesh,
+                 used by sim: and the configurable/stoppable PTY service.
+    serve.c      POSIX PTY service; v2/v3 geometries, cancellation descriptor.
+    block_wire.* Experimental escaped framing, length checks and header/payload
+                 CRC. Private code; no new legacy device capability advertised.
+    block_model.* Resident dot/session/dedup functional oracle, exercised by
+                 test_blocks. Not yet connected to RTL, public API or CLI;
+                 see ../../doc/block-protocol.md and B01-B03 in TASKS.md.
 
-Notes
------
-- No dependencies beyond libc + POSIX (termios, poll, openpty).
-- Transport is strictly request/reply; a cgra_t handle is not locked, so
-  serialise calls per handle (see THREAD SAFETY in libcgra(3)).
+Contracts
+---------
+- Dependencies: libc and POSIX termios/poll/PTY interfaces. The currently
+  verified packaging platform is x86_64 Linux.
+- A cgra_t is not locked: serialise calls per handle. Public ownership,
+  capacity, aliasing and partial-output rules are in include/cgra.h and
+  libcgra(3). Plans copy configuration and require explicit resident binding.
 - CFG/WR and EXEC with RESET retry complete NACK replies only, assuming intact
   command bytes and frame lengths. RUN/RD are never retried. Transport failures
-  and malformed replies stop the session (CGRA_ERR_DESYNC on later calls),
-  invalidate cached ID, and send no implicit RST. Restore the remote parser
+  and malformed replies poison the legacy session, invalidate resident plans
+  and cached identity, and send no implicit RST. Restore parser alignment
   before reopening; see RECOVERY AND FAULT MODEL in libcgra(3).
-- CFG/WR and EXEC input words latch as they arrive, before checksum validation.
-  A NACK does not roll those writes back; it prevents EXEC's reset/steps.
-  The model reproduces these writes for both bulk and byte-at-a-time input.
-  hw/sim/tb_protocol_diff.vhd checks the resulting replies against the RTL.
-  The model has no clock: watchdog timing is verified directly in that bench.
-- Perf: the sim: transport moves whole buffers (emu_feed/emu_drain) rather than
-  one byte per library call; payload and reply copies are memcpy'd. Byte
-  behaviour is identical to the per-byte path (verified by the test suite), but
-  it profiles ~24% faster on the CPU-bound emulator (see `make gprof`). The
-  floor is run_command/step_array, the cycle-accurate PE model itself --
-  which is why configuration words are decoded ONCE when CMD_CFG lands
-  (emu->dec[]) instead of re-deriving four bit fields per PE per step, the
-  way the hardware likewise decodes combinationally off a held register.
-
-Editing the protocol here means editing hw/rtl/cgra_pkg.vhd and
-include/cgra.h too. emu.c and the silicon must agree byte for byte.
+- CFG/WR and EXEC input words latch before checksum validation. NACK does not
+  roll them back; it prevents EXEC reset/steps. Bulk and bytewise model paths
+  reproduce this behavior, checked against production RTL by protocol replay.
+- emu.c is one functional reference, not an independent proof of its own
+  correctness. Scalar oracles, RTL replay and selected formal RTL properties
+  provide distinct checks. The model has no clock/watchdog or UART timing;
+  its host execution rate is not FPGA throughput.
+- Keep shared legacy constants and row-major 16-bit semantics aligned with
+  hw/rtl/cgra_pkg.vhd and include/cgra.h. The experimental block framing has
+  a separate versioned contract and does not silently replace v2/v3.

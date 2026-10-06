@@ -76,7 +76,7 @@ Evidence aliases (all paths are relative to this document):
 | Isolated bitstream manifest and publication | 80 Tcl / 31 artifact regressions; real bit run and `check-artifact` PASS | No formal software guarantee | [5 October physical evidence](verification/2026-10-05/physical/); no programming performed |
 | Matched five-shape physical comparison | Five actual Vivado STA runs at 10 ns/DIV2, identical source/tool hashes | Not a parametric timing theorem | [5 October sweep](verification/2026-10-05/geometry-physical/); each run retains its own reports and resource counts |
 | Final Fmax candidate and period precision | Actual final reroute at 5.859 ns, WNS +0.177/WHS +0.122; 83 Tcl / 31 artifact checks | No claim of global maximum or changed oscillator | [6 October Fmax](verification/2026-10-06/fmax/); first precision-mismatch failure retained |
-| Block framing/CRC/dedup, local memory and sequencer | NOT_RUN | NOT_RUN | B01–B03; no new protocol capability advertised |
+| Block framing/CRC/dedup and resident dot | 1036 private codec/model checks; encoded-wire dot comparison | RTL/formal block properties NOT_RUN | [6 October private model](verification/2026-10-06/block-model/); B01 partial, B02–B03 pending; no new device capability advertised |
 
 Historical counts and hashes remain in their original directories. Later
 source changes require a new run; the links above never imply that old logs

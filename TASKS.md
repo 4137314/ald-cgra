@@ -439,7 +439,7 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 | F03 | Controller: RUN/EXEC, indici, STEP_DIV 1/2/3/4, handshake, watchdog con ipotesi esplicite | VERIFICATO (istanze e completamento condizionale documentati) |
 | F04 | UART TX/RX nel modello digitale dichiarato, prove e cover | VERIFICATO |
 | F05 | Target fast/full/cover, manifest JSON, matrice requisiti–test–proprietà–evidenza e CI/Nix eseguiti | VERIFICATO |
-| B01 | Contratto sperimentale a blocchi versionato, CRC/framing/sequence e deduplicazione delimitata | DA FARE |
+| B01 | Contratto sperimentale a blocchi versionato, CRC/framing/sequence e deduplicazione delimitata | PARZIALE (codec/modello C eseguiti) |
 | B02 | Memoria locale e sequencer RTL, modello, API e CLI con workload end-to-end e regressioni legacy | DA FARE |
 | B03 | Prove buffer/sequencer, misura traffico/round trip, sintesi reale e limiti fisici documentati | DA FARE |
 | C07 | Deadline dell'intera transazione, diagnostica additiva, CLOEXEC/apertura esclusiva opzionale | VERIFICATO |
@@ -742,6 +742,42 @@ release o programmazione della scheda è autorizzato da questo ciclo.
   report/PDF unico A06 e allineamento finale A03/A14. Il percorso legacy resta
   funzionante; nessuna capability a blocchi è pubblicizzata o verificata.
   Nessun push, release o programmazione hardware.
+
+### Checkpoint 2026-10-06 / 10 — primo componente eseguibile a blocchi
+
+- **B01 parziale:** contratto selezionato in `doc/block-protocol.md`, revisionato
+  separatamente da v2/v3. Delimitatori/escape, CRC16 su header e payload,
+  lunghezza massima, nonce/sessione, sequenza senza wrap implicito, cache
+  dell'ultima richiesta confrontata byte per byte (non soltanto CRC).
+- Implementati codec `block_wire.*` e modello funzionale `block_model.*`,
+  integrati nella build e nella suite ordinaria. HELLO, upload in due banchi
+  da 1024 parole, DOT e RESULT; commit solo dopo frame validato, sostituzione/
+  append con limiti espliciti, no doppia esecuzione su replay identico, errori
+  semantici e reset. Sono componenti **privati**: non collegati ancora al
+  controller, al backend sim:, all'API pubblica o alla CLI. Nessuna nuova
+  capability è annunciata dai dispositivi esistenti.
+- **1036 controlli codec/modello**: CRC noto, tutte le lunghezze, escaping,
+  flip di ogni bit/byte perso/inserito nel fixture, sovraccarico e
+  risincronizzazione, capacità 1024, estremi signed e wrap, richieste incomplete/
+  CRC errato senza effetti, perdita risposta/duplicati/conflitti, esaurimento
+  sequenze e nuova sessione. Enumerati anche tutti gli ID fino a 65535.
+- Confronto wire realmente eseguito nel modello, dot256 × 8 con input
+  `a=i%7-3`, `b=i%5-2`: **1850 byte / 25 transazioni** inclusi HELLO/upload/
+  DOT/RESULT, contro **49976 / 2072** per API legacy 4×4/v3, ID iniziale
+  escluso e CFG inclusa. Ogni risultato verificato con accumulatore scalare
+  signed a 64 bit e riduzione modulo 2^16. Nessun tempo FPGA o BRAM inferita.
+- Gate finali del componente: **3336 controlli release e ASan/UBSan/LSan**,
+  analyzer GCC PASS, **12 install / 211 compdb / 27 build** PASS. Hash, flag,
+  versioni e misura in `doc/verification/2026-10-06/block-model*/`.
+  `lib/src/README` corregge le descrizioni obsolete di Toeplitz densa,
+  ubicazione dei kernel e modello presentato come cycle-accurate.
+- **Ripresa esatta B01/B02:** implementare preflight sicuro 0x08 e dispatcher
+  legacy/frame, frontend RTL con validazione completa prima del commit,
+  memoria locale a lettura sincrona e sequencer sul PE MAC di produzione;
+  integrare modello/API/CLI e ownership del datapath. Poi B03: proprietà
+  indici/conservazione/dedup, replay C/RTL, backpressure/reset e sintesi reale.
+  Il modello C corrente è l'oracolo funzionale, non una prova dell'RTL futuro.
+  A11 sistematico e report/PDF A06 restano aperti. Nessun push/programmazione.
 
 ## Prossime correzioni senza scheda
 

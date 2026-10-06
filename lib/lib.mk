@@ -44,7 +44,7 @@ CFLAGS  ?=
 CFLAGS  += -std=c11 $(WARN) $(OPT) -Iinclude -MMD -MP
 LDFLAGS += $(filter -fsanitize=% -pg,$(OPT))
 
-SRCS    = src/cgra.c src/vector.c src/kernels.c src/emu.c src/serve.c
+SRCS    = src/cgra.c src/vector.c src/kernels.c src/emu.c src/serve.c src/block_wire.c src/block_model.c
 OBJS    = $(SRCS:src/%.c=$(BUILD)/%.o)
 PICOBJS = $(SRCS:src/%.c=$(BUILD)/%.pic.o)
 
@@ -91,6 +91,7 @@ TRANSPORTBIN = $(BUILD)/test_transport
 KERNELBIN = $(BUILD)/test_kernels
 FAULTBIN = $(BUILD)/test_faults
 PLANBIN = $(BUILD)/test_plans
+BLOCKBIN = $(BUILD)/test_blocks
 
 # Export the same CC/CFLAGS as compilation, without building the library.
 .PHONY: compdb
@@ -98,14 +99,18 @@ compdb: | $(BUILD)
 	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CPPFLAGS) $(CFLAGS))
 	python3 ../scripts/gen-compdb.py fragment $(BUILD)/compile_commands.json \
 	    $(BUILD)/compdb-flags.txt $(SRCS) --tests \
-    $(addprefix test/,$(addsuffix .c,$(notdir $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN) $(PLANBIN))))
+    $(addprefix test/,$(addsuffix .c,$(notdir $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN) $(PLANBIN) $(BLOCKBIN))))
 
-test: $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN) $(PLANBIN)
+test: $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN) $(PLANBIN) $(BLOCKBIN)
 	./$(TESTBIN)
 	./$(TRANSPORTBIN)
 	./$(KERNELBIN)
 	./$(FAULTBIN)
 	./$(PLANBIN)
+	./$(BLOCKBIN)
+
+$(BLOCKBIN): test/test_blocks.c $(STATIC) | $(BUILD)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@
 
 $(PLANBIN): test/test_plans.c $(STATIC) | $(BUILD)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@
@@ -140,4 +145,4 @@ man: | $(BUILD)
 clean:
 	rm -rf $(BUILD)
 
--include $(OBJS:.o=.d) $(PICOBJS:.o=.d) $(BUILD)/test_cgra.d $(BUILD)/test_transport.d $(BUILD)/test_kernels.d $(BUILD)/test_faults.d
+-include $(OBJS:.o=.d) $(PICOBJS:.o=.d) $(BUILD)/test_cgra.d $(BUILD)/test_transport.d $(BUILD)/test_kernels.d $(BUILD)/test_faults.d $(BUILD)/test_plans.d $(BUILD)/test_blocks.d

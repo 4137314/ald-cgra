@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "kind": "private-block-codec-model-wire-comparison",
+  "commit": "f540750e78630bad4a03868df3456fb0a085f75a",
+  "dirty": true,
+  "platform": "Linux-6.18.52-1-lts-x86_64-with-glibc2.42",
+  "compiler": "gcc (GCC) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "sources_sha256": {
+    "lib/src/block_wire.c": "26406727f74e4efbc65ac71e36e11c5a9e94afcfb2650b31487c184495f2b346",
+    "lib/src/block_wire.h": "f8a7b3fd2a13182cd76a4104c60125add4444bcb4257a64ade2493498f88638f",
+    "lib/src/block_model.c": "24991af5fc902e4c0df16a85e18c7feaf5d6028907044f03dc72fbd9a8409c36",
+    "lib/src/block_model.h": "ca5ab08af095aaf7569c3da483ad9ab172b0b3543449fb272c8ebb203ae560e2",
+    "lib/test/test_blocks.c": "2ed18228aca461dfcc0354b7e5635a8c5f1cac15f4a98e50991910dcbe941c92",
+    "lib/lib.mk": "079315d0d92f0e43b93e300e21eefc2f9a273eed8304aea791a51dc8834d76e0",
+    "scripts/test_compdb.py": "c50bf6881d508a1d3ef994644807ac52b1f65b2e6a6f8796595da21794be6ab5"
+  },
+  "workload": {
+    "name": "dot",
+    "elements": 256,
+    "repetitions": 8,
+    "a": "i%7-3",
+    "b": "i%5-2",
+    "arithmetic": "16-bit wraparound",
+    "block_nonce": "0x01020304",
+    "block_chunk_words": 64,
+    "legacy_geometry": [
+      4,
+      4
+    ],
+    "legacy_protocol": 3
+  },
+  "block": {
+    "tx_rx_bytes": 1850,
+    "transactions": 25,
+    "includes": [
+      "HELLO",
+      "both uploads",
+      "eight DOT/RESULT pairs"
+    ]
+  },
+  "legacy": {
+    "tx_rx_bytes": 49976,
+    "transactions": 2072,
+    "initial_ID": "excluded",
+    "configuration": "included per API call"
+  },
+  "reference": "independent signed int64 scalar sum, reduced modulo 2^16; every measured result checked",
+  "timing": "NOT_MEASURED",
+  "rtl": "NOT_RUN",
+  "bram_inference": "NOT_RUN",
+  "public_block_api": "NOT_IMPLEMENTED",
+  "logs": {
+    "release": "../block-model-release/output.txt",
+    "sanitizers": "../block-model-asan/output.txt",
+    "analyzer": "../block-model-analyzer/output.txt",
+    "packaging": "../block-model-packaging/output.txt"
+  }
+}
