@@ -412,7 +412,9 @@ Operation entry points return
 .B CGRA_ERR_DESYNC
 (\-7, session stopped after an uncertain transfer),
 .B CGRA_ERR_NOMEM
-(\-8, workspace or emulator allocation failed).
+(\-8, allocation failed),
+.B CGRA_ERR_STALE
+(\-9, the requested plan configuration is not explicitly bound).
 .B cgra_has_exec
 is the boolean exception described above.
 .B cgra_strerror()
@@ -473,6 +475,56 @@ Configuration transactions exclude retries. A clock failure clears valid
 without changing the command result, diagnostic or errno. The profile is
 owned copied data, separate from cgra_stats_t; reset_stats does not reset it.
 NULL handle/output is a no-op. Re-enabling resets all profile fields.
+.SH REUSABLE PLANS
+.nf
+int cgra_plan_create(const cgra_plan_spec_t *spec, const uint32_t *cfg,
+    size_t ncfg, cgra_plan_t **plan);
+int cgra_plan_bind(cgra_t *dev, const cgra_plan_t *plan);
+int cgra_plan_execute_n(cgra_t *dev, const cgra_plan_t *plan,
+    const int16_t *west, size_t nwest, const int16_t *north, size_t nnorth,
+    int16_t *taps, size_t ntaps);
+void cgra_plan_invalidate(cgra_t *dev);
+void cgra_plan_free(cgra_plan_t *plan);
+.fi
+.PP
+A plan owns an immutable copy of a geometry-specific configuration and
+pre-serializes its CFG request. The specification fields are rows, cols,
+steps (0..255), flags (CGRA_EXEC_RESET or zero) and tap_mask. Creation performs
+no device I/O; ncfg must equal rows*cols. Invalid arguments return CGRA_ERR_ARG;
+allocation failure returns CGRA_ERR_NOMEM. On failure the output plan pointer
+is NULL. Plans may outlive a handle and may be shared across independently
+serialized handles. Free exactly once, after all borrowing calls finish;
+free(NULL) is harmless.
+.PP
+Bind explicitly loads CFG and records an owned configuration copy on the
+handle. It does not reset inputs or PE registers. Execute requires the exact
+configuration and geometry already bound, otherwise returns CGRA_ERR_STALE
+before I/O. A newly opened handle is unbound. An independently compiled plan
+with identical CFG may reuse the binding even with different steps/flags/taps.
+Successful execution retains the binding. There is no allocation in bind or
+execute. Input counts, NULL zero inputs, tap count and ascending tap order
+follow exec_n. Outputs remain unchanged on failure.
+.PP
+Every attempted raw wire command invalidates binding, including ID, RD and
+commands from ordinary kernels. Setters, statistics and cached get_info do
+not; rejected arguments without wire activity do not. Failed binding or
+transfer invalidates it. An uncertain transfer still poisons the session:
+CGRA_ERR_DESYNC prevents both execution and rebinding, without recovery bytes
+or duplicate-effect retries. A known complete NACK permits a later explicit
+bind under the legacy framing fault model. Out-of-band reset/access cannot be
+detected; call invalidate before reuse or restore the parser and reopen.
+.PP
+Protocol v3 executes one EXEC. Protocol v2 executes WR, optional datapath
+reset, RUN, then RD when taps are requested. This sequence is not atomic;
+each command has its own reply/transaction budget. Inputs and PE state may
+change before failure. RESET is a per-execution choice, not an automatic
+side effect of binding.
+.PP
+For eight identical 4x4 ADD transfers selecting PE0, including configuration
+and excluding the initial ID, v3 uses 744 bytes and 16 transactions with CFG
+before every EXEC. One explicit bind followed by eight executions uses 275
+bytes and nine transactions. These are wire counts from the regression, not
+FPGA throughput measurements.
 .SH EXAMPLE
 .nf
 .EX

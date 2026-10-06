@@ -46,7 +46,7 @@ with tempfile.TemporaryDirectory(prefix="cgra-compdb-") as temporary:
                     for p in (root / "lib/src").glob("*.c")}
         expected.update(("sw", p.name) for p in (root / "sw").glob("*.c"))
         expected.update(("lib", f"test/{name}.c") for name in
-                        ("test_cgra", "test_transport", "test_kernels", "test_faults"))
+                        ("test_cgra", "test_transport", "test_kernels", "test_faults", "test_plans"))
         expected.add(("sw", "test/test_sw.c"))
         check({(Path(row["directory"]).name, row["file"]) for row in entries} == expected,
               "all host implementation and C unit-test sources are represented")

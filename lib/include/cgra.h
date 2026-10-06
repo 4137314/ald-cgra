@@ -98,6 +98,7 @@ enum cgra_sel {
 #define CGRA_ERR_GEOMETRY -6  /* unsupported/mismatched geometry   */
 #define CGRA_ERR_DESYNC   -7  /* uncertain parser; session stopped */
 #define CGRA_ERR_NOMEM    -8  /* memory allocation failed          */
+#define CGRA_ERR_STALE    -9  /* explicitly bound plan invalidated */
 
 /* Opaque owned handle. Close exactly once; cgra_close(NULL) is harmless.
  * Calls are synchronous. All caller buffers and device strings are borrowed
@@ -359,6 +360,51 @@ int cgra_exec_n(cgra_t *dev, uint8_t steps, unsigned flags, uint16_t tap_mask,
  * cgra_get_info(), check its return code, then inspect info.version >= 3.
  */
 int cgra_has_exec(cgra_t *dev);
+
+/* ---- reusable compiled transfers --------------------------------------- */
+
+typedef struct cgra_plan cgra_plan_t;
+typedef struct {
+    unsigned rows, cols;            /* positive, rows*cols <= CGRA_MAX_PE */
+    uint8_t steps;                  /* 0..255 captures per execution */
+    unsigned flags;                 /* CGRA_EXEC_RESET or 0 */
+    uint16_t tap_mask;              /* ascending row-major taps */
+} cgra_plan_spec_t;
+
+/* Compile without device I/O. Owns copies of spec/cfg and pre-serializes CFG;
+ * ncfg must equal rows*cols. On failure *plan is NULL (when plan is non-NULL).
+ * Immutable plans work on compatible v2/v3 devices and can outlive a handle.
+ * Free exactly once; free(NULL) is harmless. No device owns the plan. */
+int cgra_plan_create(const cgra_plan_spec_t *spec, const uint32_t *cfg,
+                     size_t ncfg, cgra_plan_t **plan);
+void cgra_plan_free(cgra_plan_t *plan);
+
+/* Explicitly load CFG, even if it matches the previous binding. Successful
+ * bind leaves inputs/PE registers unchanged and stores an owned configuration
+ * copy on the handle, not a plan pointer. New/reopened handles are unbound.
+ * Every attempted raw wire command (including ID, RD and ordinary kernels)
+ * invalidates binding; stats, setters, cached get_info and argument rejection
+ * without wire activity do not. Failed bind/transfer invalidates binding.
+ * No automatic reload or retry after uncertainty: DESYNC retains its meaning.
+ * Out-of-band reset/access is not detectable: invalidate before reuse or
+ * close/reopen after restoring the parser as documented for cgra_close. */
+int cgra_plan_bind(cgra_t *dev, const cgra_plan_t *plan);
+void cgra_plan_invalidate(cgra_t *dev);
+
+/* Execute only with this exact CFG resident, otherwise STALE before I/O
+ * (DESYNC takes precedence). An equivalent independently compiled CFG may use
+ * the binding; steps/flags/taps do not change it. Counts/null inputs and tap
+ * aliasing follow exec_n. ntaps must equal popcount(spec.tap_mask). Outputs
+ * stay unchanged on failure. Success retains binding. v3 uses one EXEC; v2
+ * uses WR, optional reset, RUN and RD if taps are needed. The v2 sequence is
+ * not atomic and each command has its own timeout budget. Failure can leave
+ * inputs/PE state changed; no rollback. No allocation during bind/execute.
+ * The immutable plan can be shared across independent serialized handles;
+ * serialize free against calls borrowing it. */
+int cgra_plan_execute_n(cgra_t *dev, const cgra_plan_t *plan,
+                       const int16_t *west, size_t nwest,
+                       const int16_t *north, size_t nnorth,
+                       int16_t *taps, size_t ntaps);
 
 /*
  * One-shot configure + write inputs + run + read back. Any argument except

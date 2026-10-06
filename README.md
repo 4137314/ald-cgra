@@ -233,6 +233,12 @@ See `libcgra(3)` for empty inputs and partial results on failure.
 `sim:2x3:v2` exercises the older protocol on a rectangle.
 See [supported geometries, API contract and verification](doc/mesh-generalization.md).
 
+Repeated low-level mappings can use the additive `cgra_plan_create`,
+`cgra_plan_bind` and `cgra_plan_execute_n` API. A plan owns the compiled CFG and
+reuses an explicitly bound configuration; raw commands and failed transfers
+invalidate that binding. The API returns `STALE` before I/O instead of silently
+reloading it. See `libcgra(3)` for v2/v3, ownership and recovery details.
+
 `clangd` reads a generated compilation database (there is no `compile_flags.txt`):
 
 ```sh

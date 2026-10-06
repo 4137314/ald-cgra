@@ -76,6 +76,14 @@ int main(void) {
         if (cgra_matvec(d, A, 2, 3, x, out, 4) || out[0]!=14 || out[1]!=32) return 2;
         if (cgra_scan(d, CGRA_OP_ADD, x, 3, out, 4) || out[0]!=1 || out[1]!=3 || out[2]!=6) return 3;
         if (cgra_conv(d, h, 2, x, 3, out, 4) || out[0]!=2 || out[1]!=3 || out[2]!=4 || out[3]!=-3) return 4;
+        const uint32_t cfg[6] = {CGRA_CFG(CGRA_OP_CONST,CGRA_SEL_ZERO,CGRA_SEL_ZERO,37)};
+        const cgra_plan_spec_t spec = {2,3,1,CGRA_EXEC_RESET,1};
+        cgra_plan_t *plan = NULL;
+        if (cgra_plan_create(&spec,cfg,6,&plan) || cgra_plan_bind(d,plan)) return 5;
+        if (cgra_plan_execute_n(d,plan,NULL,0,NULL,0,out,1) || out[0]!=37) return 6;
+        cgra_plan_invalidate(d);
+        if (cgra_plan_execute_n(d,plan,NULL,0,NULL,0,out,1)!=CGRA_ERR_STALE) return 7;
+        cgra_plan_free(plan);
         cgra_close(d);
     }
     return 0;

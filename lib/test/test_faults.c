@@ -78,6 +78,18 @@ int main(void)
     cgra_set_profiling(dev, 0);
     int16_t h = 2, x = 3, out = 1234;
     fail_allocation = 1;
+    cgra_plan_spec_t spec = {4,4,1,CGRA_EXEC_RESET,1};
+    uint32_t cfg[16] = {CGRA_CFG(CGRA_OP_CONST,CGRA_SEL_ZERO,CGRA_SEL_ZERO,19)};
+    cgra_plan_t *plan = NULL;
+    CHECK(cgra_plan_create(&spec,cfg,16,&plan)==CGRA_ERR_NOMEM && plan==NULL,
+          "plan allocation failure returns no owned object");
+    fail_allocation = 0;
+    CHECK(cgra_plan_create(&spec,cfg,16,&plan)==CGRA_OK,"allocate plan before fault injection");
+    fail_allocation = 1;
+    CHECK(cgra_plan_bind(dev,plan)==CGRA_OK &&
+          cgra_plan_execute_n(dev,plan,NULL,0,NULL,0,&out,1)==CGRA_OK && out==19,
+          "plan bind and execution require no heap allocations");
+    cgra_plan_free(plan);
     CHECK(cgra_conv(dev, &h, 1, &x, 1, &out, 1) == CGRA_OK && out == 6,
           "implicit convolution needs no heap allocation after open");
     cgra_stats_t stats;

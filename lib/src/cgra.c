@@ -38,6 +38,13 @@
 #define EXEC_REQ_MAX (1 + EXEC_HDR + 4 * CGRA_MAX_EDGE + 1)
 /* For positive R,C with RC <= MAX_PE, R+C <= MAX_PE+1. */
 #define MAX_EDGE_WORDS (CGRA_MAX_PE + 1)
+#define CFG_REQ_MAX (2 + 4 * CGRA_MAX_PE)
+
+struct cgra_plan {
+    cgra_plan_spec_t spec;
+    size_t cfg_len;
+    uint8_t cfg_packet[CFG_REQ_MAX];
+};
 
 struct cgra {
     int          fd;           /* -1 for the sim: emulator backend */
@@ -54,6 +61,8 @@ struct cgra {
     cgra_stats_t stats;
     int profiling;
     cgra_profile_t profile;
+    size_t resident_len;       /* 0 unless explicitly bound by plan API */
+    uint8_t resident_cfg[CFG_REQ_MAX];
 };
 
 /* -------------------------------------------------- serial transport */
@@ -295,6 +304,7 @@ const char *cgra_strerror(int err)
     case CGRA_ERR_GEOMETRY: return "unsupported or mismatched device geometry";
     case CGRA_ERR_DESYNC:   return "session desynchronized; restore device parser before reopening";
     case CGRA_ERR_NOMEM:    return "memory allocation failed";
+    case CGRA_ERR_STALE:    return "plan configuration is not bound; bind explicitly";
     default:               return "unknown error";
     }
 }
@@ -318,6 +328,7 @@ static int monotonic_ns(int64_t *value)
 
 static int begin_transaction(cgra_t *dev, uint8_t command)
 {
+    dev->resident_len = 0;
     dev->active = (cgra_diagnostic_t){.command = command, .attempt = 1};
     dev->transaction_deadline = -1;
     if (dev->transaction_ms && dev->emu == NULL) {
@@ -801,6 +812,102 @@ int cgra_exec(cgra_t *dev, uint8_t steps, unsigned flags, uint16_t tap_mask,
         ? cgra_exec_n(dev, steps, flags, tap_mask, west, west ? CGRA_ROWS : 0,
                       north, north ? CGRA_COLS : 0, taps, ntaps)
         : rc;
+}
+
+int cgra_plan_create(const cgra_plan_spec_t *spec, const uint32_t *cfg,
+                     size_t ncfg, cgra_plan_t **plan)
+{
+    if (plan == NULL) return CGRA_ERR_ARG;
+    *plan = NULL;
+    if (spec == NULL || cfg == NULL || ncfg > CGRA_MAX_PE ||
+        spec->rows == 0 || spec->cols == 0 ||
+        spec->rows > CGRA_MAX_EDGE || spec->cols > CGRA_MAX_EDGE ||
+        spec->rows * spec->cols > CGRA_MAX_PE ||
+        ncfg != spec->rows * spec->cols ||
+        (spec->flags & ~CGRA_EXEC_RESET) ||
+        ((uint32_t)spec->tap_mask >> ncfg)) return CGRA_ERR_ARG;
+    cgra_plan_t *p = calloc(1, sizeof(*p));
+    if (p == NULL) return CGRA_ERR_NOMEM;
+    p->spec = *spec;
+    p->cfg_len = 2 + 4 * ncfg;
+    p->cfg_packet[0] = CMD_CFG;
+    for (size_t i = 0; i < ncfg; ++i)
+        for (unsigned j = 0; j < 4; ++j)
+            p->cfg_packet[1 + 4*i + j] = (uint8_t)(cfg[i] >> (8*j));
+    p->cfg_packet[p->cfg_len - 1] = checksum(p->cfg_packet + 1, p->cfg_len - 2);
+    *plan = p;
+    return CGRA_OK;
+}
+
+void cgra_plan_free(cgra_plan_t *plan)
+{
+    free(plan);
+}
+
+void cgra_plan_invalidate(cgra_t *dev)
+{
+    if (dev) dev->resident_len = 0;
+}
+
+static void bind_copy(cgra_t *dev, const cgra_plan_t *plan)
+{
+    memcpy(dev->resident_cfg, plan->cfg_packet, plan->cfg_len);
+    dev->resident_len = plan->cfg_len;
+}
+
+int cgra_plan_bind(cgra_t *dev, const cgra_plan_t *plan)
+{
+    cgra_plan_invalidate(dev);
+    if (dev == NULL || plan == NULL) return CGRA_ERR_ARG;
+    cgra_info_t g;
+    int rc = cgra_get_info(dev, &g);
+    if (rc != CGRA_OK) return rc;
+    if (g.rows != plan->spec.rows || g.cols != plan->spec.cols)
+        return CGRA_ERR_GEOMETRY;
+    rc = send_expect_ack(dev, plan->cfg_packet, plan->cfg_len);
+    if (rc == CGRA_OK) bind_copy(dev, plan);
+    return rc;
+}
+
+int cgra_plan_execute_n(cgra_t *dev, const cgra_plan_t *plan,
+                       const int16_t *west, size_t nwest,
+                       const int16_t *north, size_t nnorth,
+                       int16_t *taps, size_t ntaps)
+{
+    if (dev == NULL || plan == NULL) return CGRA_ERR_ARG;
+    const cgra_plan_spec_t *p = &plan->spec;
+    if ((west ? nwest != p->rows : nwest != 0) ||
+        (north ? nnorth != p->cols : nnorth != 0) ||
+        ntaps != (size_t)popcount16(p->tap_mask) || (ntaps && taps == NULL))
+        return CGRA_ERR_ARG;
+    if (dev->desynced) return CGRA_ERR_DESYNC;
+    if (dev->resident_len != plan->cfg_len ||
+        dev->info.rows != p->rows || dev->info.cols != p->cols ||
+        memcmp(dev->resident_cfg, plan->cfg_packet, plan->cfg_len) != 0)
+        return CGRA_ERR_STALE;
+    int rc;
+    if (dev->info.version >= 3) {
+        rc = cgra_exec_n(dev, p->steps, p->flags, p->tap_mask,
+                         west, nwest, north, nnorth, taps, ntaps);
+    } else {
+        const int16_t zeros[CGRA_MAX_EDGE] = {0};
+        int16_t regs[CGRA_MAX_PE];
+        rc = cgra_write_inputs_n(dev, west ? west : zeros, p->rows,
+                                 north ? north : zeros, p->cols);
+        if (rc == CGRA_OK && (p->flags & CGRA_EXEC_RESET)) rc = cgra_reset_datapath(dev);
+        if (rc == CGRA_OK) rc = cgra_run(dev, p->steps);
+        if (rc == CGRA_OK && ntaps) {
+            rc = cgra_read_regs_n(dev, regs, CGRA_MAX_PE);
+            if (rc == CGRA_OK) {
+                size_t j = 0;
+                for (size_t i = 0; i < p->rows * p->cols; ++i)
+                    if (p->tap_mask & (1u << i)) taps[j++] = regs[i];
+            }
+        }
+    }
+    if (rc == CGRA_OK) bind_copy(dev, plan);
+    else cgra_plan_invalidate(dev);
+    return rc;
 }
 
 int cgra_apply(cgra_t *dev, const uint32_t cfg[CGRA_NUM_PE],

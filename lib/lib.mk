@@ -90,6 +90,7 @@ TESTBIN = $(BUILD)/test_cgra
 TRANSPORTBIN = $(BUILD)/test_transport
 KERNELBIN = $(BUILD)/test_kernels
 FAULTBIN = $(BUILD)/test_faults
+PLANBIN = $(BUILD)/test_plans
 
 # Export the same CC/CFLAGS as compilation, without building the library.
 .PHONY: compdb
@@ -97,13 +98,17 @@ compdb: | $(BUILD)
 	$(file >$(BUILD)/compdb-flags.txt,$(CC) $(CPPFLAGS) $(CFLAGS))
 	python3 ../scripts/gen-compdb.py fragment $(BUILD)/compile_commands.json \
 	    $(BUILD)/compdb-flags.txt $(SRCS) --tests \
-	    $(addprefix test/,$(addsuffix .c,$(notdir $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN))))
+    $(addprefix test/,$(addsuffix .c,$(notdir $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN) $(PLANBIN))))
 
-test: $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN)
+test: $(TESTBIN) $(TRANSPORTBIN) $(KERNELBIN) $(FAULTBIN) $(PLANBIN)
 	./$(TESTBIN)
 	./$(TRANSPORTBIN)
 	./$(KERNELBIN)
 	./$(FAULTBIN)
+	./$(PLANBIN)
+
+$(PLANBIN): test/test_plans.c $(STATIC) | $(BUILD)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(STATIC) $(LDFLAGS) -o $@
 
 $(TESTBIN): test/test_cgra.c $(OBJS) | $(BUILD)
 	$(CC) $(CPPFLAGS) $(CFLAGS) -UNDEBUG $< $(OBJS) $(LDFLAGS) -o $@

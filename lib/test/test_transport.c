@@ -519,11 +519,40 @@ static void test_diagnostic_persistence(void)
     cgra_close(dev);
 }
 
+static void test_plan_uncertain(void)
+{
+    int master; cgra_t *dev = open_peer(&master);
+    cgra_set_timeout(dev,10);
+    const unsigned char ready[] = {0xCA,3,1,1,16,0x79};
+    uint32_t cfg=0; cgra_plan_spec_t spec={1,1,1,CGRA_EXEC_RESET,1};
+    cgra_plan_t *plan=NULL;
+    CHECK(cgra_plan_create(&spec,&cfg,1,&plan)==CGRA_OK,"compile serial plan");
+    CHECK(write(master,ready,sizeof(ready))==sizeof(ready) && cgra_plan_bind(dev,plan)==CGRA_OK,
+          "serial plan binding consumes ID and CFG acknowledgement");
+    unsigned char wire[64];
+    CHECK(read(master,wire,sizeof(wire))==7,"drain exactly ID and CFG requests");
+    int16_t out=123;
+    CHECK(cgra_plan_execute_n(dev,plan,NULL,0,NULL,0,&out,1)==CGRA_ERR_TIMEOUT && out==123,
+          "uncertain planned execution returns original timeout without output");
+    CHECK(read(master,wire,sizeof(wire))==10,"uncertain execution sent once, even with RESET");
+    cgra_stats_t before,after; cgra_get_stats(dev,&before);
+    CHECK(cgra_plan_execute_n(dev,plan,NULL,0,NULL,0,&out,1)==CGRA_ERR_DESYNC &&
+          cgra_plan_bind(dev,plan)==CGRA_ERR_DESYNC,"poisoned plan cannot execute or rebind");
+    cgra_get_stats(dev,&after);
+    struct pollfd pfd={.fd=master,.events=POLLIN};
+    CHECK(before.tx_bytes==after.tx_bytes && poll(&pfd,1,0)==0,"blocked plan performs no automatic recovery");
+    cgra_diagnostic_t diagnostic; cgra_get_diagnostic(dev,&diagnostic);
+    CHECK(diagnostic.code==CGRA_ERR_TIMEOUT && diagnostic.command==7 && diagnostic.attempt==1,
+          "planned execution preserves owned wire failure diagnostic");
+    cgra_plan_free(plan); cgra_close(dev); close(master);
+}
+
 int main(int argc, char **argv)
 {
     if (argc == 3 && strcmp(argv[1], "--closed") == 0)
         return fcntl(atoi(argv[2]), F_GETFD) == -1 && errno == EBADF ? 0 : 1;
     alarm(10);
+    test_plan_uncertain();
     test_silent_reply();
     test_fragmented_reply();
     test_failed_write();
