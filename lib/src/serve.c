@@ -11,6 +11,7 @@
 
 #include "cgra.h"
 #include "emu.h"
+#include "block_wire.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -45,7 +46,13 @@ int cgra_emulate_pty(void (*on_ready)(const char *path, void *user), void *user)
 int cgra_emulate_pty_ex(const cgra_pty_options_t *options,
                        void (*on_ready)(const char *path, void *user), void *user)
 {
-    if (!options || !options->rows || !options->cols ||
+    return cgra_emulate_pty_with_flags(options, 0, on_ready, user);
+}
+
+int cgra_emulate_pty_with_flags(const cgra_pty_options_t *options, unsigned flags,
+                               void (*on_ready)(const char *path, void *user), void *user)
+{
+    if ((flags & ~CGRA_PTY_BLOCKS) || !options || !options->rows || !options->cols ||
         options->rows > CGRA_MAX_EDGE || options->cols > CGRA_MAX_EDGE ||
         options->rows * options->cols > CGRA_MAX_PE ||
         (options->version != 2 && options->version != 3) || options->stop_fd < -1 ||
@@ -69,6 +76,7 @@ int cgra_emulate_pty_ex(const cgra_pty_options_t *options,
     if (tcsetattr(sfd, TCSANOW, &tio) != 0) goto done;
     e = emu_new_geometry(opts.rows, opts.cols);
     if (!e) { result = CGRA_ERR_NOMEM; goto done; }
+    if ((flags & CGRA_PTY_BLOCKS) && emu_enable_blocks(e)) { result = CGRA_ERR_NOMEM; goto done; }
     emu_set_legacy(e, opts.version == 2);
     if (on_ready) on_ready(sn, user);
     for (;;) {
@@ -82,7 +90,7 @@ int cgra_emulate_pty_ex(const cgra_pty_options_t *options,
          * overrun the model's output FIFO before emu_drain is called. */
         for (size_t i = 0; i < (size_t)k; i++) {
             emu_push(e, in[i]);
-            uint8_t out[2 * CGRA_MAX_PE + 2];
+            uint8_t out[BLOCK_WIRE];
             size_t n = emu_drain(e, out, sizeof(out)), off = 0;
             while (off < n) {
                 ready = wait_io(mfd, POLLOUT, opts.stop_fd);

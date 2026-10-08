@@ -571,3 +571,34 @@ Hardware report:
 .IR doc/build/main.pdf .
 .SH AUTHOR
 Written for the Advanced Logic Design course, University of Trento.
+
+.SH EXPERIMENTAL RESIDENT BLOCKS
+The additive cgra_block_begin, cgra_block_upload, cgra_block_dot and
+cgra_block_result functions select framing revision 1 on an explicitly enabled
+device (G_BLOCK_ENABLE=true or sim:blocks). Legacy ID remains v2/v3.
+The first begin sends a single safe capability probe; unsupported devices remain
+usable in legacy mode. Successful preflight selects framed mode until external
+device reset. Closing the serial port alone does not reset parser or session.
+.PP
+begin requires a new nonzero 32-bit nonce. It clears logical bank lengths,
+result validity and the execution count. upload replaces bank 0 or 1 with
+1..1024 caller-owned signed 16-bit words, in validated chunks of at most 64.
+Earlier successful chunks can remain after a subsequent failure. Storage is no
+longer borrowed after return. dot consumes a count fitting both loaded banks,
+including zero, and returns the signed low 16 bits of the dot product and an
+optional uint32 execution count. It issues DOT then RESULT, preserving output
+arguments on errors. result reads the saved result without executing again.
+.PP
+Each complete frame has one response deadline and the optional whole-transaction
+budget includes its writes. No automatic retry or poisoned-handle recovery API
+is provided. Uncertain transfers block subsequent commands. Exact duplicate
+replay is a wire-level facility limited to the immediately preceding request
+within the same session. Sequence exhaustion requires begin with a new nonce;
+reset destroys the duplicate cache. CRC is error detection, not authentication.
+.PP
+Legacy protocol commands are unavailable after preflight. DOT temporarily uses
+PE0 as MAC and resets the other PE registers; legacy configuration and edge
+registers are retained. Existing reusable plans are invalidated.
+cgra_emulate_pty_with_flags accepts CGRA_PTY_BLOCKS without changing the existing
+options structure or service wrappers. The PTY model has no clock/watchdog.
+See doc/block-protocol.md for the complete fault and ownership contract.

@@ -1,6 +1,7 @@
 /* Real POSIX transport regressions, using only local pseudo-terminals. */
 #define _XOPEN_SOURCE 700
 #include "cgra.h"
+#include "../src/block_wire.h"
 
 #include <assert.h>
 #include <errno.h>
@@ -449,7 +450,7 @@ static void server_ready(const char *path, void *user)
 
 static void test_configurable_server(void)
 {
-    for (int scenario = 0; scenario < 4; scenario++) {
+    for (int scenario = 0; scenario < 5; scenario++) {
         int ready[2], stop[2];
         CHECK(pipe(ready) == 0 && pipe(stop) == 0, "create server ready/cancellation channels");
         fflush(stdout);
@@ -458,7 +459,7 @@ static void test_configurable_server(void)
             alarm(5);
             close(ready[0]); close(stop[1]);
             cgra_pty_options_t opts = {2, 3, scenario == 0 ? 2u : 3u, stop[0]};
-            int rc = cgra_emulate_pty_ex(&opts, server_ready, &ready[1]);
+            int rc = cgra_emulate_pty_with_flags(&opts, scenario == 4 ? CGRA_PTY_BLOCKS : 0, server_ready, &ready[1]);
             /* The service borrows the cancellation fd, never closes it. */
             int owned = fcntl(stop[0], F_GETFD) >= 0;
             close(ready[1]); close(stop[0]);
@@ -479,7 +480,19 @@ static void test_configurable_server(void)
               "configured v2/v3 geometry serves a real serial API workload");
         int raw = open(path, O_RDWR | O_NOCTTY | O_NONBLOCK);
         CHECK(raw >= 0, "open raw client for stream/backpressure cases");
-        if (scenario == 1) {
+        if (scenario == 4) {
+            cgra_set_transaction_timeout(dev, 500);
+            fragment_writes = 1; inject_interrupt = 1; inject_again = 1;
+            CHECK(cgra_block_begin(dev,0x7e7d5678)==0 && cgra_block_upload(dev,0,a,3)==0 &&
+                  cgra_block_upload(dev,1,b,3)==0,
+                  "framed PTY upload survives partial writes, EINTR and EAGAIN");
+            fragment_writes = 0;
+            int16_t value=123; uint32_t executions=0;
+            CHECK(cgra_block_dot(dev,3,&value,&executions)==0 && value==32745 && executions==1,
+                  "public resident workload crosses real POSIX byte transport");
+            CHECK(cgra_block_result(dev,&value,&executions)==0 && value==32745 && executions==1,
+                  "RESULT does not repeat DOT effects");
+        } else if (scenario == 1) {
             /* 100 one-byte IDs in one write exceeded the old 256-byte FIFO. */
             unsigned char ids[100], reply[500];
             memset(ids, 1, sizeof(ids));
@@ -566,11 +579,54 @@ static void test_plan_uncertain(void)
     cgra_plan_free(plan); cgra_close(dev); close(master);
 }
 
+static void test_block_reply_deadline(void)
+{
+    for (int slow=0; slow<2; ++slow) {
+        int master; cgra_t *dev=open_peer(&master); cgra_set_timeout(dev,40);
+        fflush(stdout); pid_t child=fork();
+        if (child==0) {
+            alarm(3); cgra_close(dev);
+            uint8_t byte,cap[]={0xcb,1,64,0,4};
+            if (read_peer_exact(master,&byte,1)!=1 || byte!=8) _exit(1);
+            if (write(master,cap,sizeof cap)!=(ssize_t)sizeof cap) _exit(2);
+            block_decoder decoder={0}; block_frame q,r;
+            do { if (read_peer_exact(master,&byte,1)!=1) _exit(3); }
+            while (block_decode(&decoder,byte,&q)!=1);
+            r=(block_frame){.opcode=0x80,.session=q.session,.sequence=0,.length=6,
+                             .payload={0,0,4,64,1,0}};
+            uint8_t reply[BLOCK_WIRE]; size_t n=block_encode(&r,reply,sizeof reply);
+            if (!slow) reply[n-2]^=1; /* complete response with corrupted CRC */
+            for (size_t i=0;i<n;++i) {
+                if (write(master,reply+i,1)!=1) _exit(4);
+                if (slow) pause_ms(8); /* each gap <40ms, total response >40ms */
+            }
+            close(master); _exit(0);
+        }
+        CHECK(child>0,"fork block fault peer");
+        int rc=cgra_block_begin(dev,1234);
+        CHECK(rc==(slow ? CGRA_ERR_TIMEOUT : CGRA_ERR_PROTO),
+              "block response uses one deadline and validates CRC");
+        cgra_diagnostic_t diagnostic;cgra_get_diagnostic(dev,&diagnostic);
+        CHECK(diagnostic.command==BLOCK_FLAG && diagnostic.attempt==1 &&
+              diagnostic.phase==(slow ? CGRA_PHASE_READ : CGRA_PHASE_VALIDATE),
+              "framed failure retains owned command/phase diagnostic");
+        cgra_stats_t before,after;cgra_get_stats(dev,&before);
+        CHECK(cgra_block_begin(dev,5678)==CGRA_ERR_DESYNC && cgra_reset_datapath(dev)==CGRA_ERR_DESYNC,
+              "uncertain framed transfer blocks all subsequent commands");
+        cgra_get_stats(dev,&after);
+        CHECK(before.tx_bytes==after.tx_bytes && after.retries==0,"no duplicate effects via implicit retry");
+        int status;CHECK(waitpid(child,&status,0)==child && WIFEXITED(status) && !WEXITSTATUS(status),
+                         "fault peer completed its chosen wire response");
+        cgra_close(dev);close(master);
+    }
+}
+
 int main(int argc, char **argv)
 {
     if (argc == 3 && strcmp(argv[1], "--closed") == 0)
         return fcntl(atoi(argv[2]), F_GETFD) == -1 && errno == EBADF ? 0 : 1;
     alarm(10);
+    test_block_reply_deadline();
     test_plan_uncertain();
     test_silent_reply();
     test_fragmented_reply();

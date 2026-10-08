@@ -1,4 +1,4 @@
-/* Experimental block codec/model; no claim of RTL or public API integration. */
+/* Block codec/model and additive public API regressions. RTL replay is in hw/sim. */
 #include "cgra.h"
 #include "../src/block_model.h"
 #include <assert.h>
@@ -222,9 +222,66 @@ static void boundaries(void)
     CHECK(rejected==1 && !memcmp(&before,&m,sizeof(m)),"bad CRC cannot change session/cache/operands/result");
 }
 
+static void public_api(void)
+{
+    const char *devices[] = {"sim:blocks:1x16", "sim:blocks:2x8", "sim:blocks:4x4",
+                             "sim:blocks:8x2", "sim:blocks:16x1", "sim:blocks:2x3"};
+    int16_t a[1024], b[1024]; int64_t sum = 0;
+    for (size_t i=0; i<1024; ++i) {
+        a[i] = i%3 == 0 ? INT16_MIN : i%3 == 1 ? INT16_MAX : -1;
+        b[i] = (int16_t)((int)(i%11)-5);
+        sum += (int64_t)a[i]*b[i];
+    }
+    for (size_t d=0; d<sizeof devices/sizeof devices[0]; ++d) {
+        cgra_t *dev = cgra_open(devices[d], 115200); CHECK(dev != NULL,"open explicit blocks backend");
+        int16_t result=123; uint32_t executions=456;
+        CHECK(cgra_block_dot(dev,0,&result,&executions)==CGRA_ERR_ARG && result==123 && executions==456,
+              "block API requires session and preserves outputs on failure");
+        CHECK(cgra_block_begin(dev,0)==CGRA_ERR_ARG,"zero nonce rejected before preflight");
+        CHECK(cgra_block_begin(dev,0x7e7d1234)==0,"safe preflight plus escaped HELLO");
+        CHECK(cgra_block_begin(dev,0x7e7d1234)==CGRA_ERR_ARG,"active nonce cannot reset session");
+        cgra_stats_t before, after; cgra_get_stats(dev,&before);
+        CHECK(cgra_reset_datapath(dev)==CGRA_ERR_UNSUPPORTED,"legacy command blocked after explicit mode selection");
+        cgra_get_stats(dev,&after);
+        CHECK(after.tx_bytes==before.tx_bytes && after.transactions==before.transactions,
+              "blocked legacy command has no wire effects");
+        CHECK(cgra_block_result(dev,&result,&executions)==CGRA_ERR_NACK && result==123 && executions==456,
+              "NOT_READY is complete semantic error with unchanged outputs");
+        CHECK(cgra_block_dot(dev,0,&result,&executions)==0 && result==0 && executions==1,
+              "empty resident DOT after semantic error");
+        CHECK(cgra_block_upload(dev,0,a,1024)==0 && cgra_block_upload(dev,1,b,1024)==0,
+              "both full banks uploaded through public transport");
+        for (unsigned i=0; i<8; ++i)
+            CHECK(cgra_block_dot(dev,1024,&result,&executions)==0 &&
+                  (uint16_t)result==(uint16_t)((uint64_t)sum&65535u) && executions==i+2,
+                  "repeated resident DOT matches independent signed wide oracle");
+        cgra_get_stats(dev,&before);
+        CHECK(cgra_block_upload(dev,2,a,1)==CGRA_ERR_ARG && cgra_block_upload(dev,0,a,1025)==CGRA_ERR_ARG &&
+              cgra_block_dot(dev,1025,&result,NULL)==CGRA_ERR_ARG,"public block limits before writes");
+        cgra_get_stats(dev,&after);
+        CHECK(before.tx_bytes==after.tx_bytes,"invalid block arguments cause no traffic");
+        CHECK(cgra_block_begin(dev,1234)==0,"fresh nonce resets lengths without another preflight");
+        CHECK(cgra_block_dot(dev,1,&result,NULL)==CGRA_ERR_ARG,"new session invalidates bank lengths");
+        CHECK(cgra_block_upload(dev,0,a,1)==0 && cgra_block_upload(dev,1,b,1)==0 &&
+              cgra_block_dot(dev,1,a,&executions)==0 && executions==1,
+              "input ownership released after upload; result may alias prior caller storage");
+        /* Restore a[0] after intentional output alias for the next geometry. */
+        a[0] = INT16_MIN;
+        cgra_close(dev);
+    }
+    for (unsigned v=2; v<=3; ++v) {
+        cgra_t *dev=cgra_open(v==2 ? "sim:v2" : "sim",115200); CHECK(dev != NULL,"legacy backend");
+        CHECK(cgra_block_begin(dev,1)==CGRA_ERR_UNSUPPORTED,"old device receives only safe one-byte probe");
+        cgra_stats_t stats;cgra_get_stats(dev,&stats);
+        CHECK(stats.tx_bytes==1 && stats.rx_bytes==1 && stats.transactions==1,"no framed payload sent to old parser");
+        CHECK(cgra_reset_datapath(dev)==0,"legacy remains usable after unsupported capability");
+        cgra_close(dev);
+    }
+}
+
 int main(void)
 {
-    framing();resident();boundaries();
-    printf("# %u block codec/model checks passed\n",checks);
+    framing();resident();boundaries();public_api();
+    printf("# %u block codec/model/API checks passed\n",checks);
     return 0;
 }

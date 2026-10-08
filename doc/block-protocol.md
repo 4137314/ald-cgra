@@ -1,26 +1,34 @@
 # Experimental resident-block protocol v1 — implementation contract
 
-**Status: private C codec and functional model executed; controller, public
-API/CLI, memory inference and end-to-end integration remain B01–B03 work.**
-Legacy ID continues to advertise v2/v3. No current device capability or FPGA
-result is implied by this document or the private model's HELLO response.
+**Status: experimental RTL–model–public API–CLI path implemented and exercised.**
+`G_BLOCK_ENABLE=false` remains the default. The enabled 4×4/DIV2 instance has
+executed Vivado synthesis and routed timing reports with 1 BRAM tile (two
+RAMB18), WNS +0.427 ns and WHS +0.060 ns at 10 ns; no board test has been run. Formal coverage currently proves the sequencer control contract,
+not the entire framed controller, CRC, duplicate cache or RAM contents.
 
 ## Selection and framing
 
-The extension will be selected explicitly. The planned preflight is a single
+The extension is selected explicitly. The preflight is a single
 legacy-idle opcode `0x08`: an enabled implementation replies
 `CB 01 40 00 04` (marker, block revision, 64 words/chunk, 1024-word capacity
 little-endian). An old controller NACKs that one byte. A host must validate
 preflight before sending framed payload, so probing old RTL cannot accidentally
-interpret payload bytes as legacy commands. This preflight is **not yet wired**.
+interpret payload bytes as legacy commands. Successful preflight **latches framed mode until external device reset**.
+Closing/reopening a serial connection does not reset the device; restarting
+`cgra emulate --blocks` does reset that model instance. Preflight must run once
+per device reset; subsequent sessions use a new HELLO within the same handle.
+Legacy ID and commands remain usable before preflight, including in the enabled
+bitstream. In framed mode every received byte stays away from the legacy parser,
+even after malformed input or watchdog expiry. There is deliberately no unframed
+escape-to-legacy command which corrupt payload could accidentally invoke.
 Mesh addressing remains at most 16 PEs; block capacity is a separate limit.
 
 A frame has a leading `7E`, escaped body and trailing `7E`. Inside the body,
 `7E` becomes `7D 5E`, and `7D` becomes `7D 5D`; other escape pairs are invalid.
 Empty flag runs are fill. Every frame has its own leading/trailing delimiter;
 do not share one delimiter between adjacent frames. Noise outside a frame is
-ignored by this decoder. The future legacy/block dispatcher must isolate the
-framed receive interval from legacy command decoding.
+ignored by the decoder. The dispatcher isolates the entire framed mode from
+legacy decoding, including intervals between frames.
 
 Escaping was chosen for a small streaming decoder with explicit boundaries.
 It adds at most one byte per raw byte and two delimiters. COBS would bound its
@@ -45,8 +53,12 @@ Check vector: ASCII `123456789` → `29B1`. Maximum unescaped frame is 144 bytes
 maximum encoded frame is 290 bytes. Version, length, canonical escaping and
 CRC must all validate before publishing a request. Malformed/overlong frames
 are discarded without a response or committed effects; their identity cannot
-be trusted. Decoder reset discards any unfinished frame. A timed watchdog and
-UART backpressure behavior still require RTL, not this clockless C model.
+be trusted. Decoder reset discards any unfinished frame. The RTL receive watchdog discards unfinished input after G_TIMEOUT_CYCLES idle
+clocks. It does not leave framed mode. Receive bytes during processing or reply
+are ignored: the host must obey the single-outstanding-request contract and
+wait for the complete response. UART TX waits for acceptance of each byte;
+without transmitter progress no unconditional completion is promised.
+The C model and PTY service remain clockless and do not implement that watchdog.
 
 ## Session and deduplication
 
@@ -71,7 +83,7 @@ For the current session:
    Reusing the active nonce for HELLO cannot reset the sequence.
 
 An external reset loses the session and duplicate cache. Old non-HELLO requests
-then return SESSION, never execute. A new session must not reuse a nonce while
+cannot execute. After selecting block mode again, old non-HELLO frames return SESSION. A new session must not reuse a nonce while
 old traffic could remain. A random 32-bit nonce reduces accidental reuse but
 cannot mathematically eliminate it. The scope is a serialized connection and
 one cached request; it is not durable exactly-once execution across resets,
@@ -81,8 +93,12 @@ numbers guarantee rejection of every possible corruption.
 
 Lost responses may be recovered only by explicitly retransmitting the exact
 same framed request in this deduplication scope. The legacy transport rule
-(no implicit retry after uncertainty) remains unchanged. Public recovery and
-whole-transaction deadline integration still need implementation/tests.
+(no implicit retry after uncertainty) remains unchanged. The public API supports response and whole-frame transaction deadlines,
+including writes; all response bytes share one deadline. It poisons a handle
+after uncertainty and provides **no recovery/retry API**. Exact replay described
+here is a wire-level facility for clients implementing the explicit contract.
+A new serial handle alone is not recovery: the device may still be in framed
+mode and require external reset. Diagnostics are owned by the existing handle.
 
 ## Commands and resident dot
 
@@ -110,19 +126,94 @@ diagnostic, not the duplicate identity. RESULT is NOT_READY before a dot or
 after an upload/HELLO. Repeating DOT with a new sequence reuses both banks;
 repeating an identical sequence only replays the cached acknowledgement.
 
-The planned RTL sequencer uses the existing production MAC PE with resident
-operands and a guard compatible with STEP_DIV. A complete integration must
-specify legacy configuration/register ownership, prove reset/capture guards,
-exercise backpressure/partial frames, and verify local-memory inference using
-real synthesis. At this checkpoint there is **no BRAM-use or FPGA-performance
-claim**. The C model is a functional oracle, not a timing model.
+The RTL sequencer owns the existing array while DOT runs: PE0 is configured MAC
+with west/north operands, all other PEs are NOP, the array is reset once, and
+exactly `count` captures follow. Legacy CFG and input registers are preserved;
+PE0 ends at the result and other PE registers at zero. New upload/HELLO do not
+change PE registers; duplicate DOT does not reset/capture them again. Cached
+plans are invalidated by preflight; legacy calls after selection return
+`CGRA_ERR_UNSUPPORTED` without sending bytes.
 
-## Executed checks and next integration gate
+Two 1024×16 banks use synchronous reads with no content reset. The controller
+commits an UPLOAD over internal cycles after validating the whole frame; no
+concurrent reader can observe its partial writes. External reset invalidates
+session/lengths even if it interrupts a commit. Each DOT read has a guard before
+capture; the current implementation takes `STEP_DIV + 3` clocks between words.
+Only PE0 computes, trading array utilization for fewer host round trips. Synchronous RAM outputs first enter 32 explicit operand registers. Their
+C-to-PE-D paths use STEP_DIV setup/STEP_DIV-1 hold, justified by the proved
+operand-write context and data guard. A dedicated registered ownership signal
+selects array configuration/data; its C-to-PE-D paths use the same constraint,
+with ownership stability and guard proved separately. RAM-to-operand and CE/reset
+paths remain single-cycle. The first design without the operand stage failed
+routed setup (-3.580 ns); a second failed on state decoding into the array mux
+(-2.867 ns). Both failure logs remain separate from the final passing run.
 
-`make -C lib -f lib.mk test` includes `test_blocks`: CRC check vectors, every
-payload length, escaping, insufficient capacity without output writes,
-fixture bit flips/byte deletion/insertion, oversize/discard/resynchronization,
-framed request/response round trips, resident dot against an independent signed
-scalar oracle, exact duplicate/conflict behavior, sequence exhaustion and reset.
-Wire counts come from actual encoded request/response buffers. These tests do
-not by themselves close B01–B03 or advertise a new public capability.
+## Public use
+
+```sh
+cgra block-dot -d sim:blocks --a '1 -2 32767' --b '3 4 2' --repeat 3 --json
+# {"count": 3, "result": [-7, -7, -7]}
+cgra emulate --blocks --rows 2 --cols 3
+# Use its printed PTY path for ONE block-dot invocation per server instance.
+make -C hw -f hw.mk synth BLOCK_ENABLE=1
+make -C hw -f hw.mk sta BLOCK_ENABLE=1
+```
+
+C API: `cgra_block_begin(dev, nonce)`, `cgra_block_upload(dev, bank, data, n)`,
+`cgra_block_dot(dev, n, &result, &executions)`, `cgra_block_result(...)`.
+All are additive to the existing ABI; the old PTY options layout also remains
+unchanged, with `cgra_emulate_pty_with_flags(..., CGRA_PTY_BLOCKS, ...)` selecting
+the extension. Upload accepts 1..1024 words and replaces a bank in chunks of
+64; DOT permits zero elements. Each successful upload releases caller storage.
+Outputs remain unchanged on errors; earlier successful upload chunks can remain
+resident. Reserving sequence numbers for the entire upload or DOT+RESULT avoids
+starting an operation that cannot fit before sequence exhaustion. CLI repeats
+reuse both banks, return one result per DOT, and are bounded at 4096 results.
+The CLI obtains a nonzero random 32-bit nonce; this is not guaranteed unique.
+
+## Executed checks and remaining proof scope
+
+- `make test`: codec/model plus public API across six geometries, full banks,
+  signed extremes, scalar oracle, errors/output ownership, safe old-device
+  probing. PTY tests cover fragmented writes, EINTR/EAGAIN, invalid CRC,
+  one deadline across a slowly delivered response, poison/no implicit retries,
+  and controlled service stop. CLI invokes the real PTY service too.
+- `make -C hw -f hw.mk sim-blocks`: 886 transcript events for DIV1/2/3/4,
+  then the actual top-level UART/dispatcher for DIV2. C generates frame bytes
+  and replies; every executed DOT also uses an independent signed int64 oracle.
+  Exact reset/capture counts distinguish replay from repeated computation.
+  Corruptions include wire bit flips, inserted/lost bytes, truncated frames,
+  reset, watchdog recovery, semantic failures and noise resembling legacy opcodes.
+- `F-BLOCK-DOT-DIV1/2/3/4`: induction on production `block_dot.vhd`, 23 assertion
+  cells and 1 assumption (`count <= 1024`, the VHDL port subtype); other inputs
+  symbolic, full 16-bit data. Index/remaining bounds, capture counts, cadence,
+  reset priority and result capture are PROVED. Covers at depth 40 are
+  BOUNDED_PASS reachability; `M-BLOCK-EARLY` must fail after a deliberate early
+  capture mutation on a temporary DUT copy. This is **not** a composed proof
+  of the controller's length checks, RAM data conservation or deduplication.
+
+`python3 scripts/measure-blocks.py NEW_DIRECTORY` produces a separately measured
+public-API point for each of five 16-PE shapes. Counts include preflight, HELLO,
+upload, DOT and RESULT; legacy excludes initial ID and includes CFG per call.
+This differs by six bytes/one transaction from the earlier private-model
+comparison which omitted preflight. Counts are neither FPGA time nor CPU speedup.
+Per-run physical/formal evidence and remaining B03 requirements are in `TASKS.md`.
+
+## Physical cost and provenance
+
+Actual Vivado 2026.1 runs on the same 4×4/DIV2 source snapshot and part,
+with `flatten_hierarchy none`, give this synthesis comparison:
+
+| Feature selection | LUT | FF | DSP | BRAM tiles |
+|---|---:|---:|---:|---:|
+| Legacy (`BLOCK_ENABLE=0`) | 5017 | 1034 | 16 | 0 |
+| Blocks (`BLOCK_ENABLE=1`) | 8459 | 4348 | 16 | 1 |
+
+The enabled routed run at 10 ns uses the separate rebuilt strategy:
+8164 LUT, 4346 FF, 16 DSP, 1 BRAM tile, WNS +0.427 ns, WHS +0.060 ns.
+This verifies inference and static timing for that instance, not hardware
+operation or a higher oscillator frequency. The cost is significant: the first
+extension prioritizes whole-frame validation and explicit deduplication; it is
+not an area optimization. [Run manifests and reports](verification/2026-10-08/block-runs/)
+retain each strategy, source hash, failure and successful gate independently.
+No bitstream was programmed.

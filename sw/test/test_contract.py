@@ -42,7 +42,7 @@ with tempfile.TemporaryDirectory(prefix="cgra-contract-") as tmp:
     # loading an invalid config, or entering a blocking interactive service.
     for command in ("ping", "reset", "dump", "run", "pipe", "conv", "scan", "bench", "benchall",
                     "show", "probe", "modes", "devices", "pipelines", "io", "config", "check",
-                    "init", "emulate", "selftest", "shell"):
+                    "init", "emulate", "selftest", "shell", "block-dot"):
         p = run([command, "--cols", "4", "-c", str(root / "missing")])
         check(p.returncode != 0 and b"does not support --" in p.stderr and b"config error" not in p.stderr,
               f"{command}: validate option before configuration or external effects")
@@ -51,6 +51,18 @@ with tempfile.TemporaryDirectory(prefix="cgra-contract-") as tmp:
         check(p.returncode == 0 and p.stdout and not p.stderr, f"stdout/success for {' '.join(args)}")
     p = run(["run", "relu", "-d", "sim", "--", "-3", "-1", "0", "5"])
     check(p.returncode == 0 and p.stdout.strip() == b"0 0 0 5", "negative positional operands remain valid")
+
+    p = run(["block-dot", "-d", "sim:blocks", "--a", "1 -2 32767", "--b", "3 4 2", "--repeat", "3", "--json"])
+    check(p.returncode == 0 and b'[-7, -7, -7]' in p.stdout and not p.stderr,
+          "explicit simulator resident workload with modular signed output")
+    p = run(["block-dot", "-d", "sim", "--a", "1", "--b", "2"])
+    check(p.returncode != 0 and b'unavailable' in p.stderr and not p.stdout,
+          "old device reports unsupported block capability")
+    for args in (["--a", "1 2", "--b", "3"], ["--a", "1", "--b", "2", "--repeat", "4097"],
+                 ["--a", " ".join(["1"]*1025), "--b", "2"]):
+        p = run(["block-dot", "-d", "/nonexistent/cgra-test", *args])
+        check(p.returncode != 0 and b'/nonexistent' not in p.stderr and not p.stdout,
+              "block input limits fail before device open")
 
     marker = root / "must-not-exist"
     prefix = f'ping -d sim -o "{marker}" '
@@ -117,9 +129,9 @@ printf '%s\\n' "${COMPREPLY[@]}"
 
     # Configurable service and clean signal shutdown through the CLI.
     import select
-    for version in (2, 3):
+    for version, blocks in ((2, False), (3, False), (3, True)):
         server = subprocess.Popen([binary, "emulate", "--rows", "2", "--cols", "3",
-                                   "--protocol", str(version)], stdout=subprocess.PIPE,
+                                   "--protocol", str(version), *(["--blocks"] if blocks else [])], stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE, env=env)
         try:
             check(bool(select.select([server.stdout], [], [], 5)[0]), "PTY service publishes readiness")
@@ -128,6 +140,10 @@ printf '%s\\n' "${COMPREPLY[@]}"
             path = line.split()[-1]
             p = run(["ping", "-d", path])
             check(p.returncode == 0 and not p.stderr, "CLI reaches configurable server over real serial transport")
+            if blocks:
+                p = run(["block-dot", "-d", path, "--a", "1 -2 32767", "--b", "3 4 2", "--repeat", "3", "--json"])
+                check(p.returncode == 0 and b'[-7, -7, -7]' in p.stdout and not p.stderr,
+                      "resident CLI workload through real PTY and explicit blocks selection")
             server.terminate()
             _, err = server.communicate(timeout=5)
             check(server.returncode == 0 and not err, "SIGTERM shuts down service with success and no error")

@@ -23,6 +23,8 @@ typedef struct cgra_emu cgra_emu_t;
 cgra_emu_t *emu_new(void);
 cgra_emu_t *emu_new_geometry(unsigned rows, unsigned cols);
 void        emu_free(cgra_emu_t *e);
+/* Opt in before preflight; allocation failure is reported, never advertised. */
+int         emu_enable_blocks(cgra_emu_t *e);
 
 /* Test hook: when enabled, the emulator NACKs the first CFG and the first
  * input-carrying transaction (CMD_WR or CMD_EXEC) it receives, even with a

@@ -144,7 +144,7 @@ static void stop_emulator(int signal_number)
     errno = saved;
 }
 
-int cli_cmd_emulate(unsigned rows, unsigned cols, unsigned version)
+int cli_cmd_emulate(unsigned rows, unsigned cols, unsigned version, unsigned flags)
 {
     if (!rows || !cols || rows > CGRA_MAX_EDGE || cols > CGRA_MAX_EDGE ||
         rows * cols > CGRA_MAX_PE || (version != 2 && version != 3)) {
@@ -165,7 +165,7 @@ int cli_cmd_emulate(unsigned rows, unsigned cols, unsigned version)
         stop_write_fd = -1; close(stop[0]); close(stop[1]); return 1;
     }
     cgra_pty_options_t options = {rows, cols, version, stop[0]};
-    int rc = cgra_emulate_pty_ex(&options, emulate_ready, NULL);
+    int rc = cgra_emulate_pty_with_flags(&options, flags, emulate_ready, NULL);
     sigaction(SIGINT, &old_int, NULL); sigaction(SIGTERM, &old_term, NULL);
     stop_write_fd = -1;
     close(stop[0]); close(stop[1]);

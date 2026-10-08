@@ -38,6 +38,26 @@ configuration language (`.cgra`), discovered from `~/.config/cgra/` and
 project-local files. An in-process **emulator** (`device sim:`) speaks the exact
 same protocol, so the whole stack runs and is tested without an FPGA.
 
+## Experimental resident blocks
+
+The stable build defaults to legacy v2/v3. An explicit extension uploads two
+vectors to local memory and reuses them for repeated modulo-16-bit dot products:
+
+```sh
+cgra block-dot -d sim:blocks --a '1 -2 32767' --b '3 4 2' --repeat 3 --json
+cgra emulate --blocks --rows 2 --cols 3
+make -C hw -f hw.mk sim-blocks
+make -C hw -f hw.mk synth BLOCK_ENABLE=1
+```
+
+The capability preflight selects framed mode **until external device reset**;
+closing a serial connection does not restore legacy mode. Use one CLI invocation
+per device reset, or reuse the C session. The [block contract](doc/block-protocol.md)
+defines framing, CRC, partial uploads, sequence scope and public APIs. Formal
+sequencer proofs have a narrower scope than the whole extension; physical runs
+and outstanding requirements are recorded in [TASKS.md](TASKS.md). Neither the
+clockless model nor synthesis demonstrates operation on the board.
+
 ## Repository layout
 
 | Path | Content |

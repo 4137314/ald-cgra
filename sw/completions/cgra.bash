@@ -11,7 +11,7 @@ _cgra() {
     }
 
     local cmds="modes devices pipelines io config check init ping reset dump \
-                probe show run pipe matvec conv scan bench benchall emulate selftest shell"
+                probe show run pipe matvec conv scan block-dot bench benchall emulate selftest shell"
     local opts="-h --help --version" cmd="" word skip=0
     # Find the command even when global options precede it. Option values are
     # not commands (a device profile may itself be named 'run', for example).
@@ -28,19 +28,20 @@ _cgra() {
         modes|devices|pipelines|io|config|check) opts+=" -c --config -o --out" ;;
         ping) opts+=" -c --config -d --device -o --out" ;;
         reset|probe) opts+=" -c --config -d --device" ;;
-        dump|run|pipe|matvec|conv|scan)
+        dump|run|pipe|matvec|conv|scan|block-dot)
             opts+=" -c --config -d --device -o --out --io --json --dtype"
             case "$cmd" in
                 run) opts+=" --a --b --imm --steps" ;;
                 pipe) opts+=" --a --b" ;;
                 matvec) opts+=" --a --b -m --matrix --x --cols" ;;
                 conv) opts+=" --a --b -m --matrix --x" ;;
+                block-dot) opts+=" --a --b --repeat" ;;
                 scan) opts+=" --a --op" ;;
             esac ;;
         show) opts+=" -c --config -d --device -o --out --imm -v --verbose" ;;
         bench|benchall) opts+=" -c --config -d --device -o --out --json --size --repeat" ;;
         init) opts+=" --force" ;;
-        emulate) opts+=" --rows --cols --protocol" ;;
+        emulate) opts+=" --rows --cols --protocol --blocks" ;;
         shell) opts+=" -c --config" ;;
         "") opts+=" -c --config -d --device" ;;
     esac
@@ -53,7 +54,7 @@ _cgra() {
 
     case "$prev" in
         -d|--device)
-            COMPREPLY=( $(compgen -W "auto sim sim:flaky sim:v2 $(cgra devices 2>/dev/null | awk '{print $1}')" -- "$cur") )
+            COMPREPLY=( $(compgen -W "auto sim sim:blocks sim:flaky sim:v2 $(cgra devices 2>/dev/null | awk '{print $1}')" -- "$cur") )
             return ;;
         --io)
             COMPREPLY=( $(compgen -W "$(cgra io 2>/dev/null | awk '{print $1}')" -- "$cur") )

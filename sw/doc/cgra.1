@@ -147,6 +147,22 @@ Use -d sim:2x3 to emulate a rectangle, or -d sim:2x3:v2 to test the v2 fallback.
 The show command with an explicit -d validates and prints the configuration
 for that device. Without -d, show and offline check use 4x4. Custom coordinates
 and output taps outside the target mesh are rejected.
+.SS Experimental resident dot
+.B cgra block-dot --a A --b B [--repeat R]
+uploads two equal vectors of at most 1024 signed 16-bit words, then reuses the
+resident operands for R dot products (default 1, maximum 4096).
+Each output is reduced modulo 65536. Output formatting follows the other vector
+commands. Select sim:blocks or a device built with G_BLOCK_ENABLE=true.
+The safe capability preflight selects framed mode until external device reset;
+closing and reopening the serial port does not reset it. Use one CLI invocation
+per device reset, or reuse an open library handle for multiple operations.
+An old device returns an unsupported error and remains in legacy mode.
+.PP
+.B cgra emulate --blocks
+explicitly enables this capability on the configurable PTY server. Restarting
+the server resets its protocol mode and resident session. This model has no
+clock or watchdog. See doc/block-protocol.md for CRC, sequence, deduplication,
+partial upload and error contracts.
 .SH OPTIONS
 .PP
 Each command rejects extra positional arguments and options it does not use

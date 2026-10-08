@@ -8,6 +8,7 @@
 #include "cgra.h"
 #include "bitvec.h"
 #include "emu.h"
+#include "block_wire.h"
 
 #include <errno.h>
 #include <fcntl.h>
@@ -51,6 +52,10 @@ struct cgra {
     unsigned     transaction_ms;
     int64_t      transaction_deadline; /* -1: no whole-transaction budget */
     int          exclusive;
+    int block_mode;
+    uint32_t block_session, block_next;
+    size_t block_loaded[2];
+    int64_t block_reply_deadline;
     cgra_diagnostic_t diagnostic, active;
     unsigned     timeout_ms;
     unsigned     retries;      /* retransmissions on complete NACK */
@@ -89,10 +94,10 @@ static speed_t baud_to_speed(unsigned baud)
 }
 
 static int parse_sim(const char *device, unsigned *rows, unsigned *cols,
-                     int *legacy, int *flaky)
+                     int *legacy, int *flaky, int *blocks)
 {
     *rows = CGRA_ROWS; *cols = CGRA_COLS;
-    *legacy = 0; *flaky = 0;
+    *legacy = 0; *flaky = 0; *blocks = 0;
     if (strcmp(device, "sim") == 0) return 1;
     char spec[64];
     if (strlen(device + 4) >= sizeof(spec)) return 0;
@@ -101,6 +106,7 @@ static int parse_sim(const char *device, unsigned *rows, unsigned *cols,
     int geometry_seen = 0;
     for (char *token = strtok_r(spec, ":", &save); token;
          token = strtok_r(NULL, ":", &save)) {
+        if (strcmp(token, "blocks") == 0) { *blocks = 1; continue; }
         if (strcmp(token, "v2") == 0) { *legacy = 1; continue; }
         if (strcmp(token, "flaky") == 0) { *flaky = 1; continue; }
         if (geometry_seen || token[0] < '1' || token[0] > '9') return 0;
@@ -145,13 +151,14 @@ cgra_t *cgra_open_ex(const char *device, unsigned baud, unsigned flags)
     if (strcmp(device, "sim") == 0 || strncmp(device, "sim:", 4) == 0) {
         if (flags) { errno = EINVAL; return NULL; }
         unsigned rows, cols;
-        int legacy, flaky;
-        if (!parse_sim(device, &rows, &cols, &legacy, &flaky)) { errno = EINVAL; return NULL; }
+        int legacy, flaky, blocks;
+        if (!parse_sim(device, &rows, &cols, &legacy, &flaky, &blocks)) { errno = EINVAL; return NULL; }
         cgra_t *dev = calloc(1, sizeof(*dev));
         if (dev == NULL)
             return NULL;
         dev->emu = emu_new_geometry(rows, cols);
-        if (dev->emu == NULL) {
+        if (dev->emu == NULL || (blocks && emu_enable_blocks(dev->emu))) {
+            emu_free(dev->emu);
             free(dev);
             errno = ENOMEM;
             return NULL;
@@ -304,6 +311,7 @@ const char *cgra_strerror(int err)
     case CGRA_ERR_GEOMETRY: return "unsupported or mismatched device geometry";
     case CGRA_ERR_DESYNC:   return "session desynchronized; restore device parser before reopening";
     case CGRA_ERR_NOMEM:    return "memory allocation failed";
+    case CGRA_ERR_UNSUPPORTED: return "operation unavailable in this protocol mode";
     case CGRA_ERR_STALE:    return "plan configuration is not bound; bind explicitly";
     default:               return "unknown error";
     }
@@ -328,8 +336,11 @@ static int monotonic_ns(int64_t *value)
 
 static int begin_transaction(cgra_t *dev, uint8_t command)
 {
-    dev->resident_len = 0;
     dev->active = (cgra_diagnostic_t){.command = command, .attempt = 1};
+    if (dev->block_mode && command != 0x7e)
+        return failed(dev, CGRA_ERR_UNSUPPORTED, CGRA_PHASE_PREPARE, 0);
+    dev->block_reply_deadline = -1;
+    dev->resident_len = 0;
     dev->transaction_deadline = -1;
     if (dev->transaction_ms && dev->emu == NULL) {
         int64_t now;
@@ -433,6 +444,8 @@ static int read_exact_impl(cgra_t *dev, uint8_t *buf, size_t n)
         return failed(dev, CGRA_ERR_IO, CGRA_PHASE_READ, errno);
     int64_t deadline = now + (int64_t)dev->timeout_ms * 1000000;
     int immediate = dev->timeout_ms == 0;
+    if (dev->block_reply_deadline >= 0 && dev->block_reply_deadline < deadline)
+        deadline = dev->block_reply_deadline;
     if (dev->transaction_deadline >= 0 && dev->transaction_deadline <= deadline) {
         deadline = dev->transaction_deadline;
         immediate = 0;
@@ -937,4 +950,144 @@ int cgra_apply(cgra_t *dev, const uint32_t cfg[CGRA_NUM_PE],
         if (rc != CGRA_OK) return rc;
     }
     return CGRA_OK;
+}
+
+/* -------------------------------------------------- experimental blocks */
+static int block_reply_clock(cgra_t *dev)
+{
+    if (dev->emu) return CGRA_OK;
+    int64_t now;
+    if (monotonic_ns(&now)) return failed(dev, CGRA_ERR_IO, CGRA_PHASE_READ, errno);
+    dev->block_reply_deadline = now + (int64_t)dev->timeout_ms * 1000000;
+    return CGRA_OK;
+}
+
+static int block_exchange(cgra_t *dev, const block_frame *q, block_frame *r)
+{
+    uint8_t bytes[BLOCK_WIRE];
+    size_t n = block_encode(q, bytes, sizeof bytes);
+    if (!n) return CGRA_ERR_ARG;
+    int rc = begin_transaction(dev, BLOCK_FLAG);
+    if (rc != CGRA_OK) return rc;
+    rc = write_exact(dev, bytes, n);
+    if (rc != CGRA_OK) return uncertain(dev, rc);
+    rc = block_reply_clock(dev);
+    if (rc != CGRA_OK) return uncertain(dev, rc);
+    block_decoder decoder = {0};
+    /* At most 19 raw reply bytes (RESULT) -> 40 escaped bytes including flags.
+     * All byte reads share ONE reply deadline, independently of writes. */
+    for (size_t i = 0; i < 40; ++i) {
+        uint8_t b;
+        rc = read_exact(dev, &b, 1);
+        if (rc != CGRA_OK) return uncertain(dev, rc);
+        if (!i && b != BLOCK_FLAG) return uncertain(dev, CGRA_ERR_PROTO);
+        int valid = block_decode(&decoder, b, r);
+        if (valid < 0) return uncertain(dev, CGRA_ERR_PROTO);
+        if (!valid) continue;
+        if (r->opcode != (uint8_t)(q->opcode | 0x80u) || r->session != q->session ||
+            r->sequence != q->sequence || !r->length || r->payload[0] > BLOCK_NOT_READY)
+            return uncertain(dev, CGRA_ERR_PROTO);
+        unsigned status = r->payload[0];
+        size_t expected = status != BLOCK_OK ? 1 : q->opcode == BLOCK_HELLO ? 6 :
+                          q->opcode == BLOCK_RESULT ? 7 : 1;
+        if (r->length != expected) return uncertain(dev, CGRA_ERR_PROTO);
+        if (status == BLOCK_SESSION || status == BLOCK_SEQUENCE || status == BLOCK_CONFLICT)
+            return uncertain(dev, CGRA_ERR_NACK);
+        dev->block_next = (uint32_t)q->sequence + 1u;
+        if (status != BLOCK_OK) {
+            return failed(dev, CGRA_ERR_NACK, CGRA_PHASE_VALIDATE, 0);
+        }
+        return CGRA_OK;
+    }
+    return uncertain(dev, CGRA_ERR_PROTO);
+}
+
+int cgra_block_begin(cgra_t *dev, uint32_t nonce)
+{
+    if (!dev || !nonce || (dev->block_session && dev->block_session == nonce)) return CGRA_ERR_ARG;
+    if (dev->desynced) return CGRA_ERR_DESYNC;
+    if (!dev->block_mode) {
+        const uint8_t command = 0x08;
+        uint8_t cap[5];
+        int rc = begin_transaction(dev, command);
+        if (rc != CGRA_OK) return rc;
+        rc = write_exact(dev, &command, 1);
+        if (rc != CGRA_OK) return uncertain(dev, rc);
+        rc = block_reply_clock(dev);
+        if (rc != CGRA_OK) return uncertain(dev, rc);
+        rc = read_exact(dev, cap, 1);
+        if (rc != CGRA_OK) return uncertain(dev, rc);
+        if (cap[0] == RSP_NACK) return failed(dev, CGRA_ERR_UNSUPPORTED, CGRA_PHASE_VALIDATE, 0);
+        if (cap[0] != 0xcb) return uncertain(dev, CGRA_ERR_PROTO);
+        rc = read_exact(dev, cap+1, 4);
+        if (rc != CGRA_OK) return uncertain(dev, rc);
+        const uint8_t expected[] = {0xcb, BLOCK_VERSION, BLOCK_CHUNK, 0, 4};
+        if (memcmp(cap, expected, sizeof cap)) return uncertain(dev, CGRA_ERR_PROTO);
+        dev->block_mode = 1;
+    }
+    block_frame q = {.opcode = BLOCK_HELLO, .session = nonce}, r;
+    int rc = block_exchange(dev, &q, &r);
+    if (rc != CGRA_OK) return rc;
+    if (block_get16(r.payload+1) != BLOCK_WORDS || r.payload[3] != BLOCK_CHUNK ||
+        block_get16(r.payload+4) != 1) return uncertain(dev, CGRA_ERR_PROTO);
+    dev->block_session = nonce;
+    dev->block_loaded[0] = dev->block_loaded[1] = 0;
+    return CGRA_OK;
+}
+
+static int block_ready(cgra_t *dev)
+{
+    if (!dev) return CGRA_ERR_ARG;
+    if (dev->desynced) return CGRA_ERR_DESYNC;
+    if (!dev->block_session || dev->block_next > UINT16_MAX) return CGRA_ERR_ARG;
+    return CGRA_OK;
+}
+
+int cgra_block_upload(cgra_t *dev, unsigned bank, const int16_t *data, size_t n)
+{
+    if (bank > 1 || !data || !n || n > BLOCK_WORDS) return CGRA_ERR_ARG;
+    int rc = block_ready(dev);
+    if (rc != CGRA_OK) return rc;
+    size_t frames = (n + BLOCK_CHUNK-1) / BLOCK_CHUNK;
+    if (frames > UINT16_MAX+1u - dev->block_next) return CGRA_ERR_ARG;
+    for (size_t offset = 0; offset < n; offset += BLOCK_CHUNK) {
+        size_t count = n-offset < BLOCK_CHUNK ? n-offset : BLOCK_CHUNK;
+        block_frame q = {.opcode = BLOCK_UPLOAD, .session = dev->block_session,
+                         .sequence = (uint16_t)dev->block_next, .length = 4+2*count}, r;
+        q.payload[0] = (uint8_t)bank;
+        block_put16(q.payload+1, (uint16_t)offset); q.payload[3] = (uint8_t)count;
+        for (size_t i = 0; i < count; ++i) block_put16(q.payload+4+2*i, (uint16_t)data[offset+i]);
+        rc = block_exchange(dev, &q, &r);
+        if (rc != CGRA_OK) return rc;
+        dev->block_loaded[bank] = offset+count;
+    }
+    return CGRA_OK;
+}
+
+int cgra_block_result(cgra_t *dev, int16_t *result, uint32_t *executions)
+{
+    if (!result) return CGRA_ERR_ARG;
+    int rc = block_ready(dev);
+    if (rc != CGRA_OK) return rc;
+    block_frame q = {.opcode = BLOCK_RESULT, .session = dev->block_session,
+                     .sequence = (uint16_t)dev->block_next}, r;
+    rc = block_exchange(dev, &q, &r);
+    if (rc != CGRA_OK) return rc;
+    *result = cgra_i16_from_bits(block_get16(r.payload+1));
+    if (executions) *executions = block_get32(r.payload+3);
+    return CGRA_OK;
+}
+
+int cgra_block_dot(cgra_t *dev, size_t n, int16_t *result, uint32_t *executions)
+{
+    if (!result || n > BLOCK_WORDS) return CGRA_ERR_ARG;
+    int rc = block_ready(dev);
+    if (rc != CGRA_OK) return rc;
+    if (n > dev->block_loaded[0] || n > dev->block_loaded[1] || dev->block_next >= UINT16_MAX)
+        return CGRA_ERR_ARG; /* reserve both DOT and RESULT before effects */
+    block_frame q = {.opcode = BLOCK_DOT, .session = dev->block_session,
+                     .sequence = (uint16_t)dev->block_next, .length = 2}, r;
+    block_put16(q.payload, (uint16_t)n);
+    rc = block_exchange(dev, &q, &r);
+    return rc == CGRA_OK ? cgra_block_result(dev, result, executions) : rc;
 }

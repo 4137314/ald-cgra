@@ -439,9 +439,9 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 | F03 | Controller: RUN/EXEC, indici, STEP_DIV 1/2/3/4, handshake, watchdog con ipotesi esplicite | VERIFICATO (istanze e completamento condizionale documentati) |
 | F04 | UART TX/RX nel modello digitale dichiarato, prove e cover | VERIFICATO |
 | F05 | Target fast/full/cover, manifest JSON, matrice requisiti–test–proprietà–evidenza e CI/Nix eseguiti | VERIFICATO |
-| B01 | Contratto sperimentale a blocchi versionato, CRC/framing/sequence e deduplicazione delimitata | PARZIALE (codec/modello C eseguiti) |
-| B02 | Memoria locale e sequencer RTL, modello, API e CLI con workload end-to-end e regressioni legacy | DA FARE |
-| B03 | Prove buffer/sequencer, misura traffico/round trip, sintesi reale e limiti fisici documentati | DA FARE |
+| B01 | Contratto sperimentale a blocchi versionato, CRC/framing/sequence e deduplicazione delimitata | VERIFICATO (contratto sperimentale; checkpoint 12) |
+| B02 | Memoria locale e sequencer RTL, modello, API e CLI con workload end-to-end e regressioni legacy | VERIFICATO (sperimentale; prove fisiche su scheda escluse) |
+| B03 | Prove buffer/sequencer, misura traffico/round trip, sintesi reale e limiti fisici documentati | PARZIALE (sequencer provato, buffer/CRC/dedup ancora da provare) |
 | C07 | Deadline dell'intera transazione, diagnostica additiva, CLOEXEC/apertura esclusiva opzionale | VERIFICATO |
 | C08 | Server PTY configurabile/arrestabile e piani riutilizzabili con invalidazione esplicita | VERIFICATO |
 
@@ -779,11 +779,87 @@ release o programmazione della scheda è autorizzato da questo ciclo.
   Il modello C corrente è l'oracolo funzionale, non una prova dell'RTL futuro.
   A11 sistematico e report/PDF A06 restano aperti. Nessun push/programmazione.
 
+### Checkpoint 2026-10-07 / 11 — integrazione sperimentale a blocchi
+
+- HEAD iniziale `78100d8`, working tree pulito; preservati codec/modello e tutte
+  le correzioni precedenti. Nessun push, programmazione o reset Git.
+- Preflight sicuro 0x08, `G_BLOCK_ENABLE=false` di default. La selezione resta
+  attiva fino al reset esterno: timeout/corruzioni non consegnano residui al
+  parser legacy. Controller RTL con staging/CRC, upload validato, cache completa
+  della richiesta e risposta, sequenze, due banchi 1024×16, DOT sul PE0 MAC di
+  produzione. CFG/input legacy conservati; DOT modifica i registri PE.
+- API additive `cgra_block_*`, backend `sim:blocks`, servizio PTY opt-in senza
+  modifica del layout delle opzioni esistenti, CLI `block-dot` e `emulate --blocks`.
+  Deadline unica per risposta (anche letta byte per byte), budget transazione,
+  nessun retry dopo incertezza; vecchi dispositivi ricevono solo il probe.
+  Non c'è un'API di recupero del handle: deduplicazione disponibile sul wire.
+- Replay GHDL eseguito: **886 eventi** per DIV1/2/3/4 e mediante UART del vero
+  top level DIV2. Oracolo C più accumulatore signed int64 indipendente per DOT;
+  maschere di effetti, duplicati/confitti, estremi, CRC e delimitatori corrotti,
+  inserzioni/perdite, watchdog, reset e ritorno al legacy dopo reset esterno.
+- Prove sequencer DIV1–4 con induzione e controllo negativo anticipando la
+  cattura. Primo tentativo senza assumption del sottotipo ha trovato valori
+  1025..2047 sulla porta sintetizzata a 11 bit: contratto esplicito count≤1024,
+  senza ridurre i dati a 16 bit. Prime prove e cover archiviate; in corso il
+  gate finale dopo l'aggiunta del registro operandi e delle relative proprietà.
+  **RAM conservation, framing/CRC, cache/dedup non sono ancora prove formali.**
+- Misura mediante API pubbliche, dot256×8, a=i%7-3, b=i%5-2, nonce01020304:
+  **1856 byte / 26 transazioni** (include preflight) per tutte le cinque forme;
+  legacy 4×4 **49976 / 2072**, 2×8/8×2 58168/2072, 1×16/16×1 86840/2072.
+  Un file JSON per ogni esecuzione in `block-api-traffic/`; risultati verificati
+  fuori da qualsiasi temporizzazione. Nessuna stima di speedup FPGA.
+- Vivado reale: prima sintesi sperimentale PASS **8458 LUT / 4315 FF / 16 DSP /
+  1 tile BRAM**. Prima STA **FAIL, WNS −3.580 ns**: percorso BRAM→MAC in un ciclo.
+  Aggiunto stadio operandi esplicito a 32 bit e guardia verificabile; selettori
+  C→D aggiornati con controllo di tutti i bit, CE/reset sempre single-cycle.
+  Nuova STA in corso, nessun artefatto fallito pubblicato come corrente.
+- **Ripresa:** completare i gate finali/archiviare manifest del checkpoint;
+  B03 prove di conservazione RAM e controller a blocchi, reset durante commit/
+  esecuzione e isolamento concorrenza; A11 matrice legacy sistematica, A06 PDF
+  corrente/storico e allineamento A03/A14. Non dichiarare concluso l'intero incarico.
+
+### Checkpoint 2026-10-08 / 12 — gate finali e costo dell'estensione
+
+- Chiusi i gate dell'integrazione del checkpoint 11. **3519 controlli** release
+  e ASan/UBSan/LSan; GCC 13 e Clang 18 in container: **3514** per profilo
+  (cinque casi FD alto saltati esplicitamente per il limite del container).
+  Analyzer GCC, **12 install / 211 compdb / 27 build**, fallback senza readline,
+  **85 Tcl / 37 artifact** PASS. I conteggi non sono percentuali di copertura.
+- `make sim` completo PASS, inclusi i **886 eventi × cinque configurazioni**
+  del percorso a blocchi e tutte le regressioni legacy. `formal-full`:
+  **27 PROVED + otto FAIL attesi**; `formal-cover`: un obbligo PE PROVED e
+  **15 BOUNDED_PASS**, profondità 40/80/96 secondo il task. Nix software e
+  formal-fast realmente eseguiti: **14 PROVED + un FAIL atteso** per fast.
+  Il sequencer ha 23 assertion e una assumption count≤1024, DIV1/2/3/4;
+  la validazione di questo limite nel controller resta un obbligo distinto.
+- Seconda STA FAIL **WNS −2.867 ns**, percorso decoder di stato→mux CFG/dati.
+  Aggiunto registro esplicito di ownership, provati stabilità e guardia prima
+  della cattura. Multicycle soltanto C→PE D dei 32 operandi più ownership;
+  RAM→operandi, CE e reset rimangono single-cycle. Copertura esatta di
+  **833 registri di lancio / 256 pin D** nella netlist 4×4 abilitata.
+- **Vivado 2026.1 reale, routed 4×4/DIV2/10 ns PASS: WNS +0.427 ns,
+  WHS +0.060 ns**, 8164 LUT / 4346 FF / 16 DSP / 1 tile BRAM. Gate CDC,
+  sincronizzatori, endpoint, DRC e setup/hold superati. Run
+  `sta-20261008T091011Z-d4eb1e5f`; non è una prova su scheda.
+- Confronto synth separato, stessi hash/tool/strategia `flatten_hierarchy none`:
+  legacy **5017 LUT / 1034 FF / 16 DSP / 0 BRAM**, blocchi **8459 LUT /
+  4348 FF / 16 DSP / 1 BRAM**. Costo +3442 LUT, +3314 FF, +1 BRAM;
+  non confondere questi numeri con la strategia rebuilt della run routed.
+- Evidenze nuove in `doc/verification/2026-10-07/` e `2026-10-08/`:
+  manifest originali, hash/sorgenti, log PASS/FAIL/ERROR e controesempi.
+  Archivio verificato: **2977 file** decompressi e confrontati con SHA-256
+  originale; checkpoint fisici/bitstream omessi con hash e nota esplicita.
+  Nessun log storico modificato per attribuirlo ai nuovi sorgenti.
+- **Ripresa precisa:** B03 conservazione della RAM e validazione nel controller,
+  framing/CRC/cache/dedup formali, reset durante commit/esecuzione e isolamento
+  della concorrenza; A11 matrice legacy sistematica; A03/A06/A13/A14 report,
+  documentazione e PDF corrente. Nessun push, release o programmazione.
+
 ## Prossime correzioni senza scheda
 
-1. **B01–B03:** implementare il contratto sperimentale a blocchi e un workload
-   completo con memoria locale, modello, API/CLI, proprietà e sintesi reale.
-   V2/v3 e ABI esistente devono continuare a funzionare.
+1. **B03:** completare le prove RAM/controller/CRC/dedup e le regressioni di
+   reset durante commit/esecuzione e concorrenza. Il percorso B01/B02 è
+   integrato e verificato; mantenere legacy, ABI e modalità sperimentale esplicita.
 2. **H3/A11:** completare la matrice di corruzione header/opcode, byte inseriti/
    persi, disconnessioni e recupero; preservare NACK senza rollback legacy.
 3. **A03/A06/A14:** allineare report/README/commenti alle nuove evidenze,

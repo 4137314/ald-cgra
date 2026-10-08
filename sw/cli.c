@@ -498,6 +498,44 @@ static int cmd_conv(cli_context *inv, dsl_ctx *d, const char *devname, const cha
     return 0;
 }
 
+/* Explicit experimental workload; input validation precedes preflight. */
+static int cmd_block_dot(cli_context *inv, dsl_ctx *d, const char *device,
+                         const char *as, const char *bs, int repeat, const dsl_io *io)
+{
+    int16_t a[CGRA_BLOCK_WORDS], b[CGRA_BLOCK_WORDS], out[MAX_VEC];
+    size_t na, nb;
+    if (!as || !bs || cli_read_vec(as, a, CGRA_BLOCK_WORDS, &na) ||
+        cli_read_vec(bs, b, CGRA_BLOCK_WORDS, &nb) || na != nb) {
+        fprintf(stderr, "cgra: block-dot requires equal --a/--b vectors of at most 1024 words\n");
+        return 1;
+    }
+    if (!repeat) repeat = 1;
+    if (repeat > MAX_VEC) {
+        fprintf(stderr, "cgra: block-dot --repeat must be at most %d\n", MAX_VEC); return 1;
+    }
+    uint32_t nonce = 0;
+    FILE *random = fopen("/dev/urandom", "rb");
+    if (!random) { fprintf(stderr, "cgra: cannot obtain session nonce\n"); return 1; }
+    while (!nonce) {
+        if (fread(&nonce, sizeof nonce, 1, random) != 1) {
+            fclose(random); fprintf(stderr, "cgra: cannot obtain session nonce\n"); return 1;
+        }
+    }
+    if (fclose(random)) { fprintf(stderr, "cgra: nonce source close failed\n"); return 1; }
+    char error[DSL_VAL];
+    cgra_t *dev = cli_open_device(d, device, error, sizeof error);
+    if (!dev) { fprintf(stderr, "cgra: %s\n", error); return 1; }
+    int rc = cgra_block_begin(dev, nonce);
+    if (rc == CGRA_OK && na) rc = cgra_block_upload(dev, 0, a, na);
+    if (rc == CGRA_OK && nb) rc = cgra_block_upload(dev, 1, b, nb);
+    for (int i = 0; i < repeat && rc == CGRA_OK; ++i)
+        rc = cgra_block_dot(dev, na, &out[i], NULL);
+    cgra_close(dev);
+    if (rc != CGRA_OK) { fprintf(stderr, "cgra: block-dot: %s\n", cgra_strerror(rc)); return 1; }
+    cli_print_vec(inv, out, (size_t)repeat, io);
+    return 0;
+}
+
 /* -------------------------------------------------- usage */
 
 void cli_usage(FILE *out)
@@ -515,9 +553,10 @@ void cli_usage(FILE *out)
         "  matvec -m SRC --x SRC [--cols N] [--io P]    systolic y = A * x\n"
         "  conv -m KERNEL --x SIGNAL [--io P]           1-D convolution\n"
         "  scan [nums...] [--a SRC] [--op sum|max|min|prod] [--io P]  prefix scan\n"
+        "  block-dot --a A --b B [--repeat R]           experimental resident dot (max 1024)\n"
         "  bench [MODE] [--size N] [--repeat R]         time a mode on the device\n"
         "  benchall [--size N] [--repeat R] [--json]    stress-bench every mode (structured)\n"
-        "  emulate [--rows R --cols C --protocol 2|3]    serve a virtual CGRA on a pty\n"
+        "  emulate [--rows R --cols C --protocol 2|3 --blocks]    serve a virtual CGRA on a pty\n"
         "  probe                            [-d DEVICE]  no -d: scan ports; with -d: known-answer tests\n"
         "  selftest                                     run kernels on the sim: emulator\n"
         "  shell                                        interactive prompt (readline)\n"
@@ -537,7 +576,7 @@ void cli_usage(FILE *out)
  * the short options (-d -c -m -o -v -h). */
 enum {
     OPT_A = 256, OPT_B, OPT_X, OPT_COLS, OPT_OP, OPT_IO,
-    OPT_JSON, OPT_DTYPE, OPT_SIZE, OPT_REPEAT, OPT_IMM, OPT_STEPS, OPT_FORCE, OPT_VERSION, OPT_ROWS, OPT_PROTOCOL
+    OPT_JSON, OPT_DTYPE, OPT_SIZE, OPT_REPEAT, OPT_IMM, OPT_STEPS, OPT_FORCE, OPT_VERSION, OPT_ROWS, OPT_PROTOCOL, OPT_BLOCKS
 };
 
 static const struct option long_opts[] = {
@@ -553,6 +592,7 @@ static const struct option long_opts[] = {
     { "x",       required_argument, NULL, OPT_X      },
     { "rows",    required_argument, NULL, OPT_ROWS   },
     { "protocol",required_argument, NULL, OPT_PROTOCOL },
+    { "blocks",  no_argument,       NULL, OPT_BLOCKS },
     { "cols",    required_argument, NULL, OPT_COLS   },
     { "op",      required_argument, NULL, OPT_OP     },
     { "io",      required_argument, NULL, OPT_IO     },
@@ -584,9 +624,10 @@ static int validate_command(const char *cmd, int argc, uint64_t used)
         {"matvec", 0, 0, "config device out io json dtype matrix x a b cols"},
         {"conv", 0, 0, "config device out io json dtype matrix x a b"},
         {"scan", 0, INT_MAX, "config device out io json dtype a op"},
+        {"block-dot", 0, 0, "config device out io json dtype a b repeat"},
         {"bench", 0, 1, "config device out json size repeat"},
         {"benchall", 0, 0, "config device out json size repeat"},
-        {"probe", 0, 0, "config device"}, {"emulate", 0, 0, "rows cols protocol"},
+        {"probe", 0, 0, "config device"}, {"emulate", 0, 0, "rows cols protocol blocks"},
         {"selftest", 0, 0, ""}, {"shell", 0, 0, "config"}
     };
     size_t i;
@@ -659,6 +700,7 @@ int cli_dispatch(int argc, char **argv, int in_shell)
     int opt_rows = CGRA_ROWS, opt_protocol = CGRA_PROTO_VER;
     int opt_cols = 0, opt_size = 0, opt_repeat = 0;
     int force = 0, verbose = 0;
+    unsigned emulation_flags = 0;
     uint64_t used = 0;
 
     cli_context invocation = {0};
@@ -677,6 +719,7 @@ int cli_dispatch(int argc, char **argv, int in_shell)
         case 'o':        opt_outfile = optarg; break;
         case 'v':        verbose = 1;          break;
         case 'h':        cli_usage(stdout);              return 0;
+        case OPT_BLOCKS: emulation_flags = CGRA_PTY_BLOCKS; break;
         case OPT_VERSION: puts("cgra 0.1.0"); return 0;
         case OPT_A:      opt_a  = optarg;      break;
         case OPT_B:      opt_b  = optarg;      break;
@@ -792,7 +835,7 @@ int cli_dispatch(int argc, char **argv, int in_shell)
     else if (!strcmp(cmd, "selftest"))  rc = cli_selftest();
     else if (!strcmp(cmd, "probe"))     rc = cli_cmd_probe(&d, opt_device);
     else if (!strcmp(cmd, "emulate"))   rc = cli_cmd_emulate((unsigned)opt_rows,
-        opt_cols ? (unsigned)opt_cols : CGRA_COLS, (unsigned)opt_protocol);
+        opt_cols ? (unsigned)opt_cols : CGRA_COLS, (unsigned)opt_protocol, emulation_flags);
     else if (!strcmp(cmd, "show")) {
         if (nrest < 1) { fprintf(stderr, "cgra: show needs a MODE\n"); rc = 1; }
         else rc = cmd_show(&d, opt_device, rest[0], opt_imm, has_imm, verbose, out);
@@ -814,6 +857,8 @@ int cli_dispatch(int argc, char **argv, int in_shell)
         rc = cmd_scan(inv, &d, opt_device, rest, nrest, opt_a, opt_op, io);
     else if (!strcmp(cmd, "conv"))
         rc = cmd_conv(inv, &d, opt_device, opt_matrix, opt_x, opt_a, opt_b, io);
+    else if (!strcmp(cmd, "block-dot"))
+        rc = cmd_block_dot(inv, &d, opt_device, opt_a, opt_b, opt_repeat, io);
     else if (!strcmp(cmd, "bench"))
         rc = cli_cmd_bench(inv, &d, opt_device, nrest > 0 ? rest[0] : NULL, opt_size, opt_repeat);
     else if (!strcmp(cmd, "benchall"))

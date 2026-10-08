@@ -30,7 +30,7 @@ cgra_t *cli_open_device_resolved(dsl_ctx *dsl, const char *name, char *error,
                                size_t error_size, connection_info *details);
 cgra_t *cli_open_device(dsl_ctx *dsl, const char *name, char *error, size_t error_size);
 int cli_mkdir_p(const char *path);
-int cli_cmd_emulate(unsigned rows, unsigned cols, unsigned version);
+int cli_cmd_emulate(unsigned rows, unsigned cols, unsigned version, unsigned flags);
 int cli_cmd_probe(dsl_ctx *dsl, const char *device);
 int cli_selftest(void);
 int cli_cmd_bench(cli_context *inv, dsl_ctx *dsl, const char *device, const char *mode,

@@ -2,19 +2,19 @@ lib/src/ - implementation
 =========================
 
     cgra.c       POSIX serial transport, legacy v2/v3 primitives, monotonic
-                 transaction budgets, owned diagnostics and explicit plans.
+                 transaction budgets, owned diagnostics, explicit plans and framed block transactions.
     vector.c     Element-wise kernels, ReLU and MAC dot product.
     kernels.c    Geometry-aware matvec, scan and implicit convolution tiles;
                  convolution has bounded stack workspace, no dense Toeplitz.
     buffers.h    Shared array-footprint and overlap checks.
     bitvec.h     Defined conversions and 16-bit modular arithmetic helpers.
-    emu.[ch]     Clockless functional model of the legacy parser and PE mesh,
+    emu.[ch]     Clockless functional model of legacy/framed parsers and PE mesh,
                  used by sim: and the configurable/stoppable PTY service.
     serve.c      POSIX PTY service; v2/v3 geometries, cancellation descriptor.
     block_wire.* Experimental escaped framing, length checks and header/payload
-                 CRC. Private code; no new legacy device capability advertised.
+                 CRC. Shared by the optional transport/model and their tests.
     block_model.* Resident dot/session/dedup functional oracle, exercised by
-                 test_blocks. Not yet connected to RTL, public API or CLI;
+                 test_blocks and production RTL replay. Explicit sim:blocks/API/CLI;
                  see ../../doc/block-protocol.md and B01-B03 in TASKS.md.
 
 Contracts

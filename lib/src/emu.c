@@ -9,6 +9,7 @@
 #include "emu.h"
 #include "cgra.h"
 #include "bitvec.h"
+#include "block_model.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -70,6 +71,9 @@ struct cgra_emu {
 
     /* test hook: behave like a protocol v2 device (no CMD_EXEC) */
     int      legacy;
+    block_model *blocks;
+    block_decoder block_decoder;
+    int block_mode;
 };
 
 void emu_set_flaky(cgra_emu_t *e, int enable)
@@ -123,7 +127,14 @@ cgra_emu_t *emu_new_geometry(unsigned rows, unsigned cols)
 
 void emu_free(cgra_emu_t *e)
 {
+    if (e) free(e->blocks);
     free(e);
+}
+
+int emu_enable_blocks(cgra_emu_t *e)
+{
+    if (!e->blocks) e->blocks = calloc(1, sizeof(*e->blocks));
+    return e->blocks ? 0 : -1;
 }
 
 /* -------------------------------------------------- PE datapath model */
@@ -331,9 +342,32 @@ static void run_command(cgra_emu_t *e)
 /* One host->device byte through the FSM. Static so emu_feed inlines it. */
 static void push_byte(cgra_emu_t *e, uint8_t byte)
 {
+    if (e->block_mode) {
+        block_frame q, r;
+        if (block_decode(&e->block_decoder, byte, &q) == 1) {
+            uint32_t before = e->blocks->executions;
+            block_model_request(e->blocks, &q, &r);
+            if (q.opcode == BLOCK_DOT && r.payload[0] == BLOCK_OK && e->blocks->executions != before) {
+                memset(e->regs, 0, sizeof e->regs);
+                e->regs[0] = cgra_i16_from_bits(e->blocks->result);
+            }
+            uint8_t wire[BLOCK_WIRE];
+            size_t n = block_encode(&r, wire, sizeof wire);
+            for (size_t i = 0; i < n; ++i) enq(e, wire[i]);
+        }
+        return;
+    }
     if (e->cmd < 0) {
         /* waiting for a command byte */
         switch (byte) {
+        case 0x08:
+            if (!e->blocks) enq(e, RSP_NACK);
+            else {
+                e->block_mode = 1;
+                const uint8_t capability[] = {0xcb, 1, BLOCK_CHUNK, 0, 4};
+                for (size_t i = 0; i < sizeof capability; ++i) enq(e, capability[i]);
+            }
+            break;
         case CMD_ID:
             enq(e, ID_BYTE0);
             enq(e, e->legacy ? 0x02 : PROTO_VER);

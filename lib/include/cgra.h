@@ -98,6 +98,7 @@ enum cgra_sel {
 #define CGRA_ERR_GEOMETRY -6  /* unsupported/mismatched geometry   */
 #define CGRA_ERR_DESYNC   -7  /* uncertain parser; session stopped */
 #define CGRA_ERR_NOMEM    -8  /* memory allocation failed          */
+#define CGRA_ERR_UNSUPPORTED -10 /* optional capability or protocol mode */
 #define CGRA_ERR_STALE    -9  /* explicitly bound plan invalidated */
 
 /* Opaque owned handle. Close exactly once; cgra_close(NULL) is harmless.
@@ -138,6 +139,33 @@ cgra_t     *cgra_open_ex(const char *device, unsigned baud, unsigned flags);
  * to finish. Reopening alone does NOT reset the remote parser. Configuration,
  * inputs and datapath must be reinitialized before computing again. */
 void        cgra_close(cgra_t *dev);
+
+/* Experimental block framing revision 1, explicitly enabled in the bitstream
+ * (G_BLOCK_ENABLE=true) or simulator (sim:blocks). Legacy ID remains v3.
+ * begin first probes with one byte, then selects framed mode UNTIL EXTERNAL
+ * DEVICE RESET: closing/reopening a serial port does not return to legacy.
+ * nonce must be nonzero and new for this device session. Repeating begin with
+ * the active nonce is an argument error. New begin discards resident lengths.
+ * Old devices return UNSUPPORTED and remain usable with legacy commands.
+ *
+ * Buffers remain caller-owned. Upload copies 1..1024 words into bank 0 or 1,
+ * replacing its valid contents; on failure earlier complete chunks may remain.
+ * DOT consumes 0..min(loaded lengths) words, uses signed modulo-2^16 arithmetic,
+ * and changes PE registers (PE0=result, others=0), preserving legacy CFG/edges.
+ * Result outputs are unchanged on error; executions counts successful DOTs
+ * modulo 2^32 within the session. dot performs DOT then RESULT (two round trips).
+ * A whole-transaction deadline bounds each frame separately. Any uncertain
+ * transfer poisons the handle, with NO automatic retry; wire-level duplicate
+ * replay is available to protocol clients but this API does not recover a
+ * poisoned handle. Sequence exhaustion requires begin with a new nonce.
+ * Legacy commands/plan bindings are unavailable after successful preflight.
+ * No concurrent use of one handle; the model has no clock/watchdog.
+ */
+#define CGRA_BLOCK_WORDS 1024u
+int cgra_block_begin(cgra_t *dev, uint32_t nonce);
+int cgra_block_upload(cgra_t *dev, unsigned bank, const int16_t *data, size_t n);
+int cgra_block_result(cgra_t *dev, int16_t *result, uint32_t *executions);
+int cgra_block_dot(cgra_t *dev, size_t n, int16_t *result, uint32_t *executions);
 
 /* Set the deadline for one complete reply, milliseconds (default 2000).
  * Partial reads and interrupted waits do not restart it. Each retry has its
@@ -281,6 +309,13 @@ typedef struct {
 } cgra_pty_options_t;
 int cgra_emulate_pty_ex(const cgra_pty_options_t *options,
                        void (*on_ready)(const char *path, void *user), void *user);
+
+/* Additive service selection; old options struct and wrappers are unchanged.
+ * BLOCKS enables preflight and resident memory. It has no clock or watchdog;
+ * restarting the server resets its framed mode/session, closing a client does not. */
+#define CGRA_PTY_BLOCKS 1u
+int cgra_emulate_pty_with_flags(const cgra_pty_options_t *options, unsigned flags,
+                               void (*on_ready)(const char *path, void *user), void *user);
 
 /* ---- low-level primitives ----------------------------------------------- */
 
