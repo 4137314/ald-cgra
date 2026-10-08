@@ -60,8 +60,8 @@ proc cgra_check_control_paths {period report} {
     } finally {close $fd}
 }
 
-proc cgra_check_data_paths {period step_div rows cols report} {
-    lassign [cgra_datapath_registers $rows $cols] src dst
+proc cgra_check_data_paths {period step_div rows cols report {blocks false}} {
+    lassign [cgra_datapath_registers $rows $cols $blocks] src dst
     set launch [get_pins -of_objects $src -filter {REF_PIN_NAME == C}]
     set pins [get_pins -of_objects $dst -filter {REF_PIN_NAME == D}]
     set fd [open $report w]
@@ -89,10 +89,10 @@ proc cgra_read_report {path} {
 
 # A PASS here qualifies only this physical model and these explicit exceptions.
 # Keep all reports, including failures. A completed JSON is written last.
-proc cgra_physical_gate {outdir period step_div rows cols placed} {
+proc cgra_physical_gate {outdir period step_div rows cols placed {blocks false}} {
     cgra_check_synchronizers $outdir/synchronizers.tsv $placed
     cgra_check_control_paths $period $outdir/control_endpoints.tsv
-    cgra_check_data_paths $period $step_div $rows $cols $outdir/data_endpoints.tsv
+    cgra_check_data_paths $period $step_div $rows $cols $outdir/data_endpoints.tsv $blocks
     report_exceptions -coverage -file $outdir/exception_coverage.rpt
     report_cdc -details -file $outdir/cdc.rpt
     set cdc [cgra_read_report $outdir/cdc.rpt]
@@ -118,7 +118,7 @@ proc cgra_physical_gate {outdir period step_div rows cols placed} {
     set critical [get_msg_config -severity {CRITICAL WARNING} -count]
     if {$errors || $critical} {error "Vivado emitted $errors errors and $critical critical warnings"}
     set gates {"synthesis":"PASS","synchronizers":"PASS","endpoint_coverage":"PASS","control_timing":"PASS","cdc":"PASS","constraints":"PASS","drc":"PASS"}
-    set metrics "\"launch_registers\":[expr {42*$rows*$cols+16*($rows+$cols)}],\"data_endpoints\":[expr {16*$rows*$cols}]"
+    set metrics "\"launch_registers\":[expr {42*$rows*$cols+16*($rows+$cols)+33*($blocks ? 1 : 0)}],\"data_endpoints\":[expr {16*$rows*$cols}]"
     if {$placed} {
         lassign [cgra_timing_slacks] wns whs
         cgra_checked_frequency $period $wns $whs

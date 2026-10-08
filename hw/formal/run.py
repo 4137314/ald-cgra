@@ -56,6 +56,10 @@ def tasks(suite):
             result.append(dict(id=f"F-UART-{kind.upper()}-C3", top=f"uart_{kind}", kind=kind,
                                mode="prove", depth=16, parameters=dict(CLKS_PER_BIT=3),
                                assertions=count, assumptions=0, covers=3 if kind == "tx" else 4))
+        for div in (1, 2, 3, 4):
+            result.append(dict(id=f"F-BLOCK-DOT-DIV{div}", top="block_dot", kind="block_dot",
+                               mode="prove", depth=16, parameters=dict(G_STEP_DIV=div),
+                               assertions=23, assumptions=1, covers=3))
     if suite == "full":
         for rows, cols in ((1, 2), (2, 1), (3, 2), (4, 4), (1, 16), (16, 1)):
             result.append(dict(id=f"F-ARRAY-{rows}x{cols}", top="array_contract", kind="array",
@@ -72,6 +76,9 @@ def tasks(suite):
             result.append(dict(id=f"F-UART-{kind.upper()}-C868", top=f"uart_{kind}", kind=kind,
                                mode="prove", depth=16, parameters=dict(CLKS_PER_BIT=868),
                                assertions=count, assumptions=0, covers=3 if kind == "tx" else 4))
+        block = next(t for t in result if t['id'] == 'F-BLOCK-DOT-DIV2')
+        result.append(dict(block, id="M-BLOCK-EARLY", mode="bmc", depth=12, negative=True,
+                           mutation="block-early-capture"))
         result.append(dict(result[2], id="M-PE-ADD", mode="bmc", negative=True, mutation="pe-add-to-sub"))
         result.append(dict(result[4], id="M-CTRL-STEP", mode="bmc", negative=True, mutation="ctrl-drop-step"))
         ctrl = next(t for t in result if t['id'] == 'F-CTRL-1x1-DIV2')
@@ -113,6 +120,9 @@ def run_task(task, directory, budget):
                   "hw/formal/array_ports.vhd", "hw/formal/pe_spec.sv", "hw/formal/array_contract.sv"]
         if task.get("composition"): paths += ["hw/formal/pe_assume.sv"]
         entity = "array_ports"
+    elif task["kind"] == "block_dot":
+        entity = "block_dot"
+        paths += ["hw/rtl/block_pkg.vhd", "hw/rtl/block_dot.vhd", "hw/formal/block_dot_contract.psl"]
     elif task["kind"] in ("tx", "rx"):
         entity = task["top"]
         paths += [f"hw/rtl/{entity}.vhd", f"hw/formal/{entity}_contract.psl"]
@@ -126,6 +136,9 @@ def run_task(task, directory, budget):
         shutil.copy2(ROOT / p, directory / Path(p).name)
     if task.get("mutation"):
         filename, before, after = {
+            "block-early-capture": ("block_dot.vhd",
+                "step <= '1' when state = S_CAPTURE else '0';",
+                "step <= '1' when state = S_CAPTURE or state = S_READ else '0';"),
             "pe-add-to-sub": ("pe.vhd", "when OP_ADD   => res := a + b;", "when OP_ADD   => res := a - b;"),
             "ctrl-drop-step": ("cgra_ctrl.vhd", "step <= '1';", "step <= '0';"),
             "exec-byte-swap": ("cgra_ctrl.vhd",
@@ -156,7 +169,7 @@ def run_task(task, directory, budget):
         generics = " ".join(f"-g{k}={v}" for k, v in task.get("parameters", {}).items())
         # GHDL's analysis/elaboration syntax requires options BEFORE sources.
         # A misplaced -g after sources is silently ignored by this frontend.
-        if task["kind"] in ("ctrl", "tx", "rx"):
+        if task["kind"] in ("ctrl", "tx", "rx", "block_dot"):
             # Fail frontend elaboration if *any* requested parameter is ignored,
             # even when two configurations happen to have equal port widths.
             checks = " and ".join(f"{k} = {v}" for k, v in task["parameters"].items())
@@ -205,6 +218,14 @@ def run_task(task, directory, budget):
             if any(len(ports[p]["bits"]) != width for p, width in expected_ports.items()):
                 raise RuntimeError("UART port width changed")
             result["checked_port_widths"] = expected_ports
+        elif task["kind"] == "block_dot":
+            ports = json.loads((directory / "frontend.json").read_text())["modules"][entity]["ports"]
+            expected_ports = dict(pe_result=16, wr_data=16, a=16, b=16, result=16)
+            if any(len(ports[p]["bits"]) != width for p, width in expected_ports.items()):
+                raise RuntimeError("block datapath width changed")
+            result["checked_port_widths"] = expected_ports
+            result["environment"] = "count <= 1024 (production port subtype); all other inputs unconstrained"
+            result["scope"] = "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC"
         elif task["kind"] == "array":
             ports = json.loads((directory / "frontend.json").read_text())["modules"][entity]["ports"]
             rows, cols = task["parameters"]["G_ROWS"], task["parameters"]["G_COLS"]

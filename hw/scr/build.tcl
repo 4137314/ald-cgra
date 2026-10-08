@@ -27,6 +27,8 @@ set part   $board_parts($board)
 set top    cgra_top
 source scr/geometry.tcl
 lassign [cgra_geometry $argv 3] mesh_rows mesh_cols outdir
+set block_enable [cgra_blocks $argv 5]
+if {$block_enable} { append outdir /blocks }
 file mkdir $outdir
 puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 
@@ -37,8 +39,8 @@ source    scr/constraints.tcl
 source    scr/structural_checks.tcl
 
 # ---------------------------------------------------------------- synthesis
-synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
-set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
+synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000 G_BLOCK_ENABLE=$block_enable]
+set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols $::block_enable]
 write_checkpoint  -force $outdir/post_synth.dcp
 report_utilization -file $outdir/utilization_synth.rpt
 
@@ -70,7 +72,7 @@ if { $wns < 0 || $whs < 0 } {
     exit 1
 }
 
-cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 1
+cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 1 $block_enable
 
 # ---------------------------------------------------------------- bitstream
 write_bitstream -force $outdir/${top}_${board}.bit

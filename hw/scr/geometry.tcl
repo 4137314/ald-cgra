@@ -15,3 +15,12 @@ proc cgra_geometry {arguments first} {
     if {$rows != 4 || $cols != 4} { append outdir /${rows}x${cols} }
     return [list $rows $cols $outdir]
 }
+
+# Optional final argument shared by physical entry points. Keeping it in argv
+# makes the exact feature selection part of each recorded tool command.
+proc cgra_blocks {arguments index} {
+    set enabled 0
+    if {[llength $arguments] > $index} { set enabled [lindex $arguments $index] }
+    if {$enabled ni {0 1}} { error "block enable must be 0 or 1" }
+    return [expr {$enabled ? "true" : "false"}]
+}

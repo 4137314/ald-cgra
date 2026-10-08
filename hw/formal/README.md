@@ -83,6 +83,8 @@ initialization/reset model is not a claim of these proofs.
 | F-ARRAY-1x1 | Initial reset, otherwise all inputs unrestricted; complete production RTL | BMC base and induction, depth 4 |
 | F-ARRAY-2x3 (fast); 1x2, 2x1, 3x2, 4x4, 1x16, 16x1 (full) | Initial reset; imported production array wiring; proved PE transitions as component guarantees | BMC base and induction, depth 4, assume-guarantee composition |
 | F-UART-TX/RX-C3 (fast), C868 (full) | All sampled digital inputs and resets unrestricted; production initial registers | BMC base and induction, depth 16 |
+| F-BLOCK-DOT-DIV1/2/3/4 | `count <= 1024` (VHDL port subtype); other inputs unrestricted, two 1024×16 banks | Sequencer control only; BMC base/induction depth 16; see below |
+| M-BLOCK-EARLY | Temporary sequencer copy adds a capture in S_READ | Must FAIL with trace |
 | M-PE-ADD, M-CTRL-STEP, M-EXEC-BYTE, M-ARRAY-NORTH, M-UART-TX/RX | Temporary DUT copies with targeted mutations | Must FAIL with trace; original RTL unchanged |
 | Cover suite | PE, four 1x1 controllers, 1x1/2x3 arrays, C3 UARTs; extra 2x3 EXEC witness | All explicit covers within 40 cycles (UART: 80; EXEC 2x3: 96); includes the universal PE obligation |
 
@@ -218,3 +220,24 @@ durations belong to individual manifests, not timing guarantees.
 
 The online GHDL pages described 7.0.0-dev when consulted. Compatibility claims
 here come from the executed pinned 6.0.0 flow, including negative probes.
+
+## Experimental block sequencer
+
+`block_dot_contract.psl` binds to the real local-memory engine, observing its
+state, index, remaining count and PE capture enable. An independent pending
+counter consumes actual `step` pulses. It proves exactly the requested captures
+before completion, index/remaining bounds, reset priority, STEP_DIV cadence,
+array ownership and final result capture. The PE input result is symbolic:
+this proves capture, not arithmetic (the production PE has its separate proof).
+
+Each DIV1–4 task has 23 surviving assertion cells, one assumption and three
+covers in both prepared netlist and solver model. The assumption expresses the
+production VHDL `count` subtype 0..1024: the synthesized 11-bit port also has
+encodings 1025..2047. It does not restrict 16-bit data operands. A whole-extension
+proof must separately discharge the controller's count bound. RAM conservation,
+framing/CRC and request deduplication are not yet formally certified.
+
+All four instances are in fast/full; cover reaches nonempty capture, empty
+completion and multiple-element completion at depth 40. Full additionally
+requires an actual counterexample for `M-BLOCK-EARLY`; production RTL is never
+mutated. The fixed per-task 90-second budget and 20-minute fast CI limit remain.

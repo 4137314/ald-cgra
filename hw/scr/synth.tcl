@@ -33,6 +33,8 @@ set part   $board_parts($board)
 set top    cgra_top
 source scr/geometry.tcl
 lassign [cgra_geometry $argv 3] mesh_rows mesh_cols outdir
+set block_enable [cgra_blocks $argv 5]
+if {$block_enable} { append outdir /blocks }
 file mkdir $outdir
 puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 
@@ -46,20 +48,20 @@ source    scr/structural_checks.tcl
 # -flatten_hierarchy none keeps the RTL hierarchy in the reports so a warning
 # points at the module it came from.
 if { [catch { synth_design -top $top -part $part -flatten_hierarchy none \
-                           -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000] } err] } {
+                           -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000 G_BLOCK_ENABLE=$block_enable] } err] } {
     puts "ERROR: synth_design failed: $err"
     exit 1
 }
 
 # Timing constraints resolve against the synthesised netlist (cell-based
 # multicycle exception needs real leaf registers). step_div matches the generic.
-set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
+set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols $::block_enable]
 
 write_checkpoint   -force $outdir/post_synth_${board}.dcp
 report_utilization -file  $outdir/utilization_synth_${board}.rpt
 report_timing_summary -max_paths 10 -file $outdir/timing_synth_${board}.rpt
 
-cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 0
+cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 0 $block_enable
 
 # ---------------------------------------------------------------- gate
 set n_err  [get_msg_config -severity {ERROR}            -count]

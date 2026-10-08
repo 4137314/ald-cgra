@@ -53,7 +53,7 @@ def verify_files(root, files):
             raise ValueError(f"missing or changed artifact: {relative}")
 
 
-def validate_artifact(manifest_path, board, rows, cols, step_div):
+def validate_artifact(manifest_path, board, rows, cols, step_div, block_enable=False):
     """Validate before either programming tool can open a device."""
     manifest_path = Path(manifest_path).resolve(strict=True)
     m = json.loads(manifest_path.read_text())
@@ -62,6 +62,9 @@ def validate_artifact(manifest_path, board, rows, cols, step_div):
     expected = {"board": board, "part": PARTS[board], "rows": rows, "cols": cols, "step_div": step_div}
     if any(m.get("parameters", {}).get(k) != v for k, v in expected.items()):
         raise ValueError("artifact target/geometry/STEP_DIV mismatch")
+    recorded_blocks = m.get("parameters", {}).get("block_enable", False)
+    if type(recorded_blocks) is not bool or recorded_blocks != block_enable:
+        raise ValueError("artifact block feature selection mismatch")
     gates = m.get("gates", {})
     for name in (*BASE_GATES, "setup", "hold"):
         if gates.get(name) != "PASS":
@@ -124,6 +127,7 @@ def publish(run, manifest, base):
         return
     p = manifest["parameters"]
     key = f'{p["board"]}-{p["rows"]}x{p["cols"]}-div{p["step_div"]}-{manifest["mode"]}'
+    if p.get("block_enable", False): key += "-blocks"
     current = base / "current"
     current.mkdir(parents=True, exist_ok=True)
     write_json(current / (key + ".json"), {
@@ -146,7 +150,7 @@ def run_build(args):
          "parameters": {"board": args.board, "part": PARTS[args.board], "top": "cgra_top",
                         "rows": args.rows, "cols": args.cols, "step_div": args.step_div,
                         "period_ns": args.period, "requested_period_ns": args.period,
-                        "floorplan": args.floorplan,
+                        "floorplan": args.floorplan, "block_enable": args.block_enable,
                         "clock_hz": 100000000, "baud": 115200, "timeout_cycles": 100000000},
          "strategy": "synth default; opt/place/phys_opt/route default (synth-only uses hierarchy none)",
          "hardware_test": "NOT_RUN", "gates": {}, "metrics": {}, "artifact_sha256": {},
@@ -162,6 +166,7 @@ def run_build(args):
         argv = [args.board, str(args.fmax_lo), str(args.fmax_hi), str(args.fmax_iters),
                 str(args.step_div), str(args.rows), str(args.cols)]
         m["search"] = {"lo_ns": args.fmax_lo, "hi_ns": args.fmax_hi, "iterations": args.fmax_iters}
+    argv.append(str(int(args.block_enable)))
     command = [tool or args.vivado, "-mode", "batch", "-nolog", "-nojournal", "-source", "scr/" + SCRIPTS[args.mode], "-tclargs", *argv]
     m.update(command=command, cwd=str(work))
     write_json(run / "manifest.json", m)
@@ -209,7 +214,7 @@ def run_build(args):
             verify_files(run, source_hashes)
             if m["status"] == "PASS" and args.mode == "bit":
                 write_json(run / "manifest.json", m)
-                validate_artifact(run / "manifest.json", args.board, args.rows, args.cols, args.step_div)
+                validate_artifact(run / "manifest.json", args.board, args.rows, args.cols, args.step_div, args.block_enable)
         except (OSError, ValueError) as error:
             m.update(status="ERROR", error=str(error))
         write_json(run / "manifest.json", m)
@@ -228,6 +233,7 @@ def main():
     parser.add_argument("--cols", type=int, default=4)
     parser.add_argument("--step-div", type=int, default=2)
     parser.add_argument("--period", type=float, default=10)
+    parser.add_argument("--block-enable", action="store_true")
     parser.add_argument("--floorplan", action="store_true")
     parser.add_argument("--vivado", default="vivado")
     parser.add_argument("--ofl", default="openFPGALoader")
@@ -249,7 +255,7 @@ def main():
     if not args.artifact:
         parser.error("--artifact MANIFEST is required; a loose .bit file is insufficient")
     try:
-        bit, m = validate_artifact(args.artifact, args.board, args.rows, args.cols, args.step_div)
+        bit, m = validate_artifact(args.artifact, args.board, args.rows, args.cols, args.step_div, args.block_enable)
         if args.mode == "check-artifact":
             print(bit)
             return 0

@@ -27,7 +27,7 @@ proc cgra_register_set {pattern expected label} {
 
 # Check every expected bit and PE, not only a nonempty wildcard. The six
 # reserved CFG bits [31:26] have no consumers and are removed by synthesis.
-proc cgra_datapath_registers {rows cols} {
+proc cgra_datapath_registers {rows cols {blocks false}} {
     if {![string is integer -strict $rows] || ![string is integer -strict $cols] ||
         $rows < 1 || $cols < 1 || $rows * $cols > 16} {error "invalid constraint geometry"}
     set pe {}; set cfg {}; set west {}; set north {}
@@ -54,10 +54,20 @@ proc cgra_datapath_registers {rows cols} {
     foreach pattern {*cfg_r_reg* *west_r_reg* *north_r_reg*} expected [list $cfg $west $north] {
         set src [concat $src [cgra_register_set $pattern $expected $pattern]]
     }
+    if {$blocks} {
+        set operands {}
+        set src [concat $src [cgra_register_set *engine/owned_reg* {blocks.u_block/engine/owned_reg} {block configuration select}]]
+        foreach bank {a b} {
+            for {set bit 0} {$bit < 16} {incr bit} {
+                lappend operands [format {blocks.u_block/engine/operand_%s_reg[%d]} $bank $bit]
+            }
+        }
+        set src [concat $src [cgra_register_set *engine/operand_*_reg* $operands {block operands}]]
+    }
     return [list $src $dst]
 }
 
-proc cgra_timing_constraints {period_ns {step_div 2} {rows 4} {cols 4}} {
+proc cgra_timing_constraints {period_ns {step_div 2} {rows 4} {cols 4} {blocks false}} {
     cgra_timing_args $period_ns $step_div
     set period_ns [cgra_clock_period $period_ns]
     foreach port {clk uart_rx_i uart_tx_o btn_rst {led[*]}} {
@@ -88,7 +98,7 @@ proc cgra_timing_constraints {period_ns {step_div 2} {rows 4} {cols 4}} {
     # stability, not by the need to obtain a positive timing report.
     # Match only the flip-flops (REF_NAME FDRE/FDSE/...), NOT the combinational
     # LUTs Vivado names r_reg[N]_i_M after synthesis -- not valid endpoints.
-    lassign [cgra_datapath_registers $rows $cols] src_cells dst_cells
+    lassign [cgra_datapath_registers $rows $cols $blocks] src_cells dst_cells
     if { $step_div >= 2 } {
         # Launch clocks to data D endpoints only: Vivado requires register C
         # startpoints; Q is not a valid -from pin. Cell -to endpoints would

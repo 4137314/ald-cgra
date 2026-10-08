@@ -34,6 +34,8 @@ set part   $board_parts($board)
 set top    cgra_top
 source scr/geometry.tcl
 lassign [cgra_geometry $argv 3] mesh_rows mesh_cols outdir
+set block_enable [cgra_blocks $argv 5]
+if {$block_enable} { append outdir /blocks }
 file mkdir $outdir
 puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 
@@ -42,8 +44,8 @@ read_vhdl -vhdl2008 [glob rtl/*.vhd]
 read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
 source    scr/structural_checks.tcl
-synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
-set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
+synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000 G_BLOCK_ENABLE=$block_enable]
+set period [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols $::block_enable]
 report_utilization -file $outdir/utilization_synth.rpt
 if { [info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0" } {
     source scr/floorplan.tcl
@@ -63,7 +65,7 @@ report_timing -hold  -max_paths 10 -nworst 1 -file $outdir/timing_hold_${board}.
 report_clock_interaction     -file $outdir/clock_interaction_${board}.rpt
 check_timing -verbose        -file $outdir/check_timing_${board}.rpt
 
-cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 1
+cgra_physical_gate $outdir $period $step_div $mesh_rows $mesh_cols 1 $block_enable
 
 # ---------------------------------------------------------------- gate
 lassign [cgra_timing_slacks] wns whs

@@ -20,7 +20,8 @@ entity cgra_top is
     -- from one knob (make STEP_DIV=...).
     G_STEP_DIV       : positive := 2;
     G_ROWS           : positive := ROWS;
-    G_COLS           : positive := COLS
+    G_COLS           : positive := COLS;
+    G_BLOCK_ENABLE   : boolean := false
   );
   port (
     clk       : in  std_logic;
@@ -55,6 +56,13 @@ architecture rtl of cgra_top is
   signal arr_rst  : std_logic;
   signal ctrl_busy : std_logic;
 
+  signal ctrl_rx_valid, ctrl_tx_start : std_logic;
+  signal ctrl_tx_data : std_logic_vector(7 downto 0);
+  signal array_cfg : cfg_vec_t(0 to G_ROWS * G_COLS - 1);
+  signal array_west : data_vec_t(0 to G_ROWS - 1);
+  signal array_north : data_vec_t(0 to G_COLS - 1);
+  signal array_step, array_dp_rst, block_busy : std_logic;
+
   signal hb_cnt : unsigned(25 downto 0) := (others => '0');
 
 begin
@@ -69,7 +77,7 @@ begin
   end process;
   rst <= rst_s2;
 
-  arr_rst <= rst or dp_rst;
+  arr_rst <= rst or array_dp_rst;
 
   u_rx : uart_rx
     generic map (CLKS_PER_BIT => CLKS_PER_BIT)
@@ -100,9 +108,9 @@ begin
       clk      => clk,
       rst      => rst,
       rx_data  => rx_data,
-      rx_valid => rx_valid,
-      tx_data  => tx_data,
-      tx_start => tx_start,
+      rx_valid => ctrl_rx_valid,
+      tx_data  => ctrl_tx_data,
+      tx_start => ctrl_tx_start,
       tx_busy  => tx_busy,
       cfg      => cfg,
       west_o   => west_in,
@@ -113,15 +121,51 @@ begin
       busy     => ctrl_busy
     );
 
+  legacy_path : if not G_BLOCK_ENABLE generate
+    ctrl_rx_valid <= rx_valid;
+    tx_data <= ctrl_tx_data; tx_start <= ctrl_tx_start;
+    array_cfg <= cfg; array_west <= west_in; array_north <= north_in;
+    array_step <= step; array_dp_rst <= dp_rst; block_busy <= '0';
+  end generate;
+
+  blocks : if G_BLOCK_ENABLE generate
+    signal selected, block_tx_start, owns, block_step, block_rst : std_logic;
+    signal block_tx_data : std_logic_vector(7 downto 0);
+    signal a, b : data_t;
+  begin
+    u_block : entity work.block_ctrl
+      generic map (G_TIMEOUT_CYCLES => G_TIMEOUT_CYCLES, G_STEP_DIV => G_STEP_DIV)
+      port map (clk => clk, rst => rst, legacy_idle => not ctrl_busy,
+                rx_valid => rx_valid, rx_data => rx_data, tx_busy => tx_busy,
+                tx_start => block_tx_start, tx_data => block_tx_data,
+                selected => selected, busy => block_busy, pe_result => pe_regs(0),
+                owns_array => owns, step => block_step, dp_rst => block_rst, a => a, b => b);
+    ctrl_rx_valid <= rx_valid and not selected;
+    tx_start <= block_tx_start when selected = '1' else ctrl_tx_start;
+    tx_data <= block_tx_data when selected = '1' else ctrl_tx_data;
+    array_step <= block_step when owns = '1' else step;
+    array_dp_rst <= block_rst when owns = '1' else dp_rst;
+    process(all)
+    begin
+      array_cfg <= cfg; array_west <= west_in; array_north <= north_in;
+      if owns = '1' then
+        array_cfg <= (others => cfg_word(OP_NOP, SEL_ZERO, SEL_ZERO, 0));
+        array_cfg(0) <= cfg_word(OP_MAC, SEL_W, SEL_N, 0);
+        array_west <= (others => (others => '0')); array_west(0) <= a;
+        array_north <= (others => (others => '0')); array_north(0) <= b;
+      end if;
+    end process;
+  end generate;
+
   u_array : cgra_array
     generic map (G_ROWS => G_ROWS, G_COLS => G_COLS)
     port map (
       clk      => clk,
       rst      => arr_rst,
-      step     => step,
-      cfg      => cfg,
-      west_in  => west_in,
-      north_in => north_in,
+      step     => array_step,
+      cfg      => array_cfg,
+      west_in  => array_west,
+      north_in => array_north,
       pe_out   => pe_regs
     );
 
@@ -133,7 +177,7 @@ begin
   end process;
 
   led(0) <= std_logic(hb_cnt(hb_cnt'high));
-  led(1) <= ctrl_busy;
+  led(1) <= ctrl_busy or block_busy;
   led(2) <= not uart_rx_i;
   led(3) <= tx_busy;
 

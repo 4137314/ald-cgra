@@ -52,7 +52,7 @@ if mode == 'failed-gate': gates['setup']='FAIL'
 ''')
     tool.chmod(0o755)
     args = SimpleNamespace(out=str(root / "runs"), mode="bit", vivado=str(tool), board="nexys_a7",
-                           rows=4, cols=4, step_div=2, period=10, floorplan=False, timeout=20)
+                           rows=4, cols=4, step_div=2, period=10, floorplan=False, block_enable=False, timeout=20)
     with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
         status = a.run_build(args)
     check(status == 0, "successful synthetic run publishes")
@@ -92,7 +92,7 @@ if mode == 'failed-gate': gates['setup']='FAIL'
             accepted = False
         check(not accepted, f"reject invalid manifest {key}")
     manifest_path.write_bytes(original_manifest)
-    for target in (("basys3",4,4,2), ("nexys_a7",2,8,2), ("nexys_a7",4,4,3)):
+    for target in (("basys3",4,4,2), ("nexys_a7",2,8,2), ("nexys_a7",4,4,3), ("nexys_a7",4,4,2,True)):
         try:
             a.validate_artifact(manifest_path, *target)
             accepted = True
@@ -147,5 +147,12 @@ if mode == 'failed-gate': gates['setup']='FAIL'
     manifest_path.write_bytes(original_manifest)
     r = subprocess.run([sys.executable,str(real_hw/'scr/artifacts.py'),'check-artifact','--artifact',str(manifest_path)],capture_output=True,text=True)
     check(r.returncode == 0 and Path(r.stdout.strip()) == bit and not marker.exists(), "check-artifact validates without hardware access")
+
+# The Make knob must not silently turn a misspelled opt-in into legacy RTL.
+for value in ("", "2", "true", "0 1", "1 nope"):
+    p = subprocess.run(["make", "-C", str(real_hw), "-f", "hw.mk", "-n", "synth", "BLOCK_ENABLE="+value],
+                       capture_output=True, text=True)
+    check(p.returncode != 0 and "BLOCK_ENABLE must be 0 or 1" in p.stderr and
+          "scr/artifacts.py synth" not in p.stdout, f"reject invalid block build selection {value!r}")
 
 print(f"# {checks} artifact checks passed (synthetic tool; no Vivado result)")

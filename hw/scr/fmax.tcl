@@ -50,6 +50,8 @@ set part   $board_parts($board)
 set top    cgra_top
 source scr/geometry.tcl
 lassign [cgra_geometry $argv 5] mesh_rows mesh_cols outdir
+set block_enable [cgra_blocks $argv 7]
+if {$block_enable} { append outdir /blocks }
 file mkdir $outdir
 puts "mesh: ${mesh_rows}x${mesh_cols}; outputs: $outdir"
 set use_fp [expr {[info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0"}]
@@ -58,7 +60,7 @@ set use_fp [expr {[info exists ::env(FLOORPLAN)] && $::env(FLOORPLAN) ne "0"}]
 # Returns "wns whs applied_period"; the clock uses an explicit 1 ps grid.
 proc try_period {period synth_dcp use_fp board step_div} {
     open_checkpoint $synth_dcp
-    set applied [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols]
+    set applied [cgra_timing_constraints $period $step_div $::mesh_rows $::mesh_cols $::block_enable]
     if { $use_fp } { cgra_floorplan $board }
     opt_design -quiet
     place_design -quiet
@@ -72,7 +74,7 @@ read_xdc  con/${board}.xdc
 source    scr/constraints.tcl
 source    scr/structural_checks.tcl
 if { $use_fp } { source scr/floorplan.tcl }
-synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000]
+synth_design -top $top -part $part -generic [list G_STEP_DIV=$step_div G_ROWS=$mesh_rows G_COLS=$mesh_cols G_CLK_FREQ_HZ=100000000 G_BAUD=115200 G_TIMEOUT_CYCLES=100000000 G_BLOCK_ENABLE=$block_enable]
 set synth_dcp $outdir/post_synth_fmax_${board}.dcp
 write_checkpoint -force $synth_dcp
 
@@ -94,7 +96,7 @@ for {set i 0} {$i < $iters} {incr i} {
 # -------------------------------------------------- final clean run @ best
 # Re-run at the best period WITH phys_opt + full reports, and analyse the wall.
 open_checkpoint $synth_dcp
-set best_period [cgra_timing_constraints $best_period $step_div $mesh_rows $mesh_cols]
+set best_period [cgra_timing_constraints $best_period $step_div $mesh_rows $mesh_cols $block_enable]
 if { $use_fp } { cgra_floorplan $board }
 opt_design -quiet
 place_design -quiet
@@ -113,7 +115,7 @@ set fmax [cgra_checked_frequency $best_period $wns $whs]
 set sp [cgra_nonempty [get_timing_paths -max_paths 1 -nworst 1 -setup] "final setup path"]
 write_checkpoint -force $outdir/fmax_validated_${board}.dcp
 
-cgra_physical_gate $outdir $best_period $step_div $mesh_rows $mesh_cols 1
+cgra_physical_gate $outdir $best_period $step_div $mesh_rows $mesh_cols 1 $block_enable
 
 # limiting-path facts
 set src  [get_property STARTPOINT_PIN $sp]

@@ -26,6 +26,14 @@ PERIOD   ?= 10.000
 # Datapath multicycle factor (clocks per array step). Drives BOTH the RTL
 # generic G_STEP_DIV and the XDC multicycle number, so they can never disagree.
 STEP_DIV ?= 2
+# Experimental framed block path; disabled in the stable build.
+BLOCK_ENABLE ?= 0
+ifneq ($(words $(BLOCK_ENABLE)),1)
+$(error BLOCK_ENABLE must be 0 or 1)
+endif
+ifneq ($(filter 0 1,$(BLOCK_ENABLE)),$(strip $(BLOCK_ENABLE)))
+$(error BLOCK_ENABLE must be 0 or 1)
+endif
 # Device geometry is fixed at elaboration; host kernels discover it via ID.
 MESH_ROWS ?= 4
 MESH_COLS ?= 4
@@ -44,6 +52,10 @@ SRCS = rtl/cgra_pkg.vhd \
        rtl/pe.vhd \
        rtl/cgra_array.vhd \
        rtl/cgra_ctrl.vhd \
+       rtl/block_pkg.vhd \
+       rtl/block_rx.vhd \
+       rtl/block_dot.vhd \
+       rtl/block_ctrl.vhd \
        rtl/cgra_top.vhd
 
 TBS  = sim/tb_pe.vhd \
@@ -54,7 +66,8 @@ TBS  = sim/tb_pe.vhd \
        sim/tb_protocol_diff.vhd \
        sim/tb_kernel_uart.vhd \
        sim/tb_array_geometry.vhd \
-       sim/tb_uart_async.vhd
+       sim/tb_uart_async.vhd \
+       sim/tb_blocks.vhd
 
 # Self-checking testbench top-levels, run in order of increasing scope.
 TB_UNITS = tb_pe tb_uart tb_cgra_top tb_matvec tb_array_diff
@@ -66,8 +79,8 @@ KERNEL_VECTORS = $(addprefix build/kernels_,$(addsuffix .vec,$(DEVICE_SHAPES)))
 PROTOCOL_VECTORS = $(addprefix build/protocol_,$(addsuffix .vec,$(DEVICE_SHAPES)))
 
 DIFF_GEN = $(GHDL_DIR)/gen_diff_vectors
-MODEL_SRCS = ../lib/src/cgra.c ../lib/src/vector.c ../lib/src/kernels.c ../lib/src/emu.c
-MODEL_HEADERS = ../lib/include/cgra.h ../lib/src/emu.h ../lib/src/buffers.h ../lib/src/bitvec.h
+MODEL_SRCS = ../lib/src/cgra.c ../lib/src/vector.c ../lib/src/kernels.c ../lib/src/emu.c ../lib/src/block_wire.c ../lib/src/block_model.c
+MODEL_HEADERS = ../lib/src/block_wire.h ../lib/src/block_model.h ../lib/include/cgra.h ../lib/src/emu.h ../lib/src/buffers.h ../lib/src/bitvec.h
 SIM_CFLAGS ?= -std=c11 -O2 -Wall -Wextra -Werror
 
 # Build the reference from source in the simulation directory. Standalone HDL
@@ -79,8 +92,8 @@ build/array_diff.vec: $(DIFF_GEN)
 	./$(DIFF_GEN) $@.tmp
 	mv $@.tmp $@
 
-$(GHDL_DIR)/gen_protocol_vectors: sim/gen_protocol_vectors.c ../lib/src/emu.c $(MODEL_HEADERS) | $(GHDL_DIR)
-	$(CC) $(SIM_CFLAGS) -I../lib/include -I../lib/src $< ../lib/src/emu.c -o $@
+$(GHDL_DIR)/gen_protocol_vectors: sim/gen_protocol_vectors.c ../lib/src/emu.c ../lib/src/block_wire.c ../lib/src/block_model.c $(MODEL_HEADERS) | $(GHDL_DIR)
+	$(CC) $(SIM_CFLAGS) -I../lib/include -I../lib/src $< ../lib/src/emu.c ../lib/src/block_wire.c ../lib/src/block_model.c -o $@
 
 build/protocol_diff.vec: $(GHDL_DIR)/gen_protocol_vectors
 	./$(GHDL_DIR)/gen_protocol_vectors $@.tmp
@@ -98,13 +111,29 @@ build/kernels_%.vec: $(GHDL_DIR)/gen_kernel_vectors
 	./$(GHDL_DIR)/gen_kernel_vectors $@.tmp $(word 1,$(subst x, ,$*)) $(word 2,$(subst x, ,$*))
 	mv $@.tmp $@
 
+$(GHDL_DIR)/gen_block_vectors: sim/gen_block_vectors.c ../lib/src/block_model.c ../lib/src/block_wire.c ../lib/src/block_model.h ../lib/src/block_wire.h | $(GHDL_DIR)
+	$(CC) $(SIM_CFLAGS) -I../lib/src $< ../lib/src/block_model.c ../lib/src/block_wire.c -o $@
+
+build/blocks.vec: $(GHDL_DIR)/gen_block_vectors
+	./$(GHDL_DIR)/gen_block_vectors $@.tmp
+	mv $@.tmp $@
+
+.PHONY: sim-blocks
+sim-blocks: build/blocks.vec | $(GHDL_DIR)
+	$(GHDL) -a $(GHDL_FLAGS) $(SRCS) sim/tb_blocks.vhd
+	$(GHDL) -e $(GHDL_FLAGS) tb_blocks
+	@for div in $(STEP_DIVS); do \
+	    $(GHDL) -r $(GHDL_FLAGS) tb_blocks -gG_STEP_DIV=$$div --assert-level=error || exit 1; \
+	done
+	$(GHDL) -r $(GHDL_FLAGS) tb_blocks -gG_UART=true --assert-level=error
+
 VIVADO_DIR ?= build/vivado
 # Programming always requires the manifest of an explicitly selected run.
 ARTIFACT ?=
 PHYSICAL = python3 scr/artifacts.py
 PHYSICAL_ARGS = --board '$(BOARD)' --period '$(PERIOD)' --step-div '$(STEP_DIV)' \
                 --rows '$(MESH_ROWS)' --cols '$(MESH_COLS)' --vivado '$(VIVADO)' \
-                --out '$(VIVADO_DIR)' $(if $(filter 1,$(FLOORPLAN)),--floorplan,)
+                --out '$(VIVADO_DIR)' $(if $(filter 1,$(BLOCK_ENABLE)),--block-enable,) $(if $(filter 1,$(FLOORPLAN)),--floorplan,)
 
 .PHONY: all sim test-scripts lint wave synth fmax bit sta prog prog-ofl clean
 
@@ -124,7 +153,7 @@ test-scripts:
 $(GHDL_DIR):
 	mkdir -p $(GHDL_DIR)
 
-sim: build/array_diff.vec build/protocol_diff.vec $(PROTOCOL_VECTORS) $(KERNEL_VECTORS) $(addprefix build/kernels_,$(addsuffix .vec,$(UART_SHAPES))) | $(GHDL_DIR)
+sim: sim-blocks build/array_diff.vec build/protocol_diff.vec $(PROTOCOL_VECTORS) $(KERNEL_VECTORS) $(addprefix build/kernels_,$(addsuffix .vec,$(UART_SHAPES))) | $(GHDL_DIR)
 	$(GHDL) -a $(GHDL_FLAGS) $(SRCS) $(TBS)
 	@for tb in $(TB_UNITS); do \
 	    echo "== $$tb =="; \
