@@ -1,0 +1,244 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+tclsh test/test_timing.tcl
+ok timing 1 - reject invalid period '0'
+ok timing 2 - reject invalid period '-1'
+ok timing 3 - reject invalid period 'Inf'
+ok timing 4 - reject invalid period 'NaN'
+ok timing 5 - reject invalid period 'abc'
+ok timing 6 - reject invalid period ''
+ok timing 7 - reject invalid divider '0'
+ok timing 8 - reject invalid divider '-1'
+ok timing 9 - reject invalid divider '1.5'
+ok timing 10 - reject invalid divider 'abc'
+ok timing 11 - fractional-picosecond period is applied on an explicit 1 ps grid
+ok timing 12 - all sweep candidates use the same period precision
+ok timing 13 - period rounding to zero is rejected
+ok timing 14 - frequency uses actual period, not slack extrapolation
+ok timing 15 - reject invalid/failing slack -0.1 0
+ok timing 16 - reject invalid/failing slack 0 -0.1
+ok timing 17 - reject invalid/failing slack NaN 0
+ok timing 18 - reject invalid/failing slack 0 Inf
+ok timing 19 - reject invalid/failing slack {} 0
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 20 - fmax.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 21 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 22 - fmax.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 23 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 24 - fmax.tcl rejects missing_cells (PE output register coverage mismatch: expected 256, found 0 (*u_pe/r_reg*))
+ok timing 25 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 26 - fmax.tcl rejects missing_port (no objects matched port clk)
+ok timing 27 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 28 - fmax.tcl rejects missing_one_bit (PE output register coverage mismatch: expected 256, found 255 (*u_pe/r_reg*))
+ok timing 29 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 30 - fmax.tcl rejects wrong_bit (PE output register coverage mismatch: expected 256, found 256 (*u_pe/r_reg*))
+ok timing 31 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 32 - fmax.tcl rejects missing_pin (missing datapath C/D pins)
+ok timing 33 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 34 - fmax.tcl rejects final_setup (timing NOT met: WNS=-0.1 ns, WHS=0.5 ns)
+ok timing 35 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 36 - fmax.tcl rejects final_hold (timing NOT met: WNS=0.5 ns, WHS=-0.1 ns)
+ok timing 37 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 38 - fmax.tcl rejects structural (synthetic failed structural check)
+ok timing 39 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 40 - build.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 41 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 42 - build.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 43 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 44 - build.tcl rejects missing_cells (PE output register coverage mismatch: expected 256, found 0 (*u_pe/r_reg*))
+ok timing 45 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 46 - build.tcl rejects missing_port (no objects matched port clk)
+ok timing 47 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 48 - build.tcl rejects missing_one_bit (PE output register coverage mismatch: expected 256, found 255 (*u_pe/r_reg*))
+ok timing 49 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 50 - build.tcl rejects wrong_bit (PE output register coverage mismatch: expected 256, found 256 (*u_pe/r_reg*))
+ok timing 51 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 52 - build.tcl rejects missing_pin (missing datapath C/D pins)
+ok timing 53 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+timing: setup WNS = -0.1 ns, hold WHS = 0.5 ns
+ERROR: timing NOT met (WNS=-0.1 ns, WHS=0.5 ns) — no bitstream written.
+       inspect /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/timing_summary.rpt
+ok timing 54 - build.tcl rejects final_setup (EXIT:1)
+ok timing 55 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+timing: setup WNS = 0.5 ns, hold WHS = -0.1 ns
+ERROR: timing NOT met (WNS=0.5 ns, WHS=-0.1 ns) — no bitstream written.
+       inspect /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/timing_summary.rpt
+ok timing 56 - build.tcl rejects final_hold (EXIT:1)
+ok timing 57 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+timing: setup WNS = 0.5 ns, hold WHS = 0.5 ns
+ok timing 58 - build.tcl rejects structural (synthetic failed structural check)
+ok timing 59 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 60 - timing.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 61 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 62 - timing.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 63 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 64 - timing.tcl rejects missing_cells (PE output register coverage mismatch: expected 256, found 0 (*u_pe/r_reg*))
+ok timing 65 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 66 - timing.tcl rejects missing_port (no objects matched port clk)
+ok timing 67 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 68 - timing.tcl rejects missing_one_bit (PE output register coverage mismatch: expected 256, found 255 (*u_pe/r_reg*))
+ok timing 69 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 70 - timing.tcl rejects wrong_bit (PE output register coverage mismatch: expected 256, found 256 (*u_pe/r_reg*))
+ok timing 71 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 72 - timing.tcl rejects missing_pin (missing datapath C/D pins)
+ok timing 73 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = -0.1 ns
+    hold   WHS = 0.5 ns
+    FAIL: setup timing violated
+    see /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/timing_summary_nexys_a7.rpt
+======================================================================
+ok timing 74 - timing.tcl rejects final_setup (EXIT:1)
+ok timing 75 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = -0.1 ns
+    FAIL: hold timing violated
+    see /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/timing_summary_nexys_a7.rpt
+======================================================================
+ok timing 76 - timing.tcl rejects final_hold (EXIT:1)
+ok timing 77 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+ok timing 78 - timing.tcl rejects structural (synthetic failed structural check)
+ok timing 79 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/blocks
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = 0.5 ns
+    PASS: setup and hold met under the applied constraints.
+======================================================================
+ok timing 80 - block operand endpoints resolve at all 32 bits (EXIT:0)
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/blocks
+ok timing 81 - one missing block operand bit fails coverage
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+======================================================================
+  Fmax RESULT: cgra_top on nexys_a7 (xc7a100tcsg324-1)
+    best closing period = 5.078 ns
+    setup slack (WNS)   = 0.500 ns   hold (WHS) = 0.500 ns
+    validated frequency = 196.928 MHz  (1000 / constrained period)
+    ---- the wall (optimise this next) ----
+    limiting path kind  = datapath (multicycle)
+    startpoint          = a/Q
+    endpoint            = b/D
+    logic levels        = 2   datapath delay = 4.000 ns
+    LUTs used = ?   DSPs used = ?
+    full path -> /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/fmax_nexys_a7.rpt
+======================================================================
+  logged to /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/fmax_validated_history.csv
+ok timing 82 - passing Fmax run completes (EXIT:0)
+ok timing 83 - successful CSV uses validated period
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+timing: setup WNS = 0.5 ns, hold WHS = 0.5 ns
+OK: timing met; bitstream written to /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572/cgra_top_nexys_a7.bit
+ok timing 84 - passing build reaches bitstream generation
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2832572
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = 0.5 ns
+    PASS: setup and hold met under the applied constraints.
+======================================================================
+ok timing 85 - passing STA gate completes
+# 85 timing script checks passed (synthetic paths; Vivado still required)
+python3 test/test_artifacts.py
+ok artifacts 1 - successful synthetic run publishes
+ok artifacts 2 - valid manifest selects its exact hashed bitstream
+ok artifacts 3 - current pointer hashes completed manifest
+ok artifacts 4 - no Git executable retains source hashes and explicit unknown commit
+ok artifacts 5 - reject exit
+ok artifacts 6 - exit preserves last valid pointer
+ok artifacts 7 - reject no-report
+ok artifacts 8 - no-report preserves last valid pointer
+ok artifacts 9 - reject missing-gate
+ok artifacts 10 - missing-gate preserves last valid pointer
+ok artifacts 11 - reject failed-gate
+ok artifacts 12 - failed-gate preserves last valid pointer
+ok artifacts 13 - failed and successful runs all retain isolated manifests
+ok artifacts 14 - reject invalid manifest status
+ok artifacts 15 - reject invalid manifest mode
+ok artifacts 16 - reject invalid manifest schema_version
+ok artifacts 17 - reject invalid manifest bitstream
+ok artifacts 18 - reject target mismatch ('basys3', 4, 4, 2)
+ok artifacts 19 - reject target mismatch ('nexys_a7', 2, 8, 2)
+ok artifacts 20 - reject target mismatch ('nexys_a7', 4, 4, 3)
+ok artifacts 21 - reject target mismatch ('nexys_a7', 4, 4, 2, True)
+ok artifacts 22 - reject constraint incompatible with physical clock
+ok artifacts 23 - reject constraint incompatible with physical clock
+ok artifacts 24 - reject invalid routed slack wns_ns=-0.1
+ok artifacts 25 - reject invalid routed slack whs_ns=None
+ok artifacts 26 - reject invalid routed slack whs_ns=inf
+ok artifacts 27 - reject changed file work/scr/test.txt
+ok artifacts 28 - reject changed file work/build/vivado/design.bit
+ok artifacts 29 - reject source path outside run
+ok artifacts 30 - prog rejects before hardware side effects
+ok artifacts 31 - prog-ofl rejects before hardware side effects
+ok artifacts 32 - check-artifact validates without hardware access
+ok artifacts 33 - reject invalid block build selection ''
+ok artifacts 34 - reject invalid block build selection '2'
+ok artifacts 35 - reject invalid block build selection 'true'
+ok artifacts 36 - reject invalid block build selection '0 1'
+ok artifacts 37 - reject invalid block build selection '1 nope'
+# 37 artifact checks passed (synthetic tool; no Vivado result)
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

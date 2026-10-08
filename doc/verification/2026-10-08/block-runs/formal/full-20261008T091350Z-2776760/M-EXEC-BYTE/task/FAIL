@@ -1,0 +1,7 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:06 (6)
+Elapsed process time [H:MM:SS (secs)]: 0:00:06 (6)
+engine_0 (smtbmc yices) returned FAIL
+counterexample trace: engine_0/trace.vcd
+counterexample trace: engine_0/trace.yw
+  failed assertion cgra_ctrl.\ctrl_contract.f_exec_byte_content at  step 12
+  failed assertion cgra_ctrl.\ctrl_contract.f_exec_sum_queued at  step 12

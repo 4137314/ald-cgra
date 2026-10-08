@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T11:15:27" hostname="4137314" package="task" id="0" name="default" tests="21" errors="0" failures="0" time="29" skipped="5">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_206">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_214">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_222">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_230">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_238">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_246">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_254">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_262">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_270">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_278">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_286">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_294">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_302">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_310">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_318">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_326">
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:29.9-29.52" time="0" type="COVER" location="array_contract.sv:29.9-29.52" id="_witness_.check_cover_array_contract_sv_29_196">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_331">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_340">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_349">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_358">
+<skipped />
+</testcase>
+<system-out>SBY 11:15:06 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/task/src/dut.il'.
+SBY 11:15:06 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/pe_spec.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/task/src/pe_spec.sv'.
+SBY 11:15:06 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/array_contract.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/task/src/array_contract.sv'.
+SBY 11:15:06 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/pe_assume.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-ARRAY-4x4/task/src/pe_assume.sv'.
+SBY 11:15:06 [task] engine_0: smtbmc yices
+SBY 11:15:06 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 11:15:15 [task] base: finished (returncode=0)
+SBY 11:15:16 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 11:15:18 [task] prep: finished (returncode=0)
+SBY 11:15:18 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 11:15:19 [task] smt2: finished (returncode=0)
+SBY 11:15:19 [task] engine_0.basecase: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 4  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 11:15:19 [task] engine_0.induction: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -i --noprogress -t 4  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2&quot;
+SBY 11:15:19 [task] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 11:15:19 [task] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 11:15:22 [task] engine_0.basecase: ##   0:00:02  Checking assumptions in step 0..
+SBY 11:15:22 [task] engine_0.basecase: ##   0:00:02  Checking assertions in step 0..
+SBY 11:15:22 [task] engine_0.induction: ##   0:00:02  Trying induction in step 4..
+SBY 11:15:23 [task] engine_0.basecase: ##   0:00:04  Checking assumptions in step 1..
+SBY 11:15:24 [task] engine_0.basecase: ##   0:00:04  Checking assertions in step 1..
+SBY 11:15:24 [task] engine_0.induction: ##   0:00:04  Trying induction in step 3..
+SBY 11:15:24 [task] engine_0.induction: ##   0:00:04  Temporal induction successful.
+SBY 11:15:24 [task] engine_0.induction: ##   0:00:04  Status: passed
+SBY 11:15:24 [task] engine_0.induction: finished (returncode=0)
+SBY 11:15:24 [task] engine_0.induction: Status returned by engine for induction: pass
+SBY 11:15:25 [task] engine_0.basecase: ##   0:00:05  Checking assumptions in step 2..
+SBY 11:15:25 [task] engine_0.basecase: ##   0:00:05  Checking assertions in step 2..
+SBY 11:15:26 [task] engine_0.basecase: ##   0:00:06  Checking assumptions in step 3..
+SBY 11:15:26 [task] engine_0.basecase: ##   0:00:06  Checking assertions in step 3..
+SBY 11:15:26 [task] engine_0.basecase: ##   0:00:06  Status: passed
+SBY 11:15:27 [task] engine_0.basecase: finished (returncode=0)
+SBY 11:15:27 [task] engine_0.basecase: Status returned by engine for basecase: pass
+SBY 11:15:27 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:21 (21)
+SBY 11:15:27 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:29 (29)
+SBY 11:15:27 [task] summary: engine_0 (smtbmc yices) returned pass for basecase
+SBY 11:15:27 [task] summary: engine_0 (smtbmc yices) returned pass for induction
+SBY 11:15:27 [task] summary: engine_0 did not produce any traces
+SBY 11:15:27 [task] summary: successful proof by k-induction.
+SBY 11:15:27 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

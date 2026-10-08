@@ -1,0 +1,80 @@
+{
+  "id": "F-ARRAY-2x1",
+  "top": "array_contract",
+  "kind": "array",
+  "mode": "prove",
+  "depth": 4,
+  "gates": true,
+  "parameters": {
+    "G_ROWS": 2,
+    "G_COLS": 1
+  },
+  "assertions": 2,
+  "assumptions": 3,
+  "covers": 5,
+  "composition": true,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=2 -gG_COLS=1 cgra_pkg.vhd cgra_comp_pkg.vhd pe.vhd cgra_array.vhd array_ports.vhd -e array_ports; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "initial reset; subsequent inputs unconstrained; proved PE transition guarantees imported as assumptions",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_comp_pkg.vhd": "df833600c2edd6bb80d36ea2e1c225bf370ffa64664e04f249d43775c7da4b7e",
+    "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+    "hw/rtl/cgra_array.vhd": "0d84bdc23743a1c1b69821979ca7d9588e0e630e359811911997139e3e95c2c4",
+    "hw/formal/array_ports.vhd": "2755e855d2d5879f9788f55565245924cafe4c23dc62d6bab5679539b59b80d4",
+    "hw/formal/pe_spec.sv": "9882ff448d049839635b9a523229688f55b20d3fd032acb31edf48b99168499e",
+    "hw/formal/array_contract.sv": "1a5a9413c7560eee345772fc05845cd3652c4282c283fabd55d5af440f72a5b4",
+    "hw/formal/pe_assume.sv": "cdb4b3787f980caf40aef5149f168c420968e38db71da984ed24d7e46a75d538"
+  },
+  "checked_port_widths": {
+    "cfg": 64,
+    "q": 32,
+    "west": 32,
+    "north": 16
+  },
+  "abstraction": {
+    "component": "pe_Brtl",
+    "instances": 2,
+    "obligation": "F-PE-ALU-MUX",
+    "contract": "dout(t+1)=reset/hold/full-16-bit-ALU transition",
+    "initial_state": "abstract PE outputs arbitrary; first-cycle reset required by parent"
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "assert": 2,
+    "assume": 3,
+    "cover": 5
+  },
+  "smt2_cells": {
+    "assert": 2,
+    "assume": 4,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 3,
+  "model_sha256": {
+    "dut.il": "6d4b2f62b08b81198a07ac556a54f30b38c346668340046117f5856b45726f50",
+    "task/src/properties.json": "5449c4a476a5c568aec187670e2f5c96f4025d765a59f8363baeec75fed254c6",
+    "task/model/design_smt2.smt2": "1c566517cf64d34c0d2d23f8ec5ea1b9712754e7840cbb07699590056cbc4fda"
+  },
+  "traces": [],
+  "duration_seconds": 3.033
+}

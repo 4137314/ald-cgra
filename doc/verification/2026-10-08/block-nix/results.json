@@ -1,0 +1,93 @@
+{
+  "command": [
+    "nix",
+    "build",
+    "--no-link",
+    ".#checks.x86_64-linux.software",
+    ".#checks.x86_64-linux.formal-fast"
+  ],
+  "exit_code": 0,
+  "result": "PASS",
+  "derivations": [
+    {
+      "derivation": "/nix/store/wzmg9gyfk3ni698gx15ir4rxvy60i7n6-cgra-formal-fast.drv",
+      "outputs": [
+        "/nix/store/1f2rk4h6maycn0v1g1ncmwfjskhpg064-cgra-formal-fast"
+      ],
+      "env": {
+        "CGRA_SOURCE_DIRTY": "true",
+        "CGRA_SOURCE_REVISION": "78100d8b683f725e2a9cce6225161c09c642f93a-dirty",
+        "__structuredAttrs": "",
+        "buildCommand": "cp -r /nix/store/9j4p1yvg476wljgxgdfjqibalcic1pxf-5n7hhqbwjb20z4nnb1nly4zvg0gwfdyr-source source\nchmod -R u+w source\ncd source\nmake formal-fast\nmkdir -p $out\ncp -r hw/build/formal/. $out/\n",
+        "buildInputs": "",
+        "builder": "/nix/store/v8llyqw71lygr2llhmcc8ya5bdlzq45v-bash-5.3p9/bin/bash",
+        "cmakeFlags": "",
+        "configureFlags": "",
+        "depsBuildBuild": "",
+        "depsBuildBuildPropagated": "",
+        "depsBuildTarget": "",
+        "depsBuildTargetPropagated": "",
+        "depsHostHost": "",
+        "depsHostHostPropagated": "",
+        "depsTargetTarget": "",
+        "depsTargetTargetPropagated": "",
+        "doCheck": "",
+        "doInstallCheck": "",
+        "enableParallelBuilding": "1",
+        "enableParallelChecking": "1",
+        "enableParallelInstalling": "1",
+        "mesonFlags": "",
+        "name": "cgra-formal-fast",
+        "nativeBuildInputs": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0 /nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67 /nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61 /nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0 /nix/store/qdj5i0rhi4h9b37jwjdsxgr1pvggrqp1-z3-4.16.0-dev /nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6 /nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1 /nix/store/1k2lblqlj39azh6wn1sffa2869vrg3mr-git-2.54.0",
+        "out": "/nix/store/1f2rk4h6maycn0v1g1ncmwfjskhpg064-cgra-formal-fast",
+        "outputs": "out",
+        "passAsFile": "buildCommand",
+        "patches": "",
+        "propagatedBuildInputs": "",
+        "propagatedNativeBuildInputs": "",
+        "stdenv": "/nix/store/gikfyrrg5a864lkr2px8rgkgd4b61ri2-stdenv-linux-no-cc",
+        "strictDeps": "",
+        "system": "x86_64-linux"
+      }
+    },
+    {
+      "derivation": "/nix/store/z7i72584gfs1mc5h6d6v78glkdghvzr9-cgra-software-check.drv",
+      "outputs": [
+        "/nix/store/arkx9r0wrmhrnyzvjpvl07gn8g3685k6-cgra-software-check"
+      ],
+      "env": {
+        "__structuredAttrs": "",
+        "buildCommand": "cp -r /nix/store/9j4p1yvg476wljgxgdfjqibalcic1pxf-5n7hhqbwjb20z4nnb1nly4zvg0gwfdyr-source source\nchmod -R u+w source\ncd source\nmkdir -p $out\ntrap 'cat $out/*.txt' ERR\nmake -j4 test > $out/software.txt 2>&1\nmake test-install test-compdb test-build > $out/packaging.txt 2>&1\nmake -C lib -f lib.mk analyze > $out/analyzer-lib.txt 2>&1\nmake -C sw -f sw.mk analyze > $out/analyzer-cli.txt 2>&1\nmake -C sw -f sw.mk HAVE_READLINE=0 test > $out/no-readline.txt 2>&1\n",
+        "buildInputs": "",
+        "builder": "/nix/store/v8llyqw71lygr2llhmcc8ya5bdlzq45v-bash-5.3p9/bin/bash",
+        "cmakeFlags": "",
+        "configureFlags": "",
+        "depsBuildBuild": "",
+        "depsBuildBuildPropagated": "",
+        "depsBuildTarget": "",
+        "depsBuildTargetPropagated": "",
+        "depsHostHost": "",
+        "depsHostHostPropagated": "",
+        "depsTargetTarget": "",
+        "depsTargetTargetPropagated": "",
+        "doCheck": "",
+        "doInstallCheck": "",
+        "enableParallelBuilding": "1",
+        "enableParallelChecking": "1",
+        "enableParallelInstalling": "1",
+        "mesonFlags": "",
+        "name": "cgra-software-check",
+        "nativeBuildInputs": "/nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0 /nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1 /nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6 /nix/store/sn8r7j6q1js540y5briylnb62203zxq5-pkg-config-wrapper-0.29.2 /nix/store/cyrj805hm6kkxbmknf363sn6pfr9i0xj-texinfo-7.2 /nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev /nix/store/8mp5f2yh8p5xicpiv9s449zl94yhqw7v-bash-interactive-5.3p9-dev",
+        "out": "/nix/store/arkx9r0wrmhrnyzvjpvl07gn8g3685k6-cgra-software-check",
+        "outputs": "out",
+        "passAsFile": "buildCommand",
+        "patches": "",
+        "propagatedBuildInputs": "",
+        "propagatedNativeBuildInputs": "",
+        "stdenv": "/nix/store/gikfyrrg5a864lkr2px8rgkgd4b61ri2-stdenv-linux-no-cc",
+        "strictDeps": "",
+        "system": "x86_64-linux"
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+make -C lib -f lib.mk PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/vector.c -o build/vector.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/kernels.c -o build/kernels.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/emu.c -o build/emu.o
+src/cgra.c: In function ‘block_exchange’:
+src/cgra.c:998:23: error: ‘cgra_stats_t’ has no member named ‘nacks’
+  998 |             dev->stats.nacks++;
+      |                       ^
+make[1]: *** [lib.mk:72: build/cgra.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make: *** [Makefile:100: lib] Error 2

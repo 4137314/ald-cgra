@@ -1,0 +1,64 @@
+{
+  "id": "M-BLOCK-EARLY",
+  "top": "block_dot",
+  "kind": "block_dot",
+  "mode": "bmc",
+  "depth": 12,
+  "parameters": {
+    "G_STEP_DIV": 2
+  },
+  "assertions": 22,
+  "assumptions": 1,
+  "covers": 3,
+  "negative": true,
+  "mutation": "block-early-capture",
+  "result": "ERROR",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+    "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996"
+  },
+  "mutated_source_sha256": {
+    "block_dot.vhd": "5964d0875c621c5c80293ae97e773c98186532eb6e54e923d25ecb0c565d241d"
+  },
+  "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+  "effective_properties_sha256": "795f8ff099689ee77b61d6b05f27818761cab8d7f7909d6b3042bee98775c737",
+  "checked_port_widths": {
+    "pe_result": 16,
+    "wr_data": 16,
+    "a": 16,
+    "b": 16,
+    "result": 16
+  },
+  "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "assume": 1,
+    "cover": 3,
+    "assert": 23
+  },
+  "error": "property loss/change: assert expected 22, found 23",
+  "duration_seconds": 1.59
+}

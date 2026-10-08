@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-07T17:59:11" hostname="4137314" package="task" id="0" name="default" tests="6" errors="0" failures="2" time="0" skipped="5">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="FAIL"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+<failure type="FAIL" message="Task returned status FAIL." />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:14.29-14.43" time="0" type="ASSERT" location="pe_smoke.sv:14.29-14.43" id="_witness_.check_assert_pe_smoke_sv_14_91">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:15.46-15.67" time="0" type="ASSERT" location="pe_smoke.sv:15.46-15.67" id="_witness_.check_assert_pe_smoke_sv_15_96">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:17.17-17.38" time="0" type="ASSERT" location="pe_smoke.sv:17.17-17.38" id="_witness_.check_assert_pe_smoke_sv_17_102">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:19.17-19.46" time="0" type="ASSERT" location="pe_smoke.sv:19.17-19.46" id="_witness_.check_assert_pe_smoke_sv_19_108">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:22.29-22.43" time="0" type="ASSERT" location="pe_smoke.sv:22.29-22.43" id="_witness_.check_assert_pe_smoke_sv_22_110" tracefile="engine_0/trace.vcd">
+<failure type="ASSERT" message="Property ASSERT in pe_smoke at pe_smoke.sv:22.29-22.43 failed. Trace file: engine_0/trace.vcd" />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_smoke at pe_smoke.sv:24.13-24.34" time="0" type="COVER" location="pe_smoke.sv:24.13-24.34" id="_witness_.check_cover_pe_smoke_sv_24_112">
+<skipped />
+</testcase>
+<system-out>SBY 17:59:10 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/fast-20261007T155909Z-2601190/F-PE-NEGATIVE/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/fast-20261007T155909Z-2601190/F-PE-NEGATIVE/task/src/dut.il'.
+SBY 17:59:10 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/fast-20261007T155909Z-2601190/F-PE-NEGATIVE/pe_smoke.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/fast-20261007T155909Z-2601190/F-PE-NEGATIVE/task/src/pe_smoke.sv'.
+SBY 17:59:10 [task] engine_0: smtbmc yices
+SBY 17:59:10 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 17:59:10 [task] base: finished (returncode=0)
+SBY 17:59:10 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 17:59:10 [task] prep: finished (returncode=0)
+SBY 17:59:10 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 17:59:11 [task] smt2: finished (returncode=0)
+SBY 17:59:11 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 8  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 17:59:11 [task] engine_0: ##   0:00:00  BMC failed!
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Assert failed in pe_smoke: pe_smoke.sv:22.29-22.43 (_witness_.check_assert_pe_smoke_sv_22_110)
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 17:59:11 [task] engine_0: ##   0:00:00  Status: failed
+SBY 17:59:11 [task] engine_0: finished (returncode=1)
+SBY 17:59:11 [task] engine_0: Status returned by engine: FAIL
+SBY 17:59:11 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 17:59:11 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 17:59:11 [task] summary: engine_0 (smtbmc yices) returned FAIL
+SBY 17:59:11 [task] summary: counterexample trace: task/engine_0/trace.vcd
+SBY 17:59:11 [task] summary:   failed assertion pe_smoke._witness_.check_assert_pe_smoke_sv_22_110 at pe_smoke.sv:22.29-22.43 step 2
+SBY 17:59:11 [task] DONE (FAIL, rc=2)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

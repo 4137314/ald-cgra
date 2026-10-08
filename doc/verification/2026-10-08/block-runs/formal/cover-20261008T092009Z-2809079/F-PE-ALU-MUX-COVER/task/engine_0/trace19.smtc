@@ -1,0 +1,36 @@
+initial
+assume (= [$auto$async2sync.cc:107:execute$9815] false)
+assume (= [$auto$async2sync.cc:116:execute$9747] true)
+assume (= [$auto$async2sync.cc:116:execute$9753] true)
+assume (= [$auto$async2sync.cc:116:execute$9759] true)
+assume (= [$auto$async2sync.cc:116:execute$9765] true)
+assume (= [$auto$async2sync.cc:116:execute$9771] true)
+assume (= [$auto$async2sync.cc:116:execute$9777] true)
+assume (= [$auto$async2sync.cc:116:execute$9783] true)
+assume (= [$auto$async2sync.cc:116:execute$9789] true)
+assume (= [$auto$async2sync.cc:116:execute$9795] true)
+assume (= [$auto$async2sync.cc:116:execute$9801] true)
+assume (= [$auto$async2sync.cc:116:execute$9807] true)
+assume (= [$auto$async2sync.cc:116:execute$9813] true)
+assume (= [$auto$async2sync.cc:116:execute$9819] true)
+assume (= [$auto$async2sync.cc:116:execute$9825] true)
+assume (= [$auto$async2sync.cc:116:execute$9831] true)
+assume (= [$auto$async2sync.cc:116:execute$9837] true)
+assume (= [$auto$async2sync.cc:116:execute$9843] true)
+assume (= [$auto$async2sync.cc:116:execute$9849] true)
+assume (= [$auto$async2sync.cc:116:execute$9855] true)
+assume (= [$auto$async2sync.cc:116:execute$9861] true)
+assume (= [dut.dut.r] #b0000000000000000)
+assume (= [past_valid] false)
+
+state 0
+assume (= [clk] false)
+
+state 1
+assume (= [clk] false)
+
+state 2
+assume (= [clk] false)
+
+state 3
+assume (= [clk] false)

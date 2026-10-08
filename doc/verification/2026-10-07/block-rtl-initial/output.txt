@@ -1,0 +1,6 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+gcc -std=c11 -O2 -Wall -Wextra -Werror -I../lib/src sim/gen_block_vectors.c ../lib/src/block_model.c ../lib/src/block_wire.c -o build/ghdl/gen_block_vectors
+./build/ghdl/gen_block_vectors build/blocks.vec.tmp
+gen_block_vectors: sim/gen_block_vectors.c:110: main: Assertion `!memcmp(&saved, &model, sizeof model)' failed.
+make: *** [hw.mk:110: build/blocks.vec] Aborted (core dumped)
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

@@ -1,0 +1,4 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 scr/artifacts.py synth --board 'nexys_a7' --period '10.000' --step-div '2' --rows '4' --cols '4' --vivado '/opt/Xilinx/2026.1/Vivado/bin/vivado' --out 'build/vivado' --block-enable 
+PASS: /home/main/dev/git/ald-cgra/hw/build/vivado/runs/synth-20261007T153531Z-6c1ca55a/manifest.json
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

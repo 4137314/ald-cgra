@@ -1,0 +1,403 @@
+{
+  "schema_version": 1,
+  "run_id": "20261007T154456Z-2545640",
+  "suite": "full",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "78100d8b683f725e2a9cce6225161c09c642f93a",
+  "dirty": true,
+  "runner_sha256": "d7375e48c5a518619cf556f07f9c440fdbc59f9353167a890244a28202a8f3b9",
+  "tasks": [
+    {
+      "id": "F-BLOCK-DOT-DIV1",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 1
+      },
+      "assertions": 16,
+      "assumptions": 1,
+      "covers": 3,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=1 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+        "hw/formal/block_dot_contract.psl": "188c558e6609de6a6790e2c89d8df46cc5fe1b2c798683a42c8dbd4a05c08e9d"
+      },
+      "parameter_check_sha256": "f587dbb463228b22bfa2b6af38e02331ffe27d13f42e842b92fc6fdb4928c1a8",
+      "effective_properties_sha256": "846a957fb0f5dcbcbd196fbf6a846108ec82406e14e50069b7a99b884f580827",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 3,
+        "assert": 16
+      },
+      "smt2_cells": {
+        "assert": 16,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "3a126aed1958e2e6d29897882d0f47482ba685b85269d2e4eb1633cb8f97f3b7",
+        "task/src/properties.json": "d424feb8a3c6558b66c47c05bfca924ea5740dbc681018bdb78c336d08b44d01",
+        "task/model/design_smt2.smt2": "c49ed50ebf408a17dda243368110f2ed67f4bf43fa460c159779a3e53ee62856"
+      },
+      "traces": [],
+      "duration_seconds": 1.402
+    },
+    {
+      "id": "F-BLOCK-DOT-DIV2",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 2
+      },
+      "assertions": 16,
+      "assumptions": 1,
+      "covers": 3,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+        "hw/formal/block_dot_contract.psl": "188c558e6609de6a6790e2c89d8df46cc5fe1b2c798683a42c8dbd4a05c08e9d"
+      },
+      "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+      "effective_properties_sha256": "88e09a6d8317814f0455a06b635413b2c511cb55f8db15daf62c4ee0acf4ca7b",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 3,
+        "assert": 16
+      },
+      "smt2_cells": {
+        "assert": 16,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "8bcf02ab1b3a881e7641d8379b42d41208ceac11142f8b45079b184e4054bcad",
+        "task/src/properties.json": "0b0011a19a946f52f62e08ee3ca2204a7387d05fa2481f60bfd30a992903a6c0",
+        "task/model/design_smt2.smt2": "652a871e3a5c6037e8b1ab8e0d8c156fb0bc7c8c36356de5e54e1a9f6444f453"
+      },
+      "traces": [],
+      "duration_seconds": 1.503
+    },
+    {
+      "id": "F-BLOCK-DOT-DIV3",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 3
+      },
+      "assertions": 16,
+      "assumptions": 1,
+      "covers": 3,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=3 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+        "hw/formal/block_dot_contract.psl": "188c558e6609de6a6790e2c89d8df46cc5fe1b2c798683a42c8dbd4a05c08e9d"
+      },
+      "parameter_check_sha256": "2fe79ff9a7acdc0039d573cdf4424c7ce6caacaa626207165c26729c58af868a",
+      "effective_properties_sha256": "0186a74b880aaf2d2c32fd565052ccfd49206306878a09eee3584ec86049c260",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 3,
+        "assert": 16
+      },
+      "smt2_cells": {
+        "assert": 16,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "71c4dde0f8c487da95952f5b387ffc2cc3848ffc949a9a7c2638da282c197ccd",
+        "task/src/properties.json": "02e7a543c357a2722d8d79c6c8128e4e97efd468b16df828d9b1d03bd4af8796",
+        "task/model/design_smt2.smt2": "c3e101f680e6bcc59d14098b27c9763b6dfb3b33e9c28ff30791ebe16dbf542f"
+      },
+      "traces": [],
+      "duration_seconds": 1.707
+    },
+    {
+      "id": "F-BLOCK-DOT-DIV4",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 4
+      },
+      "assertions": 16,
+      "assumptions": 1,
+      "covers": 3,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=4 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+        "hw/formal/block_dot_contract.psl": "188c558e6609de6a6790e2c89d8df46cc5fe1b2c798683a42c8dbd4a05c08e9d"
+      },
+      "parameter_check_sha256": "7a1e3d4f0eab24ef4e0246f527142ca35440f1594804ab5993bff41e755671a0",
+      "effective_properties_sha256": "40ff4cb1abab5336a3c6ef2ad4daeb9d1965053f2ff28c1dd2a54ad22569ac90",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 3,
+        "assert": 16
+      },
+      "smt2_cells": {
+        "assert": 16,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "383da682cdd7d01ec424bc0b52f75a679b124712358e9d0a288e27f7ec93e1e9",
+        "task/src/properties.json": "479247f1f7d26d77bffd95982911436898fa5644fdf90ae0eb8ee208f74aba1b",
+        "task/model/design_smt2.smt2": "d60c0b41a7b352d4878bb32522bd487fa648aed412e11c6442093f8a74df6e44"
+      },
+      "traces": [],
+      "duration_seconds": 1.55
+    },
+    {
+      "id": "M-BLOCK-EARLY",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "bmc",
+      "depth": 12,
+      "parameters": {
+        "G_STEP_DIV": 2
+      },
+      "assertions": 16,
+      "assumptions": 1,
+      "covers": 3,
+      "negative": true,
+      "mutation": "block-early-capture",
+      "result": "FAIL",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+        "hw/formal/block_dot_contract.psl": "188c558e6609de6a6790e2c89d8df46cc5fe1b2c798683a42c8dbd4a05c08e9d"
+      },
+      "mutated_source_sha256": {
+        "block_dot.vhd": "f0a3ed5b777c67e564599301053a38c6b95e94c6e8fccd39bd456835f6beb3df"
+      },
+      "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+      "effective_properties_sha256": "88e09a6d8317814f0455a06b635413b2c511cb55f8db15daf62c4ee0acf4ca7b",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+      "exit_code": 2,
+      "solver_status": "FAIL",
+      "property_cells": {
+        "assume": 1,
+        "cover": 3,
+        "assert": 16
+      },
+      "smt2_cells": {
+        "assert": 16,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "57c1351547166e899ebf2a64e8f3d96c1b7ac7d63396327053704b8a3628c410",
+        "task/src/properties.json": "9627613885d8dfec29f2d860fd0ae2af4624812d201201a909dc095b143ec971",
+        "task/model/design_smt2.smt2": "e4adde3f7186a10b6ff0068caa87113f44c2481da1c4412ef30be9451ef71730"
+      },
+      "traces": [
+        "task/engine_0/trace.yw"
+      ],
+      "duration_seconds": 0.746
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-BLOCK-DOT-DIV1",
+    "F-BLOCK-DOT-DIV2",
+    "F-BLOCK-DOT-DIV3",
+    "F-BLOCK-DOT-DIV4",
+    "M-BLOCK-EARLY"
+  ]
+}

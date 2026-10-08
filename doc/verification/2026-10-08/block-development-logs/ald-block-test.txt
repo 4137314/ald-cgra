@@ -1,0 +1,33 @@
+make -C lib -f lib.mk PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/serve.c -o build/serve.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/cgra.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/vector.c -o build/vector.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/kernels.c -o build/kernels.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/emu.c -o build/emu.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/serve.c -o build/serve.pic.o
+gcc -shared -Wl,-soname,libcgra.so.0  -o build/libcgra.so.0.1.0 build/cgra.pic.o build/vector.pic.o build/kernels.pic.o build/emu.pic.o build/serve.pic.o build/block_wire.pic.o build/block_model.pic.o
+ar rcs build/libcgra.a build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o build/block_wire.o build/block_model.o
+ln -sf libcgra.so.0.1.0 build/libcgra.so.0
+ln -sf libcgra.so.0.1.0 build/libcgra.so
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C lib -f lib.mk PROFILE=release test
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_cgra.c build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o build/block_wire.o build/block_model.o  -o build/test_cgra
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_transport.c build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o build/block_wire.o build/block_model.o  -Wl,--wrap=write -o build/test_transport
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_kernels.c build/libcgra.a  -o build/test_kernels
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_faults.c build/libcgra.a  -Wl,--wrap=calloc,--wrap=read,--wrap=__read_chk,--wrap=clock_gettime -o build/test_faults
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_plans.c build/libcgra.a  -o build/test_plans
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -UNDEBUG test/test_blocks.c build/libcgra.a  -o build/test_blocks
+test/test_blocks.c: In function ‘public_api’:
+test/test_blocks.c:244:15: error: implicit declaration of function ‘cgra_reset’; did you mean ‘cgra_exec’? [-Wimplicit-function-declaration]
+  244 |         CHECK(cgra_reset(dev)==CGRA_ERR_UNSUPPORTED,"legacy command blocked after explicit mode selection");
+      |               ^~~~~~~~~~
+test/test_blocks.c:9:42: note: in definition of macro ‘CHECK’
+    9 | #define CHECK(expr, name) do { int ok = (expr); ++checks; \
+      |                                          ^~~~
+make[1]: *** [lib.mk:113: build/test_blocks] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make: *** [Makefile:107: test] Error 2

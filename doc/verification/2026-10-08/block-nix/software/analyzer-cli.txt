@@ -1,0 +1,7 @@
+make: Entering directory '/build/source/sw'
+CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=release static
+make[1]: Entering directory '/build/source/lib'
+make[1]: Leaving directory '/build/source/lib'
+python3 ../scripts/build-provenance.py build/build_provenance.h build/.build-config.json ../lib/build/.build-config.json
+mkdir -p build/analyze
+make: Leaving directory '/build/source/sw'

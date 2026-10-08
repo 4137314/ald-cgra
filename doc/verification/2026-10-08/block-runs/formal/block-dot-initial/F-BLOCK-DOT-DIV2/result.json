@@ -1,0 +1,58 @@
+{
+  "id": "F-BLOCK-DOT-DIV2",
+  "top": "block_dot",
+  "kind": "block_dot",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_STEP_DIV": 2
+  },
+  "assertions": 17,
+  "assumptions": 0,
+  "covers": 3,
+  "result": "ERROR",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+    "hw/formal/block_dot_contract.psl": "9a10404e2d3d46767b5b6000583ebe73e91ead4f0765dc33fa000973a6c7f452"
+  },
+  "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+  "effective_properties_sha256": "dc99a05f238a1baabb88ea0ae5f3393300e5843b00558a62e7cbd152312161ed",
+  "checked_port_widths": {
+    "pe_result": 16,
+    "wr_data": 16,
+    "a": 16,
+    "b": 16,
+    "result": 16
+  },
+  "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "cover": 3,
+    "assert": 16
+  },
+  "error": "property loss/change: assert expected 17, found 16",
+  "duration_seconds": 0.641
+}

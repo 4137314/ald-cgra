@@ -1,0 +1,210 @@
+[
+  {
+    "path": "formal/block-dot-2/manifest.json",
+    "status": null,
+    "mode": "fast",
+    "results": {
+      "F-BLOCK-DOT-DIV2": "PROVED"
+    },
+    "sha256": "48ba81bb8b7ceeaa5a82c728eeab5623e7fc39b51091d87f4cfde310fa757626"
+  },
+  {
+    "path": "formal/block-dot-cover/manifest.json",
+    "status": null,
+    "mode": "cover",
+    "results": {
+      "F-BLOCK-DOT-DIV1-COVER": "BOUNDED_PASS",
+      "F-BLOCK-DOT-DIV2-COVER": "BOUNDED_PASS",
+      "F-BLOCK-DOT-DIV3-COVER": "BOUNDED_PASS",
+      "F-BLOCK-DOT-DIV4-COVER": "BOUNDED_PASS"
+    },
+    "sha256": "0d3adf17adcd19223ba5f3b27ac2b78a5ffd14e8909e4b399688d7b31e11ac10"
+  },
+  {
+    "path": "formal/block-dot-final/manifest.json",
+    "status": null,
+    "mode": "full",
+    "results": {
+      "F-BLOCK-DOT-DIV1": "PROVED",
+      "F-BLOCK-DOT-DIV2": "PROVED",
+      "F-BLOCK-DOT-DIV3": "PROVED",
+      "F-BLOCK-DOT-DIV4": "PROVED",
+      "M-BLOCK-EARLY": "FAIL"
+    },
+    "sha256": "440742e4ba56dc0c5f44054be80c98038ab10be6b01304144729c4967a6f7458"
+  },
+  {
+    "path": "formal/block-dot-initial/manifest.json",
+    "status": null,
+    "mode": "fast",
+    "results": {
+      "F-BLOCK-DOT-DIV2": "ERROR"
+    },
+    "sha256": "8b7c3ed2d47f46246c8cb17447fa5d1bfaa997df74531ccf097625d636b6eaa7"
+  },
+  {
+    "path": "formal/block-dot-pipeline/manifest.json",
+    "status": null,
+    "mode": "full",
+    "results": {
+      "F-BLOCK-DOT-DIV1": "PROVED",
+      "F-BLOCK-DOT-DIV2": "PROVED",
+      "F-BLOCK-DOT-DIV3": "PROVED",
+      "F-BLOCK-DOT-DIV4": "PROVED",
+      "M-BLOCK-EARLY": "FAIL"
+    },
+    "sha256": "eb498927bd7e26cfd33ec4ab656f1607d0e7c5c9c64d0eeaf502512d6dfc4b90"
+  },
+  {
+    "path": "formal/block-owned/manifest.json",
+    "status": null,
+    "mode": "full",
+    "results": {
+      "F-BLOCK-DOT-DIV1": "ERROR",
+      "F-BLOCK-DOT-DIV2": "ERROR",
+      "F-BLOCK-DOT-DIV3": "ERROR",
+      "F-BLOCK-DOT-DIV4": "ERROR",
+      "M-BLOCK-EARLY": "ERROR"
+    },
+    "sha256": "9d89b4c33abc09b90dfad9bfc875c9cd3e20248c42c35f817cbfa609412481d1"
+  },
+  {
+    "path": "formal/cover-20261008T092009Z-2809079/manifest.json",
+    "status": null,
+    "mode": "cover",
+    "results": {
+      "F-PE-ALU-MUX": "PROVED",
+      "F-PE-SMOKE-COVER": "BOUNDED_PASS",
+      "F-PE-ALU-MUX-COVER": "BOUNDED_PASS",
+      "F-CTRL-1x1-DIV1-COVER": "BOUNDED_PASS",
+      "F-CTRL-1x1-DIV2-COVER": "BOUNDED_PASS",
+      "F-CTRL-1x1-DIV3-COVER": "BOUNDED_PASS",
+      "F-CTRL-1x1-DIV4-COVER": "BOUNDED_PASS",
+      "F-ARRAY-1x1-COVER": "BOUNDED_PASS",
+      "F-ARRAY-2x3-COVER": "BOUNDED_PASS",
+      "F-UART-TX-C3-COVER": "BOUNDED_PASS",
+      "F-UART-RX-C3-COVER": "BOUNDED_PASS",
+      "F-BLOCK-DOT-DIV1-COVER": "BOUNDED_PASS",
+      "F-BLOCK-DOT-DIV2-COVER": "BOUNDED_PASS",
+      "F-BLOCK-DOT-DIV3-COVER": "BOUNDED_PASS",
+      "F-BLOCK-DOT-DIV4-COVER": "BOUNDED_PASS",
+      "F-CTRL-2x3-DIV2-COVER": "BOUNDED_PASS"
+    },
+    "sha256": "95d211adec0d2a9a3729050946acc060d75338bb0a2c36a98a5f35afe4e63406"
+  },
+  {
+    "path": "formal/fast-20261007T155909Z-2601190/manifest.json",
+    "status": null,
+    "mode": "fast",
+    "results": {
+      "F-PE-SMOKE": "PROVED",
+      "F-PE-NEGATIVE": "FAIL",
+      "F-PE-ALU-MUX": "PROVED",
+      "F-CTRL-1x1-DIV1": "PROVED",
+      "F-CTRL-1x1-DIV2": "PROVED",
+      "F-CTRL-1x1-DIV3": "PROVED",
+      "F-CTRL-1x1-DIV4": "PROVED",
+      "F-ARRAY-1x1": "PROVED",
+      "F-ARRAY-2x3": "PROVED",
+      "F-UART-TX-C3": "PROVED",
+      "F-UART-RX-C3": "PROVED",
+      "F-BLOCK-DOT-DIV1": "PROVED",
+      "F-BLOCK-DOT-DIV2": "PROVED",
+      "F-BLOCK-DOT-DIV3": "PROVED",
+      "F-BLOCK-DOT-DIV4": "PROVED"
+    },
+    "sha256": "fcf2631baed6380cb6790e820a6b33764473cf1589514fe964f0b0413c7cfdcc"
+  },
+  {
+    "path": "formal/full-20261008T091350Z-2776760/manifest.json",
+    "status": null,
+    "mode": "full",
+    "results": {
+      "F-PE-SMOKE": "PROVED",
+      "F-PE-NEGATIVE": "FAIL",
+      "F-PE-ALU-MUX": "PROVED",
+      "F-CTRL-1x1-DIV1": "PROVED",
+      "F-CTRL-1x1-DIV2": "PROVED",
+      "F-CTRL-1x1-DIV3": "PROVED",
+      "F-CTRL-1x1-DIV4": "PROVED",
+      "F-ARRAY-1x1": "PROVED",
+      "F-ARRAY-2x3": "PROVED",
+      "F-UART-TX-C3": "PROVED",
+      "F-UART-RX-C3": "PROVED",
+      "F-BLOCK-DOT-DIV1": "PROVED",
+      "F-BLOCK-DOT-DIV2": "PROVED",
+      "F-BLOCK-DOT-DIV3": "PROVED",
+      "F-BLOCK-DOT-DIV4": "PROVED",
+      "F-ARRAY-1x2": "PROVED",
+      "F-ARRAY-2x1": "PROVED",
+      "F-ARRAY-3x2": "PROVED",
+      "F-ARRAY-4x4": "PROVED",
+      "F-ARRAY-1x16": "PROVED",
+      "F-ARRAY-16x1": "PROVED",
+      "F-CTRL-2x3-DIV2": "PROVED",
+      "F-CTRL-3x2-DIV2": "PROVED",
+      "F-CTRL-4x4-DIV2": "PROVED",
+      "F-CTRL-1x16-DIV2": "PROVED",
+      "F-CTRL-16x1-DIV2": "PROVED",
+      "F-UART-TX-C868": "PROVED",
+      "F-UART-RX-C868": "PROVED",
+      "M-BLOCK-EARLY": "FAIL",
+      "M-PE-ADD": "FAIL",
+      "M-CTRL-STEP": "FAIL",
+      "M-EXEC-BYTE": "FAIL",
+      "M-ARRAY-NORTH": "FAIL",
+      "M-UART-TX": "FAIL",
+      "M-UART-RX": "FAIL"
+    },
+    "sha256": "8f5366536ef9455314687d53c95785a4698b680440dea93b3592f68d5fb46647"
+  },
+  {
+    "path": "physical/sta-20261007T154312Z-a21aa0d9/manifest.json",
+    "status": "FAIL",
+    "mode": "sta",
+    "results": {},
+    "sha256": "6c19822ec341bb10790a64dc6db6f7bb38ca8fdf0f8ebbe00cb0246c648aab64"
+  },
+  {
+    "path": "physical/sta-20261007T155537Z-35b70ee4/manifest.json",
+    "status": "FAIL",
+    "mode": "sta",
+    "results": {},
+    "sha256": "768d9ab257f31e695de4e4bbf2901431a63e5d43e386af7fb18c3b2acba0f20d"
+  },
+  {
+    "path": "physical/sta-20261008T091011Z-d4eb1e5f/manifest.json",
+    "status": "PASS",
+    "mode": "sta",
+    "results": {},
+    "sha256": "afb2a6e2786a0b5123656ccbc080e54aa297415d855d87b40f6db1a0f19c02c5"
+  },
+  {
+    "path": "physical/synth-20261007T153427Z-e16124f3/manifest.json",
+    "status": "FAIL",
+    "mode": "synth",
+    "results": {},
+    "sha256": "1e128b4374658c3f1577b743a8c059252e285efebebd2364900473342d21bf21"
+  },
+  {
+    "path": "physical/synth-20261007T153531Z-6c1ca55a/manifest.json",
+    "status": "PASS",
+    "mode": "synth",
+    "results": {},
+    "sha256": "c6d0da719fa7bfaf0d202ca93e862ee04a26c3705fb2ef553f3c43b9923037b7"
+  },
+  {
+    "path": "physical/synth-20261008T091642Z-dbfbddce/manifest.json",
+    "status": "PASS",
+    "mode": "synth",
+    "results": {},
+    "sha256": "c158f8a8eb936d83314f5ce1bdee60e946d09b36f9fcfafcc9460feecfe9ab69"
+  },
+  {
+    "path": "physical/synth-20261008T092712Z-75b0e188/manifest.json",
+    "status": "PASS",
+    "mode": "synth",
+    "results": {},
+    "sha256": "a699955fb259a0f2ee3b72ba09fc98a5850712543e60e6bf03e8ccdfb69c1cc3"
+  }
+]

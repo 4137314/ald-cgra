@@ -1,0 +1,75 @@
+{
+  "id": "F-BLOCK-DOT-DIV2-COVER",
+  "top": "block_dot",
+  "kind": "block_dot",
+  "mode": "cover",
+  "depth": 40,
+  "parameters": {
+    "G_STEP_DIV": 2
+  },
+  "assertions": 16,
+  "assumptions": 1,
+  "covers": 3,
+  "result": "BOUNDED_PASS",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+    "hw/formal/block_dot_contract.psl": "188c558e6609de6a6790e2c89d8df46cc5fe1b2c798683a42c8dbd4a05c08e9d"
+  },
+  "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+  "effective_properties_sha256": "88e09a6d8317814f0455a06b635413b2c511cb55f8db15daf62c4ee0acf4ca7b",
+  "checked_port_widths": {
+    "pe_result": 16,
+    "wr_data": 16,
+    "a": 16,
+    "b": 16,
+    "result": 16
+  },
+  "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "assume": 1,
+    "cover": 3,
+    "assert": 16
+  },
+  "smt2_cells": {
+    "assert": 0,
+    "assume": 2,
+    "cover": 3
+  },
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "8bcf02ab1b3a881e7641d8379b42d41208ceac11142f8b45079b184e4054bcad",
+    "task/src/properties.json": "0b0011a19a946f52f62e08ee3ca2204a7387d05fa2481f60bfd30a992903a6c0",
+    "task/model/design_smt2.smt2": "4f73440437ab72b001641fdd85abeb10167c249ca78aeda1d94ed99fc35711c3"
+  },
+  "traces": [
+    "task/engine_0/trace0.yw",
+    "task/engine_0/trace1.yw",
+    "task/engine_0/trace2.yw"
+  ],
+  "meaning": "bounded reachability only; no universal guarantee",
+  "duration_seconds": 0.858
+}

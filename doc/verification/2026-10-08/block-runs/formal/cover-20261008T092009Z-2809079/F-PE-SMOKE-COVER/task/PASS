@@ -1,0 +1,6 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+engine_0 (smtbmc yices) returned pass
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement pe_smoke._witness_.check_cover_pe_smoke_sv_24_108 at pe_smoke.sv:24.13-24.34 step 3

@@ -1,0 +1,43 @@
+make -C lib -f lib.mk PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/cgra.c -o build/cgra.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/vector.c -o build/vector.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/kernels.c -o build/kernels.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/emu.c -o build/emu.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -c src/serve.c -o build/serve.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/cgra.c -o build/cgra.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/vector.c -o build/vector.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/kernels.c -o build/kernels.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/emu.c -o build/emu.pic.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP -fPIC -c src/serve.c -o build/serve.pic.o
+ar rcs build/libcgra.a build/cgra.o build/vector.o build/kernels.o build/emu.o build/serve.o build/block_wire.o build/block_model.o
+gcc -shared -Wl,-soname,libcgra.so.0  -o build/libcgra.so.0.1.0 build/cgra.pic.o build/vector.pic.o build/kernels.pic.o build/emu.pic.o build/serve.pic.o build/block_wire.pic.o build/block_model.pic.o
+ln -sf libcgra.so.0.1.0 build/libcgra.so.0
+ln -sf libcgra.so.0.1.0 build/libcgra.so
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make -C sw  -f sw.mk  PROFILE=release
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/sw'
+CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=release static
+make[2]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c main.c -o build/main.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c cli.c -o build/cli.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c vector_io.c -o build/vector_io.o
+make[2]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c device.c -o build/device.o
+gcc  -std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -I. -Ibuild -I../lib/include -DHAVE_READLINE -I/nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -MMD -MP -include build/install_paths.h -c shell.c -o build/shell.o
+cli.c:595:43: error: ‘OPT_BLOCKS’ undeclared here (not in a function); did you mean ‘OPT_ROWS’?
+  595 |     { "blocks",  no_argument,       NULL, OPT_BLOCKS },
+      |                                           ^~~~~~~~~~
+      |                                           OPT_ROWS
+cli.c:595:5: warning: missing initializer for field ‘val’ of ‘const struct option’ [-Wmissing-field-initializers]
+  595 |     { "blocks",  no_argument,       NULL, OPT_BLOCKS },
+      |     ^
+In file included from /nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/getopt.h:36,
+                 from cli.c:23:
+/nix/store/9bpdf8r3rlrffl5y5188xd8mb879vpb8-glibc-2.42-67-dev/include/bits/getopt_ext.h:57:7: note: ‘val’ declared here
+   57 |   int val;
+      |       ^~~
+make[1]: *** [sw.mk:124: build/cli.o] Error 1
+make[1]: *** Waiting for unfinished jobs....
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/sw'
+make: *** [Makefile:103: sw] Error 2

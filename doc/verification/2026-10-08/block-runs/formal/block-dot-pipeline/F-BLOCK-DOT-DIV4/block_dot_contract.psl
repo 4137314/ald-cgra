@@ -1,0 +1,53 @@
+-- Control/ownership proof of the production memory sequencer. RAM contents,
+-- arithmetic and controller length validation are separate obligations.
+vunit block_dot_contract (block_dot(rtl)) {
+  default clock is rising_edge(clk);
+  F_SELECTED: assert always (G_STEP_DIV = 4);
+
+  signal f_pending : natural range 0 to BLOCK_WORDS := 0;
+  signal f_age : natural range 0 to G_STEP_DIV := G_STEP_DIV;
+  signal f_data_age : natural range 0 to G_STEP_DIV := G_STEP_DIV;
+  signal f_index : natural range 0 to BLOCK_WORDS-1 := 0;
+  signal f_previous_result : data_t := (others => '0');
+  signal f_seen : boolean := false;
+  monitor : process(clk)
+  begin
+    if rising_edge(clk) then
+      f_seen <= true;
+      if rst = '1' or state = S_READ then f_data_age <= 0;
+      elsif f_data_age < G_STEP_DIV then f_data_age <= f_data_age+1; end if;
+      f_previous_result <= pe_result;
+      f_index <= index;
+      if rst = '1' then f_pending <= 0;
+      elsif state = S_IDLE and start = '1' then f_pending <= count;
+      elsif step = '1' and f_pending > 0 then f_pending <= f_pending-1;
+      end if;
+      if rst = '1' or dp_rst = '1' or step = '1' then f_age <= 0;
+      elsif f_age < G_STEP_DIV then f_age <= f_age+1; end if;
+    end if;
+  end process;
+  -- The VHDL port subtype count is 0..1024; its synthesized 11 bits
+  -- also encode 1025..2047. The enclosing controller must meet this bound.
+  A_BLOCK_COUNT: assume always (count <= BLOCK_WORDS);
+  F_BLOCK_STATE: assert always (state <= S_RESULT);
+  F_BLOCK_BOUNDS: assert always (index < BLOCK_WORDS and remaining <= BLOCK_WORDS);
+  F_BLOCK_GUARD: assert always (guard <= G_STEP_DIV and f_age <= G_STEP_DIV);
+  F_BLOCK_PENDING: assert always (remaining = f_pending);
+  F_BLOCK_REMAINING: assert always (remaining > 0 -> index + remaining <= BLOCK_WORDS);
+  F_BLOCK_CAPTURE: assert always (step = '1' -> remaining > 0 and busy = '1' and dp_rst = '0');
+  F_BLOCK_CADENCE: assert always (step = '1' -> f_age >= G_STEP_DIV-1);
+  F_BLOCK_DATA_AGE: assert always (f_data_age <= G_STEP_DIV);
+  F_BLOCK_DATA_GUARD: assert always (step = '1' -> f_data_age >= G_STEP_DIV-1);
+  F_BLOCK_WAIT: assert always (state = S_WAIT -> guard > 0);
+  F_BLOCK_RESET: assert always (rst = '1' -> next (state = S_IDLE and done = '0' and remaining = 0));
+  F_BLOCK_START: assert always (rst = '0' and state = S_IDLE and start = '1' -> next (state = S_RESET and index = 0));
+  F_BLOCK_BUSY: assert always (busy = '0' <-> state = S_IDLE);
+  F_BLOCK_DONE: assert always (done = '1' -> state = S_IDLE and remaining = 0);
+  F_BLOCK_RESULT: assert always (f_seen and done = '1' -> result = f_previous_result);
+  F_BLOCK_LAST: assert always (rst = '0' and state = S_CAPTURE and remaining = 1 -> next (state = S_RESULT and remaining = 0));
+  F_BLOCK_ADVANCE: assert always (rst = '0' and state = S_CAPTURE and remaining > 1 -> next (state = S_FETCH and index = f_index+1));
+  F_BLOCK_FINISH: assert always (state = S_RESULT -> remaining = 0);
+  C_BLOCK_CAPTURE: cover {rst = '0' and step = '1'};
+  C_BLOCK_EMPTY: cover {rst = '0' and state = S_RESULT and index = 0};
+  C_BLOCK_DONE: cover {rst = '0' and done = '1' and index > 0};
+}

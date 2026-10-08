@@ -1,0 +1,246 @@
+{
+  "source": "/home/main/dev/git/ald-cgra/hw/build/vivado/runs/sta-20261007T155537Z-35b70ee4",
+  "files": {
+    "manifest.json": {
+      "sha256": "768d9ab257f31e695de4e4bbf2901431a63e5d43e386af7fb18c3b2acba0f20d",
+      "archived": true,
+      "bytes": 7321
+    },
+    "vivado.log": {
+      "sha256": "0f99e17be88d94a595339f733cdbc4caf7d86b2a98fd2ea9451674882a30deb3",
+      "archived": true,
+      "bytes": 163373
+    },
+    "work/.Xil/cgra_top_propImpl.xdc": {
+      "sha256": "4f3e14cdbfca649561ab33260b30c4520198bd22eae05ef8a2373a6eec7b09ff",
+      "archived": false,
+      "bytes": 1433
+    },
+    "work/build/vivado/blocks/cdc.rpt": {
+      "sha256": "c5f4396c4d3bb6a41fdb8a8bc09f8f2b2de4016c48faae2111d71eab5a2d1ed1",
+      "archived": true,
+      "bytes": 1524
+    },
+    "work/build/vivado/blocks/check_timing_nexys_a7.rpt": {
+      "sha256": "7635fdd8353e6f5d12552ad33ffb23a798852ffaad1bc299e5b117d03c0df95a",
+      "archived": true,
+      "bytes": 3181
+    },
+    "work/build/vivado/blocks/clock_interaction_nexys_a7.rpt": {
+      "sha256": "4b0d87645d16183080075561a3192f9d60a80c573cf96f56ba8e9bdcddfc5411",
+      "archived": true,
+      "bytes": 1436
+    },
+    "work/build/vivado/blocks/constraint_coverage.rpt": {
+      "sha256": "78dbf82879ae31148efb87638d04bad0acef73b137015749f0165963617739c4",
+      "archived": true,
+      "bytes": 3179
+    },
+    "work/build/vivado/blocks/control_endpoints.tsv": {
+      "sha256": "85131b337c18b8f41651661c7db0773db31a83633ad350a734f3bb6056efdf04",
+      "archived": true,
+      "bytes": 44554
+    },
+    "work/build/vivado/blocks/data_endpoints.tsv": {
+      "sha256": "6ac9298c6d87f4158ac7f3a5f78cd11f88c93cd6a22e26308fbad08216862b78",
+      "archived": true,
+      "bytes": 15802
+    },
+    "work/build/vivado/blocks/drc_gate.rpt": {
+      "sha256": "7f517c84baab7aeb1c9d985c7ca4e4dcf5a2c01186fbce8d9ffb7ddd0c45d726",
+      "archived": true,
+      "bytes": 31360
+    },
+    "work/build/vivado/blocks/exception_coverage.rpt": {
+      "sha256": "c5642d8e3b177fd760e4f8804cf3a22a76d04204d8ba6137382cfd4350fa284b",
+      "archived": true,
+      "bytes": 1762
+    },
+    "work/build/vivado/blocks/post_route.dcp": {
+      "sha256": "a0f313490b5828040be1660145e114ecae5f79dc0c7a737f8d6b6103d9f8d4f2",
+      "archived": false,
+      "bytes": 5203987
+    },
+    "work/build/vivado/blocks/synchronizers.tsv": {
+      "sha256": "3bd28bf4662e4a0ad24f43ffce0ea9db71668985d87cd3d9a7da546679e06373",
+      "archived": true,
+      "bytes": 27250
+    },
+    "work/build/vivado/blocks/timing_hold_nexys_a7.rpt": {
+      "sha256": "0c99b2635214b8709e7417c6f3bb22668baf19ec355db53782e196e4e6720903",
+      "archived": true,
+      "bytes": 37329
+    },
+    "work/build/vivado/blocks/timing_setup_nexys_a7.rpt": {
+      "sha256": "1763dcd06ccaf27748acc3523c8cf03b1abfac08b5ceeb391a373c0ad56afdc4",
+      "archived": true,
+      "bytes": 69368
+    },
+    "work/build/vivado/blocks/timing_summary_nexys_a7.rpt": {
+      "sha256": "2ce1e0cad82f4e2f58eea5d267ce184e4a7345467ca7f8b26d55cb81726db6a4",
+      "archived": true,
+      "bytes": 20252
+    },
+    "work/build/vivado/blocks/utilization_impl.rpt": {
+      "sha256": "deeb9bffb7d7b97451e0f0e03a588c4f96f15cfc8fe1ba138ba6524bff23c00b",
+      "archived": true,
+      "bytes": 10980
+    },
+    "work/build/vivado/blocks/utilization_synth.rpt": {
+      "sha256": "183ca2cc642a46819f89884eec7ab4ee7320a57250b6e2c11c5d92b0512fd46f",
+      "archived": true,
+      "bytes": 8797
+    },
+    "work/clockInfo.txt": {
+      "sha256": "c01e515eeb5e40b06320ce4146d55e1a36c7d85e4607d1a5c112d1b430a8ef76",
+      "archived": false,
+      "bytes": 370
+    },
+    "work/con/README": {
+      "sha256": "dd4c82ed47704cc0015f7d3e0b4eff51f1b37f51db0a8997ba4a289a880bf0c3",
+      "archived": true,
+      "bytes": 1082
+    },
+    "work/con/basys3.xdc": {
+      "sha256": "75ccf3b02bacc8c6e39ad3d90e3f64f99e6b4d43f0bc4353181a5a0ae265f2aa",
+      "archived": true,
+      "bytes": 1216
+    },
+    "work/con/nexys_a7.xdc": {
+      "sha256": "2118b48a13287cee9cbb65bd55017b84e57f7b841cd4aa2c7e60a332aa6c1ee6",
+      "archived": true,
+      "bytes": 1259
+    },
+    "work/rtl/README": {
+      "sha256": "010e2335ddda7492fab0f02cc8ac383a16b54b0bd791422f28d60a93efa8b232",
+      "archived": true,
+      "bytes": 3998
+    },
+    "work/rtl/block_ctrl.vhd": {
+      "sha256": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+      "archived": true,
+      "bytes": 10391
+    },
+    "work/rtl/block_dot.vhd": {
+      "sha256": "156ba422aa3675bc9457742a20599cb9376e49ad97ecf0f3778052dd0d513113",
+      "archived": true,
+      "bytes": 3379
+    },
+    "work/rtl/block_pkg.vhd": {
+      "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+      "archived": true,
+      "bytes": 1129
+    },
+    "work/rtl/block_rx.vhd": {
+      "sha256": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+      "archived": true,
+      "bytes": 2992
+    },
+    "work/rtl/cgra_array.vhd": {
+      "sha256": "0d84bdc23743a1c1b69821979ca7d9588e0e630e359811911997139e3e95c2c4",
+      "archived": true,
+      "bytes": 2741
+    },
+    "work/rtl/cgra_comp_pkg.vhd": {
+      "sha256": "df833600c2edd6bb80d36ea2e1c225bf370ffa64664e04f249d43775c7da4b7e",
+      "archived": true,
+      "bytes": 2704
+    },
+    "work/rtl/cgra_ctrl.vhd": {
+      "sha256": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+      "archived": true,
+      "bytes": 18294
+    },
+    "work/rtl/cgra_pkg.vhd": {
+      "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+      "archived": true,
+      "bytes": 7159
+    },
+    "work/rtl/cgra_top.vhd": {
+      "sha256": "2944c89abc39c0d539aca88b1fd673744b24dfc0ea0d2586fc0b45e22a529cb7",
+      "archived": true,
+      "bytes": 5974
+    },
+    "work/rtl/pe.vhd": {
+      "sha256": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+      "archived": true,
+      "bytes": 3454
+    },
+    "work/rtl/uart_rx.vhd": {
+      "sha256": "249b607ae8139d9a4a854fedc09c9da1dea9766a4f284915cdae0c39c15c2e28",
+      "archived": true,
+      "bytes": 3239
+    },
+    "work/rtl/uart_tx.vhd": {
+      "sha256": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+      "archived": true,
+      "bytes": 2327
+    },
+    "work/scr/README": {
+      "sha256": "b9a7514221823b6fdcab31cc37bad6cb208352117fde5fbba956407655312eb3",
+      "archived": true,
+      "bytes": 3586
+    },
+    "work/scr/artifacts.py": {
+      "sha256": "43fbfdd2811b9e3bffa5b2348552ee16825d5354e99477b0abecb0fb3f96560d",
+      "archived": true,
+      "bytes": 13771
+    },
+    "work/scr/build.tcl": {
+      "sha256": "324e3576463d9d4639d3f15fde3d3608d23bb648ca560a37335ebcf4fa3ee4ac",
+      "archived": true,
+      "bytes": 3428
+    },
+    "work/scr/constraints.tcl": {
+      "sha256": "60df5dddcb841c8c6868da1c47314cf2d4aaf26bfdbd3637043dd6ea07d851ae",
+      "archived": true,
+      "bytes": 5984
+    },
+    "work/scr/floorplan.tcl": {
+      "sha256": "bd62ce780ab6356634b03ecafd96e5ab77d1ae53b4302a4d68ced72a4999a381",
+      "archived": true,
+      "bytes": 1979
+    },
+    "work/scr/fmax.tcl": {
+      "sha256": "0ea50f90bd902bc6d47be67d2d0d983eda7cecd5297551f538fd96e69caae4ee",
+      "archived": true,
+      "bytes": 7676
+    },
+    "work/scr/geometry.tcl": {
+      "sha256": "9aca4574071836d2032bd9e6b5fbc0965030c760a797939aa0c6252a657860f1",
+      "archived": true,
+      "bytes": 1195
+    },
+    "work/scr/program.tcl": {
+      "sha256": "611087b2006ea710baceeda90a291bcae1940e8250d28ac33b6ab0e0501b29de",
+      "archived": true,
+      "bytes": 1542
+    },
+    "work/scr/structural_checks.tcl": {
+      "sha256": "7365530d0ce202223ecab4e6747d248354c13c3f9347f288cae0c6024050ffed",
+      "archived": true,
+      "bytes": 7369
+    },
+    "work/scr/synth.tcl": {
+      "sha256": "772ccc78d1c1b5c97e0b9d290a5b3e867beeb01911fc74de049f88a958e7d958",
+      "archived": true,
+      "bytes": 3519
+    },
+    "work/scr/timing.tcl": {
+      "sha256": "7a6e8117cf2964c5a6e55dc14d07509390de4fb39cb9fff4278091a1038724de",
+      "archived": true,
+      "bytes": 3746
+    },
+    "work/scr/timing_checks.tcl": {
+      "sha256": "cb621181016fd5ecfb916fc10712cb9a81f195cf612fc0eaf9e8a01dec8de456",
+      "archived": true,
+      "bytes": 2233
+    },
+    "work/tight_setup_hold_pins.txt": {
+      "sha256": "957fce29d9938c4b60ca60312ce8104e50ac4a3da3293b661aed234e3b7cee1a",
+      "archived": false,
+      "bytes": 9118
+    }
+  },
+  "note": "Original manifest unchanged. Large generated RTLIL/SMT2 and physical checkpoints/bitstreams omitted; hashes retained. Reproduce using saved source copies and commands. This is not a programming artifact."
+}

@@ -1,0 +1,91 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+tclsh test/test_timing.tcl
+ok timing 1 - reject invalid period '0'
+ok timing 2 - reject invalid period '-1'
+ok timing 3 - reject invalid period 'Inf'
+ok timing 4 - reject invalid period 'NaN'
+ok timing 5 - reject invalid period 'abc'
+ok timing 6 - reject invalid period ''
+ok timing 7 - reject invalid divider '0'
+ok timing 8 - reject invalid divider '-1'
+ok timing 9 - reject invalid divider '1.5'
+ok timing 10 - reject invalid divider 'abc'
+ok timing 11 - fractional-picosecond period is applied on an explicit 1 ps grid
+ok timing 12 - all sweep candidates use the same period precision
+ok timing 13 - period rounding to zero is rejected
+ok timing 14 - frequency uses actual period, not slack extrapolation
+ok timing 15 - reject invalid/failing slack -0.1 0
+ok timing 16 - reject invalid/failing slack 0 -0.1
+ok timing 17 - reject invalid/failing slack NaN 0
+ok timing 18 - reject invalid/failing slack 0 Inf
+ok timing 19 - reject invalid/failing slack {} 0
+ok timing 20 - fmax.tcl rejects missing_paths (invalid command name "cgra_blocks")
+ok timing 21 - failure publishes no successful frequency row
+ok timing 22 - fmax.tcl rejects missing_hold (invalid command name "cgra_blocks")
+ok timing 23 - failure publishes no successful frequency row
+ok timing 24 - fmax.tcl rejects missing_cells (invalid command name "cgra_blocks")
+ok timing 25 - failure publishes no successful frequency row
+ok timing 26 - fmax.tcl rejects missing_port (invalid command name "cgra_blocks")
+ok timing 27 - failure publishes no successful frequency row
+ok timing 28 - fmax.tcl rejects missing_one_bit (invalid command name "cgra_blocks")
+ok timing 29 - failure publishes no successful frequency row
+ok timing 30 - fmax.tcl rejects wrong_bit (invalid command name "cgra_blocks")
+ok timing 31 - failure publishes no successful frequency row
+ok timing 32 - fmax.tcl rejects missing_pin (invalid command name "cgra_blocks")
+ok timing 33 - failure publishes no successful frequency row
+ok timing 34 - fmax.tcl rejects final_setup (invalid command name "cgra_blocks")
+ok timing 35 - failure publishes no successful frequency row
+ok timing 36 - fmax.tcl rejects final_hold (invalid command name "cgra_blocks")
+ok timing 37 - failure publishes no successful frequency row
+ok timing 38 - fmax.tcl rejects structural (invalid command name "cgra_blocks")
+ok timing 39 - failure publishes no successful frequency row
+ok timing 40 - build.tcl rejects missing_paths (invalid command name "cgra_blocks")
+ok timing 41 - failure publishes no successful frequency row
+ok timing 42 - build.tcl rejects missing_hold (invalid command name "cgra_blocks")
+ok timing 43 - failure publishes no successful frequency row
+ok timing 44 - build.tcl rejects missing_cells (invalid command name "cgra_blocks")
+ok timing 45 - failure publishes no successful frequency row
+ok timing 46 - build.tcl rejects missing_port (invalid command name "cgra_blocks")
+ok timing 47 - failure publishes no successful frequency row
+ok timing 48 - build.tcl rejects missing_one_bit (invalid command name "cgra_blocks")
+ok timing 49 - failure publishes no successful frequency row
+ok timing 50 - build.tcl rejects wrong_bit (invalid command name "cgra_blocks")
+ok timing 51 - failure publishes no successful frequency row
+ok timing 52 - build.tcl rejects missing_pin (invalid command name "cgra_blocks")
+ok timing 53 - failure publishes no successful frequency row
+ok timing 54 - build.tcl rejects final_setup (invalid command name "cgra_blocks")
+ok timing 55 - failure publishes no successful frequency row
+ok timing 56 - build.tcl rejects final_hold (invalid command name "cgra_blocks")
+ok timing 57 - failure publishes no successful frequency row
+ok timing 58 - build.tcl rejects structural (invalid command name "cgra_blocks")
+ok timing 59 - failure publishes no successful frequency row
+ok timing 60 - timing.tcl rejects missing_paths (invalid command name "cgra_blocks")
+ok timing 61 - failure publishes no successful frequency row
+ok timing 62 - timing.tcl rejects missing_hold (invalid command name "cgra_blocks")
+ok timing 63 - failure publishes no successful frequency row
+ok timing 64 - timing.tcl rejects missing_cells (invalid command name "cgra_blocks")
+ok timing 65 - failure publishes no successful frequency row
+ok timing 66 - timing.tcl rejects missing_port (invalid command name "cgra_blocks")
+ok timing 67 - failure publishes no successful frequency row
+ok timing 68 - timing.tcl rejects missing_one_bit (invalid command name "cgra_blocks")
+ok timing 69 - failure publishes no successful frequency row
+ok timing 70 - timing.tcl rejects wrong_bit (invalid command name "cgra_blocks")
+ok timing 71 - failure publishes no successful frequency row
+ok timing 72 - timing.tcl rejects missing_pin (invalid command name "cgra_blocks")
+ok timing 73 - failure publishes no successful frequency row
+ok timing 74 - timing.tcl rejects final_setup (invalid command name "cgra_blocks")
+ok timing 75 - failure publishes no successful frequency row
+ok timing 76 - timing.tcl rejects final_hold (invalid command name "cgra_blocks")
+ok timing 77 - failure publishes no successful frequency row
+ok timing 78 - timing.tcl rejects structural (invalid command name "cgra_blocks")
+ok timing 79 - failure publishes no successful frequency row
+FAIL: passing Fmax run completes (invalid command name "cgra_blocks")
+    while executing
+"error "FAIL: $message" "
+    (procedure "check" line 3)
+    invoked from within
+"check {$status && $message eq "EXIT:0"} "passing Fmax run completes ($message)""
+    ("try" body line 10)
+    (file "test/test_timing.tcl" line 10)
+make: *** [hw.mk:144: test-scripts] Error 1
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

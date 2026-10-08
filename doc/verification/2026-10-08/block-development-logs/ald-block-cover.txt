@@ -1,0 +1,6 @@
+warning: Git tree '/home/main/dev/git/ald-cgra' is dirty
+F-BLOCK-DOT-DIV1-COVER: BOUNDED_PASS (0.813 s)
+F-BLOCK-DOT-DIV2-COVER: BOUNDED_PASS (0.858 s)
+F-BLOCK-DOT-DIV3-COVER: BOUNDED_PASS (0.958 s)
+F-BLOCK-DOT-DIV4-COVER: BOUNDED_PASS (0.959 s)
+Manifest: hw/build/formal/block-dot-cover/manifest.json; acceptance PASS

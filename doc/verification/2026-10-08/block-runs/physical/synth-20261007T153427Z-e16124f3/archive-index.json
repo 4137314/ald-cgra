@@ -1,0 +1,156 @@
+{
+  "source": "/home/main/dev/git/ald-cgra/hw/build/vivado/runs/synth-20261007T153427Z-e16124f3",
+  "files": {
+    "manifest.json": {
+      "sha256": "1e128b4374658c3f1577b743a8c059252e285efebebd2364900473342d21bf21",
+      "archived": true,
+      "bytes": 5036
+    },
+    "vivado.log": {
+      "sha256": "9fa3389acad78507838178c218a72f57a902e5dcef56f5bb52d0b5be5015c27e",
+      "archived": true,
+      "bytes": 21577
+    },
+    "work/con/README": {
+      "sha256": "dd4c82ed47704cc0015f7d3e0b4eff51f1b37f51db0a8997ba4a289a880bf0c3",
+      "archived": true,
+      "bytes": 1082
+    },
+    "work/con/basys3.xdc": {
+      "sha256": "75ccf3b02bacc8c6e39ad3d90e3f64f99e6b4d43f0bc4353181a5a0ae265f2aa",
+      "archived": true,
+      "bytes": 1216
+    },
+    "work/con/nexys_a7.xdc": {
+      "sha256": "2118b48a13287cee9cbb65bd55017b84e57f7b841cd4aa2c7e60a332aa6c1ee6",
+      "archived": true,
+      "bytes": 1259
+    },
+    "work/rtl/README": {
+      "sha256": "010e2335ddda7492fab0f02cc8ac383a16b54b0bd791422f28d60a93efa8b232",
+      "archived": true,
+      "bytes": 3998
+    },
+    "work/rtl/block_ctrl.vhd": {
+      "sha256": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+      "archived": true,
+      "bytes": 10391
+    },
+    "work/rtl/block_dot.vhd": {
+      "sha256": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+      "archived": true,
+      "bytes": 2834
+    },
+    "work/rtl/block_pkg.vhd": {
+      "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+      "archived": true,
+      "bytes": 1129
+    },
+    "work/rtl/block_rx.vhd": {
+      "sha256": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+      "archived": true,
+      "bytes": 2992
+    },
+    "work/rtl/cgra_array.vhd": {
+      "sha256": "0d84bdc23743a1c1b69821979ca7d9588e0e630e359811911997139e3e95c2c4",
+      "archived": true,
+      "bytes": 2741
+    },
+    "work/rtl/cgra_comp_pkg.vhd": {
+      "sha256": "df833600c2edd6bb80d36ea2e1c225bf370ffa64664e04f249d43775c7da4b7e",
+      "archived": true,
+      "bytes": 2704
+    },
+    "work/rtl/cgra_ctrl.vhd": {
+      "sha256": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+      "archived": true,
+      "bytes": 18294
+    },
+    "work/rtl/cgra_pkg.vhd": {
+      "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+      "archived": true,
+      "bytes": 7159
+    },
+    "work/rtl/cgra_top.vhd": {
+      "sha256": "2944c89abc39c0d539aca88b1fd673744b24dfc0ea0d2586fc0b45e22a529cb7",
+      "archived": true,
+      "bytes": 5974
+    },
+    "work/rtl/pe.vhd": {
+      "sha256": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+      "archived": true,
+      "bytes": 3454
+    },
+    "work/rtl/uart_rx.vhd": {
+      "sha256": "249b607ae8139d9a4a854fedc09c9da1dea9766a4f284915cdae0c39c15c2e28",
+      "archived": true,
+      "bytes": 3239
+    },
+    "work/rtl/uart_tx.vhd": {
+      "sha256": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+      "archived": true,
+      "bytes": 2327
+    },
+    "work/scr/README": {
+      "sha256": "b9a7514221823b6fdcab31cc37bad6cb208352117fde5fbba956407655312eb3",
+      "archived": true,
+      "bytes": 3586
+    },
+    "work/scr/artifacts.py": {
+      "sha256": "43fbfdd2811b9e3bffa5b2348552ee16825d5354e99477b0abecb0fb3f96560d",
+      "archived": true,
+      "bytes": 13771
+    },
+    "work/scr/build.tcl": {
+      "sha256": "46ab37c0299604349e43b96166c907c9318b338fc0875e7ca11b9d3f38614c7d",
+      "archived": true,
+      "bytes": 3398
+    },
+    "work/scr/constraints.tcl": {
+      "sha256": "b6a4b08b3d5392134df852d1c71943f8371d00b7373a85059fefde3d0ce635f9",
+      "archived": true,
+      "bytes": 5595
+    },
+    "work/scr/floorplan.tcl": {
+      "sha256": "bd62ce780ab6356634b03ecafd96e5ab77d1ae53b4302a4d68ced72a4999a381",
+      "archived": true,
+      "bytes": 1979
+    },
+    "work/scr/fmax.tcl": {
+      "sha256": "c9fb699b5852c7f456ef402d6a640013785498b7e341041f30098fef72490b9c",
+      "archived": true,
+      "bytes": 7632
+    },
+    "work/scr/geometry.tcl": {
+      "sha256": "9763a3cabaf4cbe83d35178915554b3fbc61b7cc5871aab085bd221429311af7",
+      "archived": true,
+      "bytes": 1167
+    },
+    "work/scr/program.tcl": {
+      "sha256": "611087b2006ea710baceeda90a291bcae1940e8250d28ac33b6ab0e0501b29de",
+      "archived": true,
+      "bytes": 1542
+    },
+    "work/scr/structural_checks.tcl": {
+      "sha256": "4a39c54be9eef9e820406deb23d141700e9dd9fe68fb789520dcbcffe24f130c",
+      "archived": true,
+      "bytes": 7302
+    },
+    "work/scr/synth.tcl": {
+      "sha256": "bf06f60aa16c0357072778e4a4bed1ae26cf0d2554aeaa67769bf21754af43af",
+      "archived": true,
+      "bytes": 3489
+    },
+    "work/scr/timing.tcl": {
+      "sha256": "c7ed7fbe9c1264eac6e2fb216d061e651e3bde9d6ab4f07b391e6f4f1609b710",
+      "archived": true,
+      "bytes": 3716
+    },
+    "work/scr/timing_checks.tcl": {
+      "sha256": "cb621181016fd5ecfb916fc10712cb9a81f195cf612fc0eaf9e8a01dec8de456",
+      "archived": true,
+      "bytes": 2233
+    }
+  },
+  "note": "Original manifest unchanged. Large generated RTLIL/SMT2 and physical checkpoints/bitstreams omitted; hashes retained. Reproduce using saved source copies and commands. This is not a programming artifact."
+}

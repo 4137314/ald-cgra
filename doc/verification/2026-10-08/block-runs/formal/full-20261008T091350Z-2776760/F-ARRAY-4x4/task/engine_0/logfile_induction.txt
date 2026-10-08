@@ -1,0 +1,5 @@
+##   0:00:00  Solver: yices
+##   0:00:02  Trying induction in step 4..
+##   0:00:04  Trying induction in step 3..
+##   0:00:04  Temporal induction successful.
+##   0:00:04  Status: passed

@@ -1,0 +1,77 @@
+{
+  "id": "M-BLOCK-EARLY",
+  "top": "block_dot",
+  "kind": "block_dot",
+  "mode": "bmc",
+  "depth": 12,
+  "parameters": {
+    "G_STEP_DIV": 2
+  },
+  "assertions": 16,
+  "assumptions": 1,
+  "covers": 3,
+  "negative": true,
+  "mutation": "block-early-capture",
+  "result": "FAIL",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_dot.vhd": "a64f8aabe8cbb596002db114bd751783b9c998d873b9f8a334851181372e072c",
+    "hw/formal/block_dot_contract.psl": "188c558e6609de6a6790e2c89d8df46cc5fe1b2c798683a42c8dbd4a05c08e9d"
+  },
+  "mutated_source_sha256": {
+    "block_dot.vhd": "f0a3ed5b777c67e564599301053a38c6b95e94c6e8fccd39bd456835f6beb3df"
+  },
+  "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+  "effective_properties_sha256": "88e09a6d8317814f0455a06b635413b2c511cb55f8db15daf62c4ee0acf4ca7b",
+  "checked_port_widths": {
+    "pe_result": 16,
+    "wr_data": 16,
+    "a": 16,
+    "b": 16,
+    "result": 16
+  },
+  "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+  "exit_code": 2,
+  "solver_status": "FAIL",
+  "property_cells": {
+    "assume": 1,
+    "cover": 3,
+    "assert": 16
+  },
+  "smt2_cells": {
+    "assert": 16,
+    "assume": 2,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "57c1351547166e899ebf2a64e8f3d96c1b7ac7d63396327053704b8a3628c410",
+    "task/src/properties.json": "9627613885d8dfec29f2d860fd0ae2af4624812d201201a909dc095b143ec971",
+    "task/model/design_smt2.smt2": "e4adde3f7186a10b6ff0068caa87113f44c2481da1c4412ef30be9451ef71730"
+  },
+  "traces": [
+    "task/engine_0/trace.yw"
+  ],
+  "duration_seconds": 0.746
+}

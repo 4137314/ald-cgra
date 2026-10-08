@@ -1,0 +1,6 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:03 (3)
+Elapsed process time [H:MM:SS (secs)]: 0:00:02 (2)
+engine_0 (smtbmc yices) returned FAIL
+counterexample trace: engine_0/trace.vcd
+counterexample trace: engine_0/trace.yw
+  failed assertion uart_rx.\uart_rx_contract.f_rx_accept at  step 32

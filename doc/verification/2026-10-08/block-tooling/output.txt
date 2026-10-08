@@ -1,0 +1,505 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/lib'
+mkdir -p build/analyze
+make: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+make: Entering directory '/home/main/dev/git/ald-cgra/sw'
+CFLAGS='' LDFLAGS='' LDLIBS='' make -C ../lib -f lib.mk PROFILE=release static
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/lib'
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/lib'
+python3 ../scripts/build-provenance.py build/build_provenance.h build/.build-config.json ../lib/build/.build-config.json
+mkdir -p build/analyze
+make: Leaving directory '/home/main/dev/git/ald-cgra/sw'
+python3 sw/test/test_install.py
+ok install 1 - install uses release artifacts despite PROFILE=asan; prefix has spaces/quote/ampersand
+ok install 2 - installed include lookup works before init, outside checkout
+ok install 3 - init copies every bundled stdlib file from the installed prefix
+ok install 4 - installed stdlib is byte-identical to sources
+ok install 5 - installed API links/runs external C matrix, scan and convolution kernels on v2/v3
+ok install 6 - changing PREFIX refreshes runtime paths; DESTDIR stays out of the binary configuration
+ok install 7 - custom library/header directories install through DESTDIR without embedding it
+ok install 8 - pkg-config describes the actual custom directories, including spaces/quote/ampersand
+ok install 9 - external C client links/runs using only the custom installation's pkg-config flags
+ok install 10 - rebuilt staged binary resolves only its new installed prefix
+ok install 11 - staged/deployed installation supports init without source fallback
+ok install 12 - init propagates stdlib installation failure
+# 12 isolated installation checks passed
+python3 scripts/test_compdb.py
+ok compdb 1 - all host implementation and C unit-test sources are represented
+ok compdb 2 - no duplicate translation units
+ok compdb 3 - source path round-trips: src/cgra.c
+ok compdb 4 - compiler/profile/quoted flags preserved: src/cgra.c
+ok compdb 5 - test assertions follow the build: src/cgra.c
+ok compdb 6 - sanitizer flags follow the profile: src/cgra.c
+ok compdb 7 - source path round-trips: src/vector.c
+ok compdb 8 - compiler/profile/quoted flags preserved: src/vector.c
+ok compdb 9 - test assertions follow the build: src/vector.c
+ok compdb 10 - sanitizer flags follow the profile: src/vector.c
+ok compdb 11 - source path round-trips: src/kernels.c
+ok compdb 12 - compiler/profile/quoted flags preserved: src/kernels.c
+ok compdb 13 - test assertions follow the build: src/kernels.c
+ok compdb 14 - sanitizer flags follow the profile: src/kernels.c
+ok compdb 15 - source path round-trips: src/emu.c
+ok compdb 16 - compiler/profile/quoted flags preserved: src/emu.c
+ok compdb 17 - test assertions follow the build: src/emu.c
+ok compdb 18 - sanitizer flags follow the profile: src/emu.c
+ok compdb 19 - source path round-trips: src/serve.c
+ok compdb 20 - compiler/profile/quoted flags preserved: src/serve.c
+ok compdb 21 - test assertions follow the build: src/serve.c
+ok compdb 22 - sanitizer flags follow the profile: src/serve.c
+ok compdb 23 - source path round-trips: src/block_wire.c
+ok compdb 24 - compiler/profile/quoted flags preserved: src/block_wire.c
+ok compdb 25 - test assertions follow the build: src/block_wire.c
+ok compdb 26 - sanitizer flags follow the profile: src/block_wire.c
+ok compdb 27 - source path round-trips: src/block_model.c
+ok compdb 28 - compiler/profile/quoted flags preserved: src/block_model.c
+ok compdb 29 - test assertions follow the build: src/block_model.c
+ok compdb 30 - sanitizer flags follow the profile: src/block_model.c
+ok compdb 31 - source path round-trips: test/test_cgra.c
+ok compdb 32 - compiler/profile/quoted flags preserved: test/test_cgra.c
+ok compdb 33 - test assertions follow the build: test/test_cgra.c
+ok compdb 34 - sanitizer flags follow the profile: test/test_cgra.c
+ok compdb 35 - source path round-trips: test/test_transport.c
+ok compdb 36 - compiler/profile/quoted flags preserved: test/test_transport.c
+ok compdb 37 - test assertions follow the build: test/test_transport.c
+ok compdb 38 - sanitizer flags follow the profile: test/test_transport.c
+ok compdb 39 - source path round-trips: test/test_kernels.c
+ok compdb 40 - compiler/profile/quoted flags preserved: test/test_kernels.c
+ok compdb 41 - test assertions follow the build: test/test_kernels.c
+ok compdb 42 - sanitizer flags follow the profile: test/test_kernels.c
+ok compdb 43 - source path round-trips: test/test_faults.c
+ok compdb 44 - compiler/profile/quoted flags preserved: test/test_faults.c
+ok compdb 45 - test assertions follow the build: test/test_faults.c
+ok compdb 46 - sanitizer flags follow the profile: test/test_faults.c
+ok compdb 47 - source path round-trips: test/test_plans.c
+ok compdb 48 - compiler/profile/quoted flags preserved: test/test_plans.c
+ok compdb 49 - test assertions follow the build: test/test_plans.c
+ok compdb 50 - sanitizer flags follow the profile: test/test_plans.c
+ok compdb 51 - source path round-trips: test/test_blocks.c
+ok compdb 52 - compiler/profile/quoted flags preserved: test/test_blocks.c
+ok compdb 53 - test assertions follow the build: test/test_blocks.c
+ok compdb 54 - sanitizer flags follow the profile: test/test_blocks.c
+ok compdb 55 - source path round-trips: main.c
+ok compdb 56 - compiler/profile/quoted flags preserved: main.c
+ok compdb 57 - test assertions follow the build: main.c
+ok compdb 58 - generated header matches the selected profile: main.c
+ok compdb 59 - sanitizer flags follow the profile: main.c
+ok compdb 60 - source path round-trips: cli.c
+ok compdb 61 - compiler/profile/quoted flags preserved: cli.c
+ok compdb 62 - test assertions follow the build: cli.c
+ok compdb 63 - generated header matches the selected profile: cli.c
+ok compdb 64 - sanitizer flags follow the profile: cli.c
+ok compdb 65 - source path round-trips: vector_io.c
+ok compdb 66 - compiler/profile/quoted flags preserved: vector_io.c
+ok compdb 67 - test assertions follow the build: vector_io.c
+ok compdb 68 - generated header matches the selected profile: vector_io.c
+ok compdb 69 - sanitizer flags follow the profile: vector_io.c
+ok compdb 70 - source path round-trips: bench.c
+ok compdb 71 - compiler/profile/quoted flags preserved: bench.c
+ok compdb 72 - test assertions follow the build: bench.c
+ok compdb 73 - generated header matches the selected profile: bench.c
+ok compdb 74 - sanitizer flags follow the profile: bench.c
+ok compdb 75 - source path round-trips: device.c
+ok compdb 76 - compiler/profile/quoted flags preserved: device.c
+ok compdb 77 - test assertions follow the build: device.c
+ok compdb 78 - generated header matches the selected profile: device.c
+ok compdb 79 - sanitizer flags follow the profile: device.c
+ok compdb 80 - source path round-trips: shell.c
+ok compdb 81 - compiler/profile/quoted flags preserved: shell.c
+ok compdb 82 - test assertions follow the build: shell.c
+ok compdb 83 - generated header matches the selected profile: shell.c
+ok compdb 84 - sanitizer flags follow the profile: shell.c
+ok compdb 85 - source path round-trips: dsl.c
+ok compdb 86 - compiler/profile/quoted flags preserved: dsl.c
+ok compdb 87 - test assertions follow the build: dsl.c
+ok compdb 88 - generated header matches the selected profile: dsl.c
+ok compdb 89 - sanitizer flags follow the profile: dsl.c
+ok compdb 90 - source path round-trips: compile.c
+ok compdb 91 - compiler/profile/quoted flags preserved: compile.c
+ok compdb 92 - test assertions follow the build: compile.c
+ok compdb 93 - generated header matches the selected profile: compile.c
+ok compdb 94 - sanitizer flags follow the profile: compile.c
+ok compdb 95 - source path round-trips: bench_ref.c
+ok compdb 96 - compiler/profile/quoted flags preserved: bench_ref.c
+ok compdb 97 - test assertions follow the build: bench_ref.c
+ok compdb 98 - generated header matches the selected profile: bench_ref.c
+ok compdb 99 - sanitizer flags follow the profile: bench_ref.c
+ok compdb 100 - source path round-trips: test/test_sw.c
+ok compdb 101 - compiler/profile/quoted flags preserved: test/test_sw.c
+ok compdb 102 - test assertions follow the build: test/test_sw.c
+ok compdb 103 - generated header matches the selected profile: test/test_sw.c
+ok compdb 104 - sanitizer flags follow the profile: test/test_sw.c
+ok compdb 105 - all release commands pass the compiler in syntax-only mode
+ok compdb 106 - all host implementation and C unit-test sources are represented
+ok compdb 107 - no duplicate translation units
+ok compdb 108 - source path round-trips: src/cgra.c
+ok compdb 109 - compiler/profile/quoted flags preserved: src/cgra.c
+ok compdb 110 - test assertions follow the build: src/cgra.c
+ok compdb 111 - sanitizer flags follow the profile: src/cgra.c
+ok compdb 112 - source path round-trips: src/vector.c
+ok compdb 113 - compiler/profile/quoted flags preserved: src/vector.c
+ok compdb 114 - test assertions follow the build: src/vector.c
+ok compdb 115 - sanitizer flags follow the profile: src/vector.c
+ok compdb 116 - source path round-trips: src/kernels.c
+ok compdb 117 - compiler/profile/quoted flags preserved: src/kernels.c
+ok compdb 118 - test assertions follow the build: src/kernels.c
+ok compdb 119 - sanitizer flags follow the profile: src/kernels.c
+ok compdb 120 - source path round-trips: src/emu.c
+ok compdb 121 - compiler/profile/quoted flags preserved: src/emu.c
+ok compdb 122 - test assertions follow the build: src/emu.c
+ok compdb 123 - sanitizer flags follow the profile: src/emu.c
+ok compdb 124 - source path round-trips: src/serve.c
+ok compdb 125 - compiler/profile/quoted flags preserved: src/serve.c
+ok compdb 126 - test assertions follow the build: src/serve.c
+ok compdb 127 - sanitizer flags follow the profile: src/serve.c
+ok compdb 128 - source path round-trips: src/block_wire.c
+ok compdb 129 - compiler/profile/quoted flags preserved: src/block_wire.c
+ok compdb 130 - test assertions follow the build: src/block_wire.c
+ok compdb 131 - sanitizer flags follow the profile: src/block_wire.c
+ok compdb 132 - source path round-trips: src/block_model.c
+ok compdb 133 - compiler/profile/quoted flags preserved: src/block_model.c
+ok compdb 134 - test assertions follow the build: src/block_model.c
+ok compdb 135 - sanitizer flags follow the profile: src/block_model.c
+ok compdb 136 - source path round-trips: test/test_cgra.c
+ok compdb 137 - compiler/profile/quoted flags preserved: test/test_cgra.c
+ok compdb 138 - test assertions follow the build: test/test_cgra.c
+ok compdb 139 - sanitizer flags follow the profile: test/test_cgra.c
+ok compdb 140 - source path round-trips: test/test_transport.c
+ok compdb 141 - compiler/profile/quoted flags preserved: test/test_transport.c
+ok compdb 142 - test assertions follow the build: test/test_transport.c
+ok compdb 143 - sanitizer flags follow the profile: test/test_transport.c
+ok compdb 144 - source path round-trips: test/test_kernels.c
+ok compdb 145 - compiler/profile/quoted flags preserved: test/test_kernels.c
+ok compdb 146 - test assertions follow the build: test/test_kernels.c
+ok compdb 147 - sanitizer flags follow the profile: test/test_kernels.c
+ok compdb 148 - source path round-trips: test/test_faults.c
+ok compdb 149 - compiler/profile/quoted flags preserved: test/test_faults.c
+ok compdb 150 - test assertions follow the build: test/test_faults.c
+ok compdb 151 - sanitizer flags follow the profile: test/test_faults.c
+ok compdb 152 - source path round-trips: test/test_plans.c
+ok compdb 153 - compiler/profile/quoted flags preserved: test/test_plans.c
+ok compdb 154 - test assertions follow the build: test/test_plans.c
+ok compdb 155 - sanitizer flags follow the profile: test/test_plans.c
+ok compdb 156 - source path round-trips: test/test_blocks.c
+ok compdb 157 - compiler/profile/quoted flags preserved: test/test_blocks.c
+ok compdb 158 - test assertions follow the build: test/test_blocks.c
+ok compdb 159 - sanitizer flags follow the profile: test/test_blocks.c
+ok compdb 160 - source path round-trips: main.c
+ok compdb 161 - compiler/profile/quoted flags preserved: main.c
+ok compdb 162 - test assertions follow the build: main.c
+ok compdb 163 - generated header matches the selected profile: main.c
+ok compdb 164 - sanitizer flags follow the profile: main.c
+ok compdb 165 - source path round-trips: cli.c
+ok compdb 166 - compiler/profile/quoted flags preserved: cli.c
+ok compdb 167 - test assertions follow the build: cli.c
+ok compdb 168 - generated header matches the selected profile: cli.c
+ok compdb 169 - sanitizer flags follow the profile: cli.c
+ok compdb 170 - source path round-trips: vector_io.c
+ok compdb 171 - compiler/profile/quoted flags preserved: vector_io.c
+ok compdb 172 - test assertions follow the build: vector_io.c
+ok compdb 173 - generated header matches the selected profile: vector_io.c
+ok compdb 174 - sanitizer flags follow the profile: vector_io.c
+ok compdb 175 - source path round-trips: bench.c
+ok compdb 176 - compiler/profile/quoted flags preserved: bench.c
+ok compdb 177 - test assertions follow the build: bench.c
+ok compdb 178 - generated header matches the selected profile: bench.c
+ok compdb 179 - sanitizer flags follow the profile: bench.c
+ok compdb 180 - source path round-trips: device.c
+ok compdb 181 - compiler/profile/quoted flags preserved: device.c
+ok compdb 182 - test assertions follow the build: device.c
+ok compdb 183 - generated header matches the selected profile: device.c
+ok compdb 184 - sanitizer flags follow the profile: device.c
+ok compdb 185 - source path round-trips: shell.c
+ok compdb 186 - compiler/profile/quoted flags preserved: shell.c
+ok compdb 187 - test assertions follow the build: shell.c
+ok compdb 188 - generated header matches the selected profile: shell.c
+ok compdb 189 - sanitizer flags follow the profile: shell.c
+ok compdb 190 - source path round-trips: dsl.c
+ok compdb 191 - compiler/profile/quoted flags preserved: dsl.c
+ok compdb 192 - test assertions follow the build: dsl.c
+ok compdb 193 - generated header matches the selected profile: dsl.c
+ok compdb 194 - sanitizer flags follow the profile: dsl.c
+ok compdb 195 - source path round-trips: compile.c
+ok compdb 196 - compiler/profile/quoted flags preserved: compile.c
+ok compdb 197 - test assertions follow the build: compile.c
+ok compdb 198 - generated header matches the selected profile: compile.c
+ok compdb 199 - sanitizer flags follow the profile: compile.c
+ok compdb 200 - source path round-trips: bench_ref.c
+ok compdb 201 - compiler/profile/quoted flags preserved: bench_ref.c
+ok compdb 202 - test assertions follow the build: bench_ref.c
+ok compdb 203 - generated header matches the selected profile: bench_ref.c
+ok compdb 204 - sanitizer flags follow the profile: bench_ref.c
+ok compdb 205 - source path round-trips: test/test_sw.c
+ok compdb 206 - compiler/profile/quoted flags preserved: test/test_sw.c
+ok compdb 207 - test assertions follow the build: test/test_sw.c
+ok compdb 208 - generated header matches the selected profile: test/test_sw.c
+ok compdb 209 - sanitizer flags follow the profile: test/test_sw.c
+ok compdb 210 - all asan commands pass the compiler in syntax-only mode
+ok compdb 211 - a failed merge preserves the previous database
+# 211 compilation database checks passed
+python3 scripts/test_build.py
+ok build 1 - recursive make retains the jobserver
+ok build 2 - recursive make retains the jobserver
+ok build 3 - unchanged build preserves all object/archive/binary/signature mtimes
+ok build 4 - recursive make retains the jobserver
+ok build 5 - missing new compiler fails without replacing the previous library
+ok build 6 - recursive make retains the jobserver
+ok build 7 - restoring compiler rebuilds after a failed configuration
+ok build 8 - recursive make retains the jobserver
+ok build 9 - CPPFLAGS invalidates the same build profile
+ok build 10 - recursive make retains the jobserver
+ok build 11 - unchanged CPPFLAGS causes no rebuild
+ok build 12 - recursive make retains the jobserver
+ok build 13 - CFLAGS invalidates the same build profile
+ok build 14 - recursive make retains the jobserver
+ok build 15 - unchanged CFLAGS causes no rebuild
+ok build 16 - recursive make retains the jobserver
+ok build 17 - LDFLAGS invalidates the same build profile
+ok build 18 - recursive make retains the jobserver
+ok build 19 - unchanged LDFLAGS causes no rebuild
+ok build 20 - recursive make retains the jobserver
+ok build 21 - optional dependency selection invalidates CLI objects
+ok build 22 - recursive make retains the jobserver
+ok build 23 - changed generated runtime path rebuilds CLI
+ok build 24 - recursive make retains the jobserver
+ok build 25 - generated path and signatures are stable on repeat
+ok build 26 - recursive make retains the jobserver
+ok build 27 - recursive make retains the jobserver
+# 27 incremental build checks passed
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+tclsh test/test_timing.tcl
+ok timing 1 - reject invalid period '0'
+ok timing 2 - reject invalid period '-1'
+ok timing 3 - reject invalid period 'Inf'
+ok timing 4 - reject invalid period 'NaN'
+ok timing 5 - reject invalid period 'abc'
+ok timing 6 - reject invalid period ''
+ok timing 7 - reject invalid divider '0'
+ok timing 8 - reject invalid divider '-1'
+ok timing 9 - reject invalid divider '1.5'
+ok timing 10 - reject invalid divider 'abc'
+ok timing 11 - fractional-picosecond period is applied on an explicit 1 ps grid
+ok timing 12 - all sweep candidates use the same period precision
+ok timing 13 - period rounding to zero is rejected
+ok timing 14 - frequency uses actual period, not slack extrapolation
+ok timing 15 - reject invalid/failing slack -0.1 0
+ok timing 16 - reject invalid/failing slack 0 -0.1
+ok timing 17 - reject invalid/failing slack NaN 0
+ok timing 18 - reject invalid/failing slack 0 Inf
+ok timing 19 - reject invalid/failing slack {} 0
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 20 - fmax.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 21 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 22 - fmax.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 23 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 24 - fmax.tcl rejects missing_cells (PE output register coverage mismatch: expected 256, found 0 (*u_pe/r_reg*))
+ok timing 25 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 26 - fmax.tcl rejects missing_port (no objects matched port clk)
+ok timing 27 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 28 - fmax.tcl rejects missing_one_bit (PE output register coverage mismatch: expected 256, found 255 (*u_pe/r_reg*))
+ok timing 29 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 30 - fmax.tcl rejects wrong_bit (PE output register coverage mismatch: expected 256, found 256 (*u_pe/r_reg*))
+ok timing 31 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 32 - fmax.tcl rejects missing_pin (missing datapath C/D pins)
+ok timing 33 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 34 - fmax.tcl rejects final_setup (timing NOT met: WNS=-0.1 ns, WHS=0.5 ns)
+ok timing 35 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 36 - fmax.tcl rejects final_hold (timing NOT met: WNS=0.5 ns, WHS=-0.1 ns)
+ok timing 37 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+ok timing 38 - fmax.tcl rejects structural (synthetic failed structural check)
+ok timing 39 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 40 - build.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 41 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 42 - build.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 43 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 44 - build.tcl rejects missing_cells (PE output register coverage mismatch: expected 256, found 0 (*u_pe/r_reg*))
+ok timing 45 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 46 - build.tcl rejects missing_port (no objects matched port clk)
+ok timing 47 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 48 - build.tcl rejects missing_one_bit (PE output register coverage mismatch: expected 256, found 255 (*u_pe/r_reg*))
+ok timing 49 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 50 - build.tcl rejects wrong_bit (PE output register coverage mismatch: expected 256, found 256 (*u_pe/r_reg*))
+ok timing 51 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 52 - build.tcl rejects missing_pin (missing datapath C/D pins)
+ok timing 53 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+timing: setup WNS = -0.1 ns, hold WHS = 0.5 ns
+ERROR: timing NOT met (WNS=-0.1 ns, WHS=0.5 ns) — no bitstream written.
+       inspect /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/timing_summary.rpt
+ok timing 54 - build.tcl rejects final_setup (EXIT:1)
+ok timing 55 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+timing: setup WNS = 0.5 ns, hold WHS = -0.1 ns
+ERROR: timing NOT met (WNS=0.5 ns, WHS=-0.1 ns) — no bitstream written.
+       inspect /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/timing_summary.rpt
+ok timing 56 - build.tcl rejects final_hold (EXIT:1)
+ok timing 57 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+timing: setup WNS = 0.5 ns, hold WHS = 0.5 ns
+ok timing 58 - build.tcl rejects structural (synthetic failed structural check)
+ok timing 59 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 60 - timing.tcl rejects missing_paths (no objects matched setup paths)
+ok timing 61 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 62 - timing.tcl rejects missing_hold (no objects matched hold paths)
+ok timing 63 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 64 - timing.tcl rejects missing_cells (PE output register coverage mismatch: expected 256, found 0 (*u_pe/r_reg*))
+ok timing 65 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 66 - timing.tcl rejects missing_port (no objects matched port clk)
+ok timing 67 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 68 - timing.tcl rejects missing_one_bit (PE output register coverage mismatch: expected 256, found 255 (*u_pe/r_reg*))
+ok timing 69 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 70 - timing.tcl rejects wrong_bit (PE output register coverage mismatch: expected 256, found 256 (*u_pe/r_reg*))
+ok timing 71 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 72 - timing.tcl rejects missing_pin (missing datapath C/D pins)
+ok timing 73 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = -0.1 ns
+    hold   WHS = 0.5 ns
+    FAIL: setup timing violated
+    see /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/timing_summary_nexys_a7.rpt
+======================================================================
+ok timing 74 - timing.tcl rejects final_setup (EXIT:1)
+ok timing 75 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = -0.1 ns
+    FAIL: hold timing violated
+    see /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/timing_summary_nexys_a7.rpt
+======================================================================
+ok timing 76 - timing.tcl rejects final_hold (EXIT:1)
+ok timing 77 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+ok timing 78 - timing.tcl rejects structural (synthetic failed structural check)
+ok timing 79 - failure publishes no successful frequency row
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/blocks
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = 0.5 ns
+    PASS: setup and hold met under the applied constraints.
+======================================================================
+ok timing 80 - block operand endpoints resolve at all 32 bits (EXIT:0)
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/blocks
+ok timing 81 - one missing block operand bit fails coverage
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+=========== Fmax search: cgra_top on nexys_a7 (xc7a100tcsg324-1), step_div=2 ===========
+  period(ns) WNS(ns)    WHS(ns)    result
+  7.500    0.500      0.500      PASS
+  6.250    0.500      0.500      PASS
+  5.625    0.500      0.500      PASS
+  5.312    0.500      0.500      PASS
+  5.156    0.500      0.500      PASS
+  5.078    0.500      0.500      PASS
+======================================================================
+  Fmax RESULT: cgra_top on nexys_a7 (xc7a100tcsg324-1)
+    best closing period = 5.078 ns
+    setup slack (WNS)   = 0.500 ns   hold (WHS) = 0.500 ns
+    validated frequency = 196.928 MHz  (1000 / constrained period)
+    ---- the wall (optimise this next) ----
+    limiting path kind  = datapath (multicycle)
+    startpoint          = a/Q
+    endpoint            = b/D
+    logic levels        = 2   datapath delay = 4.000 ns
+    LUTs used = ?   DSPs used = ?
+    full path -> /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/fmax_nexys_a7.rpt
+======================================================================
+  logged to /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/fmax_validated_history.csv
+ok timing 82 - passing Fmax run completes (EXIT:0)
+ok timing 83 - successful CSV uses validated period
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+timing: setup WNS = 0.5 ns, hold WHS = 0.5 ns
+OK: timing met; bitstream written to /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409/cgra_top_nexys_a7.bit
+ok timing 84 - passing build reaches bitstream generation
+mesh: 4x4; outputs: /home/main/dev/git/ald-cgra/hw/build/timing-test-2773409
+======================================================================
+  STA gate: cgra_top on nexys_a7 (xc7a100tcsg324-1) @ 10.000 ns
+    setup  WNS = 0.5 ns
+    hold   WHS = 0.5 ns
+    PASS: setup and hold met under the applied constraints.
+======================================================================
+ok timing 85 - passing STA gate completes
+# 85 timing script checks passed (synthetic paths; Vivado still required)
+python3 test/test_artifacts.py
+ok artifacts 1 - successful synthetic run publishes
+ok artifacts 2 - valid manifest selects its exact hashed bitstream
+ok artifacts 3 - current pointer hashes completed manifest
+ok artifacts 4 - no Git executable retains source hashes and explicit unknown commit
+ok artifacts 5 - reject exit
+ok artifacts 6 - exit preserves last valid pointer
+ok artifacts 7 - reject no-report
+ok artifacts 8 - no-report preserves last valid pointer
+ok artifacts 9 - reject missing-gate
+ok artifacts 10 - missing-gate preserves last valid pointer
+ok artifacts 11 - reject failed-gate
+ok artifacts 12 - failed-gate preserves last valid pointer
+ok artifacts 13 - failed and successful runs all retain isolated manifests
+ok artifacts 14 - reject invalid manifest status
+ok artifacts 15 - reject invalid manifest mode
+ok artifacts 16 - reject invalid manifest schema_version
+ok artifacts 17 - reject invalid manifest bitstream
+ok artifacts 18 - reject target mismatch ('basys3', 4, 4, 2)
+ok artifacts 19 - reject target mismatch ('nexys_a7', 2, 8, 2)
+ok artifacts 20 - reject target mismatch ('nexys_a7', 4, 4, 3)
+ok artifacts 21 - reject target mismatch ('nexys_a7', 4, 4, 2, True)
+ok artifacts 22 - reject constraint incompatible with physical clock
+ok artifacts 23 - reject constraint incompatible with physical clock
+ok artifacts 24 - reject invalid routed slack wns_ns=-0.1
+ok artifacts 25 - reject invalid routed slack whs_ns=None
+ok artifacts 26 - reject invalid routed slack whs_ns=inf
+ok artifacts 27 - reject changed file work/scr/test.txt
+ok artifacts 28 - reject changed file work/build/vivado/design.bit
+ok artifacts 29 - reject source path outside run
+ok artifacts 30 - prog rejects before hardware side effects
+ok artifacts 31 - prog-ofl rejects before hardware side effects
+ok artifacts 32 - check-artifact validates without hardware access
+# 32 artifact checks passed (synthetic tool; no Vivado result)
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

@@ -1,0 +1,14 @@
+# running in task/src/
+read_rtlil dut.il
+read_verilog -formal  pe_spec.sv array_contract.sv
+chparam -set ROWS 1 -set COLS 1 array_contract
+prep -top array_contract -flatten
+wreduce
+opt -full
+techmap
+opt -full
+write_json properties.json
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

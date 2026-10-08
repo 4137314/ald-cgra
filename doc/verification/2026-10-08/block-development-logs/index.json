@@ -1,0 +1,28 @@
+{
+  "scope": "Development output only, including failed attempts; exact source snapshot NOT_CAPTURED here. Acceptance evidence has separate source-hashed manifests.",
+  "logs_sha256": {
+    "ald-block-owned-formal.txt": "b2ced9d0b905b817a1ffd42c37ac1e8250609c3c2f9758fd9abfa9233315613d",
+    "ald-block-owned-sim.txt": "51bfaac2cebdac5669306cf4119ec8836a8d6f0c6bfdc7068e9a830039d82264",
+    "ald-block-fast.txt": "51efeded2c07c3243f3adb8f481b2e9b69cd73550da47da78403eec18b7e57bf",
+    "ald-block-asan-pre.txt": "feafd3b6970ceffbdd9c63143635eff37089fbe7b8c963d74a00c59683145785",
+    "ald-block-sta-2.txt": "74bb785034bdd1820326ec5eb683468f282cd149f1e3fa8c5d27383cdf795086",
+    "ald-block-scripts-3.txt": "1dbbe85748e5967834901670d88691bf3dad58e84641196d9c2a088c82a841e5",
+    "ald-block-pipeline-formal.txt": "fb37b9feccc06242b98d0f53222a17c2a8f3b38665b6668e97c867fc1713b3a8",
+    "ald-block-pipeline-sim.txt": "51bfaac2cebdac5669306cf4119ec8836a8d6f0c6bfdc7068e9a830039d82264",
+    "ald-block-cover.txt": "4a6e5726ec137fc902015c57127666e4dbcf3d946e97cbca890c59fd30b08fc0",
+    "ald-block-cli.txt": "1dfd7fb9928775f2ba715e9c0c38698d0a372093c5fde85a6e9236505540f4cc",
+    "ald-block-transport.txt": "6b52aaae74e0d7e1889bb908483069374769fcb175c3876955aad7addfaf4e66",
+    "ald-block-formal.txt": "d518a70086804053116a3ad573895ff990fe4ac98f6175c84bed738a18d6aba7",
+    "ald-block-build-4.txt": "e2091d4aa970a660c11008aff7b15d8395827936d4d811515c4cc917edd34942",
+    "ald-block-build-3.txt": "ed664530e23a27d6ba47b79b521ea270466d72aab17ff28f2651dbd84323ab90",
+    "ald-block-sta.txt": "4e36e1d3379fb612a578aa6ff7b0617dfec6049c0960af4133ab22793e72f245",
+    "ald-block-test-2.txt": "a7a9b0d14ed5b3edbfbc854a3e2128eccada22545ded1f217f134f4bcc67a9ba",
+    "ald-block-test.txt": "10c2502dc89b27beaa1e20edbe70c3a6149969a242925f48a77ef392aba110fb",
+    "ald-block-build.txt": "531fc9acb6d7e334cdea6bb14e7307e01add1bed99e5860a2c9931be069ea730",
+    "ald-block-synth-2.txt": "7a95f61f36e5c65599f5bcd22113ef54d49d2e25b23dfccd5e046ab5aadc7f2b",
+    "ald-block-scripts-2.txt": "6d972d7c0537111aaea7b2b9f49cb33c9896eb48710c394636a158b788fc4182",
+    "ald-block-synth.txt": "55b7660acb8dbf4c3e8fe923983941a1a7be8fc77d9ff85ece1c83f9cd710ac1",
+    "ald-block-scripts.txt": "adedd9c10bb1ccddb1e491bec771be758948671d57c16185a810766a44770ba0",
+    "ald-block-replay-2.txt": "afff66a7e019e2a5af46653b8d567f72735b385264179217b4a52670fcbd45dd"
+  }
+}

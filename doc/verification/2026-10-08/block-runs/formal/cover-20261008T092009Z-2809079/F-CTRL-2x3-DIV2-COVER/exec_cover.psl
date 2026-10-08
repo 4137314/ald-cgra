@@ -1,0 +1,10 @@
+-- Reachability-only stimulus for the extra 2x3 EXEC cover task.
+-- These restrictions are NEVER used in the universal safety/ranking proofs.
+-- Prompt bytes and an ideal fast transmitter avoid exploring irrelevant
+-- commands/stalls when searching for full, sparse, empty and NACK witnesses.
+  W_EXEC_NO_RESET: assume always (rst = '0');
+  W_EXEC_COMMAND: assume always (state = S_IDLE -> rx_valid = '1' and rx_data = CMD_EXEC);
+  W_EXEC_DELIVERY: assume always ((state = S_EX_HDR or state = S_WR or state = S_EX_CK) -> rx_valid = '1');
+  W_EXEC_NONEMPTY: assume always ((state = S_EX_HDR and hdr_idx = 0) -> rx_data = x"01");
+  W_EXEC_TX_READY: assume always (state = S_SEND -> tx_busy = '0');
+  W_EXEC_TX_ACCEPT: assume always (state = S_SEND_WAIT -> tx_busy = '1');

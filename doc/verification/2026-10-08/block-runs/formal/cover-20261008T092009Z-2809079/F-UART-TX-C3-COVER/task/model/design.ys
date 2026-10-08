@@ -1,0 +1,8 @@
+# running in task/src/
+read_rtlil dut.il
+prep -top uart_tx -flatten
+write_json properties.json
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

@@ -1,0 +1,12 @@
+[options]
+mode cover
+depth 80
+timeout 90
+[engines]
+smtbmc yices
+[script]
+read_rtlil dut.il
+prep -top uart_tx -flatten
+write_json properties.json
+[files]
+dut.il

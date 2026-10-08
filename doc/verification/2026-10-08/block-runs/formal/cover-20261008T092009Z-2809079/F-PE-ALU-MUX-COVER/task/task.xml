@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T11:20:28" hostname="4137314" package="task" id="0" name="default" tests="21" errors="0" failures="0" time="3" skipped="1">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_contract at pe_contract.sv:18.25-18.51" time="0" type="ASSERT" location="pe_contract.sv:18.25-18.51" id="_witness_.check_assert_pe_contract_sv_18_69">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_108" tracefile="engine_0/trace0.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_115" tracefile="engine_0/trace1.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_122" tracefile="engine_0/trace15.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_129" tracefile="engine_0/trace2.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_136" tracefile="engine_0/trace3.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_143" tracefile="engine_0/trace4.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_150" tracefile="engine_0/trace5.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_157" tracefile="engine_0/trace6.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_164" tracefile="engine_0/trace7.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_171" tracefile="engine_0/trace8.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_178" tracefile="engine_0/trace17.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_185" tracefile="engine_0/trace9.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_192" tracefile="engine_0/trace10.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_199" tracefile="engine_0/trace13.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_206" tracefile="engine_0/trace11.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_213" tracefile="engine_0/trace12.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:26.9-26.79" time="0" type="COVER" location="pe_contract.sv:26.9-26.79" id="_witness_.check_cover_pe_contract_sv_26_72" tracefile="engine_0/trace14.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:27.9-27.88" time="0" type="COVER" location="pe_contract.sv:27.9-27.88" id="_witness_.check_cover_pe_contract_sv_27_80" tracefile="engine_0/trace16.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:28.9-28.87" time="0" type="COVER" location="pe_contract.sv:28.9-28.87" id="_witness_.check_cover_pe_contract_sv_28_90" tracefile="engine_0/trace18.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:29.9-29.71" time="0" type="COVER" location="pe_contract.sv:29.9-29.71" id="_witness_.check_cover_pe_contract_sv_29_99" tracefile="engine_0/trace19.vcd">
+</testcase>
+<system-out>SBY 11:20:23 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-PE-ALU-MUX-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-PE-ALU-MUX-COVER/task/src/dut.il'.
+SBY 11:20:23 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-PE-ALU-MUX-COVER/pe_contract.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-PE-ALU-MUX-COVER/task/src/pe_contract.sv'.
+SBY 11:20:23 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-PE-ALU-MUX-COVER/pe_spec.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-PE-ALU-MUX-COVER/task/src/pe_spec.sv'.
+SBY 11:20:23 [task] engine_0: smtbmc yices
+SBY 11:20:23 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 11:20:25 [task] base: finished (returncode=0)
+SBY 11:20:25 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 11:20:25 [task] prep: finished (returncode=0)
+SBY 11:20:25 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 11:20:25 [task] smt2: finished (returncode=0)
+SBY 11:20:25 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 40  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2&quot;
+SBY 11:20:25 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_108)
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_115)
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_129)
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_136)
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace3.vcd
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace3.smtc
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace3.yw
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_143)
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace4.vcd
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace4_tb.v
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace4.smtc
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace4.yw
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_150)
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace5.vcd
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace5_tb.v
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace5.smtc
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace5.yw
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_157)
+SBY 11:20:26 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace6.vcd
+SBY 11:20:26 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace6_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace6.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace6.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_164)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace7.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace7_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace7.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace7.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_171)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace8.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace8_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace8.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace8.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_185)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace9.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace9_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace9.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace9.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_192)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace10.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace10_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace10.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace10.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_206)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace11.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace11_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace11.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace11.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_213)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace12.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace12_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace12.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace12.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_199)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace13.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace13_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace13.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace13.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:26.9-26.79 (_witness_.check_cover_pe_contract_sv_26_72)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace14.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace14_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace14.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace14.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_122)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace15.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace15_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace15.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace15.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:27.9-27.88 (_witness_.check_cover_pe_contract_sv_27_80)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace16.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace16_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace16.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace16.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at pe_contract: pe_contract.sv:23.13-23.66 (_witness_.check_cover_pe_contract_sv_23_178)
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace17.vcd
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Verilog testbench: engine_0/trace17_tb.v
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to constraints file: engine_0/trace17.smtc
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Writing trace to Yosys witness file: engine_0/trace17.yw
+SBY 11:20:27 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 11:20:27 [task] engine_0: ##   0:00:02  Reached cover statement in step 2 at pe_contract: pe_contract.sv:28.9-28.87 (_witness_.check_cover_pe_contract_sv_28_90)
+SBY 11:20:27 [task] engine_0: ##   0:00:02  Writing trace to VCD file: engine_0/trace18.vcd
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Writing trace to Verilog testbench: engine_0/trace18_tb.v
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Writing trace to constraints file: engine_0/trace18.smtc
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Writing trace to Yosys witness file: engine_0/trace18.yw
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Checking cover reachability in step 2..
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Checking cover reachability in step 3..
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Reached cover statement in step 3 at pe_contract: pe_contract.sv:29.9-29.71 (_witness_.check_cover_pe_contract_sv_29_99)
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Writing trace to VCD file: engine_0/trace19.vcd
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Writing trace to Verilog testbench: engine_0/trace19_tb.v
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Writing trace to constraints file: engine_0/trace19.smtc
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Writing trace to Yosys witness file: engine_0/trace19.yw
+SBY 11:20:28 [task] engine_0: ##   0:00:02  Status: passed
+SBY 11:20:28 [task] engine_0: finished (returncode=0)
+SBY 11:20:28 [task] engine_0: Status returned by engine: pass
+SBY 11:20:28 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:04 (4)
+SBY 11:20:28 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:03 (3)
+SBY 11:20:28 [task] summary: engine_0 (smtbmc yices) returned pass
+SBY 11:20:28 [task] summary: cover trace: task/engine_0/trace0.vcd
+SBY 11:20:28 [task] summary:   reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_108 at pe_contract.sv:23.13-23.66 step 2
+SBY 11:20:28 [task] summary: cover trace: task/engine_0/trace1.vcd
+SBY 11:20:28 [task] summary:   reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_115 at pe_contract.sv:23.13-23.66 step 2
+SBY 11:20:28 [task] summary: cover trace: task/engine_0/trace10.vcd
+SBY 11:20:28 [task] summary:   reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_192 at pe_contract.sv:23.13-23.66 step 2
+SBY 11:20:28 [task] summary: cover trace: task/engine_0/trace11.vcd
+SBY 11:20:28 [task] summary:   reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_206 at pe_contract.sv:23.13-23.66 step 2
+SBY 11:20:28 [task] summary: cover trace: task/engine_0/trace12.vcd
+SBY 11:20:28 [task] summary:   reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_213 at pe_contract.sv:23.13-23.66 step 2
+SBY 11:20:28 [task] summary: and 15 further traces
+SBY 11:20:28 [task] summary: see task/PASS for a complete summary
+SBY 11:20:28 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

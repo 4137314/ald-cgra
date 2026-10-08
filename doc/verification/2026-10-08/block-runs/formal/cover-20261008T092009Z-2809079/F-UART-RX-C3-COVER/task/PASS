@@ -1,0 +1,15 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:01 (1)
+Elapsed process time [H:MM:SS (secs)]: 0:00:01 (1)
+engine_0 (smtbmc yices) returned pass
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement uart_rx.\uart_rx_contract.c_rx_glitch at  step 5
+cover trace: engine_0/trace1.vcd
+cover trace: engine_0/trace1.yw
+  reached cover statement uart_rx.\uart_rx_contract.c_rx_bad_stop at  step 32
+cover trace: engine_0/trace2.vcd
+cover trace: engine_0/trace2.yw
+  reached cover statement uart_rx.\uart_rx_contract.c_rx_byte at  step 32
+cover trace: engine_0/trace3.vcd
+cover trace: engine_0/trace3.yw
+  reached cover statement uart_rx.\uart_rx_contract.c_rx_recovery at  step 33

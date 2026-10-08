@@ -1,0 +1,18 @@
+initial
+assume (= [$auto$async2sync.cc:107:execute$9247] false)
+assume (= [$auto$async2sync.cc:116:execute$9239] true)
+assume (= [$auto$async2sync.cc:116:execute$9245] true)
+assume (= [$auto$async2sync.cc:116:execute$9251] true)
+assume (= [$auto$async2sync.cc:116:execute$9257] true)
+assume (= [$auto$async2sync.cc:116:execute$9263] true)
+assume (= [cell_contract[0].reference.q] #b0000000000000000)
+assume (= [past_valid] false)
+
+state 0
+assume (= [clk] false)
+
+state 1
+assume (= [clk] false)
+
+state 2
+assume (= [clk] false)

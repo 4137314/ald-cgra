@@ -1,0 +1,22 @@
+[options]
+mode bmc
+depth 6
+timeout 90
+[engines]
+smtbmc yices
+[script]
+read_rtlil dut.il
+delete pe_Brtl
+read_verilog -formal -D MUTATION_NORTH pe_spec.sv array_contract.sv pe_assume.sv
+chparam -set ROWS 2 -set COLS 3 array_contract
+prep -top array_contract -flatten
+wreduce
+opt -full
+techmap
+opt -full
+write_json properties.json
+[files]
+dut.il
+pe_spec.sv
+array_contract.sv
+pe_assume.sv

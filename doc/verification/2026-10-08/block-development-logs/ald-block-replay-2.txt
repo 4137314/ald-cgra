@@ -1,0 +1,18 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+ghdl -a --std=08 --workdir=build/ghdl rtl/cgra_pkg.vhd rtl/cgra_comp_pkg.vhd rtl/uart_rx.vhd rtl/uart_tx.vhd rtl/pe.vhd rtl/cgra_array.vhd rtl/cgra_ctrl.vhd rtl/block_pkg.vhd rtl/block_rx.vhd rtl/block_dot.vhd rtl/block_ctrl.vhd rtl/cgra_top.vhd sim/tb_blocks.vhd
+sim/tb_blocks.vhd:115:25:warning: declaration of "b" hides signal "b" [-Whide]
+    procedure send_byte(b : natural) is
+                        ^
+ghdl -e --std=08 --workdir=build/ghdl tb_blocks
+sim/tb_blocks.vhd:172:5:@4725310ns:(report note): tb_blocks PASS: 886 events, DIV=1 UART=false
+simulation stopped @4725310ns
+sim/tb_blocks.vhd:172:5:@4771760ns:(report note): tb_blocks PASS: 886 events, DIV=2 UART=false
+simulation stopped @4771760ns
+sim/tb_blocks.vhd:172:5:@4818210ns:(report note): tb_blocks PASS: 886 events, DIV=3 UART=false
+simulation stopped @4818210ns
+sim/tb_blocks.vhd:172:5:@4864660ns:(report note): tb_blocks PASS: 886 events, DIV=4 UART=false
+simulation stopped @4864660ns
+ghdl -r --std=08 --workdir=build/ghdl tb_blocks -gG_UART=true --assert-level=error
+sim/tb_blocks.vhd:172:5:@31967980ns:(report note): tb_blocks PASS: 886 events, DIV=2 UART=true
+simulation stopped @31967980ns
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

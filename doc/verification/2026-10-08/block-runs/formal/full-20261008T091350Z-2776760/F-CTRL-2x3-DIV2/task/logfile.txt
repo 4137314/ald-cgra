@@ -1,0 +1,62 @@
+SBY 11:16:12 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-CTRL-2x3-DIV2/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/full-20261008T091350Z-2776760/F-CTRL-2x3-DIV2/task/src/dut.il'.
+SBY 11:16:12 [task] engine_0: smtbmc yices
+SBY 11:16:12 [task] base: starting process "cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 11:16:13 [task] base: finished (returncode=0)
+SBY 11:16:13 [task] prep: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 11:16:13 [task] prep: finished (returncode=0)
+SBY 11:16:13 [task] smt2: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 11:16:13 [task] smt2: finished (returncode=0)
+SBY 11:16:13 [task] engine_0.basecase: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 16  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2"
+SBY 11:16:13 [task] engine_0.induction: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -i --noprogress -t 16  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2"
+SBY 11:16:13 [task] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 11:16:13 [task] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 11:16:13 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 11:16:13 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 11:16:13 [task] engine_0.induction: ##   0:00:00  Trying induction in step 16..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY 11:16:14 [task] engine_0.induction: ##   0:00:00  Trying induction in step 15..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 2..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 2..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 3..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 3..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 4..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 4..
+SBY 11:16:14 [task] engine_0.induction: ##   0:00:00  Trying induction in step 14..
+SBY 11:16:14 [task] engine_0.induction: ##   0:00:00  Trying induction in step 13..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:01  Checking assumptions in step 5..
+SBY 11:16:14 [task] engine_0.basecase: ##   0:00:01  Checking assertions in step 5..
+SBY 11:16:15 [task] engine_0.induction: ##   0:00:01  Temporal induction successful.
+SBY 11:16:15 [task] engine_0.induction: ##   0:00:01  Status: passed
+SBY 11:16:15 [task] engine_0.induction: finished (returncode=0)
+SBY 11:16:15 [task] engine_0.induction: Status returned by engine for induction: pass
+SBY 11:16:15 [task] engine_0.basecase: ##   0:00:01  Checking assumptions in step 6..
+SBY 11:16:15 [task] engine_0.basecase: ##   0:00:01  Checking assertions in step 6..
+SBY 11:16:16 [task] engine_0.basecase: ##   0:00:02  Checking assumptions in step 7..
+SBY 11:16:16 [task] engine_0.basecase: ##   0:00:02  Checking assertions in step 7..
+SBY 11:16:17 [task] engine_0.basecase: ##   0:00:03  Checking assumptions in step 8..
+SBY 11:16:17 [task] engine_0.basecase: ##   0:00:03  Checking assertions in step 8..
+SBY 11:16:18 [task] engine_0.basecase: ##   0:00:04  Checking assumptions in step 9..
+SBY 11:16:18 [task] engine_0.basecase: ##   0:00:04  Checking assertions in step 9..
+SBY 11:16:19 [task] engine_0.basecase: ##   0:00:05  Checking assumptions in step 10..
+SBY 11:16:19 [task] engine_0.basecase: ##   0:00:05  Checking assertions in step 10..
+SBY 11:16:20 [task] engine_0.basecase: ##   0:00:06  Checking assumptions in step 11..
+SBY 11:16:20 [task] engine_0.basecase: ##   0:00:06  Checking assertions in step 11..
+SBY 11:16:21 [task] engine_0.basecase: ##   0:00:07  Checking assumptions in step 12..
+SBY 11:16:21 [task] engine_0.basecase: ##   0:00:08  Checking assertions in step 12..
+SBY 11:16:22 [task] engine_0.basecase: ##   0:00:09  Checking assumptions in step 13..
+SBY 11:16:23 [task] engine_0.basecase: ##   0:00:09  Checking assertions in step 13..
+SBY 11:16:24 [task] engine_0.basecase: ##   0:00:10  Checking assumptions in step 14..
+SBY 11:16:24 [task] engine_0.basecase: ##   0:00:10  Checking assertions in step 14..
+SBY 11:16:26 [task] engine_0.basecase: ##   0:00:12  Checking assumptions in step 15..
+SBY 11:16:26 [task] engine_0.basecase: ##   0:00:12  Checking assertions in step 15..
+SBY 11:16:28 [task] engine_0.basecase: ##   0:00:14  Status: passed
+SBY 11:16:28 [task] engine_0.basecase: finished (returncode=0)
+SBY 11:16:28 [task] engine_0.basecase: Status returned by engine for basecase: pass
+SBY 11:16:28 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:15 (15)
+SBY 11:16:28 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:17 (17)
+SBY 11:16:28 [task] summary: engine_0 (smtbmc yices) returned pass for basecase
+SBY 11:16:28 [task] summary: engine_0 (smtbmc yices) returned pass for induction
+SBY 11:16:28 [task] summary: engine_0 did not produce any traces
+SBY 11:16:28 [task] summary: successful proof by k-induction.
+SBY 11:16:28 [task] DONE (PASS, rc=0)

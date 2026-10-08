@@ -1,0 +1,21 @@
+warning: Git tree '/home/main/dev/git/ald-cgra' is dirty
+make -C hw  -f hw.mk formal-fast
+make[1]: Entering directory '/home/main/dev/git/ald-cgra/hw'
+python3 formal/run.py --suite fast
+F-PE-SMOKE: PROVED (1.114 s)
+F-PE-NEGATIVE: FAIL (0.862 s) [expected negative]
+F-PE-ALU-MUX: PROVED (9.189 s)
+F-CTRL-1x1-DIV1: PROVED (6.071 s)
+F-CTRL-1x1-DIV2: PROVED (7.807 s)
+F-CTRL-1x1-DIV3: PROVED (9.332 s)
+F-CTRL-1x1-DIV4: PROVED (10.948 s)
+F-ARRAY-1x1: PROVED (7.281 s)
+F-ARRAY-2x3: PROVED (7.407 s)
+F-UART-TX-C3: PROVED (0.944 s)
+F-UART-RX-C3: PROVED (1.353 s)
+F-BLOCK-DOT-DIV1: PROVED (1.555 s)
+F-BLOCK-DOT-DIV2: PROVED (1.556 s)
+F-BLOCK-DOT-DIV3: PROVED (1.604 s)
+F-BLOCK-DOT-DIV4: PROVED (1.656 s)
+Manifest: /home/main/dev/git/ald-cgra/hw/build/formal/fast-20261007T155909Z-2601190/manifest.json; acceptance PASS
+make[1]: Leaving directory '/home/main/dev/git/ald-cgra/hw'

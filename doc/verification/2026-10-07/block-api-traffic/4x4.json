@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "scope": "public API wire counts; no wall time, FPGA timing or speedup",
+  "commit": "78100d8b683f725e2a9cce6225161c09c642f93a",
+  "dirty": true,
+  "platform": "Linux-6.18.52-1-lts-x86_64-with-glibc2.42",
+  "compiler": "gcc (GCC) 15.2.0\nCopyright (C) 2025 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n",
+  "build": {
+    "config": "gcc\nar\nPROFILE=release\nCPPFLAGS=\nCFLAGS=-std=c11 -Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion -Wcast-qual -Wcast-align -Wwrite-strings -Wundef -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes -Wdouble-promotion -Wformat=2 -fdiagnostics-color=auto -O3 -DNDEBUG -Iinclude -MMD -MP\nLDFLAGS=\nLDLIBS=\nARFLAGS=-rv\nVERSION=0.1.0 SOVERSION=0 SONAME=libcgra.so.0\n",
+    "environment": {
+      "COMPILER_PATH": null,
+      "CPATH": null,
+      "C_INCLUDE_PATH": null,
+      "GCC_EXEC_PREFIX": null,
+      "LIBRARY_PATH": null,
+      "MACOSX_DEPLOYMENT_TARGET": null,
+      "NIX_CFLAGS_COMPILE": " -frandom-seed=1kds69qpga -isystem /nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/include -isystem /nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/include -isystem /nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1/include -isystem /nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/include -isystem /nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -isystem /nix/store/bavw0xma2yw36nlba6wpb960vqhh89w8-ncurses-6.6-dev/include -isystem /nix/store/nwi9bw5vqnhkvpm6sp62awhb3ijcs1p5-valgrind-3.27.1-dev/include -isystem /nix/store/lc3a14lcfrbii8f008kjgl45xibjm1w8-perf-linux-7.1.3/include -isystem /nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/include -isystem /nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/include -isystem /nix/store/9m4gd15rxxz4xfafqysi5q7jaczxv65c-gnumake-4.4.1/include -isystem /nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/include -isystem /nix/store/prwyyxn70kvv3d4m7bagx8wbf5rmnbar-readline-8.3p3-dev/include -isystem /nix/store/bavw0xma2yw36nlba6wpb960vqhh89w8-ncurses-6.6-dev/include -isystem /nix/store/nwi9bw5vqnhkvpm6sp62awhb3ijcs1p5-valgrind-3.27.1-dev/include -isystem /nix/store/lc3a14lcfrbii8f008kjgl45xibjm1w8-perf-linux-7.1.3/include",
+      "NIX_LDFLAGS": "-rpath /home/main/dev/git/ald-cgra/outputs/out/lib  -L/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/lib -L/nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/lib -L/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/lib -L/nix/store/62qhvy2m2lpqj7ca39j9wvp2kkcxwdcg-ncurses-6.6/lib -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -L/nix/store/xnmn964hfwjk334q3kdicnl94gm66prr-clang-tools-21.1.8/lib -L/nix/store/v9pcwc34f8g4x6bi987y92ydfpcbjwdd-bear-4.0.4/lib -L/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/lib -L/nix/store/hi4cl8v2435skr1vsmc3qmzz4gv2xr3s-tcl-8.6.16/lib -L/nix/store/jxyrvv4gbpnp3ap5iy7wxwl1sg4x2x88-python3-3.14.6/lib -L/nix/store/62qhvy2m2lpqj7ca39j9wvp2kkcxwdcg-ncurses-6.6/lib -L/nix/store/3yfiiflma4rfll7fyjzk5f2k58j859jq-readline-8.3p3/lib -L/nix/store/xnmn964hfwjk334q3kdicnl94gm66prr-clang-tools-21.1.8/lib -L/nix/store/v9pcwc34f8g4x6bi987y92ydfpcbjwdd-bear-4.0.4/lib",
+      "SDKROOT": null
+    },
+    "schema": 1,
+    "tools": [
+      [
+        [
+          "gcc",
+          "/nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/gcc",
+          11487,
+          1000000000
+        ]
+      ],
+      [
+        [
+          "ar",
+          "/nix/store/ddk8rvjihg4vhh1k6x9rc65y1zb1kx34-binutils-2.46/bin/ar",
+          84344,
+          1000000000
+        ]
+      ]
+    ]
+  },
+  "source_sha256": {
+    "lib/include/README": "0d69eb10f0f4b75a37d29c7cfb34fe64f849f7e867dcbd266287e051de1f285c",
+    "lib/include/cgra.h": "100cfcb8103c78a2533cbccb2919683d38b0b784759ffee2adb3308e004dba2f",
+    "lib/src/serve.c": "7c9ffb71362bffe7c3a82186779648ea786728af35c3354c940de944cf6aadb4",
+    "lib/src/README": "c38ced221444103edc25957c7042b693ec54d7b94a0ba9fdd5326601f41a344f",
+    "lib/src/emu.h": "c054f1e2514fd4cd2b36bcbf5dd3422d0eb1959df998cea6590062079567fcb8",
+    "lib/src/cgra.c": "4cfd123fcde854982dc024d3916e4a995ee62297727469380a64441a754865f0",
+    "lib/src/emu.c": "d3de86466c5f530b8aa6023eacf2a68f9987d7ce6cb9e0dff26c478b8667c478",
+    "lib/src/buffers.h": "6edec617e92fd3394a54059e9c1ea30e73d4fc6dd3a1b43fc20d8183befc905d",
+    "lib/src/kernels.c": "86a7e7a8c760c59dbe79810fb336137beb05bef540d7981383ab498a239d527a",
+    "lib/src/bitvec.h": "36be589e4cf81ec17f0d4ab6db636b2abbd7966e3e0cdaf7e483541ba0d9b387",
+    "lib/src/vector.c": "df19ee0107f436f3b858dc929b093f951a76c9c540e90d6fb73f0931ad0b0488",
+    "lib/src/block_wire.h": "f8a7b3fd2a13182cd76a4104c60125add4444bcb4257a64ade2493498f88638f",
+    "lib/src/block_wire.c": "26406727f74e4efbc65ac71e36e11c5a9e94afcfb2650b31487c184495f2b346",
+    "lib/src/block_model.h": "ca5ab08af095aaf7569c3da483ad9ab172b0b3543449fb272c8ebb203ae560e2",
+    "lib/src/block_model.c": "24991af5fc902e4c0df16a85e18c7feaf5d6028907044f03dc72fbd9a8409c36",
+    "scripts/bench_blocks.c": "204937079eab2cd15b6d0c883252b9d2ad716fb137afc109c80ec1002c0ed5b9",
+    "scripts/measure-blocks.py": "d18178d25af543392975a5ba36cc440b08d11b8928e0a0c2468b3bda041b4bbe"
+  },
+  "commands": [
+    [
+      "make",
+      "-C",
+      "lib",
+      "-f",
+      "lib.mk",
+      "static"
+    ],
+    [
+      "gcc",
+      "-std=c11",
+      "-O2",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Ilib/include",
+      "scripts/bench_blocks.c",
+      "lib/build/libcgra.a",
+      "-o",
+      "/tmp/nix-shell.5YNUbT/cgra-block-measure-n20ylf8_/measure"
+    ],
+    [
+      "/tmp/nix-shell.5YNUbT/cgra-block-measure-n20ylf8_/measure",
+      "1x16"
+    ],
+    [
+      "/tmp/nix-shell.5YNUbT/cgra-block-measure-n20ylf8_/measure",
+      "2x8"
+    ],
+    [
+      "/tmp/nix-shell.5YNUbT/cgra-block-measure-n20ylf8_/measure",
+      "4x4"
+    ]
+  ],
+  "workload": "a[i]=i%7-3, b[i]=i%5-2; signed int64 scalar oracle reduced modulo 65536",
+  "backend": "clockless in-process model",
+  "precision_bits": 16,
+  "protocol_legacy": 3,
+  "block_revision": 1,
+  "accounting": "legacy excludes initial ID, includes CFG each call; blocks includes preflight/HELLO/upload",
+  "bitstream": null,
+  "hardware": "NOT_RUN",
+  "result": "PASS",
+  "exit_code": 0,
+  "measurement": {
+    "geometry": "4x4",
+    "n": 256,
+    "repeat": 8,
+    "nonce": 16909060,
+    "expected_bits": 65535,
+    "useful_multiplications": 2048,
+    "useful_additions": 2040,
+    "block_captures": 2048,
+    "legacy": {
+      "tx_bytes": 45600,
+      "rx_bytes": 4376,
+      "transactions": 2072
+    },
+    "blocks": {
+      "tx_bytes": 1423,
+      "rx_bytes": 433,
+      "transactions": 26
+    }
+  }
+}

@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T11:23:31" hostname="4137314" package="task" id="0" name="default" tests="82" errors="0" failures="0" time="25" skipped="78">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property COVER ctrl_contract.c_exec_empty in cgra_ctrl" time="0" type="COVER" location="" id="ctrl_contract.c_exec_empty" tracefile="engine_0/trace0.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER ctrl_contract.c_exec_full in cgra_ctrl" time="0" type="COVER" location="" id="ctrl_contract.c_exec_full" tracefile="engine_0/trace2.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER ctrl_contract.c_exec_nack_complete in cgra_ctrl" time="0" type="COVER" location="" id="ctrl_contract.c_exec_nack_complete" tracefile="engine_0/trace0.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER ctrl_contract.c_exec_sparse in cgra_ctrl" time="0" type="COVER" location="" id="ctrl_contract.c_exec_sparse" tracefile="engine_0/trace1.vcd">
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_age_range in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_age_range">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_bad_exec in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_bad_exec">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_budget_multi_launch in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_budget_multi_launch">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_budget_multi_settle in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_budget_multi_settle">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_budget_single_idle in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_budget_single_idle">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_capture_budget in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_capture_budget">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_capture_spacing in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_capture_spacing">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_cfg_change_context in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_cfg_change_context">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_cfg_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_cfg_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_data_capture_guard in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_data_capture_guard">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_exec_complete in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_exec_complete">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_index_range in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_index_range">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_input_change_context in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_input_change_context">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_pending_idle in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_pending_idle">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_phase_range in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_phase_range">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_rd_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_rd_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_reset in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_run_complete in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_run_complete">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_run_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_run_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_run_return in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_run_return">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_send_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_send_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_send_return in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_send_return">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_state_range in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_state_range">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_step_context in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_step_context">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_step_progress in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_step_progress">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_tx_context in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_tx_context">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_tx_launch in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_tx_launch">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_tx_stable in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_tx_stable">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_watchdog in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_watchdog">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_wd_clear in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_wd_clear">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_wd_range in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_wd_range">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_wd_tick in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_wd_tick">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_wr_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_wr_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_ctrl_wr_return in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_ctrl_wr_return">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_active_state in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_active_state">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_bad_no_capture in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_bad_no_capture">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_byte_content in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_byte_content">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_byte_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_byte_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_cksum_in_flight in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_cksum_in_flight">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_cksum_rank in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_cksum_rank">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_complete_length in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_complete_length">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_data_in_flight in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_data_in_flight">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_header_flags in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_header_flags">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_header_mask_hi in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_header_mask_hi">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_header_mask_lo in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_header_mask_lo">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_header_steps in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_header_steps">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_high_selected in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_high_selected">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_input_byte_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_input_byte_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_last_in_flight in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_last_in_flight">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_mask_stable in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_mask_stable">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_mux in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_mux">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_queue_send in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_queue_send">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_queue_wait in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_queue_wait">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_rank_nonincreasing in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_rank_nonincreasing">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_rank_positive in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_rank_positive">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_rank_progress in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_rank_progress">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_read_rank in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_read_rank">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_receive_context in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_receive_context">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_receive_states in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_receive_states">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_request_nonincreasing in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_request_nonincreasing">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_request_positive in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_request_positive">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_request_progress in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_request_progress">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_request_sum in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_request_sum">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_run_empty in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_run_empty">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_send_return in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_send_return">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_send_settled in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_send_settled">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_sent_bound in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_sent_bound">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_settle_low in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_settle_low">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_settled in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_settled">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_status_in_flight in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_status_in_flight">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_status_rank in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_status_rank">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_sum in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_sum">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_sum_queued in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_sum_queued">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_tap_index in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_tap_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_tx_once in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_tx_once">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_exec_verdict in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_exec_verdict">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_run_rank_positive in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_run_rank_positive">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT ctrl_contract.f_run_rank_progress in cgra_ctrl" time="0" type="ASSERT" location="" id="ctrl_contract.f_run_rank_progress">
+<skipped />
+</testcase>
+<system-out>SBY 11:23:06 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-CTRL-2x3-DIV2-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/cover-20261008T092009Z-2809079/F-CTRL-2x3-DIV2-COVER/task/src/dut.il'.
+SBY 11:23:06 [task] engine_0: smtbmc yices
+SBY 11:23:06 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 11:23:06 [task] base: finished (returncode=0)
+SBY 11:23:06 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 11:23:06 [task] prep: finished (returncode=0)
+SBY 11:23:06 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 11:23:06 [task] smt2: finished (returncode=0)
+SBY 11:23:06 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 96  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2&quot;
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 8..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 9..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 10..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 11..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 12..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 13..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 14..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 15..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 16..
+SBY 11:23:07 [task] engine_0: ##   0:00:00  Checking cover reachability in step 17..
+SBY 11:23:08 [task] engine_0: ##   0:00:00  Checking cover reachability in step 18..
+SBY 11:23:08 [task] engine_0: ##   0:00:00  Checking cover reachability in step 19..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 20..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 21..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 22..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 23..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 24..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 25..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 26..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 27..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 28..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 29..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 30..
+SBY 11:23:08 [task] engine_0: ##   0:00:01  Checking cover reachability in step 31..
+SBY 11:23:09 [task] engine_0: ##   0:00:01  Checking cover reachability in step 32..
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Checking cover reachability in step 33..
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Checking cover reachability in step 34..
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Reached cover statement in step 34 at cgra_ctrl: ctrl_contract.c_exec_empty
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Reached cover statement in step 34 at cgra_ctrl: ctrl_contract.c_exec_nack_complete
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 11:23:09 [task] engine_0: ##   0:00:02  Checking cover reachability in step 34..
+SBY 11:23:10 [task] engine_0: ##   0:00:02  Checking cover reachability in step 35..
+SBY 11:23:10 [task] engine_0: ##   0:00:03  Checking cover reachability in step 36..
+SBY 11:23:10 [task] engine_0: ##   0:00:03  Checking cover reachability in step 37..
+SBY 11:23:10 [task] engine_0: ##   0:00:03  Checking cover reachability in step 38..
+SBY 11:23:10 [task] engine_0: ##   0:00:03  Checking cover reachability in step 39..
+SBY 11:23:11 [task] engine_0: ##   0:00:03  Checking cover reachability in step 40..
+SBY 11:23:11 [task] engine_0: ##   0:00:04  Checking cover reachability in step 41..
+SBY 11:23:11 [task] engine_0: ##   0:00:04  Checking cover reachability in step 42..
+SBY 11:23:11 [task] engine_0: ##   0:00:04  Checking cover reachability in step 43..
+SBY 11:23:12 [task] engine_0: ##   0:00:04  Reached cover statement in step 43 at cgra_ctrl: ctrl_contract.c_exec_sparse
+SBY 11:23:12 [task] engine_0: ##   0:00:04  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 11:23:12 [task] engine_0: ##   0:00:05  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 11:23:12 [task] engine_0: ##   0:00:05  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 11:23:12 [task] engine_0: ##   0:00:05  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 11:23:12 [task] engine_0: ##   0:00:05  Checking cover reachability in step 43..
+SBY 11:23:12 [task] engine_0: ##   0:00:05  Checking cover reachability in step 44..
+SBY 11:23:13 [task] engine_0: ##   0:00:06  Checking cover reachability in step 45..
+SBY 11:23:13 [task] engine_0: ##   0:00:06  Checking cover reachability in step 46..
+SBY 11:23:14 [task] engine_0: ##   0:00:06  Checking cover reachability in step 47..
+SBY 11:23:14 [task] engine_0: ##   0:00:07  Checking cover reachability in step 48..
+SBY 11:23:15 [task] engine_0: ##   0:00:07  Checking cover reachability in step 49..
+SBY 11:23:15 [task] engine_0: ##   0:00:08  Checking cover reachability in step 50..
+SBY 11:23:16 [task] engine_0: ##   0:00:09  Checking cover reachability in step 51..
+SBY 11:23:16 [task] engine_0: ##   0:00:09  Checking cover reachability in step 52..
+SBY 11:23:17 [task] engine_0: ##   0:00:10  Checking cover reachability in step 53..
+SBY 11:23:18 [task] engine_0: ##   0:00:11  Checking cover reachability in step 54..
+SBY 11:23:19 [task] engine_0: ##   0:00:11  Checking cover reachability in step 55..
+SBY 11:23:19 [task] engine_0: ##   0:00:12  Checking cover reachability in step 56..
+SBY 11:23:20 [task] engine_0: ##   0:00:13  Checking cover reachability in step 57..
+SBY 11:23:21 [task] engine_0: ##   0:00:14  Checking cover reachability in step 58..
+SBY 11:23:23 [task] engine_0: ##   0:00:16  Checking cover reachability in step 59..
+SBY 11:23:24 [task] engine_0: ##   0:00:17  Checking cover reachability in step 60..
+SBY 11:23:26 [task] engine_0: ##   0:00:18  Checking cover reachability in step 61..
+SBY 11:23:27 [task] engine_0: ##   0:00:20  Checking cover reachability in step 62..
+SBY 11:23:29 [task] engine_0: ##   0:00:22  Checking cover reachability in step 63..
+SBY 11:23:30 [task] engine_0: ##   0:00:23  Reached cover statement in step 63 at cgra_ctrl: ctrl_contract.c_exec_full
+SBY 11:23:30 [task] engine_0: ##   0:00:23  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 11:23:30 [task] engine_0: ##   0:00:23  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 11:23:30 [task] engine_0: ##   0:00:23  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 11:23:30 [task] engine_0: ##   0:00:23  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 11:23:31 [task] engine_0: ##   0:00:24  Status: passed
+SBY 11:23:31 [task] engine_0: finished (returncode=0)
+SBY 11:23:31 [task] engine_0: Status returned by engine: pass
+SBY 11:23:31 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:25 (25)
+SBY 11:23:31 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:25 (25)
+SBY 11:23:31 [task] summary: engine_0 (smtbmc yices) returned pass
+SBY 11:23:31 [task] summary: cover trace: task/engine_0/trace0.vcd
+SBY 11:23:31 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_exec_empty at  step 34
+SBY 11:23:31 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_exec_nack_complete at  step 34
+SBY 11:23:31 [task] summary: cover trace: task/engine_0/trace1.vcd
+SBY 11:23:31 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_exec_sparse at  step 43
+SBY 11:23:31 [task] summary: cover trace: task/engine_0/trace2.vcd
+SBY 11:23:31 [task] summary:   reached cover statement cgra_ctrl.\ctrl_contract.c_exec_full at  step 63
+SBY 11:23:31 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

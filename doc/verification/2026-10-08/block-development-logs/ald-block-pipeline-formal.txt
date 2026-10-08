@@ -1,0 +1,7 @@
+warning: Git tree '/home/main/dev/git/ald-cgra' is dirty
+F-BLOCK-DOT-DIV1: PROVED (0.993 s)
+F-BLOCK-DOT-DIV2: PROVED (1.145 s)
+F-BLOCK-DOT-DIV3: PROVED (1.143 s)
+F-BLOCK-DOT-DIV4: PROVED (1.092 s)
+M-BLOCK-EARLY: FAIL (0.692 s) [expected negative]
+Manifest: hw/build/formal/block-dot-pipeline/manifest.json; acceptance PASS

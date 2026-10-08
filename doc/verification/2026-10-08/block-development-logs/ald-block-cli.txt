@@ -1,0 +1,70 @@
+ok contract 1 - reject unused input: ping -d sim unexpected
+ok contract 2 - reject unused input: run add --a 1 --b 2 -d sim --cols 4
+ok contract 3 - reject unused input: show add extra
+ok contract 4 - reject unused input: bench add extra
+ok contract 5 - reject unused input: scan --a 1 2
+ok contract 6 - reject unused input: run relu --a 1 --b 2
+ok contract 7 - reject unused input: conv --a 1 -m 2 --x 3
+ok contract 8 - reject unused input: matvec -m 1 --x 2 --b 3
+ok contract 9 - ping: validate option before configuration or external effects
+ok contract 10 - reset: validate option before configuration or external effects
+ok contract 11 - dump: validate option before configuration or external effects
+ok contract 12 - run: validate option before configuration or external effects
+ok contract 13 - pipe: validate option before configuration or external effects
+ok contract 14 - conv: validate option before configuration or external effects
+ok contract 15 - scan: validate option before configuration or external effects
+ok contract 16 - bench: validate option before configuration or external effects
+ok contract 17 - benchall: validate option before configuration or external effects
+ok contract 18 - show: validate option before configuration or external effects
+ok contract 19 - probe: validate option before configuration or external effects
+ok contract 20 - modes: validate option before configuration or external effects
+ok contract 21 - devices: validate option before configuration or external effects
+ok contract 22 - pipelines: validate option before configuration or external effects
+ok contract 23 - io: validate option before configuration or external effects
+ok contract 24 - config: validate option before configuration or external effects
+ok contract 25 - check: validate option before configuration or external effects
+ok contract 26 - init: validate option before configuration or external effects
+ok contract 27 - emulate: validate option before configuration or external effects
+ok contract 28 - selftest: validate option before configuration or external effects
+ok contract 29 - shell: validate option before configuration or external effects
+ok contract 30 - block-dot: validate option before configuration or external effects
+ok contract 31 - stdout/success for --help
+ok contract 32 - stdout/success for run --help
+ok contract 33 - stdout/success for --version
+ok contract 34 - negative positional operands remain valid
+ok contract 35 - explicit simulator resident workload with modular signed output
+ok contract 36 - old device reports unsupported block capability
+ok contract 37 - block input limits fail before device open
+ok contract 38 - block input limits fail before device open
+ok contract 39 - block input limits fail before device open
+ok contract 40 - reject whole shell line: unclosed
+ok contract 41 - reject whole shell line: argument limit
+ok contract 42 - reject whole shell line: token too long
+ok contract 43 - reject whole shell line: line too long
+ok contract 44 - reject whole shell line: contains NUL
+ok contract 45 - shell quotes and negative numbers round-trip
+ok contract 46 - oversized line is drained before the next command
+ok contract 47 - shell retains inherited configuration
+ok contract 48 - per-line configuration overrides inherited configuration
+ok contract 49 - completion lists shell and benchall
+ok contract 50 - completion follows run options after a global device option
+ok contract 51 - completion exposes matvec dimensions
+ok contract 52 - completion exposes version
+ok contract 53 - terminal shell rejects an unclosed quote before dispatch
+ok contract 54 - PTY service publishes readiness
+ok contract 55 - emulate accepts selected geometry/protocol
+ok contract 56 - CLI reaches configurable server over real serial transport
+ok contract 57 - SIGTERM shuts down service with success and no error
+ok contract 58 - PTY service publishes readiness
+ok contract 59 - emulate accepts selected geometry/protocol
+ok contract 60 - CLI reaches configurable server over real serial transport
+ok contract 61 - SIGTERM shuts down service with success and no error
+ok contract 62 - PTY service publishes readiness
+ok contract 63 - emulate accepts selected geometry/protocol
+ok contract 64 - CLI reaches configurable server over real serial transport
+ok contract 65 - resident CLI workload through real PTY and explicit blocks selection
+ok contract 66 - SIGTERM shuts down service with success and no error
+ok contract 67 - invalid service geometry/options rejected
+ok contract 68 - invalid service geometry/options rejected
+ok contract 69 - invalid service geometry/options rejected
+# 69 command/shell contract checks passed

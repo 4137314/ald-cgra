@@ -1,0 +1,17 @@
+initial
+assume (= [$auto$async2sync.cc:107:execute$180] false)
+assume (= [$auto$async2sync.cc:116:execute$184] true)
+assume (= [dut.dut.r] #b0000000000000000)
+assume (= [past_valid] false)
+
+state 0
+assume (= [clk] false)
+
+state 1
+assume (= [clk] false)
+
+state 2
+assume (= [clk] false)
+
+state 3
+assume (= [clk] false)
