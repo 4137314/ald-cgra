@@ -1,0 +1,296 @@
+[
+ {
+  "path": "manifest.json",
+  "size": 10319,
+  "sha256": "a240c7dea19339ae16b98a890930e709b486c4a91572ab060e1d8c02ffe3a3cd",
+  "included": true
+ },
+ {
+  "path": "vivado.log",
+  "size": 107280,
+  "sha256": "7c470b87b43bdd181c4e02feca30ee036a4d543516e9748d97203bf1738896a5",
+  "included": true
+ },
+ {
+  "path": "work/tight_setup_hold_pins.txt",
+  "size": 651,
+  "sha256": "5306498665aa44190ee94aac8bcd9eec6ed6d3a931fb5acafeccbaa0e865c97a",
+  "included": true
+ },
+ {
+  "path": "work/clockInfo.txt",
+  "size": 370,
+  "sha256": "ce1c0268f1979ea427fcea31054a78d566e081fa1c8255934b0efb9a5c8c4ef8",
+  "included": true
+ },
+ {
+  "path": "work/.Xil/cgra_top_propImpl.xdc",
+  "size": 1514,
+  "sha256": "5fb6094e0af8cb689b3ab901e4e13f47e701011efc06635934d266104f1399fd",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/gates.json",
+  "size": 304,
+  "sha256": "03db1f23715ed263a130bb5494b9d11b63fc6b09d4be3bd53462200392cdf783",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/drc_gate.rpt",
+  "size": 31353,
+  "sha256": "107cf6853904f740e2f1e6d30166138cda85a167f51939102dfda06bfc80e630",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/constraint_coverage.rpt",
+  "size": 3172,
+  "sha256": "0192bf8043f2fac900104a89168753ad915a21171d8bec6f73e21d0d023e670b",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/cdc.rpt",
+  "size": 1517,
+  "sha256": "9810a8ba4b3a11af5cbc4adfcc9706ecf369b26b1d08116cb31e782494e5cfaf",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/exception_coverage.rpt",
+  "size": 1755,
+  "sha256": "aa01105ba444c588370cd1208abc673d7577b299f15272ac7f5cdb1646f4d33f",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/data_endpoints.tsv",
+  "size": 15802,
+  "sha256": "067768beddd15a279c5f4963b3bcfe83fe54ed4544d6f73aad7906a19935ad66",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/control_endpoints.tsv",
+  "size": 39834,
+  "sha256": "4547ce6e944a1b63d3242245116c97dfcac6b84c379ba4330b0cecf209198797",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/synchronizers.tsv",
+  "size": 18306,
+  "sha256": "59a57592b16aaceeb5620594edeef7f410be980ecac320598de6836308fb6022",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/check_timing_nexys_a7.rpt",
+  "size": 3174,
+  "sha256": "029b187395cccc632992b8b4356a2cfa4c67e095996ce5d345849c538f14cbf6",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/clock_interaction_nexys_a7.rpt",
+  "size": 1429,
+  "sha256": "554ac45160fdacdc7b872ab21024595f9ac3b1c3459ef08a6c942c4a6fff6d51",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/timing_hold_nexys_a7.rpt",
+  "size": 36748,
+  "sha256": "02873d1ca3b7566d39b7347dffcb80b298a33a17c0daebc074db4b7fee909fba",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/timing_setup_nexys_a7.rpt",
+  "size": 55170,
+  "sha256": "55d5bea93d612ebe5a0be534418f3fdaf9a96537e7468d5f2bdfde0b038b7a3d",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/timing_summary_nexys_a7.rpt",
+  "size": 19543,
+  "sha256": "e4731ea8c7e67a87f51d28dd6d8efdf36633cd69a8940a6ec811171ba321c4da",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/utilization_impl.rpt",
+  "size": 10840,
+  "sha256": "7e8fa7b5752449e87ff0de390bd7852eba703664fb44cf3069306aac9df82b1e",
+  "included": true
+ },
+ {
+  "path": "work/build/vivado/post_route.dcp",
+  "size": 2566613,
+  "sha256": "a29666e1559d8a5bbb6074568a7820f17ac1d1f098c8f60bef2c5d2c14b03183",
+  "included": false
+ },
+ {
+  "path": "work/build/vivado/utilization_synth.rpt",
+  "size": 8657,
+  "sha256": "077367eb861db0755c364d5be83cfca8e8539c355593d6dbe9e2745dacdf64b1",
+  "included": true
+ },
+ {
+  "path": "work/scr/artifacts.py",
+  "size": 13771,
+  "sha256": "43fbfdd2811b9e3bffa5b2348552ee16825d5354e99477b0abecb0fb3f96560d",
+  "included": true
+ },
+ {
+  "path": "work/scr/structural_checks.tcl",
+  "size": 7369,
+  "sha256": "363568ad04c5807db039763638384a72507b2392006d05b648cccdae6c087968",
+  "included": true
+ },
+ {
+  "path": "work/scr/timing_checks.tcl",
+  "size": 2233,
+  "sha256": "cb621181016fd5ecfb916fc10712cb9a81f195cf612fc0eaf9e8a01dec8de456",
+  "included": true
+ },
+ {
+  "path": "work/scr/geometry.tcl",
+  "size": 1195,
+  "sha256": "9aca4574071836d2032bd9e6b5fbc0965030c760a797939aa0c6252a657860f1",
+  "included": true
+ },
+ {
+  "path": "work/scr/fmax.tcl",
+  "size": 7676,
+  "sha256": "0ea50f90bd902bc6d47be67d2d0d983eda7cecd5297551f538fd96e69caae4ee",
+  "included": true
+ },
+ {
+  "path": "work/scr/timing.tcl",
+  "size": 3746,
+  "sha256": "7a6e8117cf2964c5a6e55dc14d07509390de4fb39cb9fff4278091a1038724de",
+  "included": true
+ },
+ {
+  "path": "work/scr/build.tcl",
+  "size": 3428,
+  "sha256": "324e3576463d9d4639d3f15fde3d3608d23bb648ca560a37335ebcf4fa3ee4ac",
+  "included": true
+ },
+ {
+  "path": "work/scr/synth.tcl",
+  "size": 3519,
+  "sha256": "772ccc78d1c1b5c97e0b9d290a5b3e867beeb01911fc74de049f88a958e7d958",
+  "included": true
+ },
+ {
+  "path": "work/scr/constraints.tcl",
+  "size": 6116,
+  "sha256": "83db92c6989b34e69fcf1511ac81790983033ecc26cbb4a1201ffc94ee4ac12b",
+  "included": true
+ },
+ {
+  "path": "work/scr/floorplan.tcl",
+  "size": 1979,
+  "sha256": "bd62ce780ab6356634b03ecafd96e5ab77d1ae53b4302a4d68ced72a4999a381",
+  "included": true
+ },
+ {
+  "path": "work/scr/README",
+  "size": 3586,
+  "sha256": "b9a7514221823b6fdcab31cc37bad6cb208352117fde5fbba956407655312eb3",
+  "included": true
+ },
+ {
+  "path": "work/scr/program.tcl",
+  "size": 1542,
+  "sha256": "611087b2006ea710baceeda90a291bcae1940e8250d28ac33b6ab0e0501b29de",
+  "included": true
+ },
+ {
+  "path": "work/con/README",
+  "size": 1082,
+  "sha256": "dd4c82ed47704cc0015f7d3e0b4eff51f1b37f51db0a8997ba4a289a880bf0c3",
+  "included": true
+ },
+ {
+  "path": "work/con/basys3.xdc",
+  "size": 1216,
+  "sha256": "75ccf3b02bacc8c6e39ad3d90e3f64f99e6b4d43f0bc4353181a5a0ae265f2aa",
+  "included": true
+ },
+ {
+  "path": "work/con/nexys_a7.xdc",
+  "size": 1259,
+  "sha256": "2118b48a13287cee9cbb65bd55017b84e57f7b841cd4aa2c7e60a332aa6c1ee6",
+  "included": true
+ },
+ {
+  "path": "work/rtl/block_ctrl.vhd",
+  "size": 10391,
+  "sha256": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+  "included": true
+ },
+ {
+  "path": "work/rtl/block_dot.vhd",
+  "size": 3436,
+  "sha256": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+  "included": true
+ },
+ {
+  "path": "work/rtl/block_rx.vhd",
+  "size": 2992,
+  "sha256": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+  "included": true
+ },
+ {
+  "path": "work/rtl/block_pkg.vhd",
+  "size": 1129,
+  "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+  "included": true
+ },
+ {
+  "path": "work/rtl/pe.vhd",
+  "size": 3454,
+  "sha256": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+  "included": true
+ },
+ {
+  "path": "work/rtl/cgra_ctrl.vhd",
+  "size": 18294,
+  "sha256": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+  "included": true
+ },
+ {
+  "path": "work/rtl/cgra_pkg.vhd",
+  "size": 7159,
+  "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+  "included": true
+ },
+ {
+  "path": "work/rtl/README",
+  "size": 3998,
+  "sha256": "010e2335ddda7492fab0f02cc8ac383a16b54b0bd791422f28d60a93efa8b232",
+  "included": true
+ },
+ {
+  "path": "work/rtl/cgra_comp_pkg.vhd",
+  "size": 2704,
+  "sha256": "df833600c2edd6bb80d36ea2e1c225bf370ffa64664e04f249d43775c7da4b7e",
+  "included": true
+ },
+ {
+  "path": "work/rtl/cgra_top.vhd",
+  "size": 5974,
+  "sha256": "2944c89abc39c0d539aca88b1fd673744b24dfc0ea0d2586fc0b45e22a529cb7",
+  "included": true
+ },
+ {
+  "path": "work/rtl/cgra_array.vhd",
+  "size": 2741,
+  "sha256": "0d84bdc23743a1c1b69821979ca7d9588e0e630e359811911997139e3e95c2c4",
+  "included": true
+ },
+ {
+  "path": "work/rtl/uart_tx.vhd",
+  "size": 2327,
+  "sha256": "75a80933d89f14ea20e5f32eed390d39bc916a046613dc2bc698d085fd0645cf",
+  "included": true
+ },
+ {
+  "path": "work/rtl/uart_rx.vhd",
+  "size": 3239,
+  "sha256": "249b607ae8139d9a4a854fedc09c9da1dea9766a4f284915cdae0c39c15c2e28",
+  "included": true
+ }
+]

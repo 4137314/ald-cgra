@@ -1,0 +1,96 @@
+-- Integrated production controller, frame receiver and RAM engine. Initial
+-- synchronous reset is supplied by cgra_top's initialized reset synchronizer.
+-- Later reset/RX bytes/TX busy/PE result are unrestricted.
+vunit block_ctrl_contract (block_ctrl(rtl)) {
+  default clock is rising_edge(clk);
+  F_SELECTED: assert always (G_STEP_DIV = 4 and G_TIMEOUT_CYCLES = 3);
+
+  signal f_seen : boolean := false;
+  signal f_duplicate, f_replayed : boolean := false;
+  signal f_validated : boolean := false;
+  signal f_validated_byte : byte_t := (others => '0');
+  -- Quantify over every cached byte with one unconstrained constant index.
+  signal f_address : unsigned(7 downto 0);
+  attribute anyconst : boolean;
+  attribute anyconst of f_address : signal is true;
+  signal f_old_cache, f_old_response : byte_t;
+  signal f_old_length : natural range 0 to BLOCK_RAW := 0;
+  signal f_old_body : natural range 11 to 17 := 11;
+  signal f_cache_write : boolean := false;
+  signal f_uploaded : natural range 0 to BLOCK_CHUNK := 0;
+  function watched(x : bytes_t; address : unsigned) return byte_t is
+    variable i : natural := to_integer(address);
+  begin
+    if i <= x'high then return x(i); end if;
+    return x"00";
+  end function;
+  monitor : process(clk)
+  begin
+    if rising_edge(clk) then
+      f_seen <= true;
+      if rst = '1' or state = S_OP then f_uploaded <= 0;
+      elsif wr_en = '1' and f_uploaded < BLOCK_CHUNK then f_uploaded <= f_uploaded+1; end if;
+      if rst = '1' then f_validated <= false;
+      elsif state = S_IDLE then
+        f_validated <= q_valid = '1';
+        if q_valid = '1' then f_validated_byte <= watched(q, f_address); end if;
+      end if;
+      f_old_cache <= watched(cached_q, f_address); f_old_response <= watched(cached_response, f_address);
+      f_old_length <= cached_length; f_old_body <= cached_body;
+      f_cache_write <= rst = '1' or (state = S_FINISH and cache_response);
+      if rst = '1' or state = S_IDLE then f_duplicate <= false; f_replayed <= false;
+      elsif state = S_CHECK then
+        f_duplicate <= active and nonce(q) = session and le16(q(6), q(7)) = le16(cached_q(6), cached_q(7));
+      elsif state = S_COMPARE and scan = request_length-1 and q(scan) = cached_q(scan) then
+        f_replayed <= true;
+      end if;
+    end if;
+  end process;
+  A_BLOCK_INITIAL_RESET: assume always (not f_seen -> rst = '1');
+  F_BCTRL_STATE: assert always (state <= S_SEND_WAIT);
+  F_BCTRL_LOADED: assert always (loaded(0) <= BLOCK_WORDS and loaded(1) <= BLOCK_WORDS);
+  F_BCTRL_COUNT: assert always (dot_count <= BLOCK_WORDS);
+  F_BCTRL_UPLOAD_TRANSFER: assert always (wr_en = '1' -> f_uploaded = upload_index and f_uploaded < to_integer(unsigned(q(13))) and upload_count = to_integer(unsigned(q(13))) and upload_bank = to_integer(unsigned(q(10))) and wr_addr = le16(q(11), q(12))+f_uploaded and wr_data = signed(std_logic_vector'(q(15+2*f_uploaded) & q(14+2*f_uploaded))));
+  F_BCTRL_UPLOAD_COMMIT: assert always (f_seen and state = S_FINISH and prev(state = S_UPLOAD and rst = '0') -> f_uploaded = to_integer(unsigned(q(13))) and loaded(upload_bank) = le16(q(11), q(12))+f_uploaded and not result_valid);
+  F_BCTRL_UPLOAD_COUNT: assert always (upload_count >= 1 and upload_count <= BLOCK_CHUNK);
+  F_BCTRL_UPLOAD_INDEX: assert always (upload_index < upload_count);
+  F_BCTRL_UPLOAD_SPACE: assert always (upload_offset + upload_count <= BLOCK_WORDS);
+  F_BCTRL_WRITE_ADDRESS: assert always (wr_addr < BLOCK_WORDS);
+  F_BCTRL_LENGTH: assert always (request_length = 0 or (request_length >= 12 and request_length <= BLOCK_RAW));
+  F_BCTRL_REQUEST: assert always (state = S_CHECK or state = S_COMPARE or state = S_OP -> request_length >= 12 and request_length <= BLOCK_RAW);
+  F_BCTRL_COMPARE: assert always (state = S_COMPARE -> scan < request_length and request_length = cached_length);
+  F_BCTRL_BODY: assert always (body_length >= 11 and body_length <= 17 and cached_body >= 11 and cached_body <= 17);
+  F_BCTRL_CRC_INDEX: assert always (state = S_CRC -> scan <= body_length);
+  F_BCTRL_ENCODING: assert always (state = S_ENCODE -> scan <= body_length+1 and wire_length >= 1 and wire_length <= 2*scan+1);
+  F_BCTRL_CLOSING: assert always (state = S_CLOSE -> wire_length >= 1 and wire_length <= 2*(body_length+2)+1);
+  F_BCTRL_WIRE_SIZE: assert always (wire_length <= 40 and wire_index < 40);
+  F_BCTRL_SEND_INDEX: assert always (state = S_SEND or state = S_SEND_WAIT -> wire_index < wire_length);
+  F_BCTRL_NO_CONCURRENT_WRITE: assert always (wr_en = '1' -> dot_busy = '0');
+  F_BCTRL_DOT_START: assert always (dot_start = '1' -> dot_busy = '0' and dot_count <= loaded(0) and dot_count <= loaded(1));
+  F_BCTRL_DOT_CONTEXT: assert always (dot_busy = '1' -> state = S_DOT_WAIT);
+  F_BCTRL_MODE_HOLD: assert always (rst = '0' and framed = '1' -> next (framed = '1'));
+  F_BCTRL_RESET: assert always (rst = '1' -> next (state = S_IDLE and framed = '0' and not active and not result_valid and loaded(0) = 0 and loaded(1) = 0 and executions = 0 and cached_length = 0));
+  F_BCTRL_TX_LAUNCH: assert always (f_seen and tx_start = '1' -> prev(rst = '0' and state = S_SEND and tx_busy = '0') and state = S_SEND_WAIT);
+  F_BCTRL_TX_HOLD: assert always (rst = '0' and state = S_SEND_WAIT -> next (tx_data = prev(tx_data)));
+  F_BCTRL_VALIDATED_BYTES: assert always (f_validated and state /= S_IDLE -> watched(q, f_address) = f_validated_byte);
+  F_BCTRL_OPERATION_AUTHORITY: assert always (state = S_OP or state = S_UPLOAD or state = S_DOT_START or state = S_DOT_WAIT -> f_validated and framed = '1' and active);
+  F_BCTRL_EFFECT_AUTHORITY: assert always (rst = '0' and (wr_en = '1' or dot_start = '1' or step = '1' or dp_rst = '1') -> f_validated and framed = '1' and active);
+  F_BCTRL_EXEC_INCREMENT: assert always (rst = '0' and state = S_DOT_WAIT and dot_done = '1' -> next (executions = prev(executions)+1));
+  F_BCTRL_EXEC_HOLD: assert always (rst = '0' and state /= S_CHECK and not (state = S_DOT_WAIT and dot_done = '1') -> next (executions = prev(executions)));
+  F_BCTRL_DUPLICATE_COUNT: assert always (rst = '0' and state = S_CHECK and active and nonce(q) = session -> next (executions = prev(executions)));
+  F_BCTRL_COMPARE_CONTEXT: assert always (state = S_COMPARE -> f_duplicate and not cache_response and active);
+  F_BCTRL_DUPLICATE_CONTEXT: assert always (f_duplicate -> state = S_COMPARE or state = S_FINISH or state = S_CRC_INIT or state = S_CRC or state = S_ENCODE or state = S_CLOSE or state = S_SEND or state = S_SEND_WAIT or state = S_IDLE);
+  F_BCTRL_REPLAY_CONTEXT: assert always (f_replayed -> f_duplicate and (state = S_CRC_INIT or state = S_CRC or state = S_ENCODE or state = S_CLOSE or state = S_SEND or state = S_SEND_WAIT or state = S_IDLE));
+  F_BCTRL_OPERATION_CACHE: assert always (state = S_OP or state = S_UPLOAD or state = S_DOT_START or state = S_DOT_WAIT -> cache_response);
+  F_BCTRL_COMPARE_PREFIX: assert always (state = S_COMPARE -> (to_integer(f_address) >= scan or watched(q, f_address) = watched(cached_q, f_address)));
+  F_BCTRL_NEXT_SEQUENCE: assert always (state = S_OP or state = S_UPLOAD or state = S_DOT_START or state = S_DOT_WAIT -> active and nonce(q) = session and le16(cached_q(6), cached_q(7)) < 65535 and le16(q(6), q(7)) = le16(cached_q(6), cached_q(7))+1);
+  F_BCTRL_NO_DUPLICATE_EFFECTS: assert always (f_duplicate -> wr_en = '0' and dot_start = '0' and dot_busy = '0' and step = '0' and dp_rst = '0' and not cache_response);
+  F_BCTRL_REPLAY_IDENTITY: assert always (f_replayed -> request_length = cached_length and (to_integer(f_address) >= request_length or watched(q, f_address) = watched(cached_q, f_address)));
+  F_BCTRL_REPLAY_RESPONSE: assert always (f_replayed -> body_length = cached_body and (to_integer(f_address) >= body_length or watched(response, f_address) = watched(cached_response, f_address)));
+  F_BCTRL_CACHE_HOLD: assert always (f_seen and not f_cache_write -> watched(cached_q, f_address) = f_old_cache and watched(cached_response, f_address) = f_old_response and cached_length = f_old_length and cached_body = f_old_body);
+  C_BCTRL_REPLAY: cover {rst = '0' and f_replayed and state = S_CRC_INIT};
+  C_BCTRL_CONFLICT: cover {rst = '0' and f_duplicate and state = S_FINISH and response(10) = x"03"};
+  C_BCTRL_SELECTED: cover {rst = '0' and framed = '1'};
+  C_BCTRL_UPLOAD: cover {rst = '0' and wr_en = '1'};
+  C_BCTRL_DOT: cover {rst = '0' and dot_start = '1'};
+}

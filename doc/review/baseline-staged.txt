@@ -1,0 +1,13 @@
+ TASKS.md                          |  40 +++++++-
+ doc/block-protocol.md             |  37 ++++++--
+ doc/verification-matrix.md        |   9 +-
+ hw/formal/README.md               | 123 ++++++++++++++++++++-----
+ hw/formal/block_ctrl_contract.psl |  94 +++++++++++++++++++
+ hw/formal/block_ctrl_witness.vhd  |  61 +++++++++++++
+ hw/formal/block_dot_contract.psl  |   1 +
+ hw/formal/block_memory.psl        |  41 +++++++++
+ hw/formal/block_rx_contract.psl   |  80 ++++++++++++++++
+ hw/formal/run.py                  | 140 +++++++++++++++++++++++++---
+ hw/hw.mk                          |   7 +-
+ hw/sim/tb_block_faults.vhd        | 186 ++++++++++++++++++++++++++++++++++++++
+ 12 files changed, 767 insertions(+), 52 deletions(-)

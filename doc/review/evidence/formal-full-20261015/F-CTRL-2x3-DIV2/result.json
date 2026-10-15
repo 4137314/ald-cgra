@@ -1,0 +1,71 @@
+{
+  "id": "F-CTRL-2x3-DIV2",
+  "top": "cgra_ctrl",
+  "kind": "ctrl",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_ROWS": 2,
+    "G_COLS": 3,
+    "G_STEP_DIV": 2,
+    "G_TIMEOUT_CYCLES": 100000000
+  },
+  "assertions": 78,
+  "assumptions": 0,
+  "covers": 10,
+  "solver_budget_seconds": 90,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_ROWS=2 -gG_COLS=3 -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=100000000 cgra_pkg.vhd cgra_ctrl.vhd ctrl_contract.psl -e cgra_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/cgra_ctrl.vhd": "a207f8764a3387f17cbada1c1aa970df900806af167387c7dde860a2a45462ff",
+    "hw/formal/ctrl_contract.psl": "b384adcca5eda8b3d0b903fc8e01c4ff0d595a5097ebcd8dc2e477473ddf2b56",
+    "hw/formal/exec_contract.psl": "c927affff9ef1115e45a90400adffb894d47c1a2ee17ae58afe63e1e8502ebc2"
+  },
+  "parameter_check_sha256": "0b835b2198f3d9fbf5928dc9eb8deebb0f14fc71a1bbd84899664f75878712d1",
+  "effective_properties_sha256": "b7819dd6193a2fd2d9d195803491f1bf520226b792a7dca42dbf4c5340ad55bf",
+  "checked_port_widths": {
+    "cfg": 192,
+    "pe_regs": 96,
+    "west_o": 32,
+    "north_o": 48
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 10,
+    "assert": 78
+  },
+  "smt2_cells": {
+    "assert": 78,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "2b3d91ddc6e478ebb50f10103337571c894389d29b27d24893baf5db62beb45e",
+    "task/src/properties.json": "a0e65f3ce7e3c76e4ecc232e928b981ff3e04f265f441d5cdf1eb188a3b3b10f",
+    "task/model/design_smt2.smt2": "3abb8db04d32c8503bfc7168d7672d958b7256ab72346b92faccbbbae4399350"
+  },
+  "traces": [],
+  "duration_seconds": 13.608
+}

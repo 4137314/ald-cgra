@@ -1,0 +1,83 @@
+{
+  "id": "F-BLOCK-CTRL-DIV1",
+  "top": "block_ctrl",
+  "kind": "block_ctrl",
+  "mode": "prove",
+  "depth": 6,
+  "parameters": {
+    "G_STEP_DIV": 1,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 86,
+  "assumptions": 1,
+  "covers": 12,
+  "solver_budget_seconds": 90,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=1 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_dot.vhd block_ctrl.vhd block_rx_contract.psl block_dot_contract.psl block_ctrl_contract.psl -e block_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "initial synchronous reset; later reset/RX/TX busy/PE result unrestricted",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+    "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+    "hw/rtl/block_ctrl.vhd": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+    "hw/formal/block_rx_contract.psl": "58701bce17739681cfd9bc120f2f235bf6bc679a556affaf30c8daee80cef09c",
+    "hw/formal/block_dot_contract.psl": "af9d08d499415a8e7609fbf26810869967fbb475dbe8b4e0d327195b27a1389a",
+    "hw/formal/block_ctrl_contract.psl": "b5ec413316eaa3f5ea167683e5349938c2153d6912426123362dd0f279bf12f3"
+  },
+  "parameter_check_sha256": "57c5d2dce4b371d1871897a41831eadbdb8b2cc21b5117b6576dd0f37c459a0e",
+  "effective_properties_sha256": "646e9494f72896a1d97856b7d0e97fb1cd00c5cfc8f69049e79aba0884e7ee57",
+  "effective_child_properties_sha256": "78e7c032942765207a1d253b5c2e720b553efa11ee2a83dbd058ed759e69175d",
+  "discharged_obligation": "block_dot.count <= 1024 asserted as F_BCTRL_COUNT on its actual connected input",
+  "checked_port_widths": {
+    "a": 16,
+    "b": 16,
+    "pe_result": 16,
+    "rx_data": 8,
+    "tx_data": 8
+  },
+  "scope": "integrated parser/length/index safety, commit bounds, ownership, TX handshake and duplicate isolation",
+  "cone_reduction": "top outputs become internal wires; no object, assertion, assumption or input deleted",
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "assume": 1,
+    "cover": 12,
+    "assert": 86
+  },
+  "symbolic_cache_address_bits": 8,
+  "smt2_cells": {
+    "assert": 86,
+    "assume": 2,
+    "cover": 0
+  },
+  "smt2_symbolic_widths": [
+    8
+  ],
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "bb44a61db0f9a1f6fc076c2aa9881e64a8df82a2fc8c06a79a6e379b3fd112c8",
+    "task/src/properties.json": "ec76353b82c50a009531946c61a48f1e0dee5ae915f1361fc41d0af077986423",
+    "task/model/design_smt2.smt2": "3050f033f74e22af4421c723ab6a8cbe4f7c23dd80876156ad476a085d2e21c5"
+  },
+  "traces": [],
+  "duration_seconds": 29.592
+}

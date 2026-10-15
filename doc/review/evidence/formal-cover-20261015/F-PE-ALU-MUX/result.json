@@ -1,0 +1,68 @@
+{
+  "id": "F-PE-ALU-MUX",
+  "top": "pe_contract",
+  "kind": "pe",
+  "mode": "prove",
+  "depth": 4,
+  "gates": true,
+  "assertions": 1,
+  "assumptions": 1,
+  "covers": 20,
+  "solver_budget_seconds": 90,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover  cgra_pkg.vhd pe.vhd pe_ports.vhd -e pe_ports; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "initial reset; subsequent inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/pe.vhd": "380e0b39f09181c53b35717b871f0b47355672f2ab579133a6da4c18b8a20eb0",
+    "hw/formal/pe_ports.vhd": "4e5d7456a44fe624414bb42ad7851038dea1b3de2cac1ea9ebe34e1c5211dd34",
+    "hw/formal/pe_contract.sv": "c28564474a5f3aa80f26adaafb9f1b4c8dfba6fe8b790f1aa57e5e5ca9a62866",
+    "hw/formal/pe_spec.sv": "9882ff448d049839635b9a523229688f55b20d3fd032acb31edf48b99168499e"
+  },
+  "checked_port_widths": {
+    "n": 16,
+    "s": 16,
+    "e": 16,
+    "w": 16,
+    "q": 16,
+    "cfg": 32
+  },
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "assert": 1,
+    "assume": 1,
+    "cover": 20
+  },
+  "smt2_cells": {
+    "assert": 1,
+    "assume": 2,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "b037c817fa0f8c22a70552720c136fb58f12ca56fef6a08c32c0089cc8003899",
+    "task/src/properties.json": "bff1d24d6f57bf4bed7b139ba5c2c610529ffe6d226fd3d42180de2890e1ea3a",
+    "task/model/design_smt2.smt2": "c61c29bf635895eda8899e963bfc8cb578ac4ec2992eea33413d7417d2b4f254"
+  },
+  "traces": [],
+  "duration_seconds": 6.455
+}

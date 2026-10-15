@@ -1,0 +1,4 @@
+pdfTeX 3.141592653-2.6-1.40.27 (TeX Live 2025/nixos.org)
+BibTeX 0.99d (TeX Live 2025/nixos.org)
+pdfinfo version 26.08.0
+Latexmk, John Collins, 15 June 2025. Version 4.87

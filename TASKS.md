@@ -59,7 +59,7 @@ A01 estende S6 alla matrice comando/opzione, A10 estende gli oracoli di S7.
 | A03 | P1 | README/commenti hardware coerenti con protocollo, geometria e prove; nessuna garanzia di funzionamento derivata dalla sola STA | DA FARE |
 | A04 | P1 | `ASYNC_REG`, verifica netlist/placement e copertura dei vincoli con Vivado reale; estensione H5 | VERIFICATO (4×4/10 ns/DIV2) |
 | A05 | P1/P2 | Manifest e pubblicazione per run Vivado; programmazione associata all'artefatto verificato | VERIFICATO (senza programmazione) |
-| A06 | P2/P3 | PDF di consegna unico, commit/manifest e bibliografia ribilanciata dopo layout finale; estensione T4/R6 | DA FARE |
+| A06 | P2/P3 | PDF di consegna unico, commit/manifest e bibliografia ribilanciata dopo layout finale; estensione T4/R6 | PARZIALE (report aggiornato 2026-10-15) |
 | A07 | P2 | Arity/opzioni CLI, help/version, completion e limiti shell verificati; opzioni output completate | VERIFICATO |
 | A08 | P2 | Separazione dei domini CLI e contesto di invocazione; definire estensioni diagnostica/deadline mantenendo ABI | VERIFICATO |
 | A09 | P2 | Convoluzione senza Toeplitz densa; oracoli/guasti e confronto memoria/tempo host | VERIFICATO |
@@ -892,6 +892,70 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 - **Ripresa:** chiudere questo checkpoint con i manifest finali. Poi A11/H3
   matrice legacy sistematica, A03/A06/A13/A14 report/documentazione/PDF unico;
   licenza resta scelta dell'autore. Non dichiarare concluso l'intero incarico.
+
+### Checkpoint 2026-10-15 / 14 — report allineato alle evidenze di ottobre
+
+- Report LaTeX (`doc/build/main.pdf`, 12 pagine) aggiornato senza nuove
+  esecuzioni hardware/formali/Vivado: cita soltanto evidenze archiviate.
+  `make doc` exit 0; 0 riferimenti indefiniti, 0 overfull/underfull, 0 warning
+  BibTeX. Log, hash sorgenti/PDF e versioni in
+  `doc/verification/2026-10-15/report/`.
+- Errori corretti: shift (SHL logico, SHR aritmetico, conteggio 4 bit), layout
+  della parola CFG con bit riservati, dati Vivado del 23/9 superati (ora bit
+  gate 5/10, sweep cinque forme, candidato 5.859 ns, run a blocchi 8/10),
+  conteggio software 1049→3519, "six commands" con tabella a sette righe,
+  rapporto transazioni dell'abstract calcolato dal CSV.
+- Aggiunti: mappa delle evidenze (Tabella I), sezione estensione a blocchi
+  (figura frame, tabella costo), sottosezione formale con risultati UNKNOWN e
+  run consolidata dichiarata pendente, tabella "stabilisce / non stabilisce",
+  piano di collaudo su scheda (NOT_RUN). Stile: matematica Times, sans nelle
+  figure, monospazio txtt, un solo colore per i link, intestazioni ombreggiate.
+- **Ripresa:** dopo la run formale consolidata del checkpoint 13 aggiornare
+  `src/results/formal.tex` e Tabella I; decidere con l'autore la sostituzione
+  di `doc/main.pdf` (T4/A06). A03 (README/commenti hardware) resta da fare.
+
+### Checkpoint 2026-10-15 / 15 — analisi, figure e bibliografia del report
+
+- Nuova misura su emulatore `make -C doc -f doc.mk measure-scaling` (134 punti,
+  oracolo scalare per punto, solo conteggi): dot ripetuto v2/v3/residente e
+  cinque kernel × cinque forme. Le asserzioni in forma chiusa hanno prima
+  FALLITO su 16×1 matvec/conv (mancava la regola di salto delle tile a peso
+  nullo nel controllo, non nei dati); corrette. I punti 4×4 coincidono con
+  `data/wire-cost.csv`.
+- Nuove analisi: break-even τ* (dot 174 µs, matvec/conv 58 µs), roofline
+  (tutti i kernel ~10^4 sotto il ridge, link-bound), compromesso geometrico,
+  scalabilità residente. Figure scheda come segnaposto NOT RUN generate da
+  `doc/data/board/*.csv` (vuoti); percorso con dati provato con righe sintetiche
+  temporanee e poi ripristinato.
+- Figure corrette: FSM ridisegnata con stati RTL e watchdog verificato,
+  griglia systolic, datapath PE, stack. Bibliografia 42 voci (+12).
+  `make doc` exit 0, 14 pagine, nessun warning. Evidenze in
+  `doc/verification/2026-10-15/report-analysis/`.
+- Su richiesta dell'autore `doc/main.pdf` è stato sostituito con la build
+  corrente (titolo PDF corretto nei metadati); hash in `sha256.txt`.
+- **Ripresa:** con la scheda, popolare `doc/data/board/` secondo il README e
+  aggiornare didascalia/testo NOT RUN; run formale consolidata (checkpoint 13).
+
+### Checkpoint 2026-10-15 / 16 — revisione scientifica del manoscritto
+
+- Manoscritto riscritto come studio con tre domande di ricerca (fusione,
+  geometria/mapping, residenza), convenzioni di conteggio esplicite, related
+  work verificato su fonti primarie, limiti e disponibilità dell'artefatto.
+  Rapporto, matrice delle affermazioni, baseline e controllo di perimetro in
+  `doc/review/`. PDF: `doc/main.pdf` (11 pagine) e `doc/supplement.pdf`.
+- Rieseguiti sulla revisione corrente con output isolato: suite formale
+  `full` (38 PROVED, 10 FAIL attesi, nessun UNKNOWN) e `cover` (18
+  BOUNDED_PASS + 1 PROVED); STA Vivado 4×4 legacy a 10 ns e 5.859 ns, metriche
+  identiche alle run del 5–6/10, che usavano un `cgra_top.vhd` precedente.
+  Evidenze in `doc/review/evidence/`. Chiude anche il gate finale formale del
+  checkpoint 13 per i sorgenti correnti.
+- Nuova misura documentale `make -C doc -f doc.mk measure-analysis`
+  (`doc/data/analysis/`): step, byte e transazioni per cinque forme e scenari di
+  riuso, con formule chiuse asserite al render. La roofline del checkpoint 15
+  (convenzioni incoerenti) è sostituita da un modello temporale esplicito.
+- **Ripresa:** misure su scheda (piano nel supplemento), sweep geometrico e
+  ricerca Fmax sulla revisione corrente, licenza e revisione pubblicata
+  immutabile, A11/H3 (`tb_protocol_faults` non ancora integrato).
 
 ## Prossime correzioni senza scheda
 

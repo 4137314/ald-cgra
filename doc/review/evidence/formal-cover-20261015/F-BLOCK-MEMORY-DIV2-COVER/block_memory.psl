@@ -1,0 +1,41 @@
+-- Inserted into the production block_dot vunit, alongside its control proof.
+-- One arbitrary constant address quantifies over all 1024 physical words.
+  signal f_address : unsigned(9 downto 0);
+  attribute anyconst : boolean;
+  attribute anyconst of f_address : signal is true;
+  signal f_known_a, f_known_b : boolean := false;
+  signal f_word_a, f_word_b : data_t := (others => '0');
+  signal f_read_known_a, f_read_known_b : boolean := false;
+  signal f_read_a, f_read_b : data_t := (others => '0');
+  signal f_read_index : natural range 0 to BLOCK_WORDS-1 := 0;
+  signal f_read_seen : boolean := false;
+  signal f_rewritten, f_reset_written : boolean := false;
+  memory_monitor : process(clk)
+  begin
+    if rising_edge(clk) then
+      f_read_seen <= true;
+      f_read_index <= index;
+      f_read_known_a <= f_known_a and index = to_integer(f_address);
+      f_read_known_b <= f_known_b and index = to_integer(f_address);
+      f_read_a <= f_word_a; f_read_b <= f_word_b;
+      -- RAM is retained across reset. Track only accepted writes; attempts
+      -- during busy/reset must not change the symbolic word.
+      if rst = '0' and busy = '0' and wr_en = '1' and wr_addr = to_integer(f_address) then
+        if wr_bank = '0' then
+          if f_known_a then f_rewritten <= true; end if;
+          f_word_a <= wr_data; f_known_a <= true;
+        else f_word_b <= wr_data; f_known_b <= true; end if;
+      end if;
+      if rst = '1' and f_known_a and f_known_b then f_reset_written <= true; end if;
+    end if;
+  end process;
+  F_MEM_A_STORED: assert always (f_known_a -> bank_a(to_integer(f_address)) = f_word_a);
+  F_MEM_B_STORED: assert always (f_known_b -> bank_b(to_integer(f_address)) = f_word_b);
+  F_MEM_A_READ: assert always (f_read_seen and f_read_known_a -> qa = f_read_a);
+  F_MEM_B_READ: assert always (f_read_seen and f_read_known_b -> qb = f_read_b);
+  F_MEM_READ_INDEX: assert always (state = S_READ -> f_read_index = index);
+  F_MEM_A_CAPTURE: assert always (step = '1' and index = to_integer(f_address) and f_known_a -> a = f_word_a);
+  F_MEM_B_CAPTURE: assert always (step = '1' and index = to_integer(f_address) and f_known_b -> b = f_word_b);
+  C_MEM_DATA: cover {rst = '0' and step = '1' and f_known_a and f_known_b and index = to_integer(f_address) and a /= 0 and b /= 0};
+  C_MEM_RESET_REWRITE: cover {rst = '0' and step = '1' and f_known_a and f_known_b and f_rewritten and f_reset_written and index = to_integer(f_address)};
+  C_MEM_ORDER: cover {rst = '0' and step = '1' and f_known_a and f_known_b and index = to_integer(f_address) and index > 0};

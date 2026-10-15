@@ -1,0 +1,73 @@
+0f8a54bce20506c141f18f90ac98aec04fc04191
+ M doc/STRUCTURE.md
+ M doc/backmatter/references.tex
+ M doc/bib/bib.bib
+M  doc/block-protocol.md
+ M doc/config/colors.tex
+ M doc/config/hyperref.tex
+ M doc/config/macros.tex
+ M doc/config/package.tex
+ M doc/config/tikz.tex
+ M doc/doc.mk
+ M doc/figures/README
+ M doc/figures/exec/diagram.tex
+ M doc/figures/fsm/diagram.tex
+ M doc/figures/fsm/figure.tex
+ M doc/figures/pe/diagram.tex
+ M doc/figures/pe/figure.tex
+ M doc/figures/stack/diagram.tex
+ M doc/figures/stack/figure.tex
+ M doc/figures/systolic/diagram.tex
+ M doc/frontmatter/abstract.tex
+ M doc/frontmatter/keywords.tex
+ M doc/frontmatter/title.tex
+ M doc/src/analysis.tex
+ M doc/src/analysis/latency.tex
+ M doc/src/architecture/processing-element.tex
+ M doc/src/background/related-work.tex
+ M doc/src/conclusion.tex
+ M doc/src/implementation.tex
+ M doc/src/implementation/scope.tex
+ M doc/src/implementation/timing-gates.tex
+ M doc/src/implementation/validation.tex
+ M doc/src/introduction.tex
+ M doc/src/protocol/controller.tex
+ M doc/src/protocol/fused-execute.tex
+ M doc/src/results.tex
+ M doc/src/results/verification.tex
+ M doc/src/results/wire-experiment.tex
+ M doc/src/sections.tex
+ M doc/tables/README
+ M doc/tables/commands/table.tex
+ M doc/tables/kernel-counts/table.tex
+ M doc/tables/verification/table.tex
+ M doc/tables/wire-sizes/table.tex
+ M doc/tools/wire_data.py
+M  doc/verification-matrix.md
+?? doc/data/board/
+?? doc/data/scaling.csv
+?? doc/data/scaling.json
+?? doc/figures/board/
+?? doc/figures/frame/
+?? doc/figures/geometry/
+?? doc/figures/latency/
+?? doc/figures/roofline/
+?? doc/figures/scaling/
+?? doc/figures/tradeoff/
+?? doc/src/analysis/geometry.tex
+?? doc/src/analysis/roofline.tex
+?? doc/src/blocks.tex
+?? doc/src/blocks/
+?? doc/src/implementation/board-plan.tex
+?? doc/src/results/formal.tex
+?? doc/tables/block-cost/
+?? doc/tables/evidence/
+?? doc/tables/geometry/
+?? doc/tools/board_data.py
+?? doc/tools/measure_scaling.c
+?? doc/tools/model_data.py
+?? doc/tools/scaling_data.py
+?? doc/verification/2026-10-08/block-mutation-ghdl-final/
+?? doc/verification/2026-10-08/block-mutation-ghdl/
+?? doc/verification/2026-10-09/
+?? doc/verification/2026-10-15/
