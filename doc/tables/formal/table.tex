@@ -1,0 +1,42 @@
+\begin{table*}[t]
+  \centering
+  \caption{Formal results on the production VHDL, re-executed for this paper
+  on the current sources (SymbiYosys with Yices~2.7.0, GHDL~6.0.0 plugin,
+  Yosys~0.67). PROVED: bounded base case and $k$-induction at the stated
+  depth. Instances are enumerated; no result is a theorem over all
+  parameters. Assertion counts are cells in the solver model.}
+  \label{tab:formal}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.12}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.6cm}
+      >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}p{3.6cm}
+      >{\raggedright\arraybackslash}p{1.5cm} r >{\raggedright\arraybackslash}p{2.2cm}@{}}
+    \headtop
+    \headrow
+    \thead{Family} & \thead{Instances and conclusion} & \thead{Assumptions}
+      & \thead{Method} & \thead{Assert.} & \thead{Result} \\
+    \headbottom
+    PE datapath & All 16 opcodes, both 8-way muxes, all 16-bit operands; reset priority and hold
+      & Initial reset & $k$-ind., $k=4,8$ & 1, 4 & PROVED \\
+    Array wiring & $1\times1$ monolithic; $1\times2$, $2\times1$, $2\times3$, $3\times2$, $4\times4$, $1\times16$, $16\times1$ by composition
+      & Initial reset; PE transitions as proved component guarantees & $k$-ind., $k=4$ & 1--16 & PROVED \\
+    Legacy controller & $1\times1$ with $D=1$--4; $2\times3$, $3\times2$, $4\times4$, $1\times16$, $16\times1$ with $D=2$; capture count/spacing, guards, rejected \cmd{EXEC}, \cmd{EXEC} reply, watchdog, TX handshake, ranking functions
+      & None & $k$-ind., $k=16$ & 77--78 & PROVED \\
+    UART & TX and RX digital models at divisors 3 and 868
+      & None & $k$-ind., $k=16$ & 21, 31 & PROVED \\
+    Block sequencer & $D=1$--4: count, cadence, operand/ownership guards, result capture
+      & $\mathit{count}\le1024$ (port subtype) & $k$-ind., $k=16$ & 24 & PROVED \\
+    Block memories & Two $1024\times16$ banks, arbitrary address, $D=1$--4: retention and read order
+      & Same & $k$-ind., $k=16$ & 31 & PROVED \\
+    Frame receiver & Timeout 3 and $10^{8}$: escaping, length, CRC accept/reject, watchdog
+      & None & $k$-ind., $k=8$ & 22 & PROVED \\
+    Block controller & Receiver and sequencer connected, $D=1$--4 and $T=10^{8}$: effects only from validated frames, cache, exact replay without duplicated effects, sequence exhaustion
+      & Initial reset & $k$-ind., $k=6$ & 86 & PROVED \\
+    \midrule
+    Negative controls & One false assertion and nine mutated copies (adder, step, \cmd{EXEC} byte order, north link, UART TX/RX, CRC bypass, RAM bank, early capture)
+      & As above & BMC, 4--40 & -- & 10/10 FAIL as required \\
+    Reachability & 18 explicit cover tasks, including a complete block transcript driver
+      & Witness-only stimuli & BMC, 40--200 & -- & 18 BOUNDED\_PASS \\
+    \bottomrule
+  \end{tabularx}
+\end{table*}

@@ -1,38 +1,73 @@
-% Logical command phases, not a one-to-one diagram of RTL enum states.
-% The shared input receiver and step engine occur on the v2 and EXEC paths.
-\begin{tikzpicture}[x=1mm,y=1mm,font=\scriptsize,
-    phase/.style={draw=cStateE,fill=cState,rounded corners=2pt,
-      minimum width=24mm,minimum height=8mm,align=center},
-    shared/.style={phase,draw=cBlockE,fill=cBlock}]
-  \node[phase] (wr) at (0,24) {CFG / WR};
-  \node[phase] (payload) at (32,24) {receive words};
-  \node[phase] (check) at (64,24) {check sum};
-  \node[phase] (ack) at (96,24) {ACK / NACK};
-  \draw[wire] (wr)--(payload); \draw[wire] (payload)--(check);
-  \draw[wire] (check)--(ack);
-  \node[phase] (rd) at (128,24) {RD};
-  \node[phase] (regs) at (160,24) {all registers\\$+$ checksum};
-  \draw[wire] (rd)--(regs);
+% Controller state machine (hw/rtl/cgra_ctrl.vhd). Each box is one RTL state
+% or a short chain of them (named in typewriter); byte loops and the shared
+% transmit handshake S_SEND/S_SEND_WAIT are folded into the boxes that use it.
+% Blue boxes are the states shared by two commands: S_WR (WR, EXEC) and
+% S_RUN (RUN, EXEC); the return target is held in wr_ret / run_ret.
+\begin{tikzpicture}[x=1mm, y=1mm, font=\scriptsize,
+    st/.style={draw=cStateE, fill=cState, rounded corners=2pt,
+      minimum width=27mm, minimum height=9.5mm, align=center, inner sep=1pt},
+    sh/.style={st, draw=cBlockE, fill=cBlock},
+    ex/.style={st, draw=cRegE, fill=cReg},
+    tx/.style={st, draw=cWire!70, fill=white},
+    sn/.style={font=\tiny\ttfamily, text=cWire!80},
+    op/.style={lbl, fill=white, inner sep=1pt, font=\tiny\ttfamily}]
+  \newcommand{\stbox}[5]{\node[#1] (#2) at #3 {#4\\[-0.4ex]{\tiny\ttfamily\color{cWire!80}#5}};}
 
-  \node[phase] (run) at (0,9) {RUN};
-  \node[phase] (arg) at (32,9) {receive $N$};
-  \node[shared] (steps) at (64,9) {step engine};
-  \node[phase] (done) at (96,9) {ACK};
-  \draw[wire] (run)--(arg); \draw[wire] (arg)--(steps);
-  \draw[wire] (steps)--(done);
-  \node[lbl,align=center] at (144,9) {ID / RST / bad opcode:\\direct reply};
+  % hub
+  \node[draw=cStateE, fill=cState, circle, minimum size=13mm, align=center,
+        font=\scriptsize\bfseries] (idle) at (0,0) {IDLE\\[-0.5ex]{\tiny\ttfamily\mdseries S\_IDLE}};
 
-  \node[phase,draw=cRegE,fill=cReg] (hdr) at (0,-16) {EXEC header};
-  \node[shared] (exin) at (32,-16) {input receiver};
-  \node[phase,draw=cRegE,fill=cReg] (exck) at (64,-16) {check sum};
-  \node[shared] (exrun) at (96,-16) {optional reset\\$+$ step engine};
-  \node[phase,draw=cRegE,fill=cReg] (exrd) at (128,-16) {masked registers\\$+$ checksum};
-  \node[phase,draw=cRegE,fill=cReg] (status) at (160,-16) {ACK / NACK};
-  \draw[wire] (hdr)--(exin); \draw[wire] (exin)--(exck);
-  \draw[wire] (exck)--node[lbl,below]{valid}(exrun);
-  \draw[wire] (exrun)--(exrd); \draw[wire] (exrd)--(status);
-  \draw[wire,cRegE] (exck.north) -- (64,-5) -- node[lbl,above]{bad checksum: no reset or steps}
-    (128,-5) -- (exrd.north);
-  \node[lbl,align=center] at (80,-29)
-    {WR/EXEC share input reception; RUN/EXEC share stepping. Each transmit uses the shared send handshake.};
+  % one row per command family: y positions
+  \def\yCFG{33} \def\yWR{20} \def\yRUN{7} \def\yRD{-6} \def\yID{-19} \def\yEX{-33}
+
+  \stbox{st}{cfg1}{(36,\yCFG)}{receive $RC$ words}{S\_CFG}
+  \stbox{st}{cfg2}{(70,\yCFG)}{receive, verify checksum}{S\_CFG\_CK}
+  \stbox{tx}{cfg3}{(104,\yCFG)}{send ACK / NACK}{S\_SEND}
+
+  \stbox{sh}{wr1}{(36,\yWR)}{receive $R{+}C$ words}{S\_WR}
+  \stbox{st}{wr2}{(70,\yWR)}{receive, verify checksum}{S\_WR\_CK}
+  \stbox{tx}{wr3}{(104,\yWR)}{send ACK / NACK}{S\_SEND}
+
+  \stbox{st}{run1}{(36,\yRUN)}{receive $N$}{S\_RUN\_ARG}
+  \stbox{sh}{run2}{(70,\yRUN)}{$N$ enabled captures}{S\_RUN}
+  \stbox{tx}{run3}{(104,\yRUN)}{send ACK}{S\_RUN\_ACK}
+
+  \stbox{tx}{rd1}{(36,\yRD)}{send $RC$ registers}{S\_RD}
+  \stbox{tx}{rd2}{(70,\yRD)}{send checksum}{S\_RD\_CK}
+
+  \stbox{tx}{id1}{(36,\yID)}{direct reply}{S\_ID / S\_SEND}
+  \node[lbl, align=left, anchor=west] (idl) at (51,\yID)
+    {ID: signature, version, geometry\\RST: clear PE registers, ACK\\unknown opcode: NACK};
+
+  \stbox{ex}{ex1}{(36,\yEX)}{header: $N$, flags, mask}{S\_EX\_HDR}
+  \stbox{sh}{ex2}{(70,\yEX)}{receive $R{+}C$ words}{S\_WR}
+  \stbox{ex}{ex3}{(104,\yEX)}{receive, verify checksum}{S\_EX\_CK}
+  \stbox{sh}{ex4}{(138,\yEX)}{optional reset,\\[-0.4ex] $N$ captures}{S\_RUN}
+  \stbox{ex}{ex5}{(172,\yEX)}{masked registers,\\[-0.4ex] checksum, status}{S\_EX\_RD\dots S\_EX\_ST}
+
+  % dispatch from IDLE: orthogonal fan-out with opcode labels
+  \foreach \y/\dst/\code in {\yCFG/cfg1/02\,CFG, \yWR/wr1/03\,WR, \yRUN/run1/04\,RUN,
+                             \yRD/rd1/05\,RD, \yID/id1/{01,06,other}, \yEX/ex1/07\,EXEC} {
+    \draw[wire] (idle.east) -| (14,\y) -- node[op, above=0.3mm] {\code} (\dst.west);
+  }
+
+  % forward edges
+  \foreach \a/\b in {cfg1/cfg2, cfg2/cfg3, wr1/wr2, wr2/wr3, run1/run2, run2/run3,
+                     rd1/rd2, ex1/ex2, ex2/ex3} \draw[wire] (\a) -- (\b);
+  \draw[wire] (ex3) -- node[op, above=0.3mm] {valid} (ex4);
+  \draw[wire] (ex4) -- (ex5);
+  \draw[wire, cRegE] (ex3.south) -- ++(0,-6) -| node[op, pos=0.25, below=0.3mm, text=cRegE]
+    {invalid: no reset, no steps} (ex5.south);
+
+  % return to IDLE through one bus on the right and below
+  \def\xb{192}
+  \foreach \n in {cfg3, wr3, run3, rd2, idl, ex5} \draw[cWire, thick] (\n.east) -- (\xb, |- \n.east);
+  \draw[cWire, thick] (\xb,\yCFG) -- (\xb,-47);
+  \draw[wire] (\xb,-47) -- node[op, below=0.3mm] {reply complete} (0,-47) -- (idle.south);
+  \draw[cWire, thick] (id1.east) -- (idl.west);
+
+  % watchdog (dashed): from every receive state back to IDLE
+  \draw[wire, dashed, cStateE] (128,44) -- node[op, above=0.3mm, text=cStateE]
+    {watchdog: no byte for $10^{8}$ cycles (1\,s) in any state awaiting a payload or checksum byte}
+    (0,44) -- (idle.north);
 \end{tikzpicture}

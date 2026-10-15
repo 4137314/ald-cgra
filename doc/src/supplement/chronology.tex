@@ -1,0 +1,38 @@
+\section{Chronology of formal and implementation runs}
+
+Every run below is archived with its inputs, commands, tool versions, logs
+and source hashes; failed and inconclusive runs are kept as such.
+
+\emph{Implementation.} An initial synthesis and STA run on 23 September
+2026 concerned an earlier design and is superseded. On 5 October a complete
+bitstream flow for the legacy $4\times4$ design passed all nine gates
+(WNS $+1.862$\,ns, WHS $+0.098$\,ns) and five 16-PE shapes were implemented
+from identical sources. The first period search failed its final gate,
+because the requested period (5.859375\,ns) differed from the period applied
+by the tool (5.859\,ns); after quantising periods to 1\,ps and checking the
+applied clock, a second search on 6 October produced the 5.859\,ns
+candidate. These runs used a top-level wrapper that predates the block
+extension. On 7 October the enabled block build first failed to elaborate (a
+boolean generic), then failed routed setup at $-3.580$\,ns and, after adding
+operand registers, at $-2.867$\,ns on a path from state decoding into the
+array multiplexers; an explicit ownership register with a proved guard led
+to the passing run of 8 October (WNS $+0.427$\,ns). The synthesis pair of
+Table~P-\ref{P-tab:block-cost} was produced the same day. For this paper the
+legacy $4\times4$ design was re-implemented on the current revision at
+10\,ns, reproducing the 5 October metrics exactly, and at 5.859\,ns
+(\VivadoFastSummary).
+
+\emph{Formal.} A monolithic $2\times3$ array proof timed out at 90\,s and a
+first hierarchical PE formulation at 120\,s; the array is therefore proved
+by composition with the separately proved PE transition. On 8 October the
+full suite then in place reported 27 PROVED tasks and 8 required failures.
+On 9 October an extended suite with the block properties reported 37
+PROVED, 10 required failures and one UNKNOWN (block controller, $D=4$),
+where induction did not close at the chosen depth; a separate run PROVED
+that task after a reachable-state invariant was added as an assertion.
+Several cover attempts for the block controller timed out or hit frontend
+errors before the transcript driver was used. For this paper the complete
+full and cover suites were re-executed on the current sources: 38 PROVED
+tasks, all 10 negative and mutation tasks failing as required, no UNKNOWN,
+and 18 reached covers. Only this last execution is reported as the formal
+result of the paper.

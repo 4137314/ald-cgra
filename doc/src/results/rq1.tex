@@ -1,0 +1,31 @@
+\subsection{RQ1: when does fusion pay?}
+\label{sec:rq1}
+
+Table~\ref{tab:measured} lists the counted cost of the five kernels. Fusion
+divides the number of transactions by $\JRatioMin$--$\JRatioMax\times$. It also reduces
+bytes for vector addition and scan, whose unfused form reads back all
+sixteen registers per chunk, but increases bytes by 2.5--\ByteIncreaseMax\%
+for dot product, matrix--vector and convolution: per element or per tile the
+fused transactions cost two to four bytes more than the sequences they
+replace, because step, flag, mask and status bytes outweigh the removed
+command bytes and these kernels have little read-back to omit. These
+ratios are count ratios, not speedups.
+
+By Eq.~\eqref{eq:breakeven}, fusion is therefore never slower in the model
+for vector and scan, and faster for the other three kernels only when the
+turnaround exceeds $\tau^{*}=\TauDot\,\mu$s (dot), $\TauMatvec\,\mu$s
+(matrix--vector) and $\TauConv\,\mu$s (convolution), i.e.\ two, two thirds and
+two thirds of a byte time. Fig.~\ref{fig:latency} shows the full dependence:
+for $\tau\to0$ the ratio tends to the byte ratio, for large $\tau$ to the
+transaction ratio. Fig.~\ref{fig:time} shows why the device term plays no
+role: on the $4\times4$ mesh at $D=2$ and 100\,MHz, $S\,D/f_{\mathrm{clk}}$ is
+at most $\DeviceShareMax\times10^{-5}$ of the serialization time of the same
+call. Within the model, a higher clock or a smaller $D$ changes total time by
+less than that fraction. Whether fusion pays on a real system is decided by
+the measured distribution of $\tau$, which this study could not obtain.
+
+\input{tables/measured/table}
+
+\input{figures/latency/figure}
+
+\input{figures/time/figure}

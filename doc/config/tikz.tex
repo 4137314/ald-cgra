@@ -14,7 +14,11 @@
   decorations.pathreplacing
 }
 
+% Figures use the sans family (TeX Gyre Heros) for labels, as is customary
+% in IEEE figures; mathematics keeps the text math font. Node styles below set
+% only the size, so the family set here is inherited everywhere.
 \tikzset{
+  every picture/.append style={/utils/exec={\sffamily}},
   blk/.style   ={draw=cBlockE, fill=cBlock, rounded corners=2pt,
                  minimum height=8mm, minimum width=16mm, align=center,
                  font=\small},

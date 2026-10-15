@@ -1,11 +1,20 @@
-The model separates byte serialization, request/reply count and array steps.
-Let $P=RC$, $E=R+C$, and let $t$ be the number of selected registers. Counts
-assume complete successful transactions, no retries and no other port traffic.
+\subsection{Wire cost}
+\label{sec:cost}
+
+Let $P=RC$, $E=R+C$ and $t$ the number of registers selected by a tap mask.
+Table~\ref{tab:cost} gives request and reply sizes, including checksums. For
+a $4\times4$ diagonal chunk, \cmd{WR}+\cmd{RUN}+\cmd{RD} costs 56 bytes in
+three transactions, and \cmd{EXEC} with four taps 32 bytes in one.
+Table~\ref{tab:kernel-counts} gives the resulting transaction counts of the
+library kernels for nonempty inputs, a cached identity (the initial
+identification, one transaction of six bytes, is excluded), no retries and
+no skipped tiles; $K=\lceil n/L\rceil$, $Q=\lceil n/C\rceil$,
+$T_R=\lceil M/R\rceil$ and $T_C=\lceil N/C\rceil$ for an $M\times N$ matrix.
+With $B$ executed tile pairs in $C_a$ active column tiles, matrix--vector
+and convolution need $C_a+(2R+2)B$ transactions in v2 and $C_a+RB$ in v3.
+Every count reported in Section~\ref{sec:results} equals these closed forms;
+the analysis scripts check this for every geometry before plotting.
 
 \input{tables/wire-sizes/table}
 
-The EXEC request adds four bytes to WR: step count, flags and a two-byte tap
-mask. For a $4\times4$ diagonal chunk, WR+RUN+RD costs 56 bytes and three
-transactions; EXEC with four taps costs 32 bytes and one transaction.
-Untapped cells can contain routing data: the saving comes from omitting
-registers that the caller does not need, not from assuming they were unwritten.
+\input{tables/kernel-counts/table}

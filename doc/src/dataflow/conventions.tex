@@ -1,0 +1,28 @@
+\subsection{Counting conventions}
+\label{sec:conventions}
+
+To avoid mixing units we count four quantities separately. A \emph{PE slot}
+is one PE during one array step; a call with $S$ steps offers $RCS$ slots.
+A \emph{useful PE operation} is one PE instruction whose result contributes
+to the answer: one addition per output for vector addition and scan, one
+MAC per element for the dot product, one multiplication per matrix entry
+for matrix--vector and convolution. \emph{Scalar operations} count the
+multiplications and additions of the scalar reference (a MAC is two), and
+\emph{host operations} are additions performed by the host, such as the
+column sums of matrix--vector. Throughout, the useful fraction
+\begin{equation}
+  \eta=\frac{\text{useful PE operations}}{RC\,S}
+  \label{eq:eta}
+\end{equation}
+is distinct from the \emph{static occupancy}, the fraction of PEs
+configured with an arithmetic opcode. For one $4\times4$ diagonal chunk,
+four of sixteen PEs are arithmetic (occupancy $1/4$) but four useful sums
+take four steps, so $\eta=4/(16\cdot4)=1/16$.
+
+The abstract fabric ceiling is $RC\,f_{\mathrm{clk}}/D$ PE operations per
+second, $800\times10^{6}$ for $4\times4$, $D=2$ and 100\,MHz. A mapping
+attains at most $\eta$ times this ceiling, i.e.\ $50\times10^{6}$ useful
+operations per second for the diagonal, dot and scan mappings and
+$200\times10^{6}$ multiplications per second for matrix--vector, before any
+communication. The resident dot product, at $D+3=5$ clocks per element,
+attains at most $20\times10^{6}$ MACs per second.

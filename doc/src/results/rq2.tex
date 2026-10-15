@@ -1,0 +1,28 @@
+\subsection{RQ2: geometry, mapping and useful work}
+\label{sec:rq2}
+
+Fig.~\ref{fig:tradeoff} separates three quantities for the five 16-PE
+shapes, using the same problem sizes as Table~\ref{tab:measured} and counted
+array steps. The useful fraction $\eta$ is $1/16$ for vector addition, dot
+product and scan on every shape: the diagonal produces $L$ results in $L$
+steps on $RC$ PEs, the dot product uses one PE per step, and a scan block of
+$C$ elements occupies the $C$ PEs of row~0 for $C$ steps. Matrix--vector
+reaches $\eta=1/R$ (all sixteen PEs multiply on $1\times16$, one on
+$16\times1$), and convolution less because band tiles contain structural
+zeros. Static occupancy (panel~b) is up to sixteen times larger than $\eta$
+for scan on $1\times16$, where all sixteen PEs are configured but only one
+result per step is new, and should not be used as a throughput proxy.
+
+For vector, dot and scan the shape changes only communication. The same 256-element vector
+addition needs 2\,115 bytes on $4\times4$ but 11\,331 bytes on the strips,
+because every transfer carries $R+C$ edge words for at most $\min(R,C)$
+results; scan and matrix--vector are cheapest on $1\times16$ (1\,251 and
+4\,870 bytes), and matrix--vector and convolution are most expensive on
+$16\times1$ (47\,200 and 60\,608 bytes), where they also have the lowest
+$\eta$. The number of steps of
+matrix--vector ranges from 64 to 1\,024 across shapes, but, as shown for
+RQ1, steps hardly matter on this link. No shape minimises traffic for every
+kernel; for a known dominant kernel the shape should follow its edge
+utilisation.
+
+\input{figures/tradeoff/figure}

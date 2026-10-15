@@ -4,11 +4,15 @@ doc/tables/ - complete table units
 Each NAME/table.tex owns its environment, caption, label and table layout.
 Sections include that unit; previews render it directly with shared styling.
 
-    commands/       UART command payload/reply shapes
+    related/        comparison with related CGRA work
+    commands/       legacy command payload/reply shapes
     wire-sizes/     byte-cost formulae
     kernel-counts/  per-kernel transaction formulae
-    verification/   evidence and limits
-    measured/       measured v2/v3 counters; body generated from data/wire-cost.csv
+    verification/   evidence classes, revision, what each does / does not establish
+    measured/       v2/v3 counters; body generated from data/wire-cost.csv
+    block-cost/     legacy vs resident-block resources
+    formal/         per-family formal results (re-executed 15 Oct 2026)
+    vivado/         routed implementation results with revision marks
 
     make -C doc -f doc.mk table-wire-sizes
     make -C doc -f doc.mk tables

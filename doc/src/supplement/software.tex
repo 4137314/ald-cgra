@@ -1,0 +1,18 @@
+\section{Host software stack}
+
+The C library owns transport and protocol: identification, configuration,
+input transfer, stepping and read-back primitives, checksums, the
+retransmission rule of Section~P-\ref{P-sec:contracts}, and session shutdown
+after uncertain transfers. It caches the protocol version and geometry from
+one identification exchange and selects fused or unfused execution per
+chunk, so one binary drives either protocol version and every supported
+geometry. The in-process device model speaks the same byte protocols; it can
+also be exposed on a POSIX pseudo-terminal~\cite{stevens-apue}, so that the
+real serial code path is exercised without hardware. A command-line tool
+compiles a declarative configuration language into per-PE words and drives
+the library (Fig.~\ref{fig:stack}). The public header defines buffer
+capacities, ownership and aliasing; a failure after computation has started
+can leave partial output, and calls sharing a handle or a physical device
+require caller synchronisation.
+
+\input{figures/stack/figure}

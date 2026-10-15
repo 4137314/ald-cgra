@@ -1,25 +1,33 @@
-% figures/stack.tex — host/FPGA system overview (logical block diagram).
-\begin{tikzpicture}[node distance=4mm]
-  % ---- host side ----
-  \node[blk, minimum width=34mm] (cli) {\cmd{cgra} CLI\\{\scriptsize .cgra DSL $\cdot$ config discovery}};
-  \node[blk, minimum width=34mm, below=of cli] (lib) {\cmd{libcgra}\\{\scriptsize transport $\cdot$ kernels $\cdot$ emulator}};
+% figures/stack — host/FPGA system overview (logical block diagram).
+% The serial link is horizontal between the two blocks that terminate it.
+\begin{tikzpicture}[x=1mm, y=1mm, font=\scriptsize]
+  \tikzset{b/.style={blk, minimum width=31mm, minimum height=9mm, font=\scriptsize}}
+  % host
+  \node[b] (cli) at (0,15) {\texttt{cgra} CLI\\[-0.3ex]{\tiny DSL $\cdot$ config discovery}};
+  \node[b] (lib) at (0,0)  {\texttt{libcgra}\\[-0.3ex]{\tiny transport $\cdot$ kernels $\cdot$ plans}};
+  \node[b, dashed] (emu) at (0,-15) {emulator \texttt{sim:}\\[-0.3ex]{\tiny same byte protocol, clockless}};
+  \draw[wire] (cli) -- (lib);
+  \draw[wireb] (lib) -- (emu);
   \begin{scope}[on background layer]
-    \node[draw=cBlockE, dashed, rounded corners, fit=(cli)(lib),
-          inner sep=3mm, label=above:{\small Host PC}] (host) {};
+    \node[draw=cBlockE, dashed, rounded corners, fit=(cli)(emu), inner sep=2.5mm,
+          label={[font=\scriptsize]above:host}] {};
   \end{scope}
-
-  % ---- fpga side ----
-  \node[blk, minimum width=34mm, right=34mm of cli] (uart) {\cmd{uart\_rx} / \cmd{uart\_tx}\\{\scriptsize 8N1}};
-  \node[blk, minimum width=34mm, below=of uart] (ctrl) {\cmd{cgra\_ctrl}\\{\scriptsize protocol FSM $\cdot$ watchdog}};
-  \node[blk, minimum width=34mm, below=of ctrl] (arr) {$R\times C$ PE array};
-  \begin{scope}[on background layer]
-    \node[draw=cBlockE, dashed, rounded corners, fit=(uart)(ctrl)(arr),
-          inner sep=3mm, label=above:{\small FPGA}] (fpga) {};
-  \end{scope}
-
-  % ---- links ----
-  \draw[wireb] (lib.east) -- node[lbl, above]{UART}
-                                node[lbl, below]{115200} (uart.west);
+  % fpga
+  \node[b] (uart) at (52,0) {\texttt{uart\_rx} / \texttt{uart\_tx}\\[-0.3ex]{\tiny 8N1, synchronisers}};
+  \node[b] (ctrl) at (52,-15) {\texttt{cgra\_ctrl}\\[-0.3ex]{\tiny protocol FSM $\cdot$ watchdog}};
+  \node[b] (arr)  at (52,-30) {$R\times C$ PE array};
+  \node[b, draw=cRegE, fill=cReg, dashed] (blk) at (52,15)
+    {\texttt{block\_ctrl} + 2\,BRAM\\[-0.3ex]{\tiny optional, \texttt{G\_BLOCK\_ENABLE}}};
   \draw[wire] (uart) -- (ctrl);
-  \draw[wireb] (ctrl) -- node[lbl,right,xshift=1.5mm]{cfg / inputs / step / regs} (arr);
+  \draw[wireb] (ctrl) -- (arr);
+  \draw[wireb, cRegE] (uart) -- (blk);
+  \coordinate (own) at ($(blk.east)+(4,0)$);
+  \draw[wire, cRegE] (blk.east) -- (own) |- node[lbl, pos=0.3, right, align=left, text=cRegE]
+    {owns\\array\\during\\DOT} (arr.east);
+  \coordinate (ownlbl) at ($(own)+(9,0)$);
+  \begin{scope}[on background layer]
+    \node[draw=cBlockE, dashed, rounded corners, fit=(blk)(arr)(ownlbl), inner sep=2.5mm,
+          label={[font=\scriptsize]above:FPGA}] {};
+  \end{scope}
+  \draw[wireb] (lib) -- node[lbl, above] {USB--UART} node[lbl, below] {115\,200 Bd} (uart);
 \end{tikzpicture}

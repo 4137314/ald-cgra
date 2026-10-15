@@ -1,0 +1,24 @@
+% Model terms of Eq. (time) for one call on the 4x4 mesh, protocol v3, from
+% the counted B, J and S (build/ana-time.csv; tools/analysis_data.py).
+\begin{tikzpicture}
+  \begin{axis}[
+    ybar, width=\columnwidth, height=50mm, bar width=2.3mm,
+    ymode=log, log origin=infty, ymin=1e-3, ymax=1e4,
+    ytick={1e-3,1e-1,1e1,1e3}, ylabel={modelled time per call (ms)},
+    symbolic x coords={vector,dot,scan,matvec,conv}, xtick=data,
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    axis line style={cWire!45}, tick style={cWire!45},
+    ymajorgrids, grid style={cWire!15}, enlarge x limits=0.13,
+    legend style={font=\tiny, at={(0.5,1.03)}, anchor=south, legend columns=2,
+                  draw=cWire!35, fill=white},
+  ]
+    \addplot[draw=cBlockE, fill=cBlock] table[x=kernel, y=serial_ms, col sep=comma] {build/ana-time-v3.csv};
+    \addlegendentry{serialization $B\,t_b$}
+    \addplot[draw=cAluE, fill=cAlu] table[x=kernel, y=turn1ms_ms, col sep=comma] {build/ana-time-v3.csv};
+    \addlegendentry{turnaround $J\tau$, $\tau=1$\,ms}
+    \addplot[draw=cStateE, fill=cState] table[x=kernel, y=turn16ms_ms, col sep=comma] {build/ana-time-v3.csv};
+    \addlegendentry{turnaround $J\tau$, $\tau=16$\,ms}
+    \addplot[draw=cRegE, fill=cReg] table[x=kernel, y=device_ms, col sep=comma] {build/ana-time-v3.csv};
+    \addlegendentry{device $S\,D/f_{\mathrm{clk}}$, 100\,MHz}
+  \end{axis}
+\end{tikzpicture}

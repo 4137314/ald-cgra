@@ -1,0 +1,46 @@
+\subsection{RQ3: residency, resources and verification effort}
+\label{sec:rq3}
+
+\emph{Communication.} The fused legacy dot product sends one 24-byte
+exchange per element: 4 bytes of operands, 12 bytes of unused edge words
+(the payload always carries $R+C$ words) and 8 bytes of command, step,
+flag, mask, checksum and status. Uploading both vectors in 64-word frames
+before a single computation removes the padding and most per-element
+overhead. Fig.~\ref{fig:reuse} separates this batching effect from reuse
+across calls. For eight dot products of length 256, the fused legacy kernel
+transfers \ReuseStreamBytes{} bytes in \ReuseStreamJ{} transactions;
+re-uploading both vectors for every call (no reuse) needs
+\ReuseNoneBytes{} bytes in \ReuseNoneJ{} transactions, a
+$\ReuseNoneFactor\times$ reduction attributable to batching and to sending
+only the needed operands; reusing one vector needs \ReuseOneBytes{} bytes;
+reusing both needs \ReuseBothBytes{} bytes in \ReuseBothJ{} transactions
+($\ReuseBothFactor\times$ fewer bytes, $-\ReuseBothPercent\%$, and
+$\ReuseBothJFactor\times$ fewer transactions). The last case repeats an
+identical computation on identical data, whose result the host could have
+cached; it measures the amortisation of uploads, not a realistic workload.
+Resident byte counts depend on the data through byte stuffing (an archived
+run with different operands counted 1\,856 instead of 1\,857 bytes). Since
+the device term is negligible (RQ1), the time benefit predicted by
+Eq.~\eqref{eq:time} follows the byte and transaction reductions, but no
+speedup was measured.
+
+\emph{Resources.} Enabling the extension adds $+68.6\%$ LUTs and $+320.5\%$
+flip-flops after synthesis (Table~\ref{tab:block-cost}). The archived
+reports have no per-module breakdown; by construction the added state
+comprises a 144-byte receive buffer, the cached response, CRC and session
+registers and the operand registers, but their individual shares were not
+measured. The two logical $1024\times16$ banks map to two RAMB18
+primitives counted by Vivado as one block-RAM tile. Only one PE computes
+during \texttt{DOT}, so residency trades array utilisation for traffic.
+
+\emph{Verification effort.} The extension added four property families with
+163 assertion cells (sequencer 24, memories 31, receiver 22, integrated
+controller 86) and 15 positive proof tasks taking 175\,s of solver time in
+the full suite, against 23 tasks and 237\,s for the entire legacy design
+(Table~\ref{tab:formal}). Its integration also required two timing-driven
+redesigns before routed timing closed (Section~\ref{sec:chain}). These
+figures are a coarse proxy of effort, not a complexity metric.
+
+\input{tables/block-cost/table}
+
+\input{figures/reuse/figure}

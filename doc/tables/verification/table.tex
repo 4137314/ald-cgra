@@ -1,28 +1,45 @@
-\begin{table}[t]
+\begin{table*}[t]
   \centering
-  \caption{Evidence available for the current sources. Logs and commands are
-  archived under \texttt{doc/verification/}, in dated records from
-  20--25 September 2026.}
+  \caption{Evidence classes, the source revision on which each was obtained,
+  and what it does and does not establish. ``Current'' means that the file
+  hashes recorded by the run equal those of the evaluated revision for every
+  file the run uses.}
   \label{tab:verif}
   \footnotesize
-  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{1.4cm}
-    >{\raggedright\arraybackslash}p{3cm}
-    >{\raggedright\arraybackslash}p{3.15cm}@{}}
-    \toprule
-    Property & Evidence & Limit \\
-    \midrule
-    Kernel values & Independent scalar references, eight shapes, v2/v3
-      & Tested cases; no general proof \\
-    Protocol & Model/RTL byte replay and real PTY transport
-      & No physical serial bridge \\
-    C API & Release and sanitizer suites; allocation/read fault injection
-      & Caller must respect buffer lifetimes and synchronization \\
-    Step spacing & RTL assertions for $D=1,2,3,4$ including reset
-      & Enable checks alone do not prove timing or selector coverage \\
-    Wire counts & Fixed workloads, counters, source hashes
-      & No elapsed-time or CPU speedup result \\
-    FPGA timing & Real Vivado synthesis and routed STA, default $4\times4$
-      & One 10 ns point; no board validation \\
+  \renewcommand{\arraystretch}{1.12}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.7cm}
+      >{\raggedright\arraybackslash}p{3.9cm} >{\raggedright\arraybackslash}X
+      >{\raggedright\arraybackslash}X@{}}
+    \headtop
+    \headrow
+    \thead{Evidence} & \thead{Run and revision} & \thead{Establishes}
+      & \thead{Does not establish} \\
+    \headbottom
+    Counters with scalar references
+      & Recorded for this paper; current library
+      & Exact bytes, transactions and steps for the stated inputs; closed forms
+      & Elapsed time; behaviour on untested inputs \\
+    Model/RTL replay (GHDL)
+      & Archived full simulation suite; RTL and benches current
+      & Byte-exact agreement on recorded transcripts, $D=1$--4
+      & Equivalence; errors shared by model and RTL \\
+    Software suites (3\,519 checks, sanitizers)
+      & Archived; library current, command-line tool one revision earlier
+      & Tested API, transport and fault-injection behaviour
+      & Behaviour of a physical bridge; path coverage \\
+    Formal proofs and covers
+      & Re-executed for this paper; current
+      & Asserted safety on enumerated instances; reachability of covers
+      & Unasserted properties; other parameters; unconditional liveness \\
+    Routed STA, legacy $4\times4$
+      & Re-executed for this paper at 10\,ns and 5.859\,ns; current
+      & Setup/hold closure of one netlist under its constraints
+      & Correctness of the exception premise (Section~\ref{sec:chain}); board timing \\
+    Routed STA, other runs
+      & Archived; block build current; geometry sweep and period search on an earlier wrapper
+      & As above, for those configurations
+      & Statistical shape effects; a maximum frequency \\
+    Board measurement & Not run & -- & -- \\
     \bottomrule
-  \end{tabular}
-\end{table}
+  \end{tabularx}
+\end{table*}

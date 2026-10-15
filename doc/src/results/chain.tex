@@ -1,0 +1,65 @@
+\subsection{From proved capture guards to timing exceptions}
+\label{sec:chain}
+
+A PE result is a combinational function of the PE's own register, its
+neighbours' registers, its configuration word and the edge registers. The
+controller captures it only every $D$ clocks, so the design applies a
+$D$-cycle setup and $(D-1)$-cycle hold multicycle exception to these
+paths~\cite{ug903,bhasker-timing}. Such an exception is correct only if the
+sources are stable for $D$ cycles before every capture; a positive slack
+under the exception does not establish that premise. We document the
+argument as a chain of four checkable links.
+
+\emph{(1) Functional premise, proved on the RTL.} For the controller,
+properties proved by $k$-induction on every enumerated instance
+(Table~\ref{tab:formal}) state that captures are at least $D$ clocks apart,
+that the first capture after a datapath reset is at least $D$ clocks later,
+that configuration and edge registers change only in their receive states
+or on reset, and that at least $D-1$ clocks separate such a change from the
+next non-reset capture. The PE and array proofs establish that PE registers
+change only on step or reset. For the block extension, analogous guards on
+the operand and ownership registers are proved for $D=1$--4. The
+reachable-state lemmas these inductions need are asserted and proved, never
+assumed: the controller tasks have no assumptions at all, and the
+integrated block controller assumes only an initial reset; it proves the
+range bound ($\mathit{count}\le1024$) that the standalone sequencer and
+memory tasks assume.
+
+\emph{(2) Constraint scope.} The constraint script names every expected
+source register bit---for $4\times4$, 256 PE result bits, 416 used
+configuration bits, 64 west and 64 north bits, i.e.\ 800 launch registers
+(833 with the block operand and ownership registers)---and the 256 PE data
+inputs as endpoints. Exceptions are applied from clock pins to data pins
+only, so clock-enable and reset pins keep single-cycle checks, as do RAM to
+operand-register paths. A run fails if any expected register is missing
+from the synthesized netlist or any unexpected one matches.
+
+\emph{(3) Static timing.} The routed netlist must meet setup and hold with
+these exceptions, and must pass checks on endpoint coverage, unconstrained
+paths, synchronisers and clock-domain crossings.
+
+\emph{(4) Residual gap.} The link between (1) and (2) is by register name:
+we did not check formally that synthesis preserved the RTL register
+boundaries, and the proofs cover enumerated geometries and $D$ values, not
+all parameters. Metastability of the asynchronous inputs is outside both
+proofs and STA~\cite{ginosar-metastability}.
+
+Table~\ref{tab:vivado} lists the implementation results. On the current
+revision the legacy $4\times4$ design closes at 10\,ns with the same slack
+and resources as an archived run on an earlier snapshot, which differed only
+in a top-level wrapper that is pure wiring when the extension is disabled.
+A heuristic period search on that earlier snapshot found a passing
+candidate at 5.859\,ns ($1000/T=170.7$\,MHz); implementing the current
+revision at that period again passes every gate with identical slack and
+resources. This is a constraint result for one placement, not a maximum
+frequency and not a change of the board's 100\,MHz oscillator. With $D=2$, the corresponding step rate is
+$f_{\mathrm{clk}}/D$, and kernel throughput is lower still by $\eta$ and,
+dominantly, by the link (RQ1). The block extension closed at 10\,ns only
+after two retained failing designs ($-3.580$ and $-2.867$\,ns), which led
+to explicit operand and ownership registers with proved guards. The
+geometry sweep uses one placement per shape, so differences in slack
+between shapes are not statistically interpretable.
+
+\input{tables/formal/table}
+
+\input{tables/vivado/table}

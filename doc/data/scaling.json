@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "experiment": "scaling-v1",
+  "recorded_at_utc": "2026-10-15T14:29:19.796912+00:00",
+  "system": "Linux-6.18.54-1-lts-x86_64-with-glibc2.42",
+  "base_commit": "0f8a54bce20506c141f18f90ac98aec04fc04191",
+  "dirty": true,
+  "working_tree": "source hashes identify the measured code; HEAD alone is insufficient",
+  "compiler_command": "gcc",
+  "compiler": "gcc (GCC) 15.2.0",
+  "binary_sha256": "724c4d0a0608451474d864256896b9133a845617a9356638b41b4c2a6b5e3c2b",
+  "build": "make -C lib -f lib.mk PROFILE=release static; make -C doc -f doc.mk measure-scaling",
+  "backend": "in-process emulator (v2, v3, resident blocks); no serial-time model",
+  "counting": "legacy: after one ID; blocks: includes preflight, HELLO and uploads; no retries",
+  "verification": "independent scalar result per point; closed-form counts checked here",
+  "hardware": "NOT_RUN",
+  "sha256": {
+    "doc/tools/measure_scaling.c": "df8c52d00bc7fb7721d7ae700a9dd00fd466a39d18f52902458a68821bb933a8",
+    "doc/tools/scaling_data.py": "2abb927affa13e0c6a861c037fd8c86e363b832fdcd76afdb59270c0adae05e1",
+    "lib/include/cgra.h": "100cfcb8103c78a2533cbccb2919683d38b0b784759ffee2adb3308e004dba2f",
+    "lib/src/cgra.c": "4cfd123fcde854982dc024d3916e4a995ee62297727469380a64441a754865f0",
+    "lib/src/kernels.c": "86a7e7a8c760c59dbe79810fb336137beb05bef540d7981383ab498a239d527a",
+    "lib/src/emu.c": "d3de86466c5f530b8aa6023eacf2a68f9987d7ce6cb9e0dff26c478b8667c478",
+    "lib/src/emu.h": "c054f1e2514fd4cd2b36bcbf5dd3422d0eb1959df998cea6590062079567fcb8",
+    "lib/src/block_model.c": "24991af5fc902e4c0df16a85e18c7feaf5d6028907044f03dc72fbd9a8409c36",
+    "lib/src/block_model.h": "ca5ab08af095aaf7569c3da483ad9ab172b0b3543449fb272c8ebb203ae560e2",
+    "lib/src/block_wire.c": "26406727f74e4efbc65ac71e36e11c5a9e94afcfb2650b31487c184495f2b346",
+    "lib/src/block_wire.h": "f8a7b3fd2a13182cd76a4104c60125add4444bcb4257a64ade2493498f88638f"
+  },
+  "csv_sha256": "958c24eafd8fb65d048f2072a49987c27842fac49e8c75e9238120fff6a0240b"
+}

@@ -1,0 +1,32 @@
+% Emulator counts through the public API (data/analysis/counts.csv): bytes
+% per dot product for the fused legacy kernel and three residency scenarios.
+\begin{tikzpicture}
+  \tikzset{every axis/.append style={width=0.56\columnwidth, height=46mm,
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    title style={font=\scriptsize, yshift=-1ex},
+    axis line style={cWire!45}, tick style={cWire!45},
+    xmajorgrids, ymajorgrids, grid style={cWire!15}}}
+  \begin{loglogaxis}[name=r, title={(a) $n=256$, $r$ calls}, log basis x=2,
+      xtick={1,4,16,64}, xticklabels={1,4,16,64}, xmin=0.8, xmax=80,
+      ymin=50, ymax=2e4, xlabel={calls $r$}, ylabel={bytes per dot product},
+      legend style={font=\tiny, at={(0.5,1.12)}, anchor=south, legend columns=4,
+                    draw=cWire!35, fill=white}, legend to name=reuselegend]
+    \addplot[cBlockE, mark=square*, mark size=1.3pt, thick] table[x=repeat, y=stream, col sep=comma] {build/ana-reuse.csv};
+    \addlegendentry{fused legacy (v3)}
+    \addplot[cAluE, mark=triangle*, mark size=1.5pt, thick] table[x=repeat, y=none, col sep=comma] {build/ana-reuse.csv};
+    \addlegendentry{resident, no reuse}
+    \addplot[cStateE, mark=diamond*, mark size=1.6pt, thick, densely dashed] table[x=repeat, y=one, col sep=comma] {build/ana-reuse.csv};
+    \addlegendentry{one vector reused}
+    \addplot[cRegE, mark=*, mark size=1.3pt, thick] table[x=repeat, y=both, col sep=comma] {build/ana-reuse.csv};
+    \addlegendentry{both reused}
+  \end{loglogaxis}
+  \begin{loglogaxis}[at={(r.east)}, anchor=west, xshift=12mm, title={(b) $r=8$, length $n$},
+      log basis x=2, xtick={64,256,1024}, xticklabels={64,256,1024}, xmin=48, xmax=1400,
+      ymin=50, ymax=5e4, xlabel={vector length $n$}, ylabel={bytes per dot product}]
+    \addplot[cBlockE, mark=square*, mark size=1.3pt, thick] table[x=n, y=stream, col sep=comma] {build/ana-reuse-n.csv};
+    \addplot[cAluE, mark=triangle*, mark size=1.5pt, thick] table[x=n, y=none, col sep=comma] {build/ana-reuse-n.csv};
+    \addplot[cStateE, mark=diamond*, mark size=1.6pt, thick, densely dashed] table[x=n, y=one, col sep=comma] {build/ana-reuse-n.csv};
+    \addplot[cRegE, mark=*, mark size=1.3pt, thick] table[x=n, y=both, col sep=comma] {build/ana-reuse-n.csv};
+  \end{loglogaxis}
+  \node[anchor=south] at ($(r.north east)!0.5!(r.north east)+(6mm,5mm)$) {\pgfplotslegendfromname{reuselegend}};
+\end{tikzpicture}

@@ -1,7 +1,8 @@
 doc/src/ - section entry points and atomic topics
 ================================================
 
-sections.tex owns the order of the ten report sections. Each NAME.tex owns
+sections.tex owns the order of the nine paper sections; supplement/ holds
+the units of the separate supplementary PDF (../supplement.tex). Each NAME.tex owns
 its section heading/label and ordered inputs from NAME/*.tex. Those topic
 files contain the prose/subsection headings and include complete figure/table
 units. Introduction and conclusion are short standalone sections.
@@ -10,8 +11,8 @@ Use ../STRUCTURE.md to find the relevant topic. Preserve complete paragraphs,
 environments and equations within a file; use doc-relative input paths.
 
 Examples from the repository root:
-    make -C doc -f doc.mk section-protocol
-    make -C doc -f doc.mk part UNIT=protocol/fused-execute
+    make -C doc -f doc.mk section-results
+    make -C doc -f doc.mk part UNIT=results/rq1
 
 The preview imports external references from the last full report when it
 exists. It does not rebuild unrelated sections. Finish with make doc to

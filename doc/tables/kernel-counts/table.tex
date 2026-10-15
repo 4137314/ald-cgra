@@ -1,12 +1,14 @@
 \begin{table}[t]
   \centering
-  \caption{Current-kernel transactions, excluding initial ID.}
+  \caption{Transactions per library-kernel call, excluding the initial
+  identification; no retries, no skipped tiles.}
   \label{tab:kernel-counts}
   \small
   \begin{tabular}{@{}lll@{}}
-    \toprule
-    Kernel & v2 & v3 \\
-    \midrule
+    \headtop
+    \headrow
+    \thead{Kernel} & \thead{v2} & \thead{v3} \\
+    \headbottom
     Vector & $1+3K$ & $1+K$ \\
     Dot & $3+2n$ & $3+n$ \\
     Scan & $1+4Q$ & $1+Q$ \\

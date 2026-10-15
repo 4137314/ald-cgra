@@ -1,8 +1,10 @@
 \begin{figure}[t]
   \centering
   \resizebox{\columnwidth}{!}{\input{figures/stack/diagram}}
-  \caption{Layered host/device architecture. The command-line tool compiles a
+  \caption{Host/device architecture. The command-line tool compiles a
   declarative configuration language into per-PE words and drives the library,
-  which reaches the fabric over UART or an in-process emulator.}
+  which reaches either the FPGA over a USB--UART bridge or the clockless
+  emulator speaking the same byte protocol. The block controller (dashed,
+  green) exists only when the extension is elaborated.}
   \label{fig:stack}
 \end{figure}

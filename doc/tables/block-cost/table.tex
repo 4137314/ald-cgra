@@ -1,0 +1,24 @@
+\begin{table}[t]
+  \centering
+  \caption{Resource cost of the resident-block extension, $4\times4$, $D=2$,
+  10\,ns, Vivado 2026.1, \texttt{xc7a100tcsg324-1}. Post-synthesis rows use
+  identical sources, tool and \texttt{flatten\_hierarchy none}; the routed
+  row comes from a separate run with the default strategy. The legacy
+  post-synthesis count differs from Table~\ref{tab:vivado} (5\,017 versus
+  4\,999 LUTs) because that table uses the default synthesis strategy.}
+  \label{tab:block-cost}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{@{}lrrrr@{}}
+    \headtop
+    \headrow
+    \thead{Build} & \thead{LUT} & \thead{FF} & \thead{DSP} & \thead{BRAM} \\
+    \headbottom
+    Legacy, post-synthesis      & 5\,017 & 1\,034 & 16 & 0 \\
+    With blocks, post-synthesis & 8\,459 & 4\,348 & 16 & 2 RAMB18 \\
+    Difference                  & $+68.6\%$ & $+320.5\%$ & 0 & $+1$ tile \\
+    \midrule
+    With blocks, post-route     & 8\,164 & 4\,346 & 16 & 2 RAMB18 \\
+    \bottomrule
+  \end{tabular}
+\end{table}

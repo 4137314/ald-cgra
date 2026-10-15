@@ -1,10 +1,14 @@
 \begin{figure*}[t]
   \centering
   \resizebox{\textwidth}{!}{\input{figures/fsm/diagram}}
-  \caption{Logical command phases; byte loops, settling states and transmit
-  handshakes are grouped for readability. CFG receives $RC$ configuration
-  words; WR/EXEC share the receiver for $R+C$ input words. EXEC reuses the
-  RUN step engine and bypasses reset/steps on checksum rejection. Replies
-  return to idle; a watchdog aborts stalled input reception.}
+  \caption{Controller state machine of \texttt{cgra\_ctrl}. Boxes give the
+  function and the RTL state(s) in typewriter; byte loops and the shared
+  transmit handshake are folded into the boxes. Blue states are shared by two
+  commands (\cmd{WR}/\cmd{EXEC} reception, \cmd{RUN}/\cmd{EXEC} stepping) and
+  return through a stored target; green states exist only for \cmd{EXEC};
+  white states transmit. A rejected \cmd{EXEC} checksum skips reset and
+  stepping but still returns the current registers with \cmd{NACK}. Every
+  reply ends in \texttt{S\_IDLE}; the watchdog (dashed) aborts stalled
+  reception.}
   \label{fig:fsm}
 \end{figure*}

@@ -1,6 +1,9 @@
-The fabric is an $R\times C$ mesh (default $4\times4$) of identical
-processing elements operating on 16-bit signed words. The complete device
-supports positive dimensions with $RC\leq16$. All PEs share a single
-clock domain and advance synchronously; a global \emph{step} enable, asserted
-by the controller, gates every PE register so that the host advances the whole
-array a deterministic number of cycles per command.
+The fabric is an $R\times C$ mesh of identical PEs on 16-bit two's-complement
+words; the integrated controller, protocol and host support every positive
+geometry with $RC\le16$, fixed at elaboration (default $4\times4$). All PEs
+share one clock. A global \emph{step} enable, issued by the controller,
+advances every PE register at once; the host requests a number of steps per
+command, so execution is deterministic and counted in steps rather than in
+cycles. Consecutive steps are separated by $D=\texttt{G\_STEP\_DIV}$ clocks
+(default 2), which Section~\ref{sec:chain} uses to justify a $D$-cycle timing
+exception.

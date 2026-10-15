@@ -1,24 +1,29 @@
-\subsection{Serialization and latency}
+\subsection{First-order time model}
+\label{sec:latency}
 
-At 115200 baud with 8N1, a byte requires ten bit times:
+At 115\,200\,Bd with 8N1 framing a byte occupies $t_b=10/115\,200$\,s
+$\approx\ByteTimeUs\,\mu$s, i.e.\ 8\,680 clocks at 100\,MHz. For a call
+with $B$ wire bytes, $J$ transactions and $S$ array steps we use
 \begin{equation}
-  t_b=\frac{10}{115200}\simeq86.8\,\mu\mathrm{s}.
+  T\approx B\,t_b+J\,\tau+S\,\frac{D}{f_{\mathrm{clk}}}+T_{\mathrm{host}},
+  \label{eq:time}
 \end{equation}
-At a 100 MHz clock this is about 868 clocks per bit and \emph{8680 clocks per
-byte}. A 56-byte chunk requires approximately 4.86 ms of serialization;
-a 32-byte chunk requires 2.78 ms. These are link-model values, not timings
-measured on a board. Configuration and other commands add their own cost.
+where $\tau$ is the turnaround added per transaction beyond serialization
+(USB bridge, driver and operating system; e.g.\ latency timers of USB
+serial bridges~\cite{ftdi-latency}). Serialization and turnaround are
+counted once each: $\tau$ excludes the bytes' own transmission time. The
+model makes three simplifying assumptions: $\tau$ is the same for every
+command, although buffering can make it depend on the reply size; controller
+cycles outside steps are neglected, which inspection of the controller
+bounds to a few clocks per word against 8\,680 per byte; and
+$T_{\mathrm{host}}$, unmeasured, is omitted from comparisons.
 
-A first-order model for a call is
+Under these assumptions, fused execution (v3) is faster than the unfused
+sequence (v2) if and only if
 \begin{equation}
-  T\simeq B_{\rm wire}t_b+J\tau+T_{\rm host}+T_{\rm device},
+  \tau>\tau^{*}=t_b\,\frac{B_{\mathrm{v3}}-B_{\mathrm{v2}}}{J_{\mathrm{v2}}-J_{\mathrm{v3}}},
+  \label{eq:breakeven}
 \end{equation}
-where $J$ is the transaction count and $\tau$ represents additional turnaround
-latency. USB buffering and driver latency timers can delay short
-replies~\cite{ftdi-latency}; their contribution depends on the actual bridge,
-driver and settings. The device's sustained step interval is $D/f_{\rm clk}$,
-where $D=\texttt{G\_STEP\_DIV}$, plus command startup and completion overhead.
-Neither the emulator nor byte counters measure $\tau$ or physical clock timing.
-A smaller $J$ with more bytes may help a latency-dominated link but need not
-help a serialization-dominated one. A CPU baseline and board timings are
-required before claiming end-to-end acceleration.
+with $\tau^{*}<0$, i.e.\ always, when fusion also reduces bytes. A 16\,ms
+turnaround, used below as one scenario, is a common latency-timer setting,
+not a property measured on this platform.

@@ -1,0 +1,10 @@
+\begin{figure}[t]
+  \centering
+  \resizebox{\columnwidth}{!}{\input{figures/scaling/diagram}}
+  \caption{Repeated dot products through the public API, $4\times4$
+  emulator, every result checked against a scalar reference. (a)~Legacy
+  traffic grows linearly with the number of calls $r$; resident traffic is
+  dominated by the one-time upload. (b)~Per-call bytes; for $r=64$ the
+  upload is amortised. Counts, not times.}
+  \label{fig:scaling}
+\end{figure}

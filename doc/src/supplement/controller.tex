@@ -1,0 +1,30 @@
+\section{Controller and wire-level details}
+
+\subsection{Controller state machine}
+Fig.~\ref{fig:fsm} shows the controller of \texttt{cgra\_ctrl} with the RTL
+state names. From \texttt{S\_IDLE} the first received byte selects a branch.
+Short transactions (\cmd{ID}, \cmd{RST} and the rejection of an unknown
+opcode) reply at once through the shared transmit handshake. Bulk transfers
+accumulate their payload, receive and verify the checksum in a dedicated
+state and reply \cmd{ACK} or \cmd{NACK}. \cmd{RUN} produces $N$ enabled PE
+captures at the configured cadence before acknowledging. The \cmd{EXEC}
+header state falls through into the same receive state as \cmd{WR} and the
+same step engine as \cmd{RUN}; only the return targets, held in two
+registers, differ. A watchdog guards every state that waits for a payload
+or checksum byte. After an uncertain transfer the library clears its cached
+identity and fails later calls with \texttt{CGRA\_ERR\_DESYNC}; it sends no
+implicit \cmd{RST}, because a controller waiting for a \cmd{RUN} argument
+would interpret that byte (\byte{06}) as a step count.
+
+\input{figures/fsm/figure}
+
+\subsection{A transaction on the wire}
+Writing $\text{west}=(1,0,0,0)$ and $\text{north}=(5,0,0,0)$ on a $4\times4$
+device sends the command byte \byte{03}, the four west and four north words
+little-endian, and the additive checksum:
+\begin{center}\small\ttfamily
+03\quad 0100 0000 0000 0000\quad 0500 0000 0000 0000\quad 06
+\end{center}
+The sixteen payload bytes sum to 6; the device replies \cmd{ACK}
+(\byte{79}) or, on a mismatch, \cmd{NACK} (\byte{1F}). Words are committed
+as they arrive, so a \cmd{NACK} does not restore the previous inputs.

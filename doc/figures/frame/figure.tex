@@ -1,0 +1,9 @@
+\begin{figure}[t]
+  \centering
+  \resizebox{\columnwidth}{!}{\input{figures/frame/diagram}}
+  \caption{One resident-block frame. The ten-byte header identifies the
+  session (nonce) and request (sequence); the CRC is computed before
+  stuffing. A reply echoes the opcode with bit~7 set and begins its payload
+  with a status byte. Field widths are schematic.}
+  \label{fig:frame}
+\end{figure}

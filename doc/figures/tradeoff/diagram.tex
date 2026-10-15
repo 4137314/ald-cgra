@@ -1,0 +1,44 @@
+% Five 16-PE shapes. (a) useful fraction eta (Eq. eta) from counted steps;
+% (b) static occupancy of arithmetic-configured PEs (model); (c) counted v3
+% wire bytes per call. Data: build/ana-geometry.csv (tools/analysis_data.py).
+\begin{tikzpicture}
+  \tikzset{every axis/.append style={ybar, width=0.37\textwidth, height=44mm,
+    symbolic x coords={1x16,2x8,4x4,8x2,16x1}, xtick=data,
+    xticklabels={$1{\times}16$,$2{\times}8$,$4{\times}4$,$8{\times}2$,$16{\times}1$},
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    title style={font=\scriptsize, yshift=-1ex},
+    axis line style={cWire!45}, tick style={cWire!45},
+    ymajorgrids, grid style={cWire!15}, enlarge x limits=0.13, bar width=1.35mm}}
+  \begin{axis}[name=a, title={(a) useful fraction $\eta$ (counted steps)},
+      ymin=0, ymax=1.05, ylabel={$\eta$},
+      legend style={font=\tiny, draw=cWire!35, fill=white, legend columns=-1,
+                    at={(1.6,1.17)}, anchor=south}]
+    \addplot[draw=cBlockE, fill=cBlock] table[x=shape, y=vector_useful, col sep=comma] {build/ana-geometry.csv};
+    \addlegendentry{vector}
+    \addplot[draw=cStateE, fill=cState] table[x=shape, y=dot_useful, col sep=comma] {build/ana-geometry.csv};
+    \addlegendentry{dot}
+    \addplot[draw=cRegE, fill=cReg] table[x=shape, y=scan_useful, col sep=comma] {build/ana-geometry.csv};
+    \addlegendentry{scan}
+    \addplot[draw=cAluE, fill=cAlu] table[x=shape, y=matvec_useful, col sep=comma] {build/ana-geometry.csv};
+    \addlegendentry{matvec}
+    \addplot[draw=cWire, fill=cWire!25] table[x=shape, y=conv_useful, col sep=comma] {build/ana-geometry.csv};
+    \addlegendentry{conv}
+  \end{axis}
+  \begin{axis}[name=b, at={(a.east)}, anchor=west, xshift=11mm,
+      title={(b) static arithmetic occupancy}, ymin=0, ymax=1.05, ylabel={fraction of PEs}]
+    \addplot[draw=cBlockE, fill=cBlock] table[x=shape, y=vector_static, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cStateE, fill=cState] table[x=shape, y=dot_static, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cRegE, fill=cReg] table[x=shape, y=scan_static, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cAluE, fill=cAlu] table[x=shape, y=matvec_static, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cWire, fill=cWire!25] table[x=shape, y=conv_static, col sep=comma] {build/ana-geometry.csv};
+  \end{axis}
+  \begin{axis}[at={(b.east)}, anchor=west, xshift=11mm,
+      title={(c) wire bytes per call, v3 (counted)}, ymode=log, log origin=infty,
+      ymin=500, ymax=1e5, ylabel={bytes}]
+    \addplot[draw=cBlockE, fill=cBlock] table[x=shape, y=vector_bytes, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cStateE, fill=cState] table[x=shape, y=dot_bytes, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cRegE, fill=cReg] table[x=shape, y=scan_bytes, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cAluE, fill=cAlu] table[x=shape, y=matvec_bytes, col sep=comma] {build/ana-geometry.csv};
+    \addplot[draw=cWire, fill=cWire!25] table[x=shape, y=conv_bytes, col sep=comma] {build/ana-geometry.csv};
+  \end{axis}
+\end{tikzpicture}

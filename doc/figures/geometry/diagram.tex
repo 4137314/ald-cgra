@@ -1,0 +1,36 @@
+% figures/geometry — setup slack and register count of the five-shape sweep.
+% Values are copied from verification/2026-10-05/geometry-physical/README.md
+% (one routed run per shape); tables/geometry/table.tex lists the same data.
+\begin{tikzpicture}
+  \begin{axis}[
+    name=wns, ybar, width=0.56\columnwidth, height=40mm, bar width=3.2mm,
+    ymin=0, ymax=3, ytick={0,1,2,3}, ylabel={setup WNS (ns)},
+    symbolic x coords={1x16,2x8,4x4,8x2,16x1}, xtick=data,
+    xticklabels={$1{\times}16$,$2{\times}8$,$4{\times}4$,$8{\times}2$,$16{\times}1$},
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    axis line style={cWire!45}, tick style={cWire!45},
+    ymajorgrids, grid style={cWire!15}, enlarge x limits=0.2,
+    nodes near coords, every node near coord/.append style={font=\tiny},
+    title={\scriptsize slack at 10\,ns}, title style={yshift=-1.5ex},
+  ]
+    \addplot[draw=cBlockE, fill=cBlock] coordinates
+      {(1x16,2.433) (2x8,0.775) (4x4,1.862) (8x2,2.350) (16x1,1.247)};
+  \end{axis}
+  \begin{axis}[
+    at={(wns.east)}, anchor=west, xshift=15mm,
+    ybar, width=0.56\columnwidth, height=40mm, bar width=3.2mm,
+    ymin=900, ymax=1250, ylabel={flip-flops}, ytick={900,1000,1100,1200},
+    yticklabel style={/pgf/number format/1000 sep={}},
+    every node near coord/.append style={/pgf/number format/1000 sep={}},
+    symbolic x coords={1x16,2x8,4x4,8x2,16x1}, xtick=data,
+    xticklabels={$1{\times}16$,$2{\times}8$,$4{\times}4$,$8{\times}2$,$16{\times}1$},
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    axis line style={cWire!45}, tick style={cWire!45},
+    ymajorgrids, grid style={cWire!15}, enlarge x limits=0.2,
+    nodes near coords, every node near coord/.append style={font=\tiny},
+    title={\scriptsize registers (routed)}, title style={yshift=-1.5ex},
+  ]
+    \addplot[draw=cRegE, fill=cReg] coordinates
+      {(1x16,1179) (2x8,1066) (4x4,1034) (8x2,1066) (16x1,1179)};
+  \end{axis}
+\end{tikzpicture}

@@ -1,50 +1,39 @@
-% figures/pe.tex — processing-element datapath (logical).
-\begin{tikzpicture}[node distance=6mm]
-  % operand source list
-  \node[align=right, font=\scriptsize, color=cWire] (srcs)
-        {N, S, E, W\\ const (imm)\\ self ($\reg{r}$)\\ zero};
+% figures/pe — processing-element datapath (logical). Configuration fields
+% enter as labelled stubs (bit ranges of the 32-bit word), so no control wire
+% crosses the datapath. Feedback of r runs on a rail above everything.
+\begin{tikzpicture}[x=1mm, y=1mm, font=\scriptsize]
+  % operand sources (one bus feeding both 8-way muxes)
+  \node[blk, minimum width=17mm, minimum height=22mm, align=center] (src) at (0,0)
+    {N, S, E, W\\[0.3ex]imm\\[0.3ex]self $r$\\[0.3ex]zero};
 
-  % two operand muxes
-  \node[mux, right=14mm of srcs, yshift=6mm]  (ma) {mux};
-  \node[mux, right=14mm of srcs, yshift=-9mm] (mb) {mux};
-  \node[lbl, above=0.5mm of ma] {sel\_a};
-  \node[lbl, below=0.5mm of mb] {sel\_b};
+  \node[mux, minimum height=10mm] (ma) at (25, 7) {mux};
+  \node[mux, minimum height=10mm] (mb) at (25,-7) {mux};
+  \node[alu] (alu) at (47,0) {ALU};
+  \node[reg] (reg) at (68,0) {$r$};
 
-  % alu and register
-  \node[alu, right=12mm of $(ma)!0.5!(mb)$] (alu) {ALU};
-  \node[reg, right=12mm of alu] (reg) {$\reg{r}$};
-  \node[blk, below=10mm of alu, minimum width=30mm] (cfg)
-        {config word\\{\scriptsize [imm | op | sel\_a | sel\_b]}};
+  \draw[wire] (src.east |- ma) -- (ma.west);
+  \draw[wire] (src.east |- mb) -- (mb.west);
+  \draw[wire] (ma.east) -- node[lbl, above] {$a$} (alu.west |- 0,3);
+  \draw[wire] (mb.east) -- node[lbl, below] {$b$} (alu.west |- 0,-3);
+  \draw[wire] (alu) -- node[lbl, above] {16} (reg);
+  \draw[wire] (reg.east) -- node[lbl, above] {dout} ++(11,0);
 
-  % wires: sources -> muxes
-  \draw[wire] (srcs.east) -- (ma.west);
-  \draw[wire] (srcs.east) -- (mb.west);
-  % muxes -> alu
-  \draw[wire] (ma.east) -- node[lbl,above]{a} ([yshift=3mm]alu.west);
-  \draw[wire] (mb.east) -- node[lbl,below]{b} ([yshift=-3mm]alu.west);
-  % alu -> reg -> out
-  \draw[wire] (alu.east) -- (reg.west);
-  \draw[wire] (reg.east) -- node[lbl,above]{dout} ++(12mm,0);
+  % configuration fields as stubs
+  \draw[wire] (ma.north) ++(0,5) node[lbl, left] {sel\_a\,[22:20]} -- (ma.north);
+  \draw[wire] (mb.south) ++(0,-6) node[lbl, below] {sel\_b\,[25:23]} -- (mb.south);
+  \draw[wire] (alu.south) ++(0,-8) node[lbl, below] {op\,[19:16]} -- (alu.south);
+  \draw[wire] (src.south) ++(0,-6) node[lbl, below] {imm\,[15:0]} -- (src.south);
 
-  % step: one clean vertical arrow straight into reg from below; nothing else
-  % is routed through this column, so it cannot cross another wire or label.
-  \draw[wire] ([yshift=-10mm]reg.south) -- node[lbl,right]{step} (reg.south);
-  \draw[wire] ([xshift=8mm,yshift=-10mm]reg.south east)
-        -- node[lbl,right]{reset} (reg.south east);
+  % clock enable and reset of the result register
+  \draw[wire] ([xshift=-2mm]reg.south) ++(0,-8) node[lbl, below left=-1mm and -1mm] {step} -- ++(0,8);
+  \draw[wire] ([xshift=2.5mm]reg.south) ++(0,-8) node[lbl, below right=-1mm and -1mm] {reset} -- ++(0,8);
 
-  % self feedback: routed OVER THE TOP on a rail comfortably above ma (and its
-  % sel_a label), well clear of the config/op/step wiring below.
-  \coordinate (railY) at ($(ma.north)+(0,4mm)$);
-  \draw[wire] (reg.north) -- (reg.north |- railY)
-        -- (srcs.north |- railY) -- (srcs.north);
-  \node[lbl, above] at ($(reg.north|-railY)!0.5!(srcs.north|-railY)$) {self};
-  \draw[wire] (alu.north |- railY) -- node[lbl,right]{acc.} (alu.north);
-
-  % config fan-out: both control wires share a trunk placed clear of mb's
-  % footprint (to its left), so sel_a's rise to the upper mux never crosses
-  % mb's body; sel_b peels off first, sel_a continues higher.
-  \coordinate (trunk) at ($(cfg.west)+(-10mm,0)$);
-  \draw[wire] (cfg.west) -| (trunk) |- (mb.south);
-  \draw[wire] (cfg.west) -| (trunk) |- (ma.south);
-  \draw[wire] (cfg.north) -- node[lbl,right]{op} (alu.south);
+  % feedback rail: r to the source bus (self) and to the ALU (MAC/ACC)
+  \def\ry{22}
+  \draw[cWire, thick] (reg.north) -- (reg.north |- 0,\ry) -- (src.north |- 0,\ry);
+  \draw[wire] (src.north |- 0,\ry) -- (src.north);
+  \draw[wire] (alu.north |- 0,\ry) -- (alu.north);
+  \fill[cWire] (alu.north |- 0,\ry) circle (0.5);
+  \node[lbl, above] at (58,\ry) {feedback of $r$};
+  \node[lbl, right] at ([yshift=1.5mm]alu.north) {acc.};
 \end{tikzpicture}

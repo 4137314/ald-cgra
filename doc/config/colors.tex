@@ -1,17 +1,29 @@
-% colors.tex — logical, print-safe colour palette for figures and links.
-% Requires xcolor (see config/package.tex); loaded before tikz and hyperref.
+% colors.tex — one restrained, print-safe palette for figures, tables and
+% links. Requires xcolor (see config/package.tex); loaded before tikz/hyperref.
+%
+% Each role has a light fill and a dark edge of the same hue. The four hues
+% (slate blue, ochre, teal, plum) remain distinguishable in greyscale by
+% lightness and in the common colour-vision deficiencies by hue+lightness;
+% figures never rely on colour alone (labels/shapes carry the meaning).
 
-% ---- figure palette (block / ALU / register / state / wire) --------------
-\definecolor{cBlock}{HTML}{E8EEF7}
-\definecolor{cBlockE}{HTML}{3B6EA5}
-\definecolor{cAlu}{HTML}{F3E7D3}
-\definecolor{cAluE}{HTML}{B5852A}
-\definecolor{cReg}{HTML}{E3F0E3}
-\definecolor{cRegE}{HTML}{4C8C4A}
-\definecolor{cState}{HTML}{EDE7F3}
-\definecolor{cStateE}{HTML}{6C4CA5}
-\definecolor{cWire}{HTML}{444444}
+% ---- figure roles (block / ALU / register / state / wire) ----------------
+\definecolor{cBlock}{HTML}{E9EEF5}   % logic blocks, PEs, muxes
+\definecolor{cBlockE}{HTML}{2F5A8A}
+\definecolor{cAlu}{HTML}{F6EBD8}     % arithmetic
+\definecolor{cAluE}{HTML}{A3741E}
+\definecolor{cReg}{HTML}{E2F0EC}     % registers / storage
+\definecolor{cRegE}{HTML}{2E7D6B}
+\definecolor{cState}{HTML}{F0E8F2}   % FSM states
+\definecolor{cStateE}{HTML}{7A4A84}
+\definecolor{cWire}{HTML}{3A3F47}    % wires, axes, annotations
 
-% ---- hyperlink palette (used by config/hyperref.tex) ---------------------
-\definecolor{cLink}{HTML}{3B6EA5}   % internal references, URLs
-\definecolor{cCite}{HTML}{4C8C4A}   % bibliography citations
+% ---- evidence status (figures/evidence, tables) ---------------------------
+\definecolor{cPass}{HTML}{2E7D6B}    % executed and passed
+\definecolor{cPart}{HTML}{A3741E}    % bounded / partial / conditional
+\definecolor{cNone}{HTML}{9AA1AB}    % not run
+\definecolor{cHead}{HTML}{EEF1F5}    % table header shading
+
+% ---- hyperlinks (config/hyperref.tex) -------------------------------------
+% One dark accent for every link kind: legible in print, visible on screen.
+\definecolor{cLink}{HTML}{1F4E79}
+\definecolor{cCite}{HTML}{1F4E79}

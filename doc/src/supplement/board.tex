@@ -1,0 +1,39 @@
+\section{Planned board acceptance}
+\label{sec:board-plan}
+
+No board was available. The acceptance procedure is fixed in advance, so
+that a later run tests stated criteria rather than criteria chosen after the
+fact.
+\begin{enumerate}
+  \item \emph{Artifact.} Program only a bitstream whose run manifest passes
+        \texttt{make check-artifact}.
+  \item \emph{Link.} \texttt{cgra probe} must receive an identification
+        reply whose version and geometry equal the elaborated generics, then
+        pass its known-answer tests.
+  \item \emph{Function.} The kernels of the paper must reproduce the scalar
+        references on the board for both protocol versions and the resident
+        path.
+  \item \emph{Timing.} Measure per-byte time and per-transaction turnaround
+        $\tau$ on the actual USB--UART bridge with warm-up and repeated runs,
+        report distributions, state the warm-up, repetition and outlier
+        policy~\cite{hoefler-benchmarking}, and compare with a timed CPU
+        baseline.
+  \item \emph{Recovery.} Interrupt transfers, assert reset and let the
+        watchdog expire; the host must report the session as uncertain and
+        recover only through the documented reset path.
+\end{enumerate}
+Fig.~\ref{fig:board} shows the intended report. Its measured panels are
+empty: they are generated from \texttt{doc/data/board/}, which holds only
+column headers, and are marked NOT RUN. Panel~(b) already shows the model of
+Eq.~P-\ref{P-eq:time} for $\tau=0$ and $\tau=16$\,ms for later comparison.
+No synthetic data are shown as measurements.
+
+\begin{figure*}[t]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/board/diagram}}
+  \caption{Report format for board measurements: (a)~empirical
+  distribution of $\tau$; (b)~measured call time against the model
+  (solid: $\tau=0$; dashed: $\tau=16$\,ms); (c)~throughput against a timed CPU
+  baseline. All measured series are NOT RUN.}
+  \label{fig:board}
+\end{figure*}

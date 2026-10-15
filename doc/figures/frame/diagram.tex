@@ -1,0 +1,32 @@
+% figures/frame — layout of one resident-block frame (doc/block-protocol.md).
+% Field widths are schematic, not proportional to byte counts; the byte count
+% of each field is written inside it. Offsets are of the unescaped body.
+\begin{tikzpicture}[x=1mm, y=1mm, font=\scriptsize]
+  % #1 x0, #2 width, #3 fill, #4 edge, #5 label, #6 bytes, #7 offset
+  \newcommand{\fld}[7]{%
+    \draw[draw=#4, fill=#3] (#1, 0) rectangle ++(#2, 8);
+    \node[align=center, inner sep=0pt] at (#1 + #2/2, 4.9) {#5};
+    \node[lbl, inner sep=0pt] at (#1 + #2/2, 1.9) {#6};
+    \node[lbl, anchor=south, inner sep=1pt] at (#1 + #2/2, 8) {#7};
+  }
+  \fld{0}{7}{cWire!10}{cWire!60}{\texttt{7E}}{flag}{}
+  \fld{7}{7}{cBlock}{cBlockE}{rev}{1\,B}{0}
+  \fld{14}{7}{cBlock}{cBlockE}{op}{1\,B}{1}
+  \fld{21}{11}{cState}{cStateE}{nonce}{4\,B}{2--5}
+  \fld{32}{9}{cState}{cStateE}{seq}{2\,B}{6--7}
+  \fld{41}{9}{cBlock}{cBlockE}{len}{2\,B}{8--9}
+  \fld{50}{18}{cReg}{cRegE}{payload}{0--132\,B}{10\,\dots}
+  \fld{68}{9}{cAlu}{cAluE}{CRC}{2\,B}{}
+  \fld{77}{7}{cWire!10}{cWire!60}{\texttt{7E}}{flag}{}
+
+  % coverage braces below the fields
+  \draw[decorate, decoration={brace, mirror, amplitude=2pt}, cWire]
+    (7, -1.2) -- (68, -1.2)
+    node[midway, below=1.6pt, lbl] {CRC-16 coverage: header and payload};
+  \draw[decorate, decoration={brace, mirror, amplitude=2pt}, cWire]
+    (7, -7.2) -- (77, -7.2)
+    node[midway, below=1.6pt, lbl]
+      {byte-stuffed body: \texttt{7E}$\to$\texttt{7D\,5E},
+       \texttt{7D}$\to$\texttt{7D\,5D}; at most 290 bytes on the wire};
+  \node[lbl, anchor=east] at (-1, 9.5) {offset};
+\end{tikzpicture}

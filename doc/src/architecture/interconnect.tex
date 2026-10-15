@@ -1,16 +1,11 @@
-\subsection{Mesh interconnect and operand injection}
-
-Figure~\ref{fig:array} shows the interconnect. Internally, each PE reads the
-\emph{registered} outputs of its four neighbours, so data advances by at most
-one hop per step. External operands enter only at two edges: the north input
-port feeds row~0 (one value per column) and the west input port feeds column~0
-(one value per row). The south and east edges read a constant zero. All $RC$
-PE registers are exposed for read-back.
+Each PE reads the registered outputs of its four neighbours, so a value
+advances at most one hop per step (Fig.~\ref{fig:array}). External operands
+enter only at two edges: north input $c$ feeds PE$(0,c)$ and west input $r$
+feeds PE$(r,0)$; the south and east borders read zero. All $RC$ registers
+can be read back. Because a PE exposes one register to all four neighbours,
+it cannot forward two independent operands in the same step. This
+constrains schedules---it does not make output-stationary mappings
+impossible (Section~\ref{sec:mappings})---and it is the reason why several
+mappings below spend PEs on forwarding.
 
 \input{figures/array/figure}
-
-Streamed operands reach interior PEs through their neighbours. Configuration
-can independently load an immediate for every PE, but repeated configuration
-has its own wire cost. Edge injection and one exposed result register per PE
-therefore constrain communication schedules, rather than forbidding all
-alternative ways to supply operands.

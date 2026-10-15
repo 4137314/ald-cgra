@@ -1,0 +1,30 @@
+\begin{table}[t]
+  \centering
+  \caption{Routed implementation results, Vivado 2026.1,
+  \texttt{xc7a100tcsg324-1}, $D=2$, default strategy, no floorplan, one
+  placement each. All runs passed every gate (setup, hold, endpoint and
+  constraint coverage, synchronisers, CDC, DRC). LUT: post-synthesis /
+  post-route. Rev.: C~=~current revision; E~=~earlier snapshot whose
+  top-level wrapper differs only by wiring; ``this paper'' marks runs
+  executed for this revision.}
+  \label{tab:vivado}
+  \footnotesize
+  \setlength{\tabcolsep}{3pt}
+  \begin{tabular}{@{}llrrrrc@{}}
+    \headtop
+    \headrow
+    \thead{Design} & \thead{$T$/ns} & \thead{WNS} & \thead{WHS} & \thead{LUT} & \thead{FF} & \thead{Rev.} \\
+    \headbottom
+    $4\times4$, this paper     & 10    & $+1.862$ & $+0.098$ & 4\,999/4\,971 & 1\,034 & C \\
+    $4\times4$, this paper     & 5.859 & \VivadoFastWNS & \VivadoFastWHS & \VivadoFastLUT & \VivadoFastFF & C \\
+    $4\times4$, period search  & 5.859 & $+0.177$ & $+0.122$ & --/4\,975 & 1\,034 & E \\
+    $4\times4$ with blocks     & 10    & $+0.427$ & $+0.060$ & 8\,262/8\,164 & 4\,346 & C \\
+    \midrule
+    $1\times16$ & 10 & $+2.433$ & $+0.081$ & 5\,017/4\,999 & 1\,179 & E \\
+    $2\times8$  & 10 & $+0.775$ & $+0.105$ & 5\,003/4\,974 & 1\,066 & E \\
+    $4\times4$  & 10 & $+1.862$ & $+0.098$ & 4\,999/4\,971 & 1\,034 & E \\
+    $8\times2$  & 10 & $+2.350$ & $+0.130$ & 5\,002/4\,975 & 1\,066 & E \\
+    $16\times1$ & 10 & $+1.247$ & $+0.098$ & 5\,010/4\,993 & 1\,179 & E \\
+    \bottomrule
+  \end{tabular}
+\end{table}

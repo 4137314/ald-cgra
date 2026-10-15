@@ -1,0 +1,9 @@
+% Board measurements (data/board/*.csv via tools/board_data.py). With empty
+% CSV files every panel renders as a labelled NOT RUN placeholder.
+\begin{tikzpicture}
+  \node[anchor=north west, inner sep=0] (a) at (0,0) {\input{build/board-turnaround}};
+  \node[anchor=north west, inner sep=0] (b) at ([xshift=4mm]a.north east) {\input{build/board-calls}};
+  \node[anchor=north west, inner sep=0] (c) at ([xshift=4mm]b.north east) {\input{build/board-throughput}};
+  \foreach \n/\t in {a/{(a) turnaround $\tau$}, b/{(b) time per call}, c/{(c) throughput}}
+    \node[font=\scriptsize, anchor=south] at (\n.north) {\t};
+\end{tikzpicture}

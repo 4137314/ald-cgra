@@ -1,0 +1,35 @@
+doc/data/board/ - physical board measurements (currently EMPTY: NOT RUN)
+=====================================================================
+
+These CSV files hold only a header until the acceptance plan of the report
+(Section "Planned board acceptance") is executed on a programmed board whose
+artifact passed `make check-artifact`. tools/board_data.py renders a real
+plot as soon as a file contains rows; with a header only it renders a
+labelled empty axis marked NOT RUN. Never fill these files from the emulator.
+
+turnaround.csv   one row per timed request/reply on the real serial link
+    command      ID | RUN | RD | EXEC ...
+    tx_bytes     request bytes (wire, incl. checksum)
+    rx_bytes     reply bytes
+    elapsed_us   host wall time from first write to last byte read
+  The report plots tau = elapsed - (tx+rx)*10/baud as an empirical CDF.
+
+calls.csv        one row per timed public-API call (after warm-up)
+    workload     vector | dot | scan | matvec | conv  (Table VIII inputs)
+    protocol     v2 | v3 | blocks
+    repeat       index of the repetition
+    elapsed_ms   host wall time of the call
+
+throughput.csv   one row per timed kernel invocation
+    kernel       vector | dot | ...
+    n            elements
+    device       cgra | cpu   (cpu = scalar reference on the host)
+    elapsed_us   wall time
+
+Record with each file, in doc/verification/YYYY-MM-DD/board/: the artifact
+manifest, board serial, USB-UART bridge and latency-timer setting, host OS,
+baud rate, warm-up and repetition policy, and the exact commands.
+
+When rows are added, rebuild (make doc) and update the caption of
+figures/board/figure.tex and the NOT RUN statements in the report text; the
+renderer changes the plots, not the prose.

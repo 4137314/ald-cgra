@@ -1,11 +1,32 @@
-CGRAs configure word-level operations and communication rather than individual
-logic gates~\cite{cgra-survey}. Published designs explore different balances:
-ADRES couples a VLIW processor to a reconfigurable matrix~\cite{adres};
-MorphoSys provides richer communication resources~\cite{morphosys}; HyCUBE
-supports reconfigurable multi-hop paths~\cite{hycube}; PipeRench virtualises
-pipelined computations~\cite{piperench}; and DySER integrates specialised
-datapaths with a processor~\cite{dyser}. Plasticine organises compute and
-memory around parallel patterns~\cite{plasticine}, while CGRA-ME supplies a
-framework for architecture and mapping exploration~\cite{cgra-me}.
-The present design uses a smaller resource set: nearest-neighbour links,
-one result register per PE and one configuration context at a time.
+CGRAs trade the bit-level flexibility of FPGAs for word-level operations and
+fewer configuration bits~\cite{hartenstein,cgra-survey,podobas-survey}.
+Classic designs differ mainly in how much storage and communication each
+element has: ADRES couples a VLIW processor to a reconfigurable
+matrix~\cite{adres}, MorphoSys provides richer communication
+resources~\cite{morphosys}, HyCUBE adds reconfigurable multi-hop
+paths~\cite{hycube}, PipeRench virtualises pipelined
+computations~\cite{piperench}, DySER specialises datapaths inside a
+processor~\cite{dyser}, and Plasticine organises compute and memory around
+parallel patterns~\cite{plasticine}.
+
+Table~\ref{tab:related} compares the work closest in purpose. CGRA-ME
+generates RTL from an architecture description and evaluates CGRA variants
+both as standard-cell designs and as FPGA overlays~\cite{cgra-me,cgra-me-ispd}.
+QuickDough is a soft CGRA overlay whose PEs hold instruction and data
+memories; host data reach on-chip buffers by DMA, and accelerator
+performance is estimated from schedule cycles, implementation frequency and
+transfer latencies of a Zynq platform~\cite{quickdough}. OpenEdgeCGRA is an
+open-hardware CGRA with several registers per PE, a torus interconnect and
+per-column program counters, integrated in a microcontroller
+platform~\cite{openedgecgra}; Aspros et~al.\ estimate energy and latency of
+its kernel executions and compare them with post-synthesis
+simulation~\cite{aspros-cgra}. These designs are more capable than ours
+(local storage, instruction sequencing, memory access); none of them is
+evaluated here, and resources or frequencies obtained with different
+devices, precisions, geometries and tool flows are not comparable with ours.
+What this paper adds is not a better fabric but a complete accounting of a
+deliberately minimal one: every byte, transaction and step on a narrow host
+link, and a traceable link between control-logic proofs and timing
+exceptions.
+
+\input{tables/related/table}

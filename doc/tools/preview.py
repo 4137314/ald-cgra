@@ -59,7 +59,8 @@ def has_citations(path, seen=None):
     return False
 
 if args.kind in ('figure', 'table'):
-    width = r'\textwidth' if r'\begin{figure*}' in (root / unit).read_text() else r'\columnwidth'
+    text = (root / unit).read_text()
+    width = r'\textwidth' if r'\begin{figure*}' in text or r'\begin{table*}' in text else r'\columnwidth'
     body = r'\def\previewWidth{' + width + '}\n'
     body += r'\def\previewKind{' + args.kind + '}\n'
     body += r'\def\previewUnit{' + unit.as_posix() + '}\n'

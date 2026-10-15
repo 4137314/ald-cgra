@@ -1,24 +1,23 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-The project connects a configurable 16-bit mesh, a UART controller and a
-reusable host API, with functional verification across eight device shapes.
-The mapping analysis identifies distinct uses of PE resources: diagonal
-computation, local MAC accumulation, product forwarding and host reduction.
-A single result register limits simultaneous independent forwarding but does
-not forbid local output-stationary accumulation.
+For a small step-controlled CGRA behind a serial link, communication, not
+the fabric, determines the cost of every kernel studied. Exact counts and a
+first-order model answer the three questions within that scope. Fusion
+reduces transactions by $1.99$--$3.95\times$; it is never slower for kernels
+whose read-back it shrinks, and for the others it pays only once the
+per-transaction turnaround exceeds between two thirds of a byte time and two
+byte times. Geometry
+changes traffic by up to an order of magnitude while useful work per PE slot
+stays at $1/16$ for three of five kernels, so static occupancy is a poor
+proxy for efficiency. Resident operands remove most of the traffic through
+batching alone ($4.6\times$) and more through reuse, at a substantial cost
+in flip-flops and in verification effort.
 
-Current v2/v3 experiments isolate protocol fusion while keeping mappings and
-inputs fixed. They measure transactions and bytes after checking scalar
-results; reductions in these quantities are not board timings or CPU speedups.
-A Vivado 2026.1 run passes synthesis and routed setup/hold checks for the
-default mesh at a 10 ns constraint. Other configurations, comparative area
-and timing benefits, and physical board acceptance remain to be evaluated.
-
-Implicit convolution tiles now avoid the dense Toeplitz workspace while
-preserving the measured legacy wire traffic. Architectural experiments can compare
-extra routing/storage resources and alternative schedules on matched
-workloads. Burst commands or more than sixteen PEs require an explicit
-protocol extension, buffering and stronger framing/recovery. These extensions
-should preserve the independent kernel references and record both host and
-device costs.
+Methodologically, the study shows that the premise of a multicycle timing
+exception can be proved on the production RTL and connected, by named
+registers, to the exceptions that STA checks; the remaining gap is the
+correspondence between RTL and netlist registers. The decisive missing
+evidence is physical: measured turnaround distributions, call times and a
+CPU baseline on a programmed board would turn the break-even analysis into
+a measured result.

@@ -1,0 +1,45 @@
+\subsection{Mappings}
+\label{sec:mappings}
+
+Let $L=\min(R,C)$. All mappings below are those of the library; each is
+loaded with one \cmd{CFG} per call (per column tile for matrix kernels).
+
+\emph{Element-wise (diagonal).} Vector $a$ enters from the north and $b$
+from the west; PEs above the diagonal pass north values south, those below
+pass west values east, and the $L$ diagonal PEs apply the operation.
+Because operands need up to $L-1$ hops, one chunk takes $L$ steps and yields
+$L$ results. Inputs stay fixed during the chunk, so the diagonal PEs
+recompute the same value until the last step. Partial chunks are padded with
+zeros, and only valid outputs are returned.
+
+\emph{Dot product.} PE$(0,0)$ executes $r\leftarrow r+a_ib_i$ on its edge
+inputs; the host clears it once and supplies one pair per step. The partial
+sum stays local: local output-stationary accumulation is supported, and the
+other $RC-1$ PEs are idle.
+
+\emph{Inclusive scan.} PE$(0,c)$ computes $\mathrm{op}(\mathrm{west},
+\mathrm{north}_c)$ and passes the fold east; the previous block's last
+result enters west input~0 as a carry (the identity for the first block).
+One block of $C$ elements takes $C$ steps: PE$(0,c)$ settles at step $c+1$
+and recomputes thereafter. ADD, MUL, MIN and MAX folds are supported.
+
+\emph{Matrix--vector ($y=Ax$).} For each column tile, row~0 holds $x_c$ in
+its immediates and multiplies the matrix row injected from the north;
+rows $1,\dots,R-1$ pass products south (Fig.~\ref{fig:systolic}). After $R$
+steps the array holds $R\times C$ products, which the host reads, sums
+across columns and accumulates across column tiles. On a full tile, $C$ PEs
+multiply and $(R-1)C$ act as delay cells; the host reduction is part of the
+algorithm. Column tiles whose $x$ entries are all zero, and all-zero
+matrix tiles, are skipped. Convolution uses the same engine on implicitly
+generated Toeplitz tiles~\cite{golub-vanloan}, visiting only tiles that
+intersect the band.
+
+\input{figures/systolic/figure}
+
+\emph{Forwarding limit.} An interior PE cannot keep a sum $s_t$ and forward
+two operands $a_t$ east and $b_t$ south in the same step: after a MAC its
+only visible register holds $s_{t+1}$. A one-MAC-per-PE-per-step
+output-stationary schedule therefore needs extra registers, routing PEs,
+time multiplexing or reconfiguration. This is a limit of that schedule on
+this PE, not an impossibility result for output-stationary
+mappings~\cite{sze-survey,eyeriss}.

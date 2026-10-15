@@ -1,0 +1,49 @@
+\section{Methodology}
+\label{sec:method}
+
+\emph{Counters.} Byte, transaction and step counts are obtained by calling
+the public C API on the library's in-process device model, which implements
+the byte-level protocols of Section~\ref{sec:arch} without a clock. Each
+point is one call (or one sequence of calls) after the identification
+exchange, with configuration, resets, computation and read-back included; the
+driver aborts if any retransmission occurs, and none did. Every result is compared
+with an independent scalar reference and an output canary before it is
+recorded. Counts are deterministic for given inputs, so no confidence
+intervals apply; resident byte counts depend slightly on the data through
+byte stuffing. The analysis scripts recompute every transaction and step
+count from the closed forms of Section~\ref{sec:cost} and stop on any
+mismatch. These are counts, not times: the model has no notion of elapsed
+time.
+
+\emph{Model-to-RTL agreement.} Counts transfer to the hardware only if the
+model and the RTL exchange the same bytes. GHDL~\cite{ghdl} benches replay
+504 model-generated legacy transactions byte-exactly against the controller
+and array for $D=1$--4, compare 1\,024 PE results over all opcode and
+selector pairs, replay 886 framed transcript events for the block path and
+inject resets during upload and computation. Agreement of two models built
+by the same author cannot exclude a shared misunderstanding of the
+intent~\cite{mckeeman-differential}; the scalar references address this
+for numerical results.
+
+\emph{Formal verification.} Safety properties written in PSL~\cite{psl}
+are bound to the production VHDL, imported through the GHDL plugin for
+Yosys~\cite{yosys}, and checked by SymbiYosys with
+Yices~\cite{yices} (versions pinned by the repository). PROVED means that
+the bounded base case and temporal $k$-induction both
+succeed~\cite{biere-bmc,kinduction}; BOUNDED\_PASS means a finite bound or a
+reached cover, which shows reachability only. Negative tasks and mutated
+design copies~\cite{demillo-mutation} must fail; this guards against
+vacuous properties.
+
+\emph{Implementation.} AMD Vivado~2026.1 implements the design on an
+Artix-7 \texttt{xc7a100tcsg324-1} (Nexys~4~DDR board, 100\,MHz oscillator).
+A run passes only if synthesis messages, the presence of every expected
+constrained register and endpoint, synchronisers, clock-domain crossings,
+design rules, setup and hold all pass; each run archives its inputs,
+commands, reports and source hashes.
+
+Table~\ref{tab:verif} states what each class establishes and on which
+source revision it was obtained. Results obtained on an earlier snapshot are
+reported as such.
+
+\input{tables/verification/table}

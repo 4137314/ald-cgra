@@ -1,0 +1,25 @@
+\section{Additional views of reported data}
+
+Fig.~\ref{fig:timing} illustrates the capture spacing that the multicycle
+argument of Section~P-\ref{P-sec:chain} relies on, for $D=3$ after a fused
+reset. Figs.~\ref{fig:geometry} and~\ref{fig:sup-cost} plot data that the
+paper reports in Table~P-\ref{P-tab:vivado} and Table~P-\ref{P-tab:measured}.
+Fig.~\ref{fig:scaling} shows an earlier, separately archived sweep of
+repeated dot products ($n=16$--1024, $r=1$--64, both vectors reused), whose
+counts agree with the closed forms checked by its own script; the paper's
+Fig.~P-\ref{P-fig:reuse} supersedes it by separating batching from reuse.
+
+\input{figures/timing/figure}
+
+\input{figures/geometry/figure}
+
+\begin{figure}[t]
+  \centering
+  \input{figures/cost/diagram}
+  \caption{Ratios of v3 to v2 transactions and bytes for the workloads of
+  Table~P-\ref{P-tab:measured}; values below one indicate a reduction. Counts,
+  not times.}
+  \label{fig:sup-cost}
+\end{figure}
+
+\input{figures/scaling/figure}

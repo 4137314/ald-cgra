@@ -1,0 +1,17 @@
+\section{Artifact Availability}
+\label{sec:artifact}
+
+The design, host library, device model, test benches, formal properties,
+implementation scripts and this paper's sources are kept in one repository,
+publicly hosted at \url{https://github.com/4137314/ald-cgra}. At the time of
+writing, the public branch predates the revision evaluated here, and the
+repository has no license; an immutable published revision and a license are
+prerequisites for reuse and are not yet in place. Within the repository,
+the paper build (\texttt{make -C doc -f doc.mk}) only reads archived data:
+it re-verifies provenance hashes and every closed-form count, and fails on
+any mismatch. Counts are regenerated deliberately with
+\texttt{make -C doc -f doc.mk measure-analysis}, which compiles an isolated
+copy of the library. Formal and implementation campaigns are separate
+commands of the hardware flow; each run records its inputs, commands, tool
+versions, reports and source hashes, and the runs cited here are archived
+with the paper's review material.

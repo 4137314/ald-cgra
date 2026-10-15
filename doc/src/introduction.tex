@@ -1,27 +1,42 @@
 \section{Introduction}
 \label{sec:intro}
 
-A coarse-grained reconfigurable array (CGRA) selects word-level operations and
-communication paths at runtime~\cite{cgra-survey}. This project implements
-such a fabric in VHDL and drives it from a host through a UART interface.
-The default geometry is $4\times4$; the integrated controller, protocol and
-host support positive $R\times C$ meshes with $RC\leq16$ and 16-bit data.
-Reconfiguration changes the program, not the physical mesh dimensions.
+\IEEEPARstart{C}{oarse-grained} reconfigurable arrays (CGRAs) configure
+word-level operations and nearest-neighbour communication at run
+time~\cite{hartenstein,cgra-survey,podobas-survey}. Small instances are
+frequently implemented as FPGA overlays or prototypes and attached to a host
+processor~\cite{cgra-me-ispd,quickdough}. Their evaluation commonly reports
+resources, clock frequency and kernel cycles. For an accelerator reached
+through a narrow host link, however, the number of bytes and round trips can
+dominate, and the timing argument that lets a datapath settle over several
+clock cycles must be justified by the control logic rather than assumed.
 
-The project provides four connected components:
-\begin{itemize}
-  \item a step-controlled mesh with one result register per PE and north/west
-        edge injection;
-  \item a versioned request/reply protocol with fused execution and an explicit
-        contract for detected transfer failures;
-  \item an installed C kernel API, emulator and declarative command-line tool;
-  \item functional regression suites, a reproducible wire-cost experiment and
-        scripts for a subsequent FPGA implementation campaign.
-\end{itemize}
+This paper is a reproducible pre-silicon study of these two concerns on one
+concrete design: a 16-bit, step-controlled $R\times C$ mesh ($RC\le16$,
+default $4\times4$) with one result register per processing element (PE),
+operands injected at the north and west edges, and a UART command
+interface. The mesh, the UART, CRC framing, response caching and the C API
+are conventional building blocks and are not claimed as architectural
+novelty. We ask:
+\begin{description}
+  \item[RQ1] When does fusing a write--run--read sequence into one
+        transaction compensate for its larger requests?
+  \item[RQ2] How do geometry and mapping determine wire traffic, useful
+        operations and PE occupancy?
+  \item[RQ3] How does keeping operands resident on chip change the balance
+        between communication, resources and verification effort?
+\end{description}
 
-The report distinguishes local accumulation from independent operand
-forwarding, counts computing and routing PEs separately, and includes host
-reduction in the matrix algorithm. It reports current software byte/command
-counts, not a speedup over a CPU. A real Vivado run verifies synthesis and routed timing for one default
-configuration. Simulated enable spacing and the archived netlist reports
-provide complementary evidence; physical board tests remain outstanding.
+The contributions are an explicit accounting and its evidence rather than a
+new fabric: (i)~exact byte, transaction and array-step counts for five
+kernels, two protocol versions and five 16-PE geometries, obtained through
+the public API, checked against independent scalar results and against
+closed forms derived from the protocol (Sections~\ref{sec:model}
+and~\ref{sec:results}); (ii)~a first-order link model that separates
+serialization, per-transaction turnaround and device time, with break-even
+turnarounds for fusion; (iii)~a decomposition of the benefit of resident
+operands into batching and reuse, together with its area cost; and (iv)~a
+documented chain from formally proved capture guards on the production VHDL
+to the multicycle timing exceptions applied by static timing analysis
+(STA). No result was measured on an FPGA board; Section~\ref{sec:limits}
+lists the evidence that broader claims would require.

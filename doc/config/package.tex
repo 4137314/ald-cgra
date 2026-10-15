@@ -12,6 +12,9 @@
 \usepackage[T1]{fontenc}      % 8-bit output encoding, hyphenatable accents
 \usepackage[utf8]{inputenc}   % UTF-8 source
 \usepackage{microtype}        % character protrusion / font expansion
+\usepackage{mathptmx}         % Times math, matching IEEEtran's Times text
+\usepackage{tgheros}          % TeX Gyre Heros: sans for figures/labels
+\renewcommand{\ttdefault}{txtt} % legible monospace for literals and bytes
 
 % ---- mathematics ---------------------------------------------------------
 \usepackage{amsmath}
@@ -20,6 +23,8 @@
 % ---- tables --------------------------------------------------------------
 \usepackage{booktabs}         % \toprule \midrule \bottomrule
 \usepackage{array}            % extended column types, \newcolumntype
+\usepackage{tabularx}         % full-width tables with wrapping columns
+\usepackage{colortbl}         % light header shading in tables
 
 % ---- graphics & diagrams -------------------------------------------------
 \usepackage{graphicx}

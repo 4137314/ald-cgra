@@ -1,8 +1,10 @@
 \begin{figure}[t]
   \centering
   \resizebox{\columnwidth}{!}{\input{figures/pe/diagram}}
-  \caption{Processing-element datapath: two operand muxes select from the four
-  neighbours, the immediate, the self register or zero. MAC/ACC also use the
-  direct accumulator feedback. The register captures on step; reset clears it.}
+  \caption{Processing-element datapath. Two 8-way multiplexers select each
+  operand from the four neighbours, the immediate, the PE's own register or
+  zero; configuration fields are shown with their bit ranges. MAC and ACC
+  also read $r$ directly. The register captures on \emph{step} and is
+  cleared by reset.}
   \label{fig:pe}
 \end{figure}

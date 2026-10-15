@@ -1,19 +1,25 @@
 \phantomsection
 \pdfbookmark[1]{Abstract}{sec:abstract}
 \begin{abstract}
-This report describes a UART-controlled coarse-grained reconfigurable array
-with a default $4\times4$ mesh and configurable rectangular geometries up to
-sixteen 16-bit processing elements. Each element has one result register;
-the host configures operations, supplies edge operands and requests a count
-of logical steps. We describe diagonal operations, local MAC reductions,
-matrix products with stationary coefficients and host reduction, and prefix
-scans. A public C API and declarative front end share the kernel engines.
-Independent scalar references, emulator/RTL protocol comparison and UART
-simulation verify functional behaviour across eight geometries. A reproducible
-experiment compares current protocol v2 and v3 using byte and transaction
-counters with fixed workloads. These counts isolate fused execution without
-claiming physical latency or CPU speedup. The report also specifies enabled
-capture spacing and the Vivado timing gates. A real synthesis and post-route
-STA run passes at a 10 ns constraint for the default mesh; physical board
-operation and end-to-end acceleration remain unmeasured.
+Small coarse-grained reconfigurable arrays (CGRAs) attached to a host over a
+serial link are common in FPGA prototyping, yet their cost is usually
+reported as fabric resources and clock frequency. We study a 16-bit,
+step-controlled $R\times C$ CGRA ($RC\le16$) driven over UART, and ask three
+questions: when fusing a write--run--read sequence into one transaction
+pays for its extra bytes; how geometry and mapping determine traffic and
+useful work; and how keeping operands resident on chip changes the balance
+between communication, resources and verification effort. Exact byte,
+transaction and step counts from the public API, checked against scalar
+references and closed forms, feed a first-order link model. Fusion reduces
+transactions by $1.99$--$3.95\times$ and is never slower for two of five
+kernels; for the other three it wins only when the per-transaction
+turnaround exceeds 58--174\,$\mu$s. Every mapping performs useful work in at
+most one of $R$ PE-step slots, often one of 16, and on the default
+$4\times4$ mesh the modelled device time is below $3\cdot10^{-5}$ of the
+link time. Batched resident operands
+reduce dot-product traffic $4.6\times$ without reuse and $26.9\times$ for
+eight identical calls, at $+68.6\%$ LUTs and $+320\%$ flip-flops. Safety
+properties are proved on the production VHDL, and the proved capture guards
+are linked to the multicycle exceptions checked by static timing analysis.
+All results are pre-silicon; no board measurement was performed.
 \end{abstract}

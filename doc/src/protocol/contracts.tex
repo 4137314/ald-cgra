@@ -1,0 +1,20 @@
+\subsection{Failure contracts of the legacy protocol}
+\label{sec:contracts}
+
+The legacy protocol has no delimiter or sequence number, and its 8-bit
+additive checksum detects only some corruptions. Its observable contract,
+checked by differential replay against the RTL, is deliberately weak.
+\emph{(i)}~\cmd{CFG} and \cmd{WR} commit words as they arrive, before the
+checksum is validated: a \cmd{NACK} reports a failed transfer but does not
+roll back. A rejected \cmd{EXEC} likewise latches its inputs, but neither
+clears nor steps the array. \emph{(ii)}~Clearing the datapath (\cmd{RST} or
+the \cmd{EXEC} flag) and restoring the parser to its idle state are different
+operations: only a device reset or the receive watchdog ($10^{8}$ clocks,
+1\,s at 100\,MHz) returns a parser that waits for payload bytes to idle.
+\emph{(iii)}~A checksum error inside an intact frame is recoverable; loss of
+framing (an inserted, dropped or corrupted length-defining byte) is not
+detected in general. The library therefore retransmits only after a
+complete, checksum-valid \cmd{NACK} of \cmd{CFG}, \cmd{WR} or a resetting
+\cmd{EXEC}; a timeout, I/O error or malformed reply poisons the handle, and
+later calls fail without sending bytes. Reopening the serial port does not
+reset the device.

@@ -1,0 +1,11 @@
+\begin{figure}[t]
+  \centering
+  \resizebox{\columnwidth}{!}{\input{figures/reuse/diagram}}
+  \caption{Wire bytes per dot product through the public API ($4\times4$
+  model; preflight, \texttt{HELLO}, uploads, computations and results
+  included; every result checked against a scalar reference). ``No reuse''
+  uploads both vectors before every call and isolates batching; ``both
+  reused'' repeats an identical computation, an amortisation microbenchmark
+  whose result the host could also have cached. Counts, not times.}
+  \label{fig:reuse}
+\end{figure}

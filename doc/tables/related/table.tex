@@ -1,0 +1,43 @@
+\begin{table*}[t]
+  \centering
+  \caption{Comparison with related CGRA work, as documented in the cited
+  primary sources. ``Not reported'' means not found in those sources, not
+  absent from the design. Resources and frequencies are deliberately omitted:
+  they come from different devices, precisions and flows.}
+  \label{tab:related}
+  \footnotesize
+  \renewcommand{\arraystretch}{1.15}
+  \begin{tabularx}{\textwidth}{@{}>{\raggedright\arraybackslash}p{2.65cm}
+      *{5}{>{\raggedright\arraybackslash}X}@{}}
+    \headtop
+    \headrow
+    \thead{Work} & \thead{PE state and contexts} & \thead{Communication and memory}
+      & \thead{Host interface} & \thead{Mapping} & \thead{Validation reported} \\
+    \headbottom
+    CGRA-ME~\cite{cgra-me,cgra-me-ispd}
+      & Described per architecture (XML)
+      & Architecture-defined
+      & Not reported
+      & Integrated mapper
+      & Standard-cell and FPGA-overlay implementation \\
+    QuickDough~\cite{quickdough}
+      & Instruction memory and multi-port data memory per PE
+      & Torus; on-chip I/O buffers
+      & DMA from an ARM host (Zynq)
+      & Compile-time scheduling of loop DFGs
+      & Analytical performance from schedule, $f_{\max}$ and transfer latency \\
+    OpenEdgeCGRA~\cite{openedgecgra}
+      & Four registers plus output register; per-column program counter
+      & Torus; column memory ports
+      & Microcontroller integration (X-HEEP)
+      & Kernel assembly, behavioural simulator
+      & Not reported in the repository; post-synthesis comparison in~\cite{aspros-cgra} \\
+    This work
+      & One result register; one configuration
+      & Mesh with north/west edge injection; optional two $1024\times16$ banks
+      & UART, 115\,200\,Bd
+      & Fixed library mappings with host reduction
+      & Exact counters, RTL replay, formal safety proofs, STA; no board \\
+    \bottomrule
+  \end{tabularx}
+\end{table*}

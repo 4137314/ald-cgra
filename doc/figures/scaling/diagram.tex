@@ -1,0 +1,35 @@
+% Measured on the emulator (data/scaling.csv): public-API wire bytes.
+\begin{tikzpicture}
+  \tikzset{every axis/.append style={width=0.56\columnwidth, height=44mm,
+    tick label style={font=\scriptsize}, label style={font=\scriptsize},
+    title style={font=\scriptsize, yshift=-1ex},
+    axis line style={cWire!45}, tick style={cWire!45},
+    xmajorgrids, ymajorgrids, grid style={cWire!15},
+    legend style={font=\tiny, draw=cWire!35, fill=white}}}
+  \begin{loglogaxis}[name=rep, title={(a) $r$ repeated calls, $n=256$},
+      xlabel={repeated calls $r$}, ylabel={total wire bytes}, log basis x=2,
+      xtick={1,4,16,64}, xticklabels={1,4,16,64},
+      xmin=0.8, xmax=80, ymin=500, ymax=1e6,
+      legend style={at={(0.03,0.97)}, anchor=north west}]
+    \addplot[cAluE, mark=o, thick] table[x=repeat, y=v2, col sep=comma] {build/scaling-repeat.csv};
+    \addlegendentry{v2}
+    \addplot[cBlockE, mark=square*, mark size=1.4pt, thick] table[x=repeat, y=v3, col sep=comma] {build/scaling-repeat.csv};
+    \addlegendentry{v3}
+    \addplot[cRegE, mark=*, mark size=1.4pt, thick] table[x=repeat, y=blocks, col sep=comma] {build/scaling-repeat.csv};
+    \addlegendentry{resident}
+  \end{loglogaxis}
+  \begin{loglogaxis}[at={(rep.east)}, anchor=west, xshift=12mm,
+      title={(b) bytes per call versus $n$}, log basis x=2,
+      xtick={16,64,256,1024}, xticklabels={16,64,256,1024},
+      xlabel={vector length $n$}, ylabel={bytes per call},
+      xmin=10, xmax=1500, ymin=40, ymax=5e4,
+      legend style={at={(0.03,0.97)}, anchor=north west}]
+    \addplot[cBlockE, mark=square*, mark size=1.4pt, thick] table[x=n, y=v3r1, col sep=comma] {build/scaling-length.csv};
+    \addlegendentry{v3}
+    \addplot[cRegE, mark=*, mark size=1.4pt, thick] table[x=n, y=blocksr1, col sep=comma] {build/scaling-length.csv};
+    \addlegendentry{resident, $r=1$}
+    \addplot[cRegE, mark=*, mark options={fill=white}, mark size=1.4pt, thick, densely dashed]
+      table[x=n, y=blocksr64, col sep=comma] {build/scaling-length.csv};
+    \addlegendentry{resident, $r=64$}
+  \end{loglogaxis}
+\end{tikzpicture}

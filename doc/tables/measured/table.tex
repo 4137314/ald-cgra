@@ -1,7 +1,10 @@
 \begin{table}[t]
   \centering
-  \caption{Current v2 versus current v3. Transactions and total TX+RX bytes;
-  ID excluded, one call per workload. These are counters, not timings.}
+  \caption{Counted wire cost of one public-API call, $4\times4$, protocol v2
+  versus v3. Vector and scan: ADD, $n=256$; dot: $n=256$; matrix--vector:
+  dense nonzero $32\times32$; convolution: full output, $k=5$, $n=64$.
+  Configuration, resets, computation and read-back are included; the initial
+  identification is excluded; no retries; no tiles skipped. Bytes are TX+RX.}
   \label{tab:measured}
   \small
   \input{build/wire-table}

@@ -1,13 +1,14 @@
 \begin{table}[t]
   \centering
-  \caption{UART command set. \cmd{EXEC} is the version-3 addition analysed in
-  Section~\ref{sec:exec}; the rest are version 2.}
+  \caption{Legacy command set. \cmd{EXEC} is the version-3 addition; the
+  other six commands form version 2. ``ck'': 8-bit additive checksum.}
   \label{tab:proto}
   \footnotesize
   \begin{tabular}{@{}lp{2.35cm}p{2.75cm}@{}}
-    \toprule
-    Cmd & Payload & Reply \\
-    \midrule
+    \headtop
+    \headrow
+    \thead{Cmd} & \thead{Payload} & \thead{Reply} \\
+    \headbottom
     \cmd{ID}  & ---                & signature, version, geometry \\
     \cmd{CFG} & $R C$ words $+$ ck    & ACK / NACK \\
     \cmd{WR}  & $(R+C)$ words $+$ ck     & ACK / NACK \\

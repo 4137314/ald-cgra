@@ -1,0 +1,47 @@
+\subsection{Experimental resident-block extension}
+\label{sec:blocks}
+
+An optional extension adds two $1024\times16$ operand banks and a framed
+protocol for one kernel, a resident dot product; it is elaborated only when
+the generic \texttt{G\_BLOCK\_ENABLE} is set. A single preflight byte (\byte{08}), legal only
+when the legacy parser is idle, selects it; an older controller answers
+\cmd{NACK}, so probing cannot make old RTL interpret framed payload. Framed
+mode then persists until an external reset; there is no in-band return to
+legacy decoding.
+
+Each frame (Fig.~\ref{fig:frame}) is delimited by \byte{7E} and
+byte-stuffed as in HDLC-like framing~\cite{rfc1662}. A ten-byte header
+carries revision, opcode, a 32-bit session nonce, a 16-bit sequence number
+and the payload length; a CRC-16 (polynomial \texttt{0x1021}, initial value
+\texttt{0xFFFF}, no reflection) covers header and
+payload~\cite{peterson-crc,koopman-crc}. Revision, length, canonical escaping
+and CRC are validated before a request is acted upon; rejected frames
+produce neither a reply nor a committed effect. CRC detects errors; it is
+not authentication~\cite{end-to-end}, and a corrupted frame that happens to
+validate is indistinguishable from a legitimate one.
+
+The session semantics provide \emph{at-most-once effects with response
+replay} within narrow conditions~\cite{birrell-rpc}. One request may be
+outstanding, and only the response to the immediately preceding request is
+cached. A \texttt{HELLO} with a fresh nonce starts a session at sequence~1
+and invalidates resident data. A request whose opcode, nonce, sequence,
+length and payload are identical to the cached one receives the cached
+response without re-execution; the same sequence with different contents
+receives \texttt{CONFLICT}; only the next sequence number executes. Sequence
+65\,535 exhausts the session; there is no wraparound. An external reset
+loses the cache, and a random nonce makes accidental reuse unlikely but not
+impossible. Within one serialised connection between resets, a host that
+retransmits the exact frame after a lost reply therefore obtains the
+original response without a duplicated upload or computation. The public
+API does not retransmit automatically: it poisons the handle after an
+uncertain transfer, and the replay facility is available only to clients
+that implement it.
+
+Commands are \texttt{UPLOAD} (up to 64 words appended to a bank and
+committed atomically per frame), \texttt{DOT}~$n$ and \texttt{RESULT}. During
+\texttt{DOT} a sequencer owns the array, configures PE$(0,0)$ as a MAC on
+its edge inputs, resets the array once and issues exactly $n$ captures, each
+$D+3$ clocks apart; synchronous RAM outputs pass through explicit operand
+registers before reaching the PE. Products and sums wrap modulo $2^{16}$.
+
+\input{figures/frame/figure}

@@ -1,0 +1,13 @@
+\begin{figure*}[t]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/tradeoff/diagram}}
+  \caption{Geometry and mapping for the five 16-PE shapes (workloads of
+  Table~\ref{tab:measured}). (a)~Useful fraction $\eta$ of PE slots,
+  Eq.~\eqref{eq:eta}, from counted steps: vector, dot and scan stay at
+  $1/16$ on every shape; matrix--vector reaches $1/R$. (b)~Static fraction of
+  PEs configured with an arithmetic opcode, which overstates efficiency
+  wherever PEs recompute settled values or forward. (c)~Counted wire bytes
+  of one v3 call. For vector, dot and scan the shape changes only
+  communication; for the matrix kernels it changes both.}
+  \label{fig:tradeoff}
+\end{figure*}

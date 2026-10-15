@@ -1,0 +1,38 @@
+%% supplement.tex -- supplementary material for the paper (same class/styles).
+%% Build: make -C doc -f doc.mk supplement  (requires a prior full paper build
+%% so that build/main.aux provides the paper's section/figure numbers).
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\input{config/preamble}
+\usepackage{xr-hyper}
+\externaldocument[P-]{build/main}
+\graphicspath{{figures/}}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\Roman{table}}
+
+\begin{document}
+\title{Supplementary Material:\\Communication Costs and Verification of a\\
+Step-Controlled FPGA CGRA}
+\author{\IEEEauthorblockN{Mattia Fait}\IEEEauthorblockA{University of Trento\\Trento, Italy}}
+\maketitle
+
+\begin{abstract}
+This supplement collects material that supports the paper but is not needed
+to follow its argument: controller and wire-level details, the host software
+stack, an illustration of capture spacing, alternative presentations of
+data already tabulated in the paper, the planned board-acceptance procedure
+with its (empty) report figure, and the chronology of the formal and
+implementation runs, including failed attempts. References of the form
+``Section~P-x'' point to the paper.
+\end{abstract}
+
+\input{src/supplement/controller}
+\input{src/supplement/software}
+\input{src/supplement/views}
+\input{src/supplement/board}
+\input{src/supplement/chronology}
+
+\bibliographystyle{IEEEtran}
+\bibliography{bib/bib}
+\end{document}

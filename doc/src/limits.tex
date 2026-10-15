@@ -1,0 +1,43 @@
+\section{Limitations and Threats to Validity}
+\label{sec:limits}
+
+\emph{No physical measurement.} No FPGA board was available. Every time in
+this paper is a model value; $\tau$, $T_{\mathrm{host}}$, the behaviour of
+the USB--UART bridge, board-level reliability and power are unmeasured. A
+claim that fusion or residency is faster on hardware requires measured
+distributions of $\tau$ and call times on a programmed board, a stated
+warm-up and repetition policy, and a timed CPU baseline for the same
+kernels~\cite{hoefler-benchmarking}. The supplement fixes such a procedure
+and the form of its report.
+
+\emph{Model validity.} Eq.~\eqref{eq:time} assumes one turnaround for every
+command; buffering may make $\tau$ depend on the command and reply size,
+which would shift the break-even values. Counts come from a clockless model;
+their transfer to the RTL rests on byte-exact replay of recorded transcripts,
+not on an equivalence proof.
+
+\emph{Workloads.} Five fixed kernels with fixed sizes and inputs are
+studied; matrix zero skipping and resident byte stuffing make counts
+input-dependent. The repeated identical dot product is an amortisation
+microbenchmark. The geometry comparison holds problem sizes fixed but not
+mappings optimised per shape.
+
+\emph{Verification scope.} The proofs cover selected safety properties on
+enumerated instances; completion of transactions is shown only under
+explicit delivery and service obligations. The legacy protocol's recovery
+from arbitrary byte insertion or loss is not proved, and the formal
+properties do not cover the C library. The link between proved RTL
+registers and constrained netlist cells is by name (Section~\ref{sec:chain}).
+
+\emph{Implementation evidence.} Each geometry was placed and routed once,
+on an earlier snapshot whose wrapper differs from the current one only by
+wiring; only the $4\times4$ point was re-implemented on the current
+revision. The period search is heuristic and was not repeated; its candidate
+was re-checked on the current revision.
+Resources and frequencies are specific to one device, tool version and
+strategy, and are not comparable with other work.
+
+\emph{Same-author references.} The device model, RTL, test benches and
+properties were written by the same author; independent scalar references
+and mutation tests reduce, but do not remove, the risk of a shared
+misunderstanding.

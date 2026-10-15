@@ -10,14 +10,22 @@ exercise the actual caption, dimensions and shared fonts/styles. No duplicate
 standalone source or manually rendered image is maintained. Shared drawing
 styles remain in ../config/{tikz,colors,macros}.tex.
 
-    pe/           ALU, result/accumulator feedback and reset
-    array/        default 4x4 bidirectional mesh and edge operands
-    fsm/          grouped command phases, shared receiver/step engine
-    systolic/     chronological product delay and final snapshot
-    stack/        host/device software stack
-    timing/       reset guard and enabled capture edges
-    exec/         v2/v3 request/reply sequence
-    cost/         wire-cost ratios from the archived CSV
+    pe/           PE datapath with configuration bit ranges            (paper)
+    array/        4x4 mesh and edge operands                           (paper)
+    exec/         v2/v3 request/reply sequence                         (paper)
+    frame/        resident-block frame layout                          (paper)
+    systolic/     product delay line and read-back snapshot            (paper)
+    latency/      model: v3/v2 call-time ratio versus turnaround tau   (paper)
+    time/         model terms per call from counted B, J, S            (paper)
+    tradeoff/     useful fraction, static occupancy, bytes per shape   (paper)
+    reuse/        counted bytes per dot: batching versus reuse         (paper)
+    fsm/          controller state machine with RTL state names        (supplement)
+    stack/        host/device architecture                             (supplement)
+    timing/       reset guard and enabled capture edges                (supplement)
+    geometry/     five-shape Vivado sweep chart                        (supplement)
+    scaling/      earlier repeated-dot sweep                           (supplement)
+    cost/         diagram only: v3/v2 ratios; caption in supplement
+    board/        diagram only: NOT RUN board report; caption in supplement
 
 From the repository root:
     make -C doc -f doc.mk figure-pe

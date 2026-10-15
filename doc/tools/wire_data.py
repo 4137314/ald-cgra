@@ -98,10 +98,11 @@ else:
               "matvec": r"Matvec, $32\times32$", "conv": r"Conv, $k=5,n=64$"}
     def fmt(n):
         return f"{n:,}".replace(",", r"\,")
-    table = [r"\begin{tabular}{@{}lrrrr@{}}", r"\toprule",
-             r"& \multicolumn{2}{c}{Transactions} & \multicolumn{2}{c}{Bytes} \\",
-             r"\cmidrule(lr){2-3}\cmidrule(lr){4-5}",
-             r"Workload & v2 & v3 & v2 & v3 \\", r"\midrule"]
+    # Header styling macros come from config/macros.tex (shared by all tables).
+    table = [r"\begin{tabular}{@{}lrrrr@{}}", r"\headtop",
+             r"\headrow & \multicolumn{2}{c}{\thead{Transactions}} & \multicolumn{2}{c}{\thead{Bytes}} \\",
+             r"\headrow \thead{Workload} & \thead{v2} & \thead{v3} & \thead{v2} & \thead{v3} \\",
+             r"\headbottom"]
     ratios = ["workload,transactions,bytes"]
     for name in names:
         a, b = values[name, 2], values[name, 3]
