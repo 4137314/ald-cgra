@@ -1,0 +1,80 @@
+-- Safety of the production streaming frame receiver. No delivery fairness:
+-- reset, ready, RX valid and every wire byte are unrestricted.
+vunit block_rx_contract (block_rx(rtl)) {
+  default clock is rising_edge(clk);
+  F_SELECTED: assert always (G_TIMEOUT_CYCLES = 100000000);
+
+  signal f_seen : boolean := false;
+  signal f_previous_data : bytes_t(0 to BLOCK_RAW-1);
+  signal f_previous_used : natural range 0 to BLOCK_RAW := 0;
+  signal f_was_append : boolean := false;
+  signal f_written_byte : byte_t := (others => '0');
+  signal f_crc : unsigned(15 downto 0) := x"FFFF";
+  signal f_previous_crc : unsigned(15 downto 0) := x"FFFF";
+  -- Bit recurrence with explicit taps, independent of crc_byte's shift/XOR
+  -- loop. No payload bit or byte is constrained.
+  function reference_crc(c : unsigned(15 downto 0); b : byte_t) return unsigned is
+    variable r : unsigned(15 downto 0) := c;
+    variable feedback : std_logic;
+  begin
+    for i in 7 downto 0 loop
+      feedback := r(15) xor b(i);
+      r := r(14 downto 0) & '0';
+      r(12) := r(12) xor feedback;
+      r(5) := r(5) xor feedback;
+      r(0) := feedback;
+    end loop;
+    return r;
+  end function;
+  function prefix_equal(x, y : bytes_t; n : natural) return boolean is
+  begin
+    for i in 0 to BLOCK_RAW-1 loop
+      if i < n and x(i) /= y(i) then return false; end if;
+    end loop;
+    return true;
+  end function;
+  monitor : process(clk)
+    variable append_byte : boolean;
+    variable decoded_byte : byte_t;
+  begin
+    if rising_edge(clk) then
+      f_seen <= true; f_previous_data <= data; f_previous_used <= used;
+      f_previous_crc <= f_crc;
+      append_byte := rst = '0' and ready = '1' and rx_valid = '1' and
+        active and not bad and used < BLOCK_RAW and rx_data /= x"7E" and
+        ((not escaped and rx_data /= x"7D") or
+         (escaped and (rx_data = x"5D" or rx_data = x"5E")));
+      decoded_byte := rx_data;
+      if escaped then decoded_byte := rx_data xor x"20"; end if;
+      f_was_append <= append_byte; f_written_byte <= decoded_byte;
+      if rst = '0' and ready = '1' and rx_valid = '1' and rx_data = x"7E" and not active then
+        f_crc <= x"FFFF";
+      elsif append_byte and (used < BLOCK_HEADER or used < BLOCK_HEADER+le16(data(8), data(9))) then
+        f_crc <= reference_crc(f_crc, decoded_byte);
+      end if;
+    end if;
+  end process;
+  F_FRAME_USED: assert always (used <= BLOCK_RAW);
+  F_FRAME_TIMER: assert always (timer < G_TIMEOUT_CYCLES);
+  F_FRAME_CRC_RECURRENCE: assert always (crc = f_crc);
+  F_FRAME_RESET: assert always (rst = '1' or ready = '0' -> next (not active and not escaped and not bad and used = 0 and valid_o = '0'));
+  F_FRAME_TIMEOUT: assert always (rst = '0' and ready = '1' and active and rx_valid = '0' and timer = G_TIMEOUT_CYCLES-1 -> next (not active and used = 0 and valid_o = '0'));
+  F_FRAME_TIMER_CLEAR: assert always (rst = '1' or ready = '0' or rx_valid = '1' -> next (timer = 0));
+  F_FRAME_TIMER_TICK: assert always (rst = '0' and ready = '1' and active and rx_valid = '0' and timer < G_TIMEOUT_CYCLES-1 -> next (timer = prev(timer)+1));
+  F_FRAME_PUBLISH: assert always (f_seen and valid_o = '1' -> length >= 12 and length <= BLOCK_RAW and data(0) = x"01" and le16(data(8), data(9)) <= BLOCK_PAYLOAD and length = 12+le16(data(8), data(9)));
+  F_FRAME_CRC_PUBLISH: assert always (f_seen and valid_o = '1' -> le16(data(length-2), data(length-1)) = to_integer(f_previous_crc));
+  F_FRAME_VALID_FLAG: assert always (f_seen and valid_o = '1' -> prev(rst = '0' and ready = '1' and rx_valid = '1' and rx_data = x"7E" and active and not bad and not escaped));
+  F_FRAME_APPEND: assert always (f_seen and f_was_append -> used = f_previous_used+1 and data(f_previous_used) = f_written_byte);
+  F_FRAME_DATA_HOLD: assert always (f_seen and not f_was_append -> data = f_previous_data);
+  F_FRAME_NO_OVERWRITE: assert always (f_seen and f_was_append -> prefix_equal(data, f_previous_data, f_previous_used));
+  F_FRAME_BAD_ESCAPE: assert always (rst = '0' and ready = '1' and rx_valid = '1' and active and escaped and rx_data /= x"7E" and rx_data /= x"5E" and rx_data /= x"5D" -> next (bad));
+  F_FRAME_ESCAPE_PREFIX: assert always (rst = '0' and ready = '1' and rx_valid = '1' and active and not bad and not escaped and rx_data = x"7D" -> next (escaped and used = prev(used)));
+  F_FRAME_OVERFLOW: assert always (rst = '0' and ready = '1' and rx_valid = '1' and active and used = BLOCK_RAW and not bad and rx_data /= x"7E" and ((not escaped and rx_data /= x"7D") or (escaped and (rx_data = x"5D" or rx_data = x"5E"))) -> next (bad));
+  F_FRAME_BAD_STICKY: assert always (rst = '0' and ready = '1' and active and bad and ((rx_valid = '1' and rx_data /= x"7E") or (rx_valid = '0' and timer < G_TIMEOUT_CYCLES-1)) -> next (bad));
+  F_FRAME_START: assert always (rst = '0' and ready = '1' and rx_valid = '1' and not active and rx_data = x"7E" -> next (active and not escaped and not bad and used = 0 and crc = x"FFFF"));
+  F_FRAME_READY_HOLD: assert always (f_seen and valid_o = '1' -> not active and used = 0);
+  C_FRAME_OK: cover {rst = '0' and valid_o = '1' and length > 12};
+  C_FRAME_ESCAPE: cover {escaped; rx_valid = '1' and rx_data = x"5E"; not escaped and not bad};
+  C_FRAME_REJECT: cover {active and bad; rx_valid = '1' and rx_data = x"7E"; not active and valid_o = '0'};
+  C_FRAME_TIMEOUT: cover {active and rx_valid = '0' and timer = G_TIMEOUT_CYCLES-1; not active and valid_o = '0'};
+}

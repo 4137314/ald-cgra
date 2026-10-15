@@ -1,0 +1,26 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)
+
+-- Running command `ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_dot.vhd block_ctrl.vhd block_rx_contract.psl block_dot_contract.psl block_ctrl_contract.psl -e block_ctrl; write_rtlil dut.il; write_json frontend.json' --
+
+1. Executing GHDL.
+Has_EOS: cannot handle N_EQUIV_BOOL
+
+******************** GHDL Bug occurred ***************************
+Please report this bug on https://github.com/ghdl/ghdl/issues
+GHDL release: 6.0.0 (tarball) [Dunoon edition]
+Compiled with unknown compiler version
+Target: x86_64-unknown-linux-gnu
+/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-cover-1/F-BLOCK-CTRL-DIV2-COVER/
+Command line:
+
+Exception TYPES.INTERNAL_ERROR raised
+Exception information:
+raised TYPES.INTERNAL_ERROR : psl-errors.adb:37
+******************************************************************
+ERROR: vhdl import failed.

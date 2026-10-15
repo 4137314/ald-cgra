@@ -20,7 +20,7 @@ FORMAL = ROOT / "hw/formal"
 def dependencies():
     versions = {}
     for tool, args in (("ghdl", ["--version"]), ("yosys", ["-V"]),
-                       ("sby", ["--version"]), ("yices-smt2", ["--version"])):
+                       ("sby", ["--version"]), ("yices-smt2", ["--version"]), ("z3", ["--version"])):
         if not shutil.which(tool):
             raise RuntimeError(f"missing {tool}; run: nix develop .#formal -c make formal-fast")
         p = subprocess.run([tool, *args], text=True, capture_output=True, check=True)
@@ -59,8 +59,30 @@ def tasks(suite):
         for div in (1, 2, 3, 4):
             result.append(dict(id=f"F-BLOCK-DOT-DIV{div}", top="block_dot", kind="block_dot",
                                mode="prove", depth=16, parameters=dict(G_STEP_DIV=div),
-                               assertions=23, assumptions=1, covers=3))
+                               assertions=24, assumptions=1, covers=3))
+        result.append(dict(id="F-BLOCK-MEMORY-DIV2", top="block_dot", kind="block_dot",
+                           mode="prove", depth=16, parameters=dict(G_STEP_DIV=2),
+                           memory=True, assertions=31, assumptions=1, covers=6))
+        result.append(dict(id="F-BLOCK-RX-T3", top="block_rx", kind="block_rx", mode="prove",
+                           depth=8, parameters=dict(G_TIMEOUT_CYCLES=3), assertions=22, assumptions=0, covers=4))
+        result.append(dict(id="F-BLOCK-CTRL-DIV2", top="block_ctrl", kind="block_ctrl", mode="prove",
+                           depth=6, parameters=dict(G_STEP_DIV=2, G_TIMEOUT_CYCLES=3),
+                           assertions=86, assumptions=1, covers=12))
     if suite == "full":
+        controller = next(t for t in result if t['id'] == 'F-BLOCK-CTRL-DIV2')
+        for div in (1, 3, 4):
+            result.append(dict(controller, id=f"F-BLOCK-CTRL-DIV{div}",
+                               parameters=dict(G_STEP_DIV=div, G_TIMEOUT_CYCLES=3)))
+        result.append(dict(controller, id="F-BLOCK-CTRL-T100000000", parameters=dict(G_STEP_DIV=2, G_TIMEOUT_CYCLES=100_000_000)))
+        receiver = next(t for t in result if t['id'] == 'F-BLOCK-RX-T3')
+        result.append(dict(receiver, id="F-BLOCK-RX-T100000000", parameters=dict(G_TIMEOUT_CYCLES=100_000_000)))
+        result.append(dict(receiver, id="M-BLOCK-CRC", mode="bmc", depth=20, negative=True,
+                           mutation="block-bypass-crc"))
+        memory = next(t for t in result if t['id'] == 'F-BLOCK-MEMORY-DIV2')
+        for div in (1, 3, 4):
+            result.append(dict(memory, id=f"F-BLOCK-MEMORY-DIV{div}", parameters=dict(G_STEP_DIV=div)))
+        result.append(dict(memory, id="M-BLOCK-READ", mode="bmc", depth=16, negative=True,
+                           mutation="block-read-bank"))
         for rows, cols in ((1, 2), (2, 1), (3, 2), (4, 4), (1, 16), (16, 1)):
             result.append(dict(id=f"F-ARRAY-{rows}x{cols}", top="array_contract", kind="array",
                                mode="prove", depth=4, gates=True,
@@ -96,7 +118,8 @@ def tasks(suite):
                            mode="prove", depth=16, parameters=dict(G_ROWS=2, G_COLS=3,
                            G_STEP_DIV=2, G_TIMEOUT_CYCLES=3),
                            assertions=78, assumptions=6, covers=4, exec_witness=True))
-        result = [dict(t, id=t["id"] + "-COVER", mode="cover", depth=80 if t["kind"] in ("tx", "rx") else
+        result = [dict(t, **(dict(block_witness=True, assertions=t["assertions"]-1, assumptions=1, covers=5, skip=160, timeout_seconds=240) if t["kind"] == "block_ctrl" else {}),
+                       top="block_ctrl_witness" if t["kind"] == "block_ctrl" else t["top"], id=t["id"] + "-COVER", mode="cover", depth=200 if t["kind"] == "block_ctrl" else 80 if t["kind"] in ("tx", "rx") else
                        96 if t["kind"] == "ctrl" and t["parameters"]["G_ROWS"] * t["parameters"]["G_COLS"] > 1 else 40)
                   for t in result if not t.get("negative")]
     return result
@@ -105,7 +128,7 @@ def tasks(suite):
 def run_task(task, directory, budget):
     directory.mkdir()
     start = time.monotonic()
-    result = dict(task, result="ERROR", acceptance_passed=False, engine="smtbmc yices",
+    result = dict(task, solver_budget_seconds=budget, result="ERROR", acceptance_passed=False, engine=" ".join(["smtbmc", *task.get("engine_options", []), task.get("solver", "yices")]),
                   commands=[], logs=[], clock="rising_edge(clk)",
                   initial_state="production RTL initial values",
                   environment=("initial reset; subsequent inputs unconstrained" if task["kind"] in ("pe", "array")
@@ -120,9 +143,18 @@ def run_task(task, directory, budget):
                   "hw/formal/array_ports.vhd", "hw/formal/pe_spec.sv", "hw/formal/array_contract.sv"]
         if task.get("composition"): paths += ["hw/formal/pe_assume.sv"]
         entity = "array_ports"
+    elif task["kind"] == "block_ctrl":
+        entity = task["top"]
+        if task.get("block_witness"): paths += ["hw/formal/block_ctrl_witness.vhd"]
+        paths += ["hw/rtl/block_pkg.vhd", "hw/rtl/block_rx.vhd", "hw/rtl/block_dot.vhd", "hw/rtl/block_ctrl.vhd",
+                  "hw/formal/block_rx_contract.psl", "hw/formal/block_dot_contract.psl", "hw/formal/block_ctrl_contract.psl"]
+    elif task["kind"] == "block_rx":
+        entity = "block_rx"
+        paths += ["hw/rtl/block_pkg.vhd", "hw/rtl/block_rx.vhd", "hw/formal/block_rx_contract.psl"]
     elif task["kind"] == "block_dot":
         entity = "block_dot"
         paths += ["hw/rtl/block_pkg.vhd", "hw/rtl/block_dot.vhd", "hw/formal/block_dot_contract.psl"]
+        if task.get("memory"): paths += ["hw/formal/block_memory.psl"]
     elif task["kind"] in ("tx", "rx"):
         entity = task["top"]
         paths += [f"hw/rtl/{entity}.vhd", f"hw/formal/{entity}_contract.psl"]
@@ -136,6 +168,10 @@ def run_task(task, directory, budget):
         shutil.copy2(ROOT / p, directory / Path(p).name)
     if task.get("mutation"):
         filename, before, after = {
+            "block-bypass-crc": ("block_rx.vhd", "if le16(data(used-2), data(used-1)) = to_integer(crc) then",
+                                 "if true then"),
+            "block-read-bank": ("block_dot.vhd", "qa <= bank_a(index); qb <= bank_b(index);",
+                                "qa <= bank_b(index); qb <= bank_b(index);"),
             "block-early-capture": ("block_dot.vhd",
                 "step <= '1' when state = S_CAPTURE else '0';",
                 "step <= '1' when state = S_CAPTURE or state = S_READ else '0';"),
@@ -165,18 +201,18 @@ def run_task(task, directory, budget):
                                   timeout=budget + 30).returncode
 
     try:
-        vhdl = " ".join(Path(p).name for p in paths if not p.endswith(".sv") and Path(p).name not in ("exec_contract.psl", "exec_cover.psl"))
+        vhdl = " ".join(Path(p).name for p in paths if not p.endswith(".sv") and Path(p).name not in ("exec_contract.psl", "exec_cover.psl", "block_memory.psl"))
         generics = " ".join(f"-g{k}={v}" for k, v in task.get("parameters", {}).items())
         # GHDL's analysis/elaboration syntax requires options BEFORE sources.
         # A misplaced -g after sources is silently ignored by this frontend.
-        if task["kind"] in ("ctrl", "tx", "rx", "block_dot"):
+        if task["kind"] in ("ctrl", "tx", "rx", "block_dot", "block_rx", "block_ctrl"):
             # Fail frontend elaboration if *any* requested parameter is ignored,
             # even when two configurations happen to have equal port widths.
             checks = " and ".join(f"{k} = {v}" for k, v in task["parameters"].items())
             # This GHDL version binds only the last vunit for an architecture.
             # Add the instance check to the SAME vunit, and retain both the
             # original and effective property bytes with independent hashes.
-            property_name = "ctrl_contract" if task["kind"] == "ctrl" else entity + "_contract"
+            property_name = "ctrl_contract" if task["kind"] == "ctrl" else task["kind"] + "_contract" if task["kind"] == "block_ctrl" else entity + "_contract"
             property_file = directory / (property_name + ".psl")
             original = property_file.read_text()
             shutil.copy2(property_file, directory / (property_name + ".source.psl"))
@@ -194,12 +230,34 @@ def run_task(task, directory, budget):
                     result["environment"] = ("reachability-only stimulus: no reset; EXEC-only; prompt RX; "
                         "one step; ideal prompt TX handshake; mask, payload and checksum symbolic")
                     result["scope"] = "EXEC covers only; these assumptions do not apply to any proof task"
+            if task.get("memory"):
+                original = original.rstrip().removesuffix("}") + (directory / "block_memory.psl").read_text() + "\n}\n"
             parameter_check = f"\n  F_SELECTED: assert always ({checks});\n"
             effective = original.replace("  default clock is rising_edge(clk);",
                                          "  default clock is rising_edge(clk);" + parameter_check)
             property_file.write_text(effective)
             result["parameter_check_sha256"] = hashlib.sha256(parameter_check.encode()).hexdigest()
             result["effective_properties_sha256"] = hashlib.sha256(effective.encode()).hexdigest()
+        if task["kind"] == "block_ctrl":
+            child = directory / "block_dot_contract.psl"
+            original_child = child.read_text()
+            assumption = "  A_BLOCK_COUNT: assume always (count <= BLOCK_WORDS);"
+            if original_child.count(assumption) != 1:
+                raise RuntimeError("child count obligation changed")
+            shutil.copy2(child, directory / "block_dot_contract.source.psl")
+            child.write_text(original_child.replace(assumption,
+                "  -- No count assumption here: F_BCTRL_COUNT proves the connected bound."))
+            result["effective_child_properties_sha256"] = hashlib.sha256(child.read_bytes()).hexdigest()
+            if task.get("block_witness"):
+                # Child reachability is exercised separately by the memory,
+                # sequencer and RX cover tasks. This task witnesses dispatcher paths.
+                for child_name in ("block_dot_contract.psl", "block_rx_contract.psl"):
+                    child_file = directory / child_name
+                    effective_child = re.sub(r"  C_\w+: cover \{[^}]*\};\n", "", child_file.read_text())
+                    child_file.write_text(effective_child)
+                result["effective_child_properties_sha256"] = {name: hashlib.sha256((directory / name).read_bytes()).hexdigest()
+                    for name in ("block_dot_contract.psl", "block_rx_contract.psl")}
+            result["discharged_obligation"] = "block_dot.count <= 1024 asserted as F_BCTRL_COUNT on its actual connected input"
         script = f"ghdl --std=08 --no-assert-cover {generics} {vhdl} -e {entity}; write_rtlil dut.il; write_json frontend.json"
         if command(["yosys", "-p", script], "frontend.txt"):
             raise RuntimeError("VHDL frontend failed")
@@ -218,6 +276,27 @@ def run_task(task, directory, budget):
             if any(len(ports[p]["bits"]) != width for p, width in expected_ports.items()):
                 raise RuntimeError("UART port width changed")
             result["checked_port_widths"] = expected_ports
+        elif task["kind"] == "block_ctrl":
+            modules = json.loads((directory / "frontend.json").read_text())["modules"]
+            expected_ports = dict(a=16, b=16, pe_result=16, rx_data=8, tx_data=8)
+            candidates = [m["ports"] for m in modules.values() if set(expected_ports) <= set(m["ports"])]
+            if len(candidates) != 1: raise RuntimeError("production block controller missing/duplicated")
+            ports = candidates[0]
+            if any(len(ports[p]["bits"]) != width for p, width in expected_ports.items()):
+                raise RuntimeError("block controller interface changed")
+            result["checked_port_widths"] = expected_ports
+            result["environment"] = "initial synchronous reset; later reset/RX/TX busy/PE result unrestricted"
+            result["scope"] = "integrated parser/length/index safety, commit bounds, ownership, TX handshake and duplicate isolation"
+            if task.get("block_witness"):
+                result["environment"] = "reachability-only schedule: initial reset, prompt TX, preflight/HELLO then one of four fixed valid frames"
+                result["scope"] = "dispatcher covers only; executable stimulus driver absent from universal proofs"
+        elif task["kind"] == "block_rx":
+            ports = json.loads((directory / "frontend.json").read_text())["modules"][entity]["ports"]
+            expected_ports = dict(raw=8*144, rx_data=8, length=8, valid_o=1)
+            if any(len(ports[p]["bits"]) != width for p, width in expected_ports.items()):
+                raise RuntimeError("frame receiver width changed")
+            result["checked_port_widths"] = expected_ports
+            result["scope"] = "bounded storage, ordered append, CRC recurrence/publication, reset and watchdog safety"
         elif task["kind"] == "block_dot":
             ports = json.loads((directory / "frontend.json").read_text())["modules"][entity]["ports"]
             expected_ports = dict(pe_result=16, wr_data=16, a=16, b=16, result=16)
@@ -225,7 +304,9 @@ def run_task(task, directory, budget):
                 raise RuntimeError("block datapath width changed")
             result["checked_port_widths"] = expected_ports
             result["environment"] = "count <= 1024 (production port subtype); all other inputs unconstrained"
-            result["scope"] = "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC"
+            result["scope"] = ("sequencer control plus full-size RAM retention/read/capture at any constant address; "
+                               "unwritten words unconstrained; not caller length validation or CRC" if task.get("memory") else
+                               "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC")
         elif task["kind"] == "array":
             ports = json.loads((directory / "frontend.json").read_text())["modules"][entity]["ports"]
             rows, cols = task["parameters"]["G_ROWS"], task["parameters"]["G_COLS"]
@@ -270,13 +351,22 @@ def run_task(task, directory, budget):
             files += "\n".join(sv) + "\n"
         if task["kind"] == "array":
             model += f"chparam -set ROWS {rows} -set COLS {cols} array_contract\n"
+        if task["kind"] == "block_ctrl":
+            # Preserve every signal, input and property. Unmark the top output
+            # ports so ordinary cone-of-influence optimization can discard RAM
+            # data unused by controller properties/covers after hierarchy flattening.
+            model += f"delete -output {task['top']}/w:*\n"
+            result["cone_reduction"] = "top outputs become internal wires; no object, assertion, assumption or input deleted"
         model += f"prep -top {task['top']} -flatten\n"
+        if task.get("block_witness"):
+            model += "memory_map\nopt -full\n"
         if task.get("gates"):
             model += "wreduce\nopt -full\ntechmap\nopt -full\n"
         model += "write_json properties.json\n"
         (directory / "task.sby").write_text(
             f"[options]\nmode {task['mode']}\ndepth {task['depth']}\ntimeout {budget}\n"
-            f"[engines]\nsmtbmc yices\n[script]\n{model}[files]\n{files}")
+            + (f"skip {task['skip']}\n" if "skip" in task else "") +
+            f"[engines]\n{result['engine']}\n[script]\n{model}[files]\n{files}")
         rc = command(["sby", "task.sby"], "solver.txt")
         result["exit_code"] = rc
         statusfile = directory / "task/status"
@@ -296,6 +386,24 @@ def run_task(task, directory, budget):
                 elif c["type"] in ("$assert", "$assume", "$cover"):
                     counts[c["type"][1:]] += 1
         result["property_cells"] = dict(counts)
+        if task["kind"] == "block_ctrl":
+            widths = sorted(int(c["parameters"]["WIDTH"], 2) for m in design["modules"].values()
+                            for c in m["cells"].values() if c["type"] == "$anyconst")
+            if widths != ([2, 8] if task.get("block_witness") else [8]):
+                raise RuntimeError("symbolic cache/witness selector missing or wrong width")
+            result["symbolic_cache_address_bits"] = 8
+        if task.get("memory"):
+            symbolic = [c for m in design["modules"].values() for c in m["cells"].values()
+                        if c["type"] == "$anyconst"]
+            if len(symbolic) != 1 or int(symbolic[0]["parameters"]["WIDTH"], 2) != 10:
+                raise RuntimeError("symbolic memory address missing or wrong width")
+            result["symbolic_address_bits"] = 10
+            memories = {name: {k: int(c["parameters"][k], 2) for k in ("SIZE", "WIDTH", "ABITS")}
+                        for m in design["modules"].values() for name, c in m["cells"].items()
+                        if c["type"] == "$mem_v2"}
+            if memories != {bank: dict(SIZE=1024, WIDTH=16, ABITS=10) for bank in ("bank_a", "bank_b")}:
+                raise RuntimeError("production memory count/capacity/width changed")
+            result["checked_memories"] = memories
         for singular, plural in (("assert", "assertions"), ("assume", "assumptions"), ("cover", "covers")):
             if counts[singular] != task[plural]:
                 raise RuntimeError(f"property loss/change: {singular} expected {task[plural]}, found {counts[singular]}")
@@ -303,6 +411,16 @@ def run_task(task, directory, budget):
         smt_counts = {k: len(re.findall(r"^; yosys-smt2-" + k + r" ", smt, re.M))
                       for k in ("assert", "assume", "cover")}
         result["smt2_cells"] = smt_counts
+        if task["kind"] == "block_ctrl":
+            widths = sorted(int(x) for x in re.findall(r"^; yosys-smt2-anyconst \S+ (\d+) ", smt, re.M))
+            if widths != ([2] if task.get("block_witness") else [8]):
+                raise RuntimeError("cache address/witness selector did not reach SMT model")
+            result["smt2_symbolic_widths"] = widths
+        if task.get("memory"):
+            addresses = re.findall(r"^; yosys-smt2-anyconst \S+ (\d+) ", smt, re.M)
+            if addresses != ["10"]:
+                raise RuntimeError("symbolic memory address did not reach SMT model")
+            result["smt2_symbolic_address_bits"] = 10
         user_assumptions = sum(line.startswith("; yosys-smt2-assume ") and "$auto$formalff" not in line
                                for line in smt.splitlines())
         result["smt2_user_assumptions"] = user_assumptions
@@ -340,7 +458,7 @@ def main():
     parser.add_argument("--suite", choices=("smoke", "fast", "full", "cover"), default="fast")
     parser.add_argument("--out", type=Path)
     parser.add_argument("--task", action="append", help="explicit subset by stable ID; manifest marks subset")
-    parser.add_argument("--timeout", type=int, default=90)
+    parser.add_argument("--timeout", type=int, help="override per-task solver budget (default 90 s; controller cover 240 s)")
     args = parser.parse_args()
     try:
         versions = dependencies()
@@ -385,7 +503,7 @@ def main():
             manifest["tasks"].append(dict(task, result="NOT_RUN", acceptance_passed=False,
                                          error="mandatory production PE obligation not proved in this run"))
         else:
-            manifest["tasks"].append(run_task(task, out / task["id"], args.timeout))
+            manifest["tasks"].append(run_task(task, out / task["id"], args.timeout if args.timeout is not None else task.get("timeout_seconds", 90)))
         (out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     ok = all(t["acceptance_passed"] for t in manifest["tasks"])
     print(f"Manifest: {out / 'manifest.json'}; acceptance {'PASS' if ok else 'FAIL'}")

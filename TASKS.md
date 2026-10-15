@@ -441,7 +441,7 @@ release o programmazione della scheda è autorizzato da questo ciclo.
 | F05 | Target fast/full/cover, manifest JSON, matrice requisiti–test–proprietà–evidenza e CI/Nix eseguiti | VERIFICATO |
 | B01 | Contratto sperimentale a blocchi versionato, CRC/framing/sequence e deduplicazione delimitata | VERIFICATO (contratto sperimentale; checkpoint 12) |
 | B02 | Memoria locale e sequencer RTL, modello, API e CLI con workload end-to-end e regressioni legacy | VERIFICATO (sperimentale; prove fisiche su scheda escluse) |
-| B03 | Prove buffer/sequencer, misura traffico/round trip, sintesi reale e limiti fisici documentati | PARZIALE (sequencer provato, buffer/CRC/dedup ancora da provare) |
+| B03 | Prove buffer/sequencer, misura traffico/round trip, sintesi reale e limiti fisici documentati | IN CORSO (prove RAM/CRC/controller eseguite; gate finali checkpoint 13) |
 | C07 | Deadline dell'intera transazione, diagnostica additiva, CLOEXEC/apertura esclusiva opzionale | VERIFICATO |
 | C08 | Server PTY configurabile/arrestabile e piani riutilizzabili con invalidazione esplicita | VERIFICATO |
 
@@ -854,6 +854,44 @@ release o programmazione della scheda è autorizzato da questo ciclo.
   framing/CRC/cache/dedup formali, reset durante commit/esecuzione e isolamento
   della concorrenza; A11 matrice legacy sistematica; A03/A06/A13/A14 report,
   documentazione e PDF corrente. Nessun push, release o programmazione.
+
+### Checkpoint 2026-10-09 / 13 — conservazione RAM, CRC e deduplicazione
+
+- Commit salvati: `27f8da7` RTL/flow, `3a0500b` API/CLI, `0f8a54b` evidenze.
+  Nessun push. La nuova fase modifica proprietà, harness, test e documenti;
+  l'RTL di produzione rimane quello delle prove fisiche del checkpoint 12.
+- RAM: indirizzo arbitrario a 10 bit, due banchi reali 1024×16 verificati nel
+  modello solver, conservazione delle scritture accettate, lettura sincrona,
+  ordine alla cattura, reset senza cancellazione e sovrascrittura. DIV1–4
+  provati; cover e mutazione del banco di lettura eseguiti.
+- Receiver: CRC indipendente mediante tap espliciti, buffer da 144 byte,
+  ordine senza sovrascrittura del prefisso, escape/overflow, pubblicazione,
+  accettazione/rifiuto e watchdog. Prove anche a timeout 100000000; mutazione
+  che bypassa CRC rilevata. Nessuna assumption sugli ingressi del receiver.
+- Controller integrato: unico vincolo di reset iniziale, come nel top reale;
+  l'assumption count≤1024 del figlio è rimossa e il limite è provato sul
+  collegamento reale. Cache verificata con un indice arbitrario a otto bit,
+  confronti completi, sequenze, replay senza scritture/reset/step duplicati,
+  contatore esecuzioni, capacità, isolamento e handshake.
+- Gli UNKNOWN/timeout restano conservati. Aggiunte invarianti **asserite** sugli
+  stati raggiungibili; per DIV4 serviva rendere esplicito remaining>0 nelle
+  fasi fetch/read/wait/capture. La prova interessata ora è PROVED. Nessuna
+  riduzione di dati, capacità o dominio degli opcode per far passare i gate.
+- Cover controller: driver VHDL con quattro transcript completi da reset,
+  assente dalle prove universali. Selezione, conflitto, DOT, upload e replay
+  raggiunti ai cicli **160/168/169/173/178**; ricerca fino a 200, primo prefisso
+  unrolled integralmente. Budget dedicato 180 s, esecuzione 112.725 s.
+- GHDL mirato: reset durante commit/DOT e richieste concorrenti durante
+  esecuzione/readback PASS per DIV1–4. I due nuovi difetti mutati causano
+  assertion nei veri testbench. Primo tentativo CRC con fixture mancante in
+  elaborazione conservato come ERROR; secondo tentativo rileva il difetto.
+- **Gate finali in corso:** `block-final-full`, `block-final-fast`,
+  `block-final-cover` in `hw/build/formal/`; completare archiviazione, nuovo
+  gate GHDL registrato e check Nix formale prima del commit. La run estesa
+  precedente è 37 PROVED + dieci FAIL attesi + un UNKNOWN DIV4, non PASS.
+- **Ripresa:** chiudere questo checkpoint con i manifest finali. Poi A11/H3
+  matrice legacy sistematica, A03/A06/A13/A14 report/documentazione/PDF unico;
+  licenza resta scelta dell'autore. Non dichiarare concluso l'intero incarico.
 
 ## Prossime correzioni senza scheda
 

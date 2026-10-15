@@ -1,0 +1,24 @@
+make -C hw  -f hw.mk formal-fast
+make[1]: Entering directory '/build/source/hw'
+python3 formal/run.py --suite fast
+F-PE-SMOKE: PROVED (1.762 s)
+F-PE-NEGATIVE: FAIL (1.453 s) [expected negative]
+F-PE-ALU-MUX: PROVED (14.244 s)
+F-CTRL-1x1-DIV1: PROVED (10.736 s)
+F-CTRL-1x1-DIV2: PROVED (10.52 s)
+F-CTRL-1x1-DIV3: PROVED (9.35 s)
+F-CTRL-1x1-DIV4: PROVED (8.449 s)
+F-ARRAY-1x1: PROVED (9.205 s)
+F-ARRAY-2x3: PROVED (8.004 s)
+F-UART-TX-C3: PROVED (0.997 s)
+F-UART-RX-C3: PROVED (1.311 s)
+F-BLOCK-DOT-DIV1: PROVED (2.191 s)
+F-BLOCK-DOT-DIV2: PROVED (2.108 s)
+F-BLOCK-DOT-DIV3: PROVED (2.411 s)
+F-BLOCK-DOT-DIV4: PROVED (2.368 s)
+F-BLOCK-MEMORY-DIV2: PROVED (4.831 s)
+F-BLOCK-RX-T3: PROVED (9.677 s)
+F-BLOCK-CTRL-DIV2: PROVED (33.78 s)
+Manifest: /build/source/hw/build/formal/fast-20261009T135833Z-9/manifest.json; acceptance PASS
+make[1]: Leaving directory '/build/source/hw'
+got build log for '/nix/store/b6z1xb2ic2yyi2rfgw122qyk65847h35-cgra-formal-fast.drv' from 'daemon'

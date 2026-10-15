@@ -3,8 +3,8 @@
 **Status: experimental RTL–model–public API–CLI path implemented and exercised.**
 `G_BLOCK_ENABLE=false` remains the default. The enabled 4×4/DIV2 instance has
 executed Vivado synthesis and routed timing reports with 1 BRAM tile (two
-RAMB18), WNS +0.427 ns and WHS +0.060 ns at 10 ns; no board test has been run. Formal coverage currently proves the sequencer control contract,
-not the entire framed controller, CRC, duplicate cache or RAM contents.
+RAMB18), WNS +0.427 ns and WHS +0.060 ns at 10 ns; no board test has been run. Formal coverage includes selected sequencer, RAM, receiver and controller safety
+properties. It does not prove the complete software/protocol stack or physical operation.
 
 ## Selection and framing
 
@@ -184,13 +184,32 @@ The CLI obtains a nonzero random 32-bit nonce; this is not guaranteed unique.
   Exact reset/capture counts distinguish replay from repeated computation.
   Corruptions include wire bit flips, inserted/lost bytes, truncated frames,
   reset, watchdog recovery, semantic failures and noise resembling legacy opcodes.
-- `F-BLOCK-DOT-DIV1/2/3/4`: induction on production `block_dot.vhd`, 23 assertion
-  cells and 1 assumption (`count <= 1024`, the VHDL port subtype); other inputs
-  symbolic, full 16-bit data. Index/remaining bounds, capture counts, cadence,
-  reset priority and result capture are PROVED. Covers at depth 40 are
-  BOUNDED_PASS reachability; `M-BLOCK-EARLY` must fail after a deliberate early
-  capture mutation on a temporary DUT copy. This is **not** a composed proof
-  of the controller's length checks, RAM data conservation or deduplication.
+- `tb_block_faults` resets the controller during upload commit and DOT, then
+  verifies new-session lengths/result state. Otherwise valid concurrent HELLO
+  requests during execution or readback must not change the active session,
+  result or number of captures. All four STEP_DIV instances are exercised.
+- `F-BLOCK-DOT-DIV1/2/3/4`: 24 assertion cells, full data domain and the port
+  subtype assumption `count <= 1024`. Index/count/cadence, nonempty active
+  phases, operand/ownership guards, reset and result capture are checked.
+- `F-BLOCK-MEMORY-*`: 31 assertions, both real 1024×16 banks. An arbitrary
+  ten-bit address proves accepted write retention, reads and ordered capture
+  across busy/reset/rewrite. Unwritten words remain unconstrained.
+- `F-BLOCK-RX-*`: 22 assertions, no assumptions; CRC recurrence with independent
+  bit taps, frame acceptance/rejection, canonical escaping, ordered staging,
+  publication and watchdog. Full includes the production timeout.
+- `F-BLOCK-CTRL-*`: 86 assertions with initial synchronous reset as the only
+  assumption. Actual receiver/engine remain connected; the controller proves
+  the child's count bound. An arbitrary byte index checks cache preservation,
+  exact replay identity/response and no duplicate effects. Accepted effects,
+  exact upload order/committed length, index/capacity limits, sequence exhaustion
+  and TX handshake are also checked.
+- Covers are finite reachability: component depth 40 and controller depth 200,
+  with an explicit driver around unchanged RTL for the latter. Negative early
+  capture, wrong-bank read and CRC-bypass mutations are required to fail.
+  The last two also fail in GHDL. See [formal contracts](../hw/formal/README.md)
+  for parameters, initial state, property preservation, budgets and limits;
+  [new evidence](verification/2026-10-09/block-formal/) preserves failed attempts
+  as well as final runs. No unconditional completion or whole-stack proof follows.
 
 `python3 scripts/measure-blocks.py NEW_DIRECTORY` produces a separately measured
 public-API point for each of five 16-PE shapes. Counts include preflight, HELLO,

@@ -1,0 +1,483 @@
+{
+  "schema_version": 1,
+  "run_id": "20261008T152936Z-186795",
+  "suite": "full",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "0f8a54bce20506c141f18f90ac98aec04fc04191",
+  "dirty": true,
+  "runner_sha256": "9a757ffeb0195707bc3e3722fa75e9464950f72e84d616deca57983a54daa80a",
+  "tasks": [
+    {
+      "id": "F-BLOCK-MEMORY-DIV2",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 2
+      },
+      "memory": true,
+      "assertions": 30,
+      "assumptions": 1,
+      "covers": 6,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+        "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+        "hw/formal/block_memory.psl": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854"
+      },
+      "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+      "effective_properties_sha256": "880be222b39e540593ed1500a92f08dc74faeba222d24b67ece918fb11f107bd",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control plus full-size RAM retention/read/capture at any constant address; unwritten words unconstrained; not caller length validation or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 6,
+        "assert": 30
+      },
+      "symbolic_address_bits": 10,
+      "checked_memories": {
+        "bank_a": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        },
+        "bank_b": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        }
+      },
+      "smt2_cells": {
+        "assert": 30,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_symbolic_address_bits": 10,
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "718497ab08304169edf7187f1f59695ce3ea9ee2bc092631fd9ab430c0c0a6b4",
+        "task/src/properties.json": "ab2f602981e69f1cba15577e0c88f02634c1841618a5e095a4c8b635665ed3a7",
+        "task/model/design_smt2.smt2": "b315b30b97c405bf880902d23148046919cd1959edbbbfc707e78478eb4c66ab"
+      },
+      "traces": [],
+      "duration_seconds": 3.819
+    },
+    {
+      "id": "F-BLOCK-MEMORY-DIV1",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 1
+      },
+      "memory": true,
+      "assertions": 30,
+      "assumptions": 1,
+      "covers": 6,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=1 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+        "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+        "hw/formal/block_memory.psl": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854"
+      },
+      "parameter_check_sha256": "f587dbb463228b22bfa2b6af38e02331ffe27d13f42e842b92fc6fdb4928c1a8",
+      "effective_properties_sha256": "475a1a373837f4ead24decf9980f3da16b6aef1c83342a68650e2dc7c3e73d59",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control plus full-size RAM retention/read/capture at any constant address; unwritten words unconstrained; not caller length validation or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 6,
+        "assert": 30
+      },
+      "symbolic_address_bits": 10,
+      "checked_memories": {
+        "bank_a": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        },
+        "bank_b": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        }
+      },
+      "smt2_cells": {
+        "assert": 30,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_symbolic_address_bits": 10,
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "49bf2fb60932a9d7f59e8b6ebc5cd16d33ad3ba832cab4d50f757a0bfe5095e3",
+        "task/src/properties.json": "5464c3e768da2b80d8ab0647d86c09038d22cf34fe6517f02ae1d7fede75da73",
+        "task/model/design_smt2.smt2": "ec609ab76405977c9f4ad862cdcfc78801760cb0af3179a0fd5b8ce05b8eec51"
+      },
+      "traces": [],
+      "duration_seconds": 3.118
+    },
+    {
+      "id": "F-BLOCK-MEMORY-DIV3",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 3
+      },
+      "memory": true,
+      "assertions": 30,
+      "assumptions": 1,
+      "covers": 6,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=3 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+        "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+        "hw/formal/block_memory.psl": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854"
+      },
+      "parameter_check_sha256": "2fe79ff9a7acdc0039d573cdf4424c7ce6caacaa626207165c26729c58af868a",
+      "effective_properties_sha256": "9db9f779ac4243c84a9ded61881d8935d8b74e69c0369fe20534af501ad68b7d",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control plus full-size RAM retention/read/capture at any constant address; unwritten words unconstrained; not caller length validation or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 6,
+        "assert": 30
+      },
+      "symbolic_address_bits": 10,
+      "checked_memories": {
+        "bank_a": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        },
+        "bank_b": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        }
+      },
+      "smt2_cells": {
+        "assert": 30,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_symbolic_address_bits": 10,
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "ad643afcbcad52f92f475d12db4eac4cad7f9b2e6f7d9f43a39a346f7e98b959",
+        "task/src/properties.json": "0f4cc28af2e21a2a1e2061c09f74993f6b57b8254eadea434c464da8e9c6a1c2",
+        "task/model/design_smt2.smt2": "1877918f5aa47e4465e6d2e6800141f5e1815dc2c70f6ebab6481b63b1793402"
+      },
+      "traces": [],
+      "duration_seconds": 3.564
+    },
+    {
+      "id": "F-BLOCK-MEMORY-DIV4",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "prove",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 4
+      },
+      "memory": true,
+      "assertions": 30,
+      "assumptions": 1,
+      "covers": 6,
+      "result": "PROVED",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=4 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+        "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+        "hw/formal/block_memory.psl": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854"
+      },
+      "parameter_check_sha256": "7a1e3d4f0eab24ef4e0246f527142ca35440f1594804ab5993bff41e755671a0",
+      "effective_properties_sha256": "a547d24c0f3893bab209dcbd899d2f42a2244870c2e79fc2caff1b32ccaabdd5",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control plus full-size RAM retention/read/capture at any constant address; unwritten words unconstrained; not caller length validation or CRC",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "assume": 1,
+        "cover": 6,
+        "assert": 30
+      },
+      "symbolic_address_bits": 10,
+      "checked_memories": {
+        "bank_a": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        },
+        "bank_b": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        }
+      },
+      "smt2_cells": {
+        "assert": 30,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_symbolic_address_bits": 10,
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "9f1e0267af7f22e726eec77d6a7e53afc64924c1f71fa69d521ac8d2ecf478da",
+        "task/src/properties.json": "919ba4312dd7a680e189135cd9b527e3ec98999ceb3070f6b7952c8d81f994e4",
+        "task/model/design_smt2.smt2": "1b5c901bf7ba31cce9a8e41a8380f05b9fa484e6adb1a851401a4406b91a059a"
+      },
+      "traces": [],
+      "duration_seconds": 3.316
+    },
+    {
+      "id": "M-BLOCK-READ",
+      "top": "block_dot",
+      "kind": "block_dot",
+      "mode": "bmc",
+      "depth": 16,
+      "parameters": {
+        "G_STEP_DIV": 2
+      },
+      "memory": true,
+      "assertions": 30,
+      "assumptions": 1,
+      "covers": 6,
+      "negative": true,
+      "mutation": "block-read-bank",
+      "result": "FAIL",
+      "acceptance_passed": true,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+        "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+        "hw/formal/block_memory.psl": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854"
+      },
+      "mutated_source_sha256": {
+        "block_dot.vhd": "d3add88d2c620d3df465efa32c1e680da4c7e6b407c27eb110a541ee1c821d09"
+      },
+      "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+      "effective_properties_sha256": "880be222b39e540593ed1500a92f08dc74faeba222d24b67ece918fb11f107bd",
+      "checked_port_widths": {
+        "pe_result": 16,
+        "wr_data": 16,
+        "a": 16,
+        "b": 16,
+        "result": 16
+      },
+      "scope": "sequencer control plus full-size RAM retention/read/capture at any constant address; unwritten words unconstrained; not caller length validation or CRC",
+      "exit_code": 2,
+      "solver_status": "FAIL",
+      "property_cells": {
+        "assume": 1,
+        "cover": 6,
+        "assert": 30
+      },
+      "symbolic_address_bits": 10,
+      "checked_memories": {
+        "bank_a": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        },
+        "bank_b": {
+          "SIZE": 1024,
+          "WIDTH": 16,
+          "ABITS": 10
+        }
+      },
+      "smt2_cells": {
+        "assert": 30,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_symbolic_address_bits": 10,
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "3d2f7db805786fa17dd1fb521659df126bfd22acbe558d9f6f1f415417d0883f",
+        "task/src/properties.json": "827b1c0c2f94b498be7fd4c88fd191a5a6065f08f4763cebad85c6c8c2a80eaf",
+        "task/model/design_smt2.smt2": "b26c07ffcba44bddcdddef332fe0afcf265dfb85ce0fc2c4686dbd180bec0115"
+      },
+      "traces": [
+        "task/engine_0/trace.yw"
+      ],
+      "duration_seconds": 0.832
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-BLOCK-MEMORY-DIV2",
+    "F-BLOCK-MEMORY-DIV1",
+    "F-BLOCK-MEMORY-DIV3",
+    "F-BLOCK-MEMORY-DIV4",
+    "M-BLOCK-READ"
+  ]
+}

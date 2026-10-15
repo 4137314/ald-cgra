@@ -1,0 +1,16 @@
+[options]
+mode cover
+depth 200
+timeout 90
+skip 160
+[engines]
+smtbmc yices
+[script]
+read_rtlil dut.il
+delete -output block_ctrl_witness/w:*
+prep -top block_ctrl_witness -flatten
+memory_map
+opt -full
+write_json properties.json
+[files]
+dut.il

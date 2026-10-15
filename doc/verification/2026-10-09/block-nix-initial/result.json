@@ -1,0 +1,15 @@
+{
+  "command": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    ".#checks.x86_64-linux.formal-fast"
+  ],
+  "exit_code": 0,
+  "status": "PASS",
+  "derivation": "/nix/store/b6z1xb2ic2yyi2rfgw122qyk65847h35-cgra-formal-fast.drv",
+  "output": "/nix/store/v2nnlpkywkmj2fkdpi14s141xj7zfqqk-cgra-formal-fast",
+  "note": "Initial final gate with 84 controller assertions; subsequent upload-order properties have a separate check",
+  "manifest_sha256": "56b5fd0e027fb46968de2776b15231c31268fb3fc426dac0579332f7b5021a3c"
+}

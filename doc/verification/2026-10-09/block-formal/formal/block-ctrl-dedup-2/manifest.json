@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "run_id": "20261008T154542Z-226323",
+  "suite": "fast",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "0f8a54bce20506c141f18f90ac98aec04fc04191",
+  "dirty": true,
+  "runner_sha256": "84d7965b1cef8e0ccfe7e7b44dce2e28f2462c97d184fc2c165a1ce133cba7d3",
+  "tasks": [
+    {
+      "id": "F-BLOCK-CTRL-DIV2",
+      "top": "block_ctrl",
+      "kind": "block_ctrl",
+      "mode": "prove",
+      "depth": 6,
+      "parameters": {
+        "G_STEP_DIV": 2,
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 74,
+      "assumptions": 1,
+      "covers": 12,
+      "result": "UNKNOWN",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_dot.vhd block_ctrl.vhd block_rx_contract.psl block_dot_contract.psl block_ctrl_contract.psl -e block_ctrl; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "initial synchronous reset; later reset/RX/TX busy/PE result unrestricted",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+        "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+        "hw/rtl/block_ctrl.vhd": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+        "hw/formal/block_rx_contract.psl": "1a794dbc191089c07429a99bd612857ed432de882fb4c8e72850e90143926302",
+        "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+        "hw/formal/block_ctrl_contract.psl": "bdfcde36b174e1881034041bfc0e32f722f07da9181bbe8de594ac4702591162"
+      },
+      "parameter_check_sha256": "c50defb554ab3389bca23f1e2f4e14d886844658d8419c751b53deba22c10c2c",
+      "effective_properties_sha256": "b637e2568b80967ad16d95a2d051d547f5f4ea948850fe38b03165a266ae2e84",
+      "effective_child_properties_sha256": "5c4ea22ec91a92d3853101d43e0414d433994d17ad57e14713ddec5cbbc22b40",
+      "discharged_obligation": "block_dot.count <= 1024 asserted as F_BCTRL_COUNT on its actual connected input",
+      "checked_port_widths": {
+        "a": 16,
+        "b": 16,
+        "pe_result": 16,
+        "rx_data": 8,
+        "tx_data": 8
+      },
+      "scope": "integrated parser/length/index safety, commit bounds, ownership, TX handshake and duplicate isolation",
+      "exit_code": 4,
+      "solver_status": "UNKNOWN",
+      "property_cells": {
+        "assume": 1,
+        "cover": 12,
+        "assert": 74
+      },
+      "smt2_cells": {
+        "assert": 74,
+        "assume": 2,
+        "cover": 0
+      },
+      "smt2_user_assumptions": 1,
+      "model_sha256": {
+        "dut.il": "92f5729caa7f7053c6b08b39b57255d96a6afc6ed49392d0cfdbc0e0c990b98d",
+        "task/src/properties.json": "6f67cf921c68d796b83ed90666075ceceaefdb15bc90c7ec01fc15b68cb52c11",
+        "task/model/design_smt2.smt2": "17f6ef1272715a56384c009758cba22bf3720cfdf7f6acdb4c4dac3547c91ac3"
+      },
+      "traces": [
+        "task/engine_0/trace_induct.yw"
+      ],
+      "duration_seconds": 52.401
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-BLOCK-CTRL-DIV2"
+  ]
+}

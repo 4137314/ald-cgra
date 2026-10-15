@@ -2,7 +2,7 @@
 
 This directory proves selected properties of **production VHDL**. It does not
 certify the complete system, C software, CDC metastability, analog UART timing
-or place and route. Remaining integration/corruption work and block properties are tracked in
+or place and route. Remaining integration/corruption work and proof limits are tracked in
 A11/B03 in `TASKS.md`. The conditional EXEC contract is qualified below.
 
 ## Run
@@ -17,7 +17,7 @@ nix develop .#formal -c make formal-cover
 ```
 
 Standalone Make targets also work when GHDL, Yosys **with the GHDL plugin**,
-SBY and Yices are on PATH (`make -C hw -f hw.mk formal-fast`). A missing tool
+SBY, Yices and Z3 are on PATH (`make -C hw -f hw.mk formal-fast`). A missing tool
 is an error. `formal-smoke` isolates the initial frontend and negative probe.
 `python3 hw/formal/run.py --suite fast --out NEW_DIRECTORY` selects a new
 output directory; an existing directory is never silently overwritten.
@@ -83,7 +83,10 @@ initialization/reset model is not a claim of these proofs.
 | F-ARRAY-1x1 | Initial reset, otherwise all inputs unrestricted; complete production RTL | BMC base and induction, depth 4 |
 | F-ARRAY-2x3 (fast); 1x2, 2x1, 3x2, 4x4, 1x16, 16x1 (full) | Initial reset; imported production array wiring; proved PE transitions as component guarantees | BMC base and induction, depth 4, assume-guarantee composition |
 | F-UART-TX/RX-C3 (fast), C868 (full) | All sampled digital inputs and resets unrestricted; production initial registers | BMC base and induction, depth 16 |
-| F-BLOCK-DOT-DIV1/2/3/4 | `count <= 1024` (VHDL port subtype); other inputs unrestricted, two 1024×16 banks | Sequencer control only; BMC base/induction depth 16; see below |
+| F-BLOCK-DOT-DIV1/2/3/4 | `count <= 1024` (VHDL port subtype); other inputs unrestricted | Sequencer control; BMC base/induction depth 16 |
+| F-BLOCK-MEMORY-DIV2 (fast); DIV1/3/4 (full) | Same count bound; two actual 1024×16 banks, arbitrary constant address, all 16 data bits | Accepted write retention, synchronous reads and ordered operand capture |
+| F-BLOCK-RX-T3 (fast); T100000000 (full) | No input assumptions; actual 144-byte staging and all wire values | Length/order/CRC, acceptance/rejection and watchdog safety |
+| F-BLOCK-CTRL-DIV2 (fast); DIV1/3/4 and T100000000 (full) | Initial synchronous reset only; subsequent RX, TX busy, reset and PE result unrestricted | Integrated bounds, validated effects, ownership, cache/replay and TX handshake |
 | M-BLOCK-EARLY | Temporary sequencer copy adds a capture in S_READ | Must FAIL with trace |
 | M-PE-ADD, M-CTRL-STEP, M-EXEC-BYTE, M-ARRAY-NORTH, M-UART-TX/RX | Temporary DUT copies with targeted mutations | Must FAIL with trace; original RTL unchanged |
 | Cover suite | PE, four 1x1 controllers, 1x1/2x3 arrays, C3 UARTs; extra 2x3 EXEC witness | All explicit covers within 40 cycles (UART: 80; EXEC 2x3: 96); includes the universal PE obligation |
@@ -207,8 +210,8 @@ Completed historical evidence is archived under `doc/verification/` separately.
 Expected negative tasks retain result `FAIL` and separately set
 `acceptance_passed`; a missing counterexample is an acceptance failure. Normal
 mandatory tasks require PROVED, cover tasks require all covers reached. The
-default per-task solver budget is 90 seconds; fast has eleven tasks, so budget
-20 minutes for CI including frontend overhead and dependency startup. Actual
+default per-task solver budget is 90 seconds; fast has eighteen tasks, so budget
+30 minutes for CI including frontend overhead and dependency startup. Actual
 durations belong to individual manifests, not timing guarantees.
 
 ## Primary documentation
@@ -221,23 +224,93 @@ durations belong to individual manifests, not timing guarantees.
 The online GHDL pages described 7.0.0-dev when consulted. Compatibility claims
 here come from the executed pinned 6.0.0 flow, including negative probes.
 
-## Experimental block sequencer
+## Experimental block contracts
 
-`block_dot_contract.psl` binds to the real local-memory engine, observing its
-state, index, remaining count and PE capture enable. An independent pending
-counter consumes actual `step` pulses. It proves exactly the requested captures
-before completion, index/remaining bounds, reset priority, STEP_DIV cadence,
-array ownership and final result capture. The PE input result is symbolic:
-this proves capture, not arithmetic (the production PE has its separate proof).
+The properties observe the production VHDL; no C or handwritten RTL model
+replaces the controller, receiver or memories. Standalone sequencer tasks
+prove 24 assertion cells with one input assumption and three covers. The
+assumption represents the VHDL `count` subtype 0..1024, whose synthesized port
+also encodes 1025..2047. All 16 data bits remain symbolic. The capture budget,
+nonempty fetch/read/wait phases, guard, ownership, reset and result capture are
+checked together. The PE result input is symbolic; its arithmetic is proved
+separately by the PE tasks.
 
-Each DIV1–4 task has 23 surviving assertion cells, one assumption and three
-covers in both prepared netlist and solver model. The assumption expresses the
-production VHDL `count` subtype 0..1024: the synthesized 11-bit port also has
-encodings 1025..2047. It does not restrict 16-bit data operands. A whole-extension
-proof must separately discharge the controller's count bound. RAM conservation,
-framing/CRC and request deduplication are not yet formally certified.
+### Memory contents
 
-All four instances are in fast/full; cover reaches nonempty capture, empty
-completion and multiple-element completion at depth 40. Full additionally
-requires an actual counterexample for `M-BLOCK-EARLY`; production RTL is never
-mutated. The fixed per-task 90-second budget and 20-minute fast CI limit remain.
+`block_memory.psl` adds seven assertions and three covers to the same vunit.
+A GHDL `anyconst` attribute supplies a single arbitrary ten-bit address. The
+runner verifies its width both before solving and in the actual SMT model,
+and checks that both 1024×16 memories survive preparation. There is no reduced
+RAM model. For either bank, the most recent accepted write to that address
+must remain stored until the next accepted write. Writes during busy/reset
+are not accepted. Monitors also check synchronous read data and operands at
+capture, including read-before-write behavior. Initial unwritten contents
+remain unconstrained; ghost validity persists across reset because RAM does.
+Covers include nonzero data, overwrite followed by reset, and index greater
+than zero. `M-BLOCK-READ` deliberately swaps the read bank in a temporary copy.
+
+### Frame receiver
+
+`block_rx_contract.psl` has 22 assertion cells and no assumptions. It checks
+all 144 byte positions and the full wire domain: ordered append without prefix
+overwrite, canonical escapes, overflow discard, valid version/length, CRC
+acceptance and rejection, one-cycle publication, reset/ready isolation and
+watchdog progression. A separate CRC recurrence uses explicit polynomial taps
+12/5/0 rather than calling the DUT's shift/XOR function. Timeout 3 is used in
+fast and covers; full also proves the production 100000000-clock instance.
+`M-BLOCK-CRC` bypasses the request CRC comparison and must produce a trace.
+
+### Integrated controller and deduplication
+
+`block_ctrl_contract.psl` includes the actual receiver and engine. It starts
+with synchronous reset, matching the initialized reset synchronizer in
+`cgra_top`; subsequent reset and all external input values are unrestricted.
+There are 86 surviving assertion cells and one assumption. The runner removes
+only the standalone engine's count *assumption* from the copied child vunit:
+`F_BCTRL_COUNT` now proves the bound on its real connected input, alongside the
+child's control assertions. The original/effective properties are both hashed.
+No component is abstracted and no assertion becomes an assumption.
+
+Checked properties include buffer/response indices and capacities, commit
+bounds, exact upload word/address order and final committed length, lack of
+concurrent writes during DOT, validated bytes held during
+processing, effects authorized by a validated frame, resident length bounds,
+TX launch/stability and mode isolation. A separate arbitrary eight-bit address
+quantifies over every cached request/response byte. Prefix-match invariants,
+cache stability, next sequence with no wrap, exact replay identity and response,
+no duplicate reset/write/start/capture, and execution counter updates are proved.
+Only the immediately preceding request in the active volatile session belongs
+to this deduplication scope. No persistence across reset, collision-free CRC,
+unique nonce, implicit retry, or unconditional liveness guarantee is implied.
+
+For controller tasks, top output flags are removed before ordinary optimization;
+the wires, all inputs and properties remain. This allows removal of RAM data
+that cannot affect these control properties. The separate RAM tasks keep both
+full memories. Property counts are checked after optimization and in SMT.
+
+### Reachability, budgets and limits
+
+The controller cover uses `block_ctrl_witness.vhd`, an executable driver around
+unchanged production RTL: initial reset, preflight, HELLO, then a choice of
+upload, empty DOT, exact replay or conflict. An arbitrary two-bit selector
+ranges over all four transcripts. Prompt TX service and explicit wire bytes
+are **stimulus for reachability only**, absent from universal proof tasks.
+The driver replaces no DUT logic. CRC fixture constants come from Python
+`binascii.crc_hqx`; ordinary transcript tests separately exercise C/RTL framing.
+
+This cover unrolls the entire prefix from reset, but searches for the five
+covers in cycles 160..199 (depth 200). `skip=160` suppresses earlier cover queries;
+it adds no assumptions about skipped assertions or states. Child covers run
+separately at depth 40. A trivially true generic check merges during cover
+optimization (85 assertion cells remain); universal controller proofs retain
+and prove all 86. The driver selector must survive into SMT. Budget: 90 seconds
+per ordinary task; 240 seconds for this controller cover. `--timeout` explicitly
+overrides these values. Earlier timeouts, missing invariants and unsupported
+frontend constructs remain in their own evidence directories.
+
+These are selected safety properties on enumerated instances, not a proof of
+all block API software, every formatted reply, physical timing, metastability
+or whole-system liveness. `tb_block_faults` additionally tests reset during
+upload/DOT and ignored concurrent requests during execution/readback. Both
+new mutations are replayed against actual GHDL testbenches. Physical results
+retain the unchanged production RTL hashes; formal-only edits need no new STA.

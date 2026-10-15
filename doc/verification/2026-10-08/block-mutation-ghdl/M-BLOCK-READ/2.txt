@@ -1,0 +1,6 @@
+tb_block_faults.vhd:149:7:@63350ns:(assertion failure): result or execution count corrupted by concurrency/reset
+ghdl:error: assertion failed
+  instance: /tb_block_faults/stimulus
+  from: work.tb_block_faults(sim).stimulus.result at tb_block_faults.vhd:152
+  from: process work.tb_block_faults(sim).stimulus at tb_block_faults.vhd:169
+ghdl:error: simulation failed

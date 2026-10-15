@@ -1,0 +1,726 @@
+initial
+assume (= [cycle] #b00000000)
+assume (= [dut.active] false)
+assume (= [dut.block_ctrl_contract.f_duplicate] false)
+assume (= [dut.block_ctrl_contract.f_replayed] false)
+assume (= [dut.block_ctrl_contract.f_seen] false)
+assume (= [dut.body_length] #b01011)
+assume (= [dut.cache_response] false)
+assume (= [dut.cached_body] #b01011)
+assume (= [dut.cached_length] #b00000000)
+assume (= [dut.cached_q] #b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+assume (= [dut.cached_response] #b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+assume (= [dut.crc] #b1111111111111111)
+assume (= [dut.dot_count] #b00000000000)
+assume (= [dut.dot_done] false)
+assume (= [dut.dot_result] #b0000000000000000)
+assume (= [dut.engine.guard] #b00)
+assume (= [dut.engine.remaining] #b00000000000)
+assume (= [dut.engine.state] #b000)
+assume (= [dut.executions] #b00000000000000000000000000000000)
+assume (= [dut.framed] false)
+assume (= [dut.loaded] #b0000000000000000000000)
+assume (= [dut.q] #b000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+assume (= [dut.q_length] #b00000000)
+assume (= [dut.q_valid] false)
+assume (= [dut.receiver.active] false)
+assume (= [dut.receiver.bad] false)
+assume (= [dut.receiver.crc] #b1111111111111111)
+assume (= [dut.receiver.escaped] false)
+assume (= [dut.receiver.timer] #b00)
+assume (= [dut.receiver.used] #b00000000)
+assume (= [dut.request_length] #b00000000)
+assume (= [dut.response] #b00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
+assume (= [dut.result_valid] false)
+assume (= [dut.saved_result] #b0000000000000000)
+assume (= [dut.scan] #b00000000)
+assume (= [dut.session] #b00000000000000000000000000000000)
+assume (= [dut.state] #b0000)
+assume (= [dut.tx_busy] false)
+assume (= [dut.upload_bank] false)
+assume (= [dut.upload_count] #b0000001)
+assume (= [dut.upload_index] #b000000)
+assume (= [dut.upload_offset] #b0000000000)
+assume (= [dut.wire_index] #b000000)
+assume (= [dut.wire_length] #b000000)
+assume (= [tx_start] false)
+
+state 0
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 1
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 2
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 3
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 4
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 5
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 6
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 7
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 8
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 9
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 10
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 11
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 12
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 13
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 14
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 15
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 16
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 17
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 18
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 19
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 20
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 21
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 22
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 23
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 24
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 25
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 26
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 27
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 28
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 29
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 30
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 31
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 32
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 33
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 34
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 35
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 36
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 37
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 38
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 39
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 40
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 41
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 42
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 43
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 44
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 45
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 46
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 47
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 48
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 49
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 50
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 51
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 52
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 53
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 54
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 55
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 56
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 57
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 58
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 59
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 60
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 61
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 62
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 63
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 64
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 65
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 66
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 67
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 68
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 69
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 70
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 71
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 72
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 73
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 74
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 75
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 76
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 77
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 78
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 79
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 80
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 81
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 82
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 83
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 84
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 85
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 86
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 87
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 88
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 89
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 90
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 91
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 92
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 93
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 94
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 95
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 96
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 97
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 98
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 99
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 100
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 101
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 102
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 103
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 104
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 105
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 106
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 107
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 108
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 109
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 110
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 111
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 112
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 113
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 114
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 115
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 116
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 117
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 118
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 119
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 120
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 121
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 122
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 123
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 124
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 125
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 126
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 127
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 128
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 129
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 130
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 131
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 132
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 133
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 134
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 135
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 136
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 137
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 138
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 139
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 140
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 141
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 142
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 143
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 144
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 145
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 146
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 147
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 148
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 149
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 150
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 151
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 152
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 153
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 154
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 155
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 156
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 157
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 158
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 159
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 160
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 161
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 162
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 163
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 164
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 165
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 166
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 167
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 168
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)
+
+state 169
+assume (= [clk] false)
+assume (= [pe_result] #b0000000000000000)

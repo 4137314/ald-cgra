@@ -1,0 +1,210 @@
+##   0:00:00  Solver: yices
+##   0:00:00  Skipping step 0..
+##   0:00:00  Skipping step 1..
+##   0:00:00  Skipping step 2..
+##   0:00:00  Skipping step 3..
+##   0:00:00  Skipping step 4..
+##   0:00:00  Skipping step 5..
+##   0:00:01  Skipping step 6..
+##   0:00:01  Skipping step 7..
+##   0:00:01  Skipping step 8..
+##   0:00:01  Skipping step 9..
+##   0:00:01  Skipping step 10..
+##   0:00:01  Skipping step 11..
+##   0:00:01  Skipping step 12..
+##   0:00:02  Skipping step 13..
+##   0:00:02  Skipping step 14..
+##   0:00:02  Skipping step 15..
+##   0:00:02  Skipping step 16..
+##   0:00:02  Skipping step 17..
+##   0:00:02  Skipping step 18..
+##   0:00:02  Skipping step 19..
+##   0:00:03  Skipping step 20..
+##   0:00:03  Skipping step 21..
+##   0:00:03  Skipping step 22..
+##   0:00:03  Skipping step 23..
+##   0:00:03  Skipping step 24..
+##   0:00:03  Skipping step 25..
+##   0:00:03  Skipping step 26..
+##   0:00:04  Skipping step 27..
+##   0:00:04  Skipping step 28..
+##   0:00:04  Skipping step 29..
+##   0:00:04  Skipping step 30..
+##   0:00:04  Skipping step 31..
+##   0:00:04  Skipping step 32..
+##   0:00:05  Skipping step 33..
+##   0:00:05  Skipping step 34..
+##   0:00:05  Skipping step 35..
+##   0:00:05  Skipping step 36..
+##   0:00:06  Skipping step 37..
+##   0:00:06  Skipping step 38..
+##   0:00:06  Skipping step 39..
+##   0:00:06  Skipping step 40..
+##   0:00:06  Skipping step 41..
+##   0:00:06  Skipping step 42..
+##   0:00:06  Skipping step 43..
+##   0:00:07  Skipping step 44..
+##   0:00:07  Skipping step 45..
+##   0:00:07  Skipping step 46..
+##   0:00:07  Skipping step 47..
+##   0:00:07  Skipping step 48..
+##   0:00:08  Skipping step 49..
+##   0:00:08  Skipping step 50..
+##   0:00:08  Skipping step 51..
+##   0:00:08  Skipping step 52..
+##   0:00:08  Skipping step 53..
+##   0:00:09  Skipping step 54..
+##   0:00:09  Skipping step 55..
+##   0:00:09  Skipping step 56..
+##   0:00:09  Skipping step 57..
+##   0:00:09  Skipping step 58..
+##   0:00:09  Skipping step 59..
+##   0:00:10  Skipping step 60..
+##   0:00:10  Skipping step 61..
+##   0:00:10  Skipping step 62..
+##   0:00:10  Skipping step 63..
+##   0:00:11  Skipping step 64..
+##   0:00:11  Skipping step 65..
+##   0:00:11  Skipping step 66..
+##   0:00:11  Skipping step 67..
+##   0:00:11  Skipping step 68..
+##   0:00:12  Skipping step 69..
+##   0:00:12  Skipping step 70..
+##   0:00:12  Skipping step 71..
+##   0:00:12  Skipping step 72..
+##   0:00:12  Skipping step 73..
+##   0:00:12  Skipping step 74..
+##   0:00:13  Skipping step 75..
+##   0:00:13  Skipping step 76..
+##   0:00:13  Skipping step 77..
+##   0:00:13  Skipping step 78..
+##   0:00:13  Skipping step 79..
+##   0:00:13  Skipping step 80..
+##   0:00:13  Skipping step 81..
+##   0:00:14  Skipping step 82..
+##   0:00:14  Skipping step 83..
+##   0:00:14  Skipping step 84..
+##   0:00:14  Skipping step 85..
+##   0:00:14  Skipping step 86..
+##   0:00:14  Skipping step 87..
+##   0:00:14  Skipping step 88..
+##   0:00:15  Skipping step 89..
+##   0:00:15  Skipping step 90..
+##   0:00:15  Skipping step 91..
+##   0:00:15  Skipping step 92..
+##   0:00:15  Skipping step 93..
+##   0:00:15  Skipping step 94..
+##   0:00:16  Skipping step 95..
+##   0:00:16  Skipping step 96..
+##   0:00:16  Skipping step 97..
+##   0:00:16  Skipping step 98..
+##   0:00:17  Skipping step 99..
+##   0:00:17  Skipping step 100..
+##   0:00:17  Skipping step 101..
+##   0:00:17  Skipping step 102..
+##   0:00:17  Skipping step 103..
+##   0:00:18  Skipping step 104..
+##   0:00:18  Skipping step 105..
+##   0:00:18  Skipping step 106..
+##   0:00:18  Skipping step 107..
+##   0:00:18  Skipping step 108..
+##   0:00:19  Skipping step 109..
+##   0:00:19  Skipping step 110..
+##   0:00:19  Skipping step 111..
+##   0:00:19  Skipping step 112..
+##   0:00:19  Skipping step 113..
+##   0:00:20  Skipping step 114..
+##   0:00:20  Skipping step 115..
+##   0:00:20  Skipping step 116..
+##   0:00:20  Skipping step 117..
+##   0:00:20  Skipping step 118..
+##   0:00:21  Skipping step 119..
+##   0:00:21  Skipping step 120..
+##   0:00:21  Skipping step 121..
+##   0:00:21  Skipping step 122..
+##   0:00:21  Skipping step 123..
+##   0:00:22  Skipping step 124..
+##   0:00:22  Skipping step 125..
+##   0:00:22  Skipping step 126..
+##   0:00:22  Skipping step 127..
+##   0:00:22  Skipping step 128..
+##   0:00:23  Skipping step 129..
+##   0:00:23  Skipping step 130..
+##   0:00:23  Skipping step 131..
+##   0:00:23  Skipping step 132..
+##   0:00:24  Skipping step 133..
+##   0:00:24  Skipping step 134..
+##   0:00:24  Skipping step 135..
+##   0:00:24  Skipping step 136..
+##   0:00:24  Skipping step 137..
+##   0:00:25  Skipping step 138..
+##   0:00:25  Skipping step 139..
+##   0:00:25  Skipping step 140..
+##   0:00:25  Skipping step 141..
+##   0:00:26  Skipping step 142..
+##   0:00:26  Skipping step 143..
+##   0:00:26  Skipping step 144..
+##   0:00:26  Skipping step 145..
+##   0:00:27  Skipping step 146..
+##   0:00:27  Skipping step 147..
+##   0:00:27  Skipping step 148..
+##   0:00:27  Skipping step 149..
+##   0:00:28  Skipping step 150..
+##   0:00:28  Skipping step 151..
+##   0:00:28  Skipping step 152..
+##   0:00:28  Skipping step 153..
+##   0:00:29  Skipping step 154..
+##   0:00:29  Skipping step 155..
+##   0:00:29  Skipping step 156..
+##   0:00:29  Skipping step 157..
+##   0:00:30  Skipping step 158..
+##   0:00:30  Skipping step 159..
+##   0:00:30  Checking cover reachability in step 160..
+##   0:00:36  Reached cover statement in step 160 at block_ctrl_witness: dut.block_ctrl_contract.c_bctrl_selected
+##   0:00:36  Writing trace to VCD file: engine_0/trace0.vcd
+##   0:00:39  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+##   0:00:39  Writing trace to constraints file: engine_0/trace0.smtc
+##   0:00:39  Writing trace to Yosys witness file: engine_0/trace0.yw
+##   0:00:41  Checking cover reachability in step 160..
+##   0:00:45  Checking cover reachability in step 161..
+##   0:00:49  Checking cover reachability in step 162..
+##   0:00:53  Checking cover reachability in step 163..
+##   0:00:57  Checking cover reachability in step 164..
+##   0:01:00  Checking cover reachability in step 165..
+##   0:01:04  Checking cover reachability in step 166..
+##   0:01:07  Checking cover reachability in step 167..
+##   0:01:10  Checking cover reachability in step 168..
+##   0:01:13  Reached cover statement in step 168 at block_ctrl_witness: dut.block_ctrl_contract.c_bctrl_conflict
+##   0:01:13  Writing trace to VCD file: engine_0/trace1.vcd
+##   0:01:16  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+##   0:01:16  Writing trace to constraints file: engine_0/trace1.smtc
+##   0:01:16  Writing trace to Yosys witness file: engine_0/trace1.yw
+##   0:01:17  Checking cover reachability in step 168..
+##   0:01:21  Checking cover reachability in step 169..
+##   0:01:25  Reached cover statement in step 169 at block_ctrl_witness: dut.block_ctrl_contract.c_bctrl_dot
+##   0:01:25  Writing trace to VCD file: engine_0/trace2.vcd
+##   0:01:26  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+##   0:01:26  Writing trace to constraints file: engine_0/trace2.smtc
+##   0:01:26  Writing trace to Yosys witness file: engine_0/trace2.yw
+##   0:01:27  Checking cover reachability in step 169..
+##   0:01:32  Checking cover reachability in step 170..
+##   0:01:35  Checking cover reachability in step 171..
+##   0:01:38  Checking cover reachability in step 172..
+##   0:01:41  Checking cover reachability in step 173..
+##   0:01:44  Reached cover statement in step 173 at block_ctrl_witness: dut.block_ctrl_contract.c_bctrl_upload
+##   0:01:44  Writing trace to VCD file: engine_0/trace3.vcd
+##   0:01:46  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+##   0:01:46  Writing trace to constraints file: engine_0/trace3.smtc
+##   0:01:46  Writing trace to Yosys witness file: engine_0/trace3.yw
+##   0:01:47  Checking cover reachability in step 173..
+##   0:01:52  Checking cover reachability in step 174..
+##   0:01:55  Checking cover reachability in step 175..
+##   0:02:00  Checking cover reachability in step 176..
+##   0:02:04  Checking cover reachability in step 177..
+##   0:02:08  Checking cover reachability in step 178..
+##   0:02:11  Reached cover statement in step 178 at block_ctrl_witness: dut.block_ctrl_contract.c_bctrl_replay
+##   0:02:11  Writing trace to VCD file: engine_0/trace4.vcd
+##   0:02:14  Writing trace to Verilog testbench: engine_0/trace4_tb.v
+##   0:02:14  Writing trace to constraints file: engine_0/trace4.smtc
+##   0:02:14  Writing trace to Yosys witness file: engine_0/trace4.yw
+##   0:02:16  Status: passed

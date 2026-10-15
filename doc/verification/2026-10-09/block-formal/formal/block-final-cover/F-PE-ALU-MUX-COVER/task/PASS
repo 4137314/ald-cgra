@@ -1,0 +1,63 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:03 (3)
+Elapsed process time [H:MM:SS (secs)]: 0:00:03 (3)
+engine_0 (smtbmc yices) returned pass
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_108 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace1.vcd
+cover trace: engine_0/trace1.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_115 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace10.vcd
+cover trace: engine_0/trace10.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_192 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace11.vcd
+cover trace: engine_0/trace11.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_206 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace12.vcd
+cover trace: engine_0/trace12.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_213 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace13.vcd
+cover trace: engine_0/trace13.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_199 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace14.vcd
+cover trace: engine_0/trace14.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_26_72 at pe_contract.sv:26.9-26.79 step 2
+cover trace: engine_0/trace15.vcd
+cover trace: engine_0/trace15.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_122 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace16.vcd
+cover trace: engine_0/trace16.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_27_80 at pe_contract.sv:27.9-27.88 step 2
+cover trace: engine_0/trace17.vcd
+cover trace: engine_0/trace17.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_178 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace18.vcd
+cover trace: engine_0/trace18.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_28_90 at pe_contract.sv:28.9-28.87 step 2
+cover trace: engine_0/trace19.vcd
+cover trace: engine_0/trace19.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_29_99 at pe_contract.sv:29.9-29.71 step 3
+cover trace: engine_0/trace2.vcd
+cover trace: engine_0/trace2.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_129 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace3.vcd
+cover trace: engine_0/trace3.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_136 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace4.vcd
+cover trace: engine_0/trace4.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_143 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace5.vcd
+cover trace: engine_0/trace5.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_150 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace6.vcd
+cover trace: engine_0/trace6.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_157 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace7.vcd
+cover trace: engine_0/trace7.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_164 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace8.vcd
+cover trace: engine_0/trace8.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_171 at pe_contract.sv:23.13-23.66 step 2
+cover trace: engine_0/trace9.vcd
+cover trace: engine_0/trace9.yw
+  reached cover statement pe_contract._witness_.check_cover_pe_contract_sv_23_185 at pe_contract.sv:23.13-23.66 step 2

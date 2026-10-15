@@ -1,0 +1,6 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:11 (11)
+Elapsed process time [H:MM:SS (secs)]: 0:00:12 (12)
+engine_0 (smtbmc yices) returned FAIL
+counterexample trace: engine_0/trace.vcd
+counterexample trace: engine_0/trace.yw
+  failed assertion block_rx.\block_rx_contract.f_frame_crc_publish at  step 14

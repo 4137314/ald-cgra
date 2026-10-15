@@ -1,0 +1,178 @@
+initial
+assume (= [$auto$ghdl.cc:825:import_module$434] #b001)
+assume (= [$auto$ghdl.cc:825:import_module$444] #b001)
+assume (= [$auto$ghdl.cc:825:import_module$453] #b001)
+assume (= [bit_idx] #b000)
+assume (= [clk_cnt] #b00)
+assume (= [data_r] #b00000000)
+assume (= [rx_data] #b00000000)
+assume (= [rx_s1] true)
+assume (= [rx_s2] true)
+assume (= [rx_valid] false)
+assume (= [state] #b000)
+assume (= [uart_rx_contract.f_seen] false)
+
+state 0
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 1
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 2
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 3
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 4
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 5
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 6
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 7
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 8
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 9
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 10
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 11
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 12
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 13
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 14
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 15
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 16
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 17
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 18
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 19
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 20
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 21
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 22
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 23
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 24
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 25
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 26
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] true)
+
+state 27
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 28
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 29
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] true)
+
+state 30
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 31
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)
+
+state 32
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [rx_serial] false)

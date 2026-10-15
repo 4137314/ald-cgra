@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-09T15:59:28" hostname="4137314" package="task" id="0" name="default" tests="35" errors="0" failures="0" time="1" skipped="31">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_bad_stop in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_bad_stop" tracefile="engine_0/trace1.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_byte in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_byte" tracefile="engine_0/trace2.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_glitch in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_glitch" tracefile="engine_0/trace0.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_recovery in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_recovery" tracefile="engine_0/trace3.vcd">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_accept in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_accept">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits0 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits0">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits1 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits1">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits2 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits2">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits3 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits3">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits4 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits4">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits5 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits5">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits6 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits6">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits7 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits7">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_break in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_break">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_confirm in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_confirm">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_counter in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_counter">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_drop in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_drop">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_eight in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_eight">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_glitch in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_glitch">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_index in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_last in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_last">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_pulse in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_pulse">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_release in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_release">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_reset in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_sample in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_sample">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start_counter in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start_counter">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start_index in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start_tick in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start_tick">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_state in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_state">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_sync1 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_sync1">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_sync2 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_sync2">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_tick in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_tick">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_valid_context in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_valid_context">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_selected in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_selected">
+<skipped />
+</testcase>
+<system-out>SBY 15:59:27 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-UART-RX-C3-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-UART-RX-C3-COVER/task/src/dut.il'.
+SBY 15:59:27 [task] engine_0: smtbmc yices
+SBY 15:59:27 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 15:59:27 [task] base: finished (returncode=0)
+SBY 15:59:27 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 15:59:27 [task] prep: finished (returncode=0)
+SBY 15:59:27 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 15:59:27 [task] smt2: finished (returncode=0)
+SBY 15:59:27 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 80  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2&quot;
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Reached cover statement in step 5 at uart_rx: uart_rx_contract.c_rx_glitch
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 5..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 6..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 7..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 8..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 9..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 10..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 11..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 12..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 13..
+SBY 15:59:27 [task] engine_0: ##   0:00:00  Checking cover reachability in step 14..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 15..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 16..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 17..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 18..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 19..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 20..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 21..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 22..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 23..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 24..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 25..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 26..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 27..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 28..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 29..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 30..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 31..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 32..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Reached cover statement in step 32 at uart_rx: uart_rx_contract.c_rx_bad_stop
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 32..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Reached cover statement in step 32 at uart_rx: uart_rx_contract.c_rx_byte
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 32..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Checking cover reachability in step 33..
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Reached cover statement in step 33 at uart_rx: uart_rx_contract.c_rx_recovery
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace3.vcd
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace3.smtc
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace3.yw
+SBY 15:59:28 [task] engine_0: ##   0:00:00  Status: passed
+SBY 15:59:28 [task] engine_0: finished (returncode=0)
+SBY 15:59:28 [task] engine_0: Status returned by engine: pass
+SBY 15:59:28 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY 15:59:28 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY 15:59:28 [task] summary: engine_0 (smtbmc yices) returned pass
+SBY 15:59:28 [task] summary: cover trace: task/engine_0/trace0.vcd
+SBY 15:59:28 [task] summary:   reached cover statement uart_rx.\uart_rx_contract.c_rx_glitch at  step 5
+SBY 15:59:28 [task] summary: cover trace: task/engine_0/trace1.vcd
+SBY 15:59:28 [task] summary:   reached cover statement uart_rx.\uart_rx_contract.c_rx_bad_stop at  step 32
+SBY 15:59:28 [task] summary: cover trace: task/engine_0/trace2.vcd
+SBY 15:59:28 [task] summary:   reached cover statement uart_rx.\uart_rx_contract.c_rx_byte at  step 32
+SBY 15:59:28 [task] summary: cover trace: task/engine_0/trace3.vcd
+SBY 15:59:28 [task] summary:   reached cover statement uart_rx.\uart_rx_contract.c_rx_recovery at  step 33
+SBY 15:59:28 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

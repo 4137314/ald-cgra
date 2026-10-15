@@ -1,0 +1,13 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:25 (25)
+Elapsed process time [H:MM:SS (secs)]: 0:00:26 (26)
+engine_0 (smtbmc yices) returned pass
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement cgra_ctrl.\ctrl_contract.c_exec_empty at  step 34
+  reached cover statement cgra_ctrl.\ctrl_contract.c_exec_nack_complete at  step 34
+cover trace: engine_0/trace1.vcd
+cover trace: engine_0/trace1.yw
+  reached cover statement cgra_ctrl.\ctrl_contract.c_exec_sparse at  step 43
+cover trace: engine_0/trace2.vcd
+cover trace: engine_0/trace2.yw
+  reached cover statement cgra_ctrl.\ctrl_contract.c_exec_full at  step 63

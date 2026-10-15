@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T17:44:43" hostname="4137314" package="task" id="0" name="default" tests="83" errors="0" failures="1" time="53" skipped="83">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="TIMEOUT"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+<failure type="TIMEOUT" message="Task returned status TIMEOUT." />
+</testcase>
+<testcase classname="default" name="Property COVER block_ctrl_contract.c_bctrl_conflict in block_ctrl" time="0" type="COVER" location="" id="block_ctrl_contract.c_bctrl_conflict">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER block_ctrl_contract.c_bctrl_dot in block_ctrl" time="0" type="COVER" location="" id="block_ctrl_contract.c_bctrl_dot">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER block_ctrl_contract.c_bctrl_replay in block_ctrl" time="0" type="COVER" location="" id="block_ctrl_contract.c_bctrl_replay">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER block_ctrl_contract.c_bctrl_selected in block_ctrl" time="0" type="COVER" location="" id="block_ctrl_contract.c_bctrl_selected">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER block_ctrl_contract.c_bctrl_upload in block_ctrl" time="0" type="COVER" location="" id="block_ctrl_contract.c_bctrl_upload">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER engine.block_dot_contract.c_block_capture in block_ctrl" time="0" type="COVER" location="" id="engine.block_dot_contract.c_block_capture">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER engine.block_dot_contract.c_block_done in block_ctrl" time="0" type="COVER" location="" id="engine.block_dot_contract.c_block_done">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER engine.block_dot_contract.c_block_empty in block_ctrl" time="0" type="COVER" location="" id="engine.block_dot_contract.c_block_empty">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER receiver.block_rx_contract.c_frame_escape in block_ctrl" time="0" type="COVER" location="" id="receiver.block_rx_contract.c_frame_escape">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER receiver.block_rx_contract.c_frame_ok in block_ctrl" time="0" type="COVER" location="" id="receiver.block_rx_contract.c_frame_ok">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER receiver.block_rx_contract.c_frame_reject in block_ctrl" time="0" type="COVER" location="" id="receiver.block_rx_contract.c_frame_reject">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER receiver.block_rx_contract.c_frame_timeout in block_ctrl" time="0" type="COVER" location="" id="receiver.block_rx_contract.c_frame_timeout">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_body in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_body">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_cache_hold in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_cache_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_closing in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_closing">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_compare in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_compare">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_compare_prefix in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_compare_prefix">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_count in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_count">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_crc_index in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_crc_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_dot_context in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_dot_context">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_dot_start in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_dot_start">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_encoding in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_encoding">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_length in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_length">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_loaded in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_loaded">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_mode_hold in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_mode_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_next_sequence in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_next_sequence">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_no_concurrent_write in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_no_concurrent_write">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_no_duplicate_effects in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_no_duplicate_effects">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_replay_identity in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_replay_identity">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_replay_response in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_replay_response">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_request in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_request">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_reset in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_send_index in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_send_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_state in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_state">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_tx_hold in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_tx_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_tx_launch in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_tx_launch">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_upload_count in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_upload_count">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_upload_index in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_upload_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_upload_space in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_upload_space">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_wire_size in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_wire_size">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_bctrl_write_address in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_bctrl_write_address">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_ctrl_contract.f_selected in block_ctrl" time="0" type="ASSERT" location="" id="block_ctrl_contract.f_selected">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_advance in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_advance">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_bounds in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_bounds">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_busy in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_busy">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_cadence in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_cadence">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_capture in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_capture">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_config_age in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_config_age">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_config_guard in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_config_guard">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_data_age in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_data_age">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_data_guard in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_data_guard">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_done in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_done">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_finish in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_finish">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_guard in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_guard">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_last in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_last">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_operands in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_operands">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_owned_hold in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_owned_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_pending in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_pending">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_remaining in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_remaining">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_reset in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_result in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_result">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_start in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_start">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_state in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_state">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT engine.block_dot_contract.f_block_wait in block_ctrl" time="0" type="ASSERT" location="" id="engine.block_dot_contract.f_block_wait">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_append in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_append">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_bad_escape in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_bad_escape">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_bad_sticky in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_bad_sticky">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_crc_publish in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_crc_publish">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_crc_recurrence in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_crc_recurrence">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_data_hold in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_data_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_escape_prefix in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_escape_prefix">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_no_overwrite in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_no_overwrite">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_overflow in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_overflow">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_publish in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_publish">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_ready_hold in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_ready_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_reset in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_start in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_start">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_timeout in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_timeout">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_timer in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_timer">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_timer_clear in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_timer_clear">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_timer_tick in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_timer_tick">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_used in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_used">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT receiver.block_rx_contract.f_frame_valid_flag in block_ctrl" time="0" type="ASSERT" location="" id="receiver.block_rx_contract.f_frame_valid_flag">
+<skipped />
+</testcase>
+<system-out>SBY 17:43:12 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-dedup-1/F-BLOCK-CTRL-DIV2/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-dedup-1/F-BLOCK-CTRL-DIV2/task/src/dut.il'.
+SBY 17:43:12 [task] engine_0: smtbmc yices
+SBY 17:43:12 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 17:43:14 [task] base: finished (returncode=0)
+SBY 17:43:14 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 17:43:15 [task] prep: finished (returncode=0)
+SBY 17:43:15 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 17:43:15 [task] smt2: finished (returncode=0)
+SBY 17:43:15 [task] engine_0.basecase: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 12  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 17:43:15 [task] engine_0.induction: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -i --noprogress -t 12  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2&quot;
+SBY 17:43:15 [task] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 17:43:15 [task] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 17:43:15 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 17:43:15 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 17:43:15 [task] engine_0.induction: ##   0:00:00  Trying induction in step 12..
+SBY 17:43:16 [task] engine_0.induction: ##   0:00:00  Trying induction in step 11..
+SBY 17:43:16 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY 17:43:16 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY 17:43:16 [task] engine_0.basecase: ##   0:00:01  Checking assumptions in step 2..
+SBY 17:43:16 [task] engine_0.basecase: ##   0:00:01  Checking assertions in step 2..
+SBY 17:43:17 [task] engine_0.basecase: ##   0:00:01  Checking assumptions in step 3..
+SBY 17:43:17 [task] engine_0.basecase: ##   0:00:01  Checking assertions in step 3..
+SBY 17:43:17 [task] engine_0.basecase: ##   0:00:02  Checking assumptions in step 4..
+SBY 17:43:17 [task] engine_0.basecase: ##   0:00:02  Checking assertions in step 4..
+SBY 17:43:18 [task] engine_0.basecase: ##   0:00:02  Checking assumptions in step 5..
+SBY 17:43:18 [task] engine_0.basecase: ##   0:00:02  Checking assertions in step 5..
+SBY 17:43:18 [task] engine_0.basecase: ##   0:00:03  Checking assumptions in step 6..
+SBY 17:43:18 [task] engine_0.basecase: ##   0:00:03  Checking assertions in step 6..
+SBY 17:43:19 [task] engine_0.basecase: ##   0:00:04  Checking assumptions in step 7..
+SBY 17:43:19 [task] engine_0.basecase: ##   0:00:04  Checking assertions in step 7..
+SBY 17:43:21 [task] engine_0.basecase: ##   0:00:05  Checking assumptions in step 8..
+SBY 17:43:21 [task] engine_0.basecase: ##   0:00:05  Checking assertions in step 8..
+SBY 17:43:24 [task] engine_0.basecase: ##   0:00:08  Checking assumptions in step 9..
+SBY 17:43:24 [task] engine_0.basecase: ##   0:00:08  Checking assertions in step 9..
+SBY 17:43:25 [task] engine_0.induction: ##   0:00:09  Trying induction in step 10..
+SBY 17:43:25 [task] engine_0.induction: ##   0:00:10  Trying induction in step 9..
+SBY 17:43:26 [task] engine_0.induction: ##   0:00:10  Trying induction in step 8..
+SBY 17:43:27 [task] engine_0.induction: ##   0:00:12  Trying induction in step 7..
+SBY 17:43:33 [task] engine_0.basecase: ##   0:00:18  Checking assumptions in step 10..
+SBY 17:43:33 [task] engine_0.basecase: ##   0:00:18  Checking assertions in step 10..
+SBY 17:43:44 [task] engine_0.basecase: ##   0:00:29  Checking assumptions in step 11..
+SBY 17:43:44 [task] engine_0.basecase: ##   0:00:29  Checking assertions in step 11..
+SBY 17:44:03 [task] engine_0.basecase: ##   0:00:47  Status: passed
+SBY 17:44:03 [task] engine_0.basecase: finished (returncode=0)
+SBY 17:44:03 [task] engine_0.basecase: Status returned by engine for basecase: pass
+SBY 17:44:27 [task] engine_0.induction: ##   0:01:12  waiting for solver (1 minute)
+SBY 17:44:43 [task] Reached TIMEOUT (90 seconds). Terminating all subprocesses.
+SBY 17:44:43 [task] engine_0.induction: terminating process
+SBY 17:44:43 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:01:31 (91)
+SBY 17:44:43 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:53 (53)
+SBY 17:44:43 [task] summary: engine_0 (smtbmc yices) returned pass for basecase
+SBY 17:44:43 [task] summary: engine_0 did not produce any traces
+SBY 17:44:43 [task] DONE (TIMEOUT, rc=8)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

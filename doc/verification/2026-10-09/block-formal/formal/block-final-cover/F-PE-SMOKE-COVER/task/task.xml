@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-09T15:57:02" hostname="4137314" package="task" id="0" name="default" tests="5" errors="0" failures="0" time="0" skipped="4">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:14.29-14.43" time="0" type="ASSERT" location="pe_smoke.sv:14.29-14.43" id="_witness_.check_assert_pe_smoke_sv_14_89">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:15.46-15.67" time="0" type="ASSERT" location="pe_smoke.sv:15.46-15.67" id="_witness_.check_assert_pe_smoke_sv_15_94">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:17.17-17.38" time="0" type="ASSERT" location="pe_smoke.sv:17.17-17.38" id="_witness_.check_assert_pe_smoke_sv_17_100">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_smoke at pe_smoke.sv:19.17-19.46" time="0" type="ASSERT" location="pe_smoke.sv:19.17-19.46" id="_witness_.check_assert_pe_smoke_sv_19_106">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_smoke at pe_smoke.sv:24.13-24.34" time="0" type="COVER" location="pe_smoke.sv:24.13-24.34" id="_witness_.check_cover_pe_smoke_sv_24_108" tracefile="engine_0/trace0.vcd">
+</testcase>
+<system-out>SBY 15:57:02 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-PE-SMOKE-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-PE-SMOKE-COVER/task/src/dut.il'.
+SBY 15:57:02 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-PE-SMOKE-COVER/pe_smoke.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-PE-SMOKE-COVER/task/src/pe_smoke.sv'.
+SBY 15:57:02 [task] engine_0: smtbmc yices
+SBY 15:57:02 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 15:57:02 [task] base: finished (returncode=0)
+SBY 15:57:02 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 15:57:02 [task] prep: finished (returncode=0)
+SBY 15:57:02 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 15:57:02 [task] smt2: finished (returncode=0)
+SBY 15:57:02 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 40  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2&quot;
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Reached cover statement in step 3 at pe_smoke: pe_smoke.sv:24.13-24.34 (_witness_.check_cover_pe_smoke_sv_24_108)
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 15:57:02 [task] engine_0: ##   0:00:00  Status: passed
+SBY 15:57:02 [task] engine_0: finished (returncode=0)
+SBY 15:57:02 [task] engine_0: Status returned by engine: pass
+SBY 15:57:02 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 15:57:02 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 15:57:02 [task] summary: engine_0 (smtbmc yices) returned pass
+SBY 15:57:02 [task] summary: cover trace: task/engine_0/trace0.vcd
+SBY 15:57:02 [task] summary:   reached cover statement pe_smoke._witness_.check_cover_pe_smoke_sv_24_108 at pe_smoke.sv:24.13-24.34 step 3
+SBY 15:57:02 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

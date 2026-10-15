@@ -1,0 +1,57 @@
+{
+  "id": "F-BLOCK-RX-T3",
+  "top": "block_rx",
+  "kind": "block_rx",
+  "mode": "prove",
+  "depth": 8,
+  "parameters": {
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 14,
+  "assumptions": 0,
+  "covers": 4,
+  "result": "ERROR",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_rx_contract.psl -e block_rx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+    "hw/formal/block_rx_contract.psl": "025afa9a39e16e0884fabc9efaddc79833b791fe47fcbb17025eb1b2480aed7e"
+  },
+  "parameter_check_sha256": "b05c13ee642229c1619e2c5c8ce256070ce517d9b7899c8de51080f2f674000e",
+  "effective_properties_sha256": "a3e8d71286664e9e320a514ee8cafa9e7dd063f82943252555fcad6bcf7b88c3",
+  "checked_port_widths": {
+    "raw": 1152,
+    "rx_data": 8,
+    "length": 8,
+    "valid_o": 1
+  },
+  "scope": "bounded storage, ordered append, CRC recurrence/publication, reset and watchdog safety",
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 4,
+    "assert": 15
+  },
+  "error": "property loss/change: assert expected 14, found 15",
+  "duration_seconds": 5.211
+}

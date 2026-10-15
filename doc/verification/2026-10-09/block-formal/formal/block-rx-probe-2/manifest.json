@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "run_id": "20261008T153519Z-199761",
+  "suite": "fast",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "0f8a54bce20506c141f18f90ac98aec04fc04191",
+  "dirty": true,
+  "runner_sha256": "3326421792fdea9d6cdc9a32b0ffa784327c8bb9e714a755ee74833c7059509d",
+  "tasks": [
+    {
+      "id": "F-BLOCK-RX-T3",
+      "top": "block_rx",
+      "kind": "block_rx",
+      "mode": "prove",
+      "depth": 8,
+      "parameters": {
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 14,
+      "assumptions": 0,
+      "covers": 4,
+      "result": "ERROR",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_rx_contract.psl -e block_rx; write_rtlil dut.il; write_json frontend.json"
+        ],
+        [
+          "sby",
+          "task.sby"
+        ]
+      ],
+      "logs": [
+        "frontend.txt",
+        "solver.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+        "hw/formal/block_rx_contract.psl": "025afa9a39e16e0884fabc9efaddc79833b791fe47fcbb17025eb1b2480aed7e"
+      },
+      "parameter_check_sha256": "b05c13ee642229c1619e2c5c8ce256070ce517d9b7899c8de51080f2f674000e",
+      "effective_properties_sha256": "a3e8d71286664e9e320a514ee8cafa9e7dd063f82943252555fcad6bcf7b88c3",
+      "checked_port_widths": {
+        "raw": 1152,
+        "rx_data": 8,
+        "length": 8,
+        "valid_o": 1
+      },
+      "scope": "bounded storage, ordered append, CRC recurrence/publication, reset and watchdog safety",
+      "exit_code": 0,
+      "solver_status": "PASS",
+      "property_cells": {
+        "cover": 4,
+        "assert": 15
+      },
+      "error": "property loss/change: assert expected 14, found 15",
+      "duration_seconds": 5.211
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-BLOCK-RX-T3"
+  ]
+}

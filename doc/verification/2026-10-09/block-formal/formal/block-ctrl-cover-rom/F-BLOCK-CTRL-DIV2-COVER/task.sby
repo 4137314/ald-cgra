@@ -1,0 +1,16 @@
+[options]
+mode cover
+depth 200
+timeout 180
+skip 160
+[engines]
+smtbmc --unroll z3
+[script]
+read_rtlil dut.il
+delete -output block_ctrl/w:*
+prep -top block_ctrl -flatten
+memory_map
+opt -full
+write_json properties.json
+[files]
+dut.il

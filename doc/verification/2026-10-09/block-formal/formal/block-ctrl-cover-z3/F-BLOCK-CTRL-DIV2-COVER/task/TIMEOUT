@@ -1,0 +1,10 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:01:31 (91)
+Elapsed process time [H:MM:SS (secs)]: 0:00:03 (3)
+engine_0 (smtbmc z3) did not return a status
+engine_0 did not produce any traces
+unreached cover statements:
+  block_ctrl.\block_ctrl_contract.c_bctrl_conflict at 
+  block_ctrl.\block_ctrl_contract.c_bctrl_dot at 
+  block_ctrl.\block_ctrl_contract.c_bctrl_replay at 
+  block_ctrl.\block_ctrl_contract.c_bctrl_selected at 
+  block_ctrl.\block_ctrl_contract.c_bctrl_upload at 

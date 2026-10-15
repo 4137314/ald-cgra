@@ -1,0 +1,181 @@
+{
+  "source": "/home/main/dev/git/ald-cgra/hw/build/formal/block-memory-probe-1",
+  "files": {
+    "F-BLOCK-MEMORY/block_dot.vhd": {
+      "sha256": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+      "archived": true,
+      "bytes": 3436
+    },
+    "F-BLOCK-MEMORY/block_dot_contract.psl": {
+      "sha256": "880be222b39e540593ed1500a92f08dc74faeba222d24b67ece918fb11f107bd",
+      "archived": true,
+      "bytes": 6541
+    },
+    "F-BLOCK-MEMORY/block_dot_contract.source.psl": {
+      "sha256": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+      "archived": true,
+      "bytes": 3911
+    },
+    "F-BLOCK-MEMORY/block_memory.psl": {
+      "sha256": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854",
+      "archived": true,
+      "bytes": 2582
+    },
+    "F-BLOCK-MEMORY/block_pkg.vhd": {
+      "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+      "archived": true,
+      "bytes": 1129
+    },
+    "F-BLOCK-MEMORY/cgra_pkg.vhd": {
+      "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+      "archived": true,
+      "bytes": 7159
+    },
+    "F-BLOCK-MEMORY/dut.il": {
+      "sha256": "718497ab08304169edf7187f1f59695ce3ea9ee2bc092631fd9ab430c0c0a6b4",
+      "archived": false,
+      "bytes": 132232
+    },
+    "F-BLOCK-MEMORY/frontend.json": {
+      "sha256": "cf95dfa466ed34db541924912cf0771c0ecb8f2799d7004359c89d4ffb395a98",
+      "archived": false,
+      "bytes": 817607
+    },
+    "F-BLOCK-MEMORY/frontend.txt": {
+      "sha256": "9658d2d0f7413f47df5ce8ed63d8e5dbb49fa7aeb8ddefacf122982cc6b4aa77",
+      "archived": true,
+      "bytes": 1908
+    },
+    "F-BLOCK-MEMORY/result.json": {
+      "sha256": "1618f308ff27d1d964b1787448c8dcde2bcd6c006c48d6cf8a891a2dfe091bc3",
+      "archived": true,
+      "bytes": 2359
+    },
+    "F-BLOCK-MEMORY/solver.txt": {
+      "sha256": "3e0262d3a4a22779ce5ca6d371e489abc1ade732592e6ecc2b48e3fad82248e9",
+      "archived": true,
+      "bytes": 6005
+    },
+    "F-BLOCK-MEMORY/task/PASS": {
+      "sha256": "ecba95a5fcff5a0bddada8aee1f3b67c9e46d73fb8f1941b623164101debe937",
+      "archived": true,
+      "bytes": 272
+    },
+    "F-BLOCK-MEMORY/task/config.sby": {
+      "sha256": "b18427524e3cf6bd827ac9a8181a22f0746a37bf80cc32eff79667a41d2407cd",
+      "archived": true,
+      "bytes": 162
+    },
+    "F-BLOCK-MEMORY/task/engine_0/logfile_basecase.txt": {
+      "sha256": "c4489b9da5f126da9fce5039a60fb9e98fa9f8797541a30c803eb7d9d3919de6",
+      "archived": true,
+      "bytes": 1557
+    },
+    "F-BLOCK-MEMORY/task/engine_0/logfile_induction.txt": {
+      "sha256": "e4ed379a8de1f7e9aa348a018c901ea9437e3f843369efd5058481df4c07f2a0",
+      "archived": true,
+      "bytes": 366
+    },
+    "F-BLOCK-MEMORY/task/logfile.txt": {
+      "sha256": "3e0262d3a4a22779ce5ca6d371e489abc1ade732592e6ecc2b48e3fad82248e9",
+      "archived": true,
+      "bytes": 6005
+    },
+    "F-BLOCK-MEMORY/task/model/design.il": {
+      "sha256": "ace98d47f7ac65a854e860070c2bc8c4532774feae3f77b4eca74f2bb80eeac4",
+      "archived": false,
+      "bytes": 94617
+    },
+    "F-BLOCK-MEMORY/task/model/design.json": {
+      "sha256": "7dda09809ce8a89f953ab0548f1c74d43ce5b4e15aec5dda21a7f8bb8045dfed",
+      "archived": true,
+      "bytes": 178465
+    },
+    "F-BLOCK-MEMORY/task/model/design.log": {
+      "sha256": "77438cb5cece3322c0c1201eb2dac5c9b637e75d67d93b889a6103f7d69b78de",
+      "archived": true,
+      "bytes": 18977
+    },
+    "F-BLOCK-MEMORY/task/model/design.ys": {
+      "sha256": "bfc1e419fe9101d7a49860d24906463556e785aba1ecfe5958c5a187450c5cda",
+      "archived": true,
+      "bytes": 211
+    },
+    "F-BLOCK-MEMORY/task/model/design_prep.il": {
+      "sha256": "47fe120752e73f4e91b9cb2e41c4ada4bcbe09d38789bbb9ee383d6df5493e98",
+      "archived": false,
+      "bytes": 87905
+    },
+    "F-BLOCK-MEMORY/task/model/design_prep.log": {
+      "sha256": "741b6ec549555c7d6bb2c34f73b37999602741e1bfb9ea6d3ae7a453c4627e2b",
+      "archived": true,
+      "bytes": 3695
+    },
+    "F-BLOCK-MEMORY/task/model/design_prep.ys": {
+      "sha256": "74babbaa950843339dfa1a5193ce2f0d038a84d054db3e9e651c853f26a33713",
+      "archived": true,
+      "bytes": 344
+    },
+    "F-BLOCK-MEMORY/task/model/design_smt2.log": {
+      "sha256": "35be23c8d02021f9b1ec90e5c0ce6eebcbe56e464f393d3e57fb31894e9c71c5",
+      "archived": true,
+      "bytes": 2234
+    },
+    "F-BLOCK-MEMORY/task/model/design_smt2.smt2": {
+      "sha256": "b315b30b97c405bf880902d23148046919cd1959edbbbfc707e78478eb4c66ab",
+      "archived": false,
+      "bytes": 83774
+    },
+    "F-BLOCK-MEMORY/task/model/design_smt2.ys": {
+      "sha256": "6875d9b50e8c316a2d602e2b2d6b2e9ab0ce1549463a5dd4fb96af2d2eb73f31",
+      "archived": true,
+      "bytes": 155
+    },
+    "F-BLOCK-MEMORY/task/src/dut.il": {
+      "sha256": "718497ab08304169edf7187f1f59695ce3ea9ee2bc092631fd9ab430c0c0a6b4",
+      "archived": false,
+      "bytes": 132232
+    },
+    "F-BLOCK-MEMORY/task/src/properties.json": {
+      "sha256": "ab2f602981e69f1cba15577e0c88f02634c1841618a5e095a4c8b635665ed3a7",
+      "archived": true,
+      "bytes": 289435
+    },
+    "F-BLOCK-MEMORY/task/status": {
+      "sha256": "c64cd1e86b7f62337279d990860d37ca6636f5812efd86b6d24dfd010434d5f0",
+      "archived": true,
+      "bytes": 9
+    },
+    "F-BLOCK-MEMORY/task/status.sqlite": {
+      "sha256": "270155899edae57e7cc379c1d749adb12c4cceebd025bc8dd8efa07ea9817c68",
+      "archived": true,
+      "bytes": 73728
+    },
+    "F-BLOCK-MEMORY/task/task.xml": {
+      "sha256": "151a21f6b99bbedeb38ab0da1a77166ebb5842e21ee2115290e3326a88fa444e",
+      "archived": true,
+      "bytes": 13369
+    },
+    "F-BLOCK-MEMORY/task.sby": {
+      "sha256": "b18427524e3cf6bd827ac9a8181a22f0746a37bf80cc32eff79667a41d2407cd",
+      "archived": true,
+      "bytes": 162
+    },
+    "manifest.json": {
+      "sha256": "b7428f62c11fbc108fd40f4c659ba04a622ad1f0f0040a15e2488b2c8f5d7f46",
+      "archived": true,
+      "bytes": 4625
+    },
+    "run.py": {
+      "sha256": "61436d3a088f1b5a99ab1d08742cd2185dd16dfbae224927c0adb9675daa2743",
+      "archived": true,
+      "bytes": 26633
+    },
+    "toolchain.json": {
+      "sha256": "3674a5f8cde5b40cfc3b3839777a111ea47ca1f12b7d8b5894f167d42bc619de",
+      "archived": true,
+      "bytes": 330
+    }
+  },
+  "note": "Original manifest unchanged. Large generated RTLIL/SMT2 and physical checkpoints/bitstreams omitted; hashes retained. Reproduce using saved source copies and commands. This is not a programming artifact."
+}

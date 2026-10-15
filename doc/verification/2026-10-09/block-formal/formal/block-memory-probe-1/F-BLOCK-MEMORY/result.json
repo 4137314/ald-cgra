@@ -1,0 +1,73 @@
+{
+  "id": "F-BLOCK-MEMORY",
+  "top": "block_dot",
+  "kind": "block_dot",
+  "mode": "prove",
+  "depth": 16,
+  "parameters": {
+    "G_STEP_DIV": 2
+  },
+  "memory": true,
+  "assertions": 30,
+  "assumptions": 1,
+  "covers": 6,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+    "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+    "hw/formal/block_memory.psl": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854"
+  },
+  "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+  "effective_properties_sha256": "880be222b39e540593ed1500a92f08dc74faeba222d24b67ece918fb11f107bd",
+  "checked_port_widths": {
+    "pe_result": 16,
+    "wr_data": 16,
+    "a": 16,
+    "b": 16,
+    "result": 16
+  },
+  "scope": "sequencer control, capture count/cadence, reset and result capture; not RAM data or CRC",
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "assume": 1,
+    "cover": 6,
+    "assert": 30
+  },
+  "symbolic_address_bits": 10,
+  "smt2_cells": {
+    "assert": 30,
+    "assume": 2,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "718497ab08304169edf7187f1f59695ce3ea9ee2bc092631fd9ab430c0c0a6b4",
+    "task/src/properties.json": "ab2f602981e69f1cba15577e0c88f02634c1841618a5e095a4c8b635665ed3a7",
+    "task/model/design_smt2.smt2": "b315b30b97c405bf880902d23148046919cd1959edbbbfc707e78478eb4c66ab"
+  },
+  "traces": [],
+  "duration_seconds": 3.672
+}

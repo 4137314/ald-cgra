@@ -1,0 +1,185 @@
+SBY 17:51:22 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-cover-z3/F-BLOCK-CTRL-DIV2-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-cover-z3/F-BLOCK-CTRL-DIV2-COVER/task/src/dut.il'.
+SBY 17:51:22 [task] engine_0: smtbmc z3
+SBY 17:51:22 [task] base: starting process "cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 17:51:25 [task] base: finished (returncode=0)
+SBY 17:51:25 [task] prep: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 17:51:25 [task] prep: finished (returncode=0)
+SBY 17:51:25 [task] smt2: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 17:51:25 [task] smt2: finished (returncode=0)
+SBY 17:51:25 [task] engine_0: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s z3 --presat -c --noprogress -t 160:200  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Solver: z3
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 0..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 1..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 2..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 3..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 4..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 5..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 6..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 7..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 8..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 9..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 10..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 11..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 12..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 13..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 14..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 15..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 16..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 17..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 18..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 19..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 20..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 21..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 22..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 23..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 24..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 25..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 26..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 27..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 28..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 29..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 30..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 31..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 32..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 33..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 34..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 35..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 36..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 37..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 38..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 39..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 40..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 41..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 42..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 43..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 44..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 45..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 46..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 47..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 48..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 49..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 50..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 51..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 52..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 53..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 54..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 55..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 56..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 57..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 58..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 59..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 60..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 61..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 62..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 63..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 64..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 65..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 66..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 67..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 68..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 69..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 70..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 71..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 72..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 73..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 74..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 75..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 76..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 77..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 78..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 79..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 80..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 81..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 82..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 83..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 84..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 85..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 86..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 87..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 88..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 89..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 90..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 91..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 92..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 93..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 94..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 95..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 96..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 97..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 98..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 99..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 100..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 101..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 102..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 103..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 104..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 105..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 106..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 107..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 108..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 109..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 110..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 111..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 112..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 113..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 114..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 115..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 116..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 117..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 118..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 119..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 120..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 121..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 122..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 123..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 124..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 125..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 126..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 127..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 128..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 129..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 130..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 131..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 132..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 133..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 134..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 135..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 136..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 137..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 138..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 139..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 140..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 141..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 142..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 143..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 144..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 145..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 146..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 147..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 148..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 149..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 150..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 151..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 152..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 153..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 154..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 155..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 156..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 157..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 158..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Skipping step 159..
+SBY 17:51:26 [task] engine_0: ##   0:00:00  Checking cover reachability in step 160..
+SBY 17:52:26 [task] engine_0: ##   0:01:00  waiting for solver (1 minute)
+SBY 17:52:54 [task] Reached TIMEOUT (90 seconds). Terminating all subprocesses.
+SBY 17:52:54 [task] engine_0: terminating process
+SBY 17:52:54 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:01:31 (91)
+SBY 17:52:54 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:03 (3)
+SBY 17:52:54 [task] summary: engine_0 (smtbmc z3) did not return a status
+SBY 17:52:54 [task] summary: engine_0 did not produce any traces
+SBY 17:52:54 [task] summary: unreached cover statements:
+SBY 17:52:54 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_conflict at 
+SBY 17:52:54 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_dot at 
+SBY 17:52:54 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_replay at 
+SBY 17:52:54 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_selected at 
+SBY 17:52:54 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_upload at 
+SBY 17:52:54 [task] DONE (TIMEOUT, rc=8)

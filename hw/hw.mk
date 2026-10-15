@@ -67,7 +67,8 @@ TBS  = sim/tb_pe.vhd \
        sim/tb_kernel_uart.vhd \
        sim/tb_array_geometry.vhd \
        sim/tb_uart_async.vhd \
-       sim/tb_blocks.vhd
+       sim/tb_blocks.vhd \
+       sim/tb_block_faults.vhd
 
 # Self-checking testbench top-levels, run in order of increasing scope.
 TB_UNITS = tb_pe tb_uart tb_cgra_top tb_matvec tb_array_diff
@@ -120,10 +121,12 @@ build/blocks.vec: $(GHDL_DIR)/gen_block_vectors
 
 .PHONY: sim-blocks
 sim-blocks: build/blocks.vec | $(GHDL_DIR)
-	$(GHDL) -a $(GHDL_FLAGS) $(SRCS) sim/tb_blocks.vhd
+	$(GHDL) -a $(GHDL_FLAGS) $(SRCS) sim/tb_blocks.vhd sim/tb_block_faults.vhd
 	$(GHDL) -e $(GHDL_FLAGS) tb_blocks
+	$(GHDL) -e $(GHDL_FLAGS) tb_block_faults
 	@for div in $(STEP_DIVS); do \
 	    $(GHDL) -r $(GHDL_FLAGS) tb_blocks -gG_STEP_DIV=$$div --assert-level=error || exit 1; \
+	    $(GHDL) -r $(GHDL_FLAGS) tb_block_faults -gG_STEP_DIV=$$div --assert-level=error || exit 1; \
 	done
 	$(GHDL) -r $(GHDL_FLAGS) tb_blocks -gG_UART=true --assert-level=error
 

@@ -1,0 +1,217 @@
+{
+  "source": "/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-probe-1",
+  "files": {
+    "F-BLOCK-CTRL-DIV2/block_ctrl.vhd": {
+      "sha256": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+      "archived": true,
+      "bytes": 10391
+    },
+    "F-BLOCK-CTRL-DIV2/block_ctrl_contract.psl": {
+      "sha256": "c8d4fc8c483aa73889c61f729de296ff535068937a6907806fe7ca209372e02c",
+      "archived": true,
+      "bytes": 3049
+    },
+    "F-BLOCK-CTRL-DIV2/block_ctrl_contract.source.psl": {
+      "sha256": "260ad28fcf3e1995631289e240543bd31cf207e87580e2c8c027effebcae7de1",
+      "archived": true,
+      "bytes": 2977
+    },
+    "F-BLOCK-CTRL-DIV2/block_dot.vhd": {
+      "sha256": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+      "archived": true,
+      "bytes": 3436
+    },
+    "F-BLOCK-CTRL-DIV2/block_pkg.vhd": {
+      "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+      "archived": true,
+      "bytes": 1129
+    },
+    "F-BLOCK-CTRL-DIV2/block_rx.vhd": {
+      "sha256": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+      "archived": true,
+      "bytes": 2992
+    },
+    "F-BLOCK-CTRL-DIV2/block_rx_contract.psl": {
+      "sha256": "1a794dbc191089c07429a99bd612857ed432de882fb4c8e72850e90143926302",
+      "archived": true,
+      "bytes": 5379
+    },
+    "F-BLOCK-CTRL-DIV2/cgra_pkg.vhd": {
+      "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+      "archived": true,
+      "bytes": 7159
+    },
+    "F-BLOCK-CTRL-DIV2/dut.il": {
+      "sha256": "decd5b252cc9d39894eafad6a0a5580c98392016f1ada8d798355b7b3402c09c",
+      "archived": false,
+      "bytes": 1436366
+    },
+    "F-BLOCK-CTRL-DIV2/frontend.json": {
+      "sha256": "41c1b5d4747e4a25f3a297f340ac37e854af5a16ca0ff21ce953ee187cc69320",
+      "archived": false,
+      "bytes": 4502433
+    },
+    "F-BLOCK-CTRL-DIV2/frontend.txt": {
+      "sha256": "89bf08797081da47d10d01fd9faf50d8c651c60a5e261de924efca90b0010afc",
+      "archived": true,
+      "bytes": 2051
+    },
+    "F-BLOCK-CTRL-DIV2/result.json": {
+      "sha256": "3c8e1bb2985ac400ff0189afa31fc7dae59d9be1d68ca5cdb17070c54bcd25a7",
+      "archived": true,
+      "bytes": 2650
+    },
+    "F-BLOCK-CTRL-DIV2/solver.txt": {
+      "sha256": "afd9793f556116450674dbba25e081387f78c56230ceacbd979a6e5b55bd5304",
+      "archived": true,
+      "bytes": 6544
+    },
+    "F-BLOCK-CTRL-DIV2/task/UNKNOWN": {
+      "sha256": "3453470d78b2ef572dc959a6500ae073a7ce33966712c6356511b920ac66182a",
+      "archived": true,
+      "bytes": 399
+    },
+    "F-BLOCK-CTRL-DIV2/task/config.sby": {
+      "sha256": "b3a03e1eb6657fa64e2e11a59a3882b90bd15f77ef415b63b004789b58873d94",
+      "archived": true,
+      "bytes": 163
+    },
+    "F-BLOCK-CTRL-DIV2/task/engine_0/logfile_basecase.txt": {
+      "sha256": "748d1d571dc838b5fb8b93247a1ed255106ae091449fb6bbf8e79b80a17a3bf4",
+      "archived": true,
+      "bytes": 1177
+    },
+    "F-BLOCK-CTRL-DIV2/task/engine_0/logfile_induction.txt": {
+      "sha256": "f5638aa9a46ebfc53f57c35a5c2178ef413e7e5c01a949b07bc80130f72cd8b0",
+      "archived": true,
+      "bytes": 1039
+    },
+    "F-BLOCK-CTRL-DIV2/task/engine_0/trace_induct.smtc": {
+      "sha256": "b743a433d5256474d953d685afc045e75bae92cce7d1d991eed92f5507ec620e",
+      "archived": true,
+      "bytes": 10235
+    },
+    "F-BLOCK-CTRL-DIV2/task/engine_0/trace_induct.vcd": {
+      "sha256": "9f858dce5ac7922b78f5cadbad987e7d5e2f497d31ccba8358779cdb7b7cd8e4",
+      "archived": true,
+      "bytes": 250802
+    },
+    "F-BLOCK-CTRL-DIV2/task/engine_0/trace_induct.yw": {
+      "sha256": "11282a2435ad76f97b8e5b645ecc22b08e61082e213ec6d2be5280064ff6e3d1",
+      "archived": true,
+      "bytes": 155494
+    },
+    "F-BLOCK-CTRL-DIV2/task/engine_0/trace_induct_tb.v": {
+      "sha256": "12f6920237a0b39ec8c98e9778210f8bae5f0267dbeb3f15616e51a382684c9d",
+      "archived": true,
+      "bytes": 11405
+    },
+    "F-BLOCK-CTRL-DIV2/task/logfile.txt": {
+      "sha256": "afd9793f556116450674dbba25e081387f78c56230ceacbd979a6e5b55bd5304",
+      "archived": true,
+      "bytes": 6544
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design.il": {
+      "sha256": "39615fd1c2bb7a911e8ca123683a1c8917b72ab1563ae624abb71d613713881e",
+      "archived": false,
+      "bytes": 1286307
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design.json": {
+      "sha256": "85c08c9b5604a04f029770bbf1792546aa7ba0f3b37c372db37f3457ba0ccf63",
+      "archived": true,
+      "bytes": 1481570,
+      "archive_path": "F-BLOCK-CTRL-DIV2/task/model/design.json.gz",
+      "compression": "gzip",
+      "archive_sha256": "43b73aee239032504dad3b69c15d1169f1e2e85fec85fda4685ef5a1a8cc6702"
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design.log": {
+      "sha256": "68cc4c18764df48570d6e799d0de41d6dbb9c51d2341cda52fa67aa7f12b6088",
+      "archived": true,
+      "bytes": 129902
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design.ys": {
+      "sha256": "f363a9180fe30e0e30d5a07213c6272728b5a2363a306944972c365ae1229232",
+      "archived": true,
+      "bytes": 212
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design_prep.il": {
+      "sha256": "bafd19a0a4dc67d8098fc63d511b7e853a7c1a3cff178eb8b7447414fea81b52",
+      "archived": false,
+      "bytes": 1291823
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design_prep.log": {
+      "sha256": "970d98beb51029a26c7e5302fc111bccce5bcbb3c29b8731b93f1fe2782b1080",
+      "archived": true,
+      "bytes": 4404
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design_prep.ys": {
+      "sha256": "74babbaa950843339dfa1a5193ce2f0d038a84d054db3e9e651c853f26a33713",
+      "archived": true,
+      "bytes": 344
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design_smt2.log": {
+      "sha256": "04fffde7762ba5e53e73a6b5a23fe97f3eba67603d79668ee3ee9bffb9647c10",
+      "archived": true,
+      "bytes": 2277
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design_smt2.smt2": {
+      "sha256": "aafeadceee332db517b355e0336cc19478f97bc5aa73a6b3b46b3ba2058a2a72",
+      "archived": false,
+      "bytes": 1332936
+    },
+    "F-BLOCK-CTRL-DIV2/task/model/design_smt2.ys": {
+      "sha256": "6875d9b50e8c316a2d602e2b2d6b2e9ab0ce1549463a5dd4fb96af2d2eb73f31",
+      "archived": true,
+      "bytes": 155
+    },
+    "F-BLOCK-CTRL-DIV2/task/src/dut.il": {
+      "sha256": "decd5b252cc9d39894eafad6a0a5580c98392016f1ada8d798355b7b3402c09c",
+      "archived": false,
+      "bytes": 1436366
+    },
+    "F-BLOCK-CTRL-DIV2/task/src/properties.json": {
+      "sha256": "bfcdd4fbb1b3b354a5ac6e1c5631f09e14c1a91c915baf6850a0d781e6891dee",
+      "archived": true,
+      "bytes": 3172562,
+      "archive_path": "F-BLOCK-CTRL-DIV2/task/src/properties.json.gz",
+      "compression": "gzip",
+      "archive_sha256": "1d9d7a2759bee2c8f30349a1b1a468615f46bfbf6d034d3a4dce66b7ff6dd35e"
+    },
+    "F-BLOCK-CTRL-DIV2/task/status": {
+      "sha256": "8b431fb5c656e45793d79fe29db13fe0de39326974d640181df634dbe70eba8a",
+      "archived": true,
+      "bytes": 13
+    },
+    "F-BLOCK-CTRL-DIV2/task/status.sqlite": {
+      "sha256": "1e494c31f6440eb8c2501944436a745606ab2f1e07dab681e51483ffea34a70a",
+      "archived": true,
+      "bytes": 73728
+    },
+    "F-BLOCK-CTRL-DIV2/task/task.xml": {
+      "sha256": "4e92ffe7be8582eeae7c6eab882e4a9742e3a22fcd9360dc8c69fc683c17db9e",
+      "archived": true,
+      "bytes": 17972
+    },
+    "F-BLOCK-CTRL-DIV2/task.sby": {
+      "sha256": "b3a03e1eb6657fa64e2e11a59a3882b90bd15f77ef415b63b004789b58873d94",
+      "archived": true,
+      "bytes": 163
+    },
+    "manifest.json": {
+      "sha256": "a48616184532145fe133a785377922af3bc8faf78747de94abdabdc075e2c5a6",
+      "archived": true,
+      "bytes": 4931
+    },
+    "run.py": {
+      "sha256": "7ddbd8673a81d96ac516164e71dc303b8fa2b94a3e6517e35e85414ba5f06dd3",
+      "archived": true,
+      "bytes": 30846
+    },
+    "toolchain.json": {
+      "sha256": "3674a5f8cde5b40cfc3b3839777a111ea47ca1f12b7d8b5894f167d42bc619de",
+      "archived": true,
+      "bytes": 330
+    }
+  },
+  "note": "Original manifest unchanged. Large generated RTLIL/SMT2 and physical checkpoints/bitstreams omitted; hashes retained. Reproduce using saved source copies and commands. This is not a programming artifact."
+}

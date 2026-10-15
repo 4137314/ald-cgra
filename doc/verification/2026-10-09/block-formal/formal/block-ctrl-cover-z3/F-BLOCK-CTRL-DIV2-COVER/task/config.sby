@@ -1,0 +1,13 @@
+[options]
+mode cover
+depth 200
+timeout 90
+skip 160
+[engines]
+smtbmc z3
+[script]
+read_rtlil dut.il
+prep -top block_ctrl -flatten
+write_json properties.json
+[files]
+dut.il

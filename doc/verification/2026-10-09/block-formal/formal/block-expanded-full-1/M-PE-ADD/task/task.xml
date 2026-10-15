@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T18:07:55" hostname="4137314" package="task" id="0" name="default" tests="21" errors="0" failures="2" time="1" skipped="20">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="FAIL"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+<failure type="FAIL" message="Task returned status FAIL." />
+</testcase>
+<testcase classname="default" name="Property ASSERT in pe_contract at pe_contract.sv:18.25-18.51" time="0" type="ASSERT" location="pe_contract.sv:18.25-18.51" id="_witness_.check_assert_pe_contract_sv_18_69" tracefile="engine_0/trace.vcd">
+<failure type="ASSERT" message="Property ASSERT in pe_contract at pe_contract.sv:18.25-18.51 failed. Trace file: engine_0/trace.vcd" />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_108">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_115">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_122">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_129">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_136">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_143">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_150">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_157">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_164">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_171">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_178">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_185">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_192">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_199">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_206">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:23.13-23.66" time="0" type="COVER" location="pe_contract.sv:23.13-23.66" id="_witness_.check_cover_pe_contract_sv_23_213">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:26.9-26.79" time="0" type="COVER" location="pe_contract.sv:26.9-26.79" id="_witness_.check_cover_pe_contract_sv_26_72">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:27.9-27.88" time="0" type="COVER" location="pe_contract.sv:27.9-27.88" id="_witness_.check_cover_pe_contract_sv_27_80">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:28.9-28.87" time="0" type="COVER" location="pe_contract.sv:28.9-28.87" id="_witness_.check_cover_pe_contract_sv_28_90">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in pe_contract at pe_contract.sv:29.9-29.71" time="0" type="COVER" location="pe_contract.sv:29.9-29.71" id="_witness_.check_cover_pe_contract_sv_29_99">
+<skipped />
+</testcase>
+<system-out>SBY 18:07:53 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-PE-ADD/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-PE-ADD/task/src/dut.il'.
+SBY 18:07:53 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-PE-ADD/pe_contract.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-PE-ADD/task/src/pe_contract.sv'.
+SBY 18:07:53 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-PE-ADD/pe_spec.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-PE-ADD/task/src/pe_spec.sv'.
+SBY 18:07:53 [task] engine_0: smtbmc yices
+SBY 18:07:53 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 18:07:54 [task] base: finished (returncode=0)
+SBY 18:07:54 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 18:07:54 [task] prep: finished (returncode=0)
+SBY 18:07:54 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 18:07:54 [task] smt2: finished (returncode=0)
+SBY 18:07:54 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 4  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 18:07:54 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 18:07:54 [task] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 18:07:54 [task] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 18:07:55 [task] engine_0: ##   0:00:00  BMC failed!
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Assert failed in pe_contract: pe_contract.sv:18.25-18.51 (_witness_.check_assert_pe_contract_sv_18_69)
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 18:07:55 [task] engine_0: ##   0:00:00  Status: failed
+SBY 18:07:55 [task] engine_0: finished (returncode=1)
+SBY 18:07:55 [task] engine_0: Status returned by engine: FAIL
+SBY 18:07:55 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY 18:07:55 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:01 (1)
+SBY 18:07:55 [task] summary: engine_0 (smtbmc yices) returned FAIL
+SBY 18:07:55 [task] summary: counterexample trace: task/engine_0/trace.vcd
+SBY 18:07:55 [task] summary:   failed assertion pe_contract._witness_.check_assert_pe_contract_sv_18_69 at pe_contract.sv:18.25-18.51 step 3
+SBY 18:07:55 [task] DONE (FAIL, rc=2)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

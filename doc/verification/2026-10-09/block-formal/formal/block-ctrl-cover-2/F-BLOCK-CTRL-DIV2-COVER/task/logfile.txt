@@ -1,0 +1,78 @@
+SBY 17:44:57 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-cover-2/F-BLOCK-CTRL-DIV2-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-ctrl-cover-2/F-BLOCK-CTRL-DIV2-COVER/task/src/dut.il'.
+SBY 17:44:57 [task] engine_0: smtbmc yices
+SBY 17:44:57 [task] base: starting process "cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys"
+SBY 17:45:00 [task] base: finished (returncode=0)
+SBY 17:45:00 [task] prep: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys"
+SBY 17:45:01 [task] prep: finished (returncode=0)
+SBY 17:45:01 [task] smt2: starting process "cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys"
+SBY 17:45:01 [task] smt2: finished (returncode=0)
+SBY 17:45:01 [task] engine_0: starting process "cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 200  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2"
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Reached cover statement in step 2 at block_ctrl: block_ctrl_contract.c_bctrl_selected
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 17:45:01 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 17:45:02 [task] engine_0: ##   0:00:00  Checking cover reachability in step 2..
+SBY 17:45:02 [task] engine_0: ##   0:00:00  Checking cover reachability in step 3..
+SBY 17:45:02 [task] engine_0: ##   0:00:00  Checking cover reachability in step 4..
+SBY 17:45:02 [task] engine_0: ##   0:00:01  Checking cover reachability in step 5..
+SBY 17:45:02 [task] engine_0: ##   0:00:01  Checking cover reachability in step 6..
+SBY 17:45:02 [task] engine_0: ##   0:00:01  Checking cover reachability in step 7..
+SBY 17:45:03 [task] engine_0: ##   0:00:01  Checking cover reachability in step 8..
+SBY 17:45:03 [task] engine_0: ##   0:00:01  Checking cover reachability in step 9..
+SBY 17:45:03 [task] engine_0: ##   0:00:02  Checking cover reachability in step 10..
+SBY 17:45:03 [task] engine_0: ##   0:00:02  Checking cover reachability in step 11..
+SBY 17:45:04 [task] engine_0: ##   0:00:02  Checking cover reachability in step 12..
+SBY 17:45:04 [task] engine_0: ##   0:00:03  Checking cover reachability in step 13..
+SBY 17:45:05 [task] engine_0: ##   0:00:03  Checking cover reachability in step 14..
+SBY 17:45:05 [task] engine_0: ##   0:00:04  Checking cover reachability in step 15..
+SBY 17:45:06 [task] engine_0: ##   0:00:04  Checking cover reachability in step 16..
+SBY 17:45:06 [task] engine_0: ##   0:00:05  Checking cover reachability in step 17..
+SBY 17:45:07 [task] engine_0: ##   0:00:05  Checking cover reachability in step 18..
+SBY 17:45:07 [task] engine_0: ##   0:00:06  Checking cover reachability in step 19..
+SBY 17:45:08 [task] engine_0: ##   0:00:06  Checking cover reachability in step 20..
+SBY 17:45:08 [task] engine_0: ##   0:00:07  Checking cover reachability in step 21..
+SBY 17:45:09 [task] engine_0: ##   0:00:08  Checking cover reachability in step 22..
+SBY 17:45:10 [task] engine_0: ##   0:00:09  Checking cover reachability in step 23..
+SBY 17:45:11 [task] engine_0: ##   0:00:09  Checking cover reachability in step 24..
+SBY 17:45:12 [task] engine_0: ##   0:00:10  Checking cover reachability in step 25..
+SBY 17:45:13 [task] engine_0: ##   0:00:11  Checking cover reachability in step 26..
+SBY 17:45:13 [task] engine_0: ##   0:00:12  Checking cover reachability in step 27..
+SBY 17:45:15 [task] engine_0: ##   0:00:13  Checking cover reachability in step 28..
+SBY 17:45:17 [task] engine_0: ##   0:00:15  Checking cover reachability in step 29..
+SBY 17:45:19 [task] engine_0: ##   0:00:17  Checking cover reachability in step 30..
+SBY 17:45:21 [task] engine_0: ##   0:00:19  Checking cover reachability in step 31..
+SBY 17:45:22 [task] engine_0: ##   0:00:21  Checking cover reachability in step 32..
+SBY 17:45:24 [task] engine_0: ##   0:00:23  Checking cover reachability in step 33..
+SBY 17:45:26 [task] engine_0: ##   0:00:24  Checking cover reachability in step 34..
+SBY 17:45:27 [task] engine_0: ##   0:00:26  Checking cover reachability in step 35..
+SBY 17:45:30 [task] engine_0: ##   0:00:28  Checking cover reachability in step 36..
+SBY 17:45:32 [task] engine_0: ##   0:00:31  Checking cover reachability in step 37..
+SBY 17:45:35 [task] engine_0: ##   0:00:34  Checking cover reachability in step 38..
+SBY 17:45:38 [task] engine_0: ##   0:00:37  Checking cover reachability in step 39..
+SBY 17:45:42 [task] engine_0: ##   0:00:41  Checking cover reachability in step 40..
+SBY 17:45:45 [task] engine_0: ##   0:00:44  Checking cover reachability in step 41..
+SBY 17:45:51 [task] engine_0: ##   0:00:50  Checking cover reachability in step 42..
+SBY 17:45:56 [task] engine_0: ##   0:00:54  Checking cover reachability in step 43..
+SBY 17:45:59 [task] engine_0: ##   0:00:58  Checking cover reachability in step 44..
+SBY 17:46:04 [task] engine_0: ##   0:01:02  Checking cover reachability in step 45..
+SBY 17:46:09 [task] engine_0: ##   0:01:08  Checking cover reachability in step 46..
+SBY 17:46:14 [task] engine_0: ##   0:01:13  Checking cover reachability in step 47..
+SBY 17:46:19 [task] engine_0: ##   0:01:18  Checking cover reachability in step 48..
+SBY 17:46:29 [task] Reached TIMEOUT (90 seconds). Terminating all subprocesses.
+SBY 17:46:29 [task] engine_0: terminating process
+SBY 17:46:29 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:01:31 (91)
+SBY 17:46:29 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:04 (4)
+SBY 17:46:29 [task] summary: engine_0 (smtbmc yices) did not return a status
+SBY 17:46:29 [task] summary: cover trace: task/engine_0/trace0.vcd
+SBY 17:46:29 [task] summary:   reached cover statement block_ctrl.\block_ctrl_contract.c_bctrl_selected at  step 2
+SBY 17:46:29 [task] summary: unreached cover statements:
+SBY 17:46:29 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_conflict at 
+SBY 17:46:29 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_dot at 
+SBY 17:46:29 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_replay at 
+SBY 17:46:29 [task] summary:   block_ctrl.\block_ctrl_contract.c_bctrl_upload at 
+SBY 17:46:29 [task] DONE (TIMEOUT, rc=8)

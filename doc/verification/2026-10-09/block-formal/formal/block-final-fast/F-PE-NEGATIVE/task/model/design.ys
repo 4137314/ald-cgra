@@ -1,0 +1,9 @@
+# running in task/src/
+read_rtlil dut.il
+read_verilog -formal -D NEGATIVE pe_smoke.sv
+prep -top pe_smoke -flatten
+write_json properties.json
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

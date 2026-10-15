@@ -1,0 +1,24 @@
+make: Entering directory '/home/main/dev/git/ald-cgra/hw'
+ghdl -a --std=08 --workdir=build/ghdl rtl/cgra_pkg.vhd rtl/cgra_comp_pkg.vhd rtl/uart_rx.vhd rtl/uart_tx.vhd rtl/pe.vhd rtl/cgra_array.vhd rtl/cgra_ctrl.vhd rtl/block_pkg.vhd rtl/block_rx.vhd rtl/block_dot.vhd rtl/block_ctrl.vhd rtl/cgra_top.vhd sim/tb_blocks.vhd sim/tb_block_faults.vhd
+ghdl -e --std=08 --workdir=build/ghdl tb_blocks
+ghdl -e --std=08 --workdir=build/ghdl tb_block_faults
+sim/tb_blocks.vhd:172:5:@4771760ns:(report note): tb_blocks PASS: 886 events, DIV=1 UART=false
+simulation stopped @4771760ns
+sim/tb_block_faults.vhd:183:5:@127220ns:(report note): tb_block_faults PASS: upload/DOT reset, concurrent execution/readback; DIV=1
+simulation stopped @127220ns
+sim/tb_blocks.vhd:172:5:@4818210ns:(report note): tb_blocks PASS: 886 events, DIV=2 UART=false
+simulation stopped @4818210ns
+sim/tb_block_faults.vhd:183:5:@128580ns:(report note): tb_block_faults PASS: upload/DOT reset, concurrent execution/readback; DIV=2
+simulation stopped @128580ns
+sim/tb_blocks.vhd:172:5:@4864660ns:(report note): tb_blocks PASS: 886 events, DIV=3 UART=false
+simulation stopped @4864660ns
+sim/tb_block_faults.vhd:183:5:@129940ns:(report note): tb_block_faults PASS: upload/DOT reset, concurrent execution/readback; DIV=3
+simulation stopped @129940ns
+sim/tb_blocks.vhd:172:5:@4911110ns:(report note): tb_blocks PASS: 886 events, DIV=4 UART=false
+simulation stopped @4911110ns
+sim/tb_block_faults.vhd:183:5:@131300ns:(report note): tb_block_faults PASS: upload/DOT reset, concurrent execution/readback; DIV=4
+simulation stopped @131300ns
+ghdl -r --std=08 --workdir=build/ghdl tb_blocks -gG_UART=true --assert-level=error
+sim/tb_blocks.vhd:172:5:@32014430ns:(report note): tb_blocks PASS: 886 events, DIV=2 UART=true
+simulation stopped @32014430ns
+make: Leaving directory '/home/main/dev/git/ald-cgra/hw'

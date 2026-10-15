@@ -39,6 +39,7 @@ vunit block_dot_contract (block_dot(rtl)) {
   F_BLOCK_GUARD: assert always (guard <= G_STEP_DIV and f_age <= G_STEP_DIV);
   F_BLOCK_PENDING: assert always (remaining = f_pending);
   F_BLOCK_REMAINING: assert always (remaining > 0 -> index + remaining <= BLOCK_WORDS);
+  F_BLOCK_LIVE_COUNT: assert always (state = S_FETCH or state = S_READ or state = S_WAIT or state = S_CAPTURE -> remaining > 0);
   F_BLOCK_CAPTURE: assert always (step = '1' -> remaining > 0 and busy = '1' and dp_rst = '0');
   F_BLOCK_CADENCE: assert always (step = '1' -> f_age >= G_STEP_DIV-1);
   F_BLOCK_OPERANDS: assert always (f_seen and not f_operand_write -> operand_a = f_a and operand_b = f_b);

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T18:00:38" hostname="4137314" package="task" id="0" name="default" tests="6" errors="0" failures="0" time="10" skipped="5">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_167">
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:29.9-29.52" time="0" type="COVER" location="array_contract.sv:29.9-29.52" id="_witness_.check_cover_array_contract_sv_29_157">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_172">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_181">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_190">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_199">
+<skipped />
+</testcase>
+<system-out>SBY 18:00:31 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-ARRAY-1x1/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-ARRAY-1x1/task/src/dut.il'.
+SBY 18:00:31 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-ARRAY-1x1/pe_spec.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-ARRAY-1x1/task/src/pe_spec.sv'.
+SBY 18:00:31 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-ARRAY-1x1/array_contract.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-ARRAY-1x1/task/src/array_contract.sv'.
+SBY 18:00:31 [task] engine_0: smtbmc yices
+SBY 18:00:31 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 18:00:32 [task] base: finished (returncode=0)
+SBY 18:00:32 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 18:00:33 [task] prep: finished (returncode=0)
+SBY 18:00:33 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 18:00:33 [task] smt2: finished (returncode=0)
+SBY 18:00:33 [task] engine_0.basecase: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 4  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 18:00:33 [task] engine_0.induction: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -i --noprogress -t 4  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2&quot;
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 18:00:33 [task] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY 18:00:33 [task] engine_0.induction: ##   0:00:00  Trying induction in step 4..
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 2..
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 2..
+SBY 18:00:33 [task] engine_0.induction: ##   0:00:00  Trying induction in step 3..
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 3..
+SBY 18:00:33 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 3..
+SBY 18:00:33 [task] engine_0.induction: ##   0:00:00  Trying induction in step 2..
+SBY 18:00:35 [task] engine_0.basecase: ##   0:00:02  Status: passed
+SBY 18:00:35 [task] engine_0.basecase: finished (returncode=0)
+SBY 18:00:35 [task] engine_0.basecase: Status returned by engine for basecase: pass
+SBY 18:00:38 [task] engine_0.induction: ##   0:00:05  Temporal induction successful.
+SBY 18:00:38 [task] engine_0.induction: ##   0:00:05  Status: passed
+SBY 18:00:38 [task] engine_0.induction: finished (returncode=0)
+SBY 18:00:38 [task] engine_0.induction: Status returned by engine for induction: pass
+SBY 18:00:38 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:07 (7)
+SBY 18:00:38 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:10 (10)
+SBY 18:00:38 [task] summary: engine_0 (smtbmc yices) returned pass for basecase
+SBY 18:00:38 [task] summary: engine_0 (smtbmc yices) returned pass for induction
+SBY 18:00:38 [task] summary: engine_0 did not produce any traces
+SBY 18:00:38 [task] summary: successful proof by k-induction.
+SBY 18:00:38 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T18:07:52" hostname="4137314" package="task" id="0" name="default" tests="35" errors="0" failures="0" time="0" skipped="4">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_bad_stop in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_bad_stop">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_byte in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_byte">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_glitch in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_glitch">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER uart_rx_contract.c_rx_recovery in uart_rx" time="0" type="COVER" location="" id="uart_rx_contract.c_rx_recovery">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_accept in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_accept">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits0 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits0">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits1 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits1">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits2 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits2">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits3 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits3">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits4 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits4">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits5 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits5">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits6 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits6">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_bits7 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_bits7">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_break in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_break">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_confirm in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_confirm">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_counter in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_counter">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_drop in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_drop">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_eight in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_eight">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_glitch in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_glitch">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_index in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_index">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_last in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_last">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_pulse in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_pulse">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_release in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_release">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_reset in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_reset">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_sample in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_sample">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start_counter in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start_counter">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start_index in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start_index">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_start_tick in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_start_tick">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_state in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_state">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_sync1 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_sync1">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_sync2 in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_sync2">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_tick in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_tick">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_rx_valid_context in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_rx_valid_context">
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_rx_contract.f_selected in uart_rx" time="0" type="ASSERT" location="" id="uart_rx_contract.f_selected">
+</testcase>
+<system-out>SBY 18:07:51 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-UART-RX-C868/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/F-UART-RX-C868/task/src/dut.il'.
+SBY 18:07:52 [task] engine_0: smtbmc yices
+SBY 18:07:52 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 18:07:52 [task] base: finished (returncode=0)
+SBY 18:07:52 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 18:07:52 [task] prep: finished (returncode=0)
+SBY 18:07:52 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 18:07:52 [task] smt2: finished (returncode=0)
+SBY 18:07:52 [task] engine_0.basecase: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 16  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 18:07:52 [task] engine_0.induction: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -i --noprogress -t 16  --append 0 --dump-vcd engine_0/trace_induct.vcd --dump-yw engine_0/trace_induct.yw --dump-vlogtb engine_0/trace_induct_tb.v --dump-smtc engine_0/trace_induct.smtc model/design_smt2.smt2&quot;
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Solver: yices
+SBY 18:07:52 [task] engine_0.induction: ##   0:00:00  Solver: yices
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 0..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 0..
+SBY 18:07:52 [task] engine_0.induction: ##   0:00:00  Trying induction in step 16..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 1..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 1..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 2..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 2..
+SBY 18:07:52 [task] engine_0.induction: ##   0:00:00  Trying induction in step 15..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 3..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 3..
+SBY 18:07:52 [task] engine_0.induction: ##   0:00:00  Trying induction in step 14..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 4..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 4..
+SBY 18:07:52 [task] engine_0.induction: ##   0:00:00  Temporal induction successful.
+SBY 18:07:52 [task] engine_0.induction: ##   0:00:00  Status: passed
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 5..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 5..
+SBY 18:07:52 [task] engine_0.induction: finished (returncode=0)
+SBY 18:07:52 [task] engine_0.induction: Status returned by engine for induction: pass
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 6..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 6..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 7..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 7..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 8..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 8..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 9..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 9..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 10..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 10..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 11..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 11..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 12..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 12..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 13..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 13..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 14..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 14..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assumptions in step 15..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Checking assertions in step 15..
+SBY 18:07:52 [task] engine_0.basecase: ##   0:00:00  Status: passed
+SBY 18:07:52 [task] engine_0.basecase: finished (returncode=0)
+SBY 18:07:52 [task] engine_0.basecase: Status returned by engine for basecase: pass
+SBY 18:07:52 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 18:07:52 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 18:07:52 [task] summary: engine_0 (smtbmc yices) returned pass for basecase
+SBY 18:07:52 [task] summary: engine_0 (smtbmc yices) returned pass for induction
+SBY 18:07:52 [task] summary: engine_0 did not produce any traces
+SBY 18:07:52 [task] summary: successful proof by k-induction.
+SBY 18:07:52 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

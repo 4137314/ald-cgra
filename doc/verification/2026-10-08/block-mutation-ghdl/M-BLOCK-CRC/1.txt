@@ -1,0 +1,3 @@
+tb_blocks.vhd:109:10:error: cannot open file: build/blocks.vec
+    file vectors : text open read_mode is G_VECTOR_FILE;
+         ^

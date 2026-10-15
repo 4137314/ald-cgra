@@ -1,0 +1,40 @@
+-- Integrated production controller, frame receiver and RAM engine. Initial
+-- synchronous reset is supplied by cgra_top's initialized reset synchronizer.
+-- Later reset/RX bytes/TX busy/PE result are unrestricted.
+vunit block_ctrl_contract (block_ctrl(rtl)) {
+  default clock is rising_edge(clk);
+  F_SELECTED: assert always (G_STEP_DIV = 2 and G_TIMEOUT_CYCLES = 3);
+
+  signal f_seen : boolean := false;
+  monitor : process(clk)
+  begin
+    if rising_edge(clk) then f_seen <= true; end if;
+  end process;
+  A_BLOCK_INITIAL_RESET: assume always (not f_seen -> rst = '1');
+  F_BCTRL_STATE: assert always (state <= S_SEND_WAIT);
+  F_BCTRL_LOADED: assert always (loaded(0) <= BLOCK_WORDS and loaded(1) <= BLOCK_WORDS);
+  F_BCTRL_COUNT: assert always (dot_count <= BLOCK_WORDS);
+  F_BCTRL_UPLOAD_COUNT: assert always (upload_count >= 1 and upload_count <= BLOCK_CHUNK);
+  F_BCTRL_UPLOAD_INDEX: assert always (upload_index < upload_count);
+  F_BCTRL_UPLOAD_SPACE: assert always (upload_offset + upload_count <= BLOCK_WORDS);
+  F_BCTRL_WRITE_ADDRESS: assert always (wr_addr < BLOCK_WORDS);
+  F_BCTRL_LENGTH: assert always (request_length = 0 or (request_length >= 12 and request_length <= BLOCK_RAW));
+  F_BCTRL_REQUEST: assert always (state = S_CHECK or state = S_COMPARE or state = S_OP -> request_length >= 12 and request_length <= BLOCK_RAW);
+  F_BCTRL_COMPARE: assert always (state = S_COMPARE -> scan < request_length and request_length = cached_length);
+  F_BCTRL_BODY: assert always (body_length >= 11 and body_length <= 17 and cached_body >= 11 and cached_body <= 17);
+  F_BCTRL_CRC_INDEX: assert always (state = S_CRC -> scan <= body_length);
+  F_BCTRL_ENCODING: assert always (state = S_ENCODE -> scan <= body_length+1 and wire_length >= 1 and wire_length <= 2*scan+1);
+  F_BCTRL_CLOSING: assert always (state = S_CLOSE -> wire_length >= 1 and wire_length <= 2*(body_length+2)+1);
+  F_BCTRL_WIRE_SIZE: assert always (wire_length <= 40 and wire_index < 40);
+  F_BCTRL_SEND_INDEX: assert always (state = S_SEND or state = S_SEND_WAIT -> wire_index < wire_length);
+  F_BCTRL_NO_CONCURRENT_WRITE: assert always (wr_en = '1' -> dot_busy = '0');
+  F_BCTRL_DOT_START: assert always (dot_start = '1' -> dot_busy = '0' and dot_count <= loaded(0) and dot_count <= loaded(1));
+  F_BCTRL_DOT_CONTEXT: assert always (dot_busy = '1' -> state = S_DOT_WAIT);
+  F_BCTRL_MODE_HOLD: assert always (rst = '0' and framed = '1' -> next (framed = '1'));
+  F_BCTRL_RESET: assert always (rst = '1' -> next (state = S_IDLE and framed = '0' and not active and not result_valid and loaded(0) = 0 and loaded(1) = 0 and executions = 0 and cached_length = 0));
+  F_BCTRL_TX_LAUNCH: assert always (f_seen and tx_start = '1' -> prev(rst = '0' and state = S_SEND and tx_busy = '0') and state = S_SEND_WAIT);
+  F_BCTRL_TX_HOLD: assert always (rst = '0' and state = S_SEND_WAIT -> next (tx_data = prev(tx_data)));
+  C_BCTRL_SELECTED: cover {rst = '0' and framed = '1'};
+  C_BCTRL_UPLOAD: cover {rst = '0' and wr_en = '1'};
+  C_BCTRL_DOT: cover {rst = '0' and dot_start = '1'};
+}

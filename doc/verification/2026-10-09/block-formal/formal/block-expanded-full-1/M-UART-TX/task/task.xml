@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T18:08:02" hostname="4137314" package="task" id="0" name="default" tests="24" errors="0" failures="2" time="0" skipped="23">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="FAIL"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+<failure type="FAIL" message="Task returned status FAIL." />
+</testcase>
+<testcase classname="default" name="Property COVER uart_tx_contract.c_tx_complete in uart_tx" time="0" type="COVER" location="" id="uart_tx_contract.c_tx_complete">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER uart_tx_contract.c_tx_nonempty in uart_tx" time="0" type="COVER" location="" id="uart_tx_contract.c_tx_nonempty">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER uart_tx_contract.c_tx_reset in uart_tx" time="0" type="COVER" location="" id="uart_tx_contract.c_tx_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_selected in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_selected">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_bit_end in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_bit_end">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_busy in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_busy">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_capture in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_capture">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_counter in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_counter">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_data in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_data" tracefile="engine_0/trace.vcd">
+<failure type="ASSERT" message="Property ASSERT uart_tx_contract.f_tx_data in uart_tx failed. Trace file: engine_0/trace.vcd" />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_data_end in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_data_end">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_eight in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_eight">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_frame_end in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_frame_end">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_idle in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_idle">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_index in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_period in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_period">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_rank_positive in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_rank_positive">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_rank_progress in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_rank_progress">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_reset in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_start in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_start">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_start_end in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_start_end">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_start_index in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_start_index">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_state in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_state">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_stop in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_stop">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT uart_tx_contract.f_tx_word in uart_tx" time="0" type="ASSERT" location="" id="uart_tx_contract.f_tx_word">
+<skipped />
+</testcase>
+<system-out>SBY 18:08:02 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-UART-TX/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-UART-TX/task/src/dut.il'.
+SBY 18:08:02 [task] engine_0: smtbmc yices
+SBY 18:08:02 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 18:08:02 [task] base: finished (returncode=0)
+SBY 18:08:02 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 18:08:02 [task] prep: finished (returncode=0)
+SBY 18:08:02 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 18:08:02 [task] smt2: finished (returncode=0)
+SBY 18:08:02 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 40  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assumptions in step 3..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assertions in step 3..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assumptions in step 4..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assertions in step 4..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assumptions in step 5..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Checking assertions in step 5..
+SBY 18:08:02 [task] engine_0: ##   0:00:00  BMC failed!
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Assert failed in uart_tx: uart_tx_contract.f_tx_data
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Writing trace to VCD file: engine_0/trace.vcd
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Writing trace to constraints file: engine_0/trace.smtc
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 18:08:02 [task] engine_0: ##   0:00:00  Status: failed
+SBY 18:08:02 [task] engine_0: finished (returncode=1)
+SBY 18:08:02 [task] engine_0: Status returned by engine: FAIL
+SBY 18:08:02 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 18:08:02 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+SBY 18:08:02 [task] summary: engine_0 (smtbmc yices) returned FAIL
+SBY 18:08:02 [task] summary: counterexample trace: task/engine_0/trace.vcd
+SBY 18:08:02 [task] summary:   failed assertion uart_tx.\uart_tx_contract.f_tx_data at  step 5
+SBY 18:08:02 [task] DONE (FAIL, rc=2)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

@@ -1,0 +1,33 @@
+initial
+assume (= [$auto$async2sync.cc:107:execute$165] false)
+assume (= [$auto$async2sync.cc:107:execute$171] false)
+assume (= [$auto$async2sync.cc:107:execute$177] false)
+assume (= [$auto$async2sync.cc:107:execute$183] false)
+assume (= [$auto$async2sync.cc:116:execute$163] true)
+assume (= [$auto$async2sync.cc:116:execute$169] true)
+assume (= [$auto$async2sync.cc:116:execute$175] true)
+assume (= [$auto$async2sync.cc:116:execute$181] true)
+assume (= [$auto$async2sync.cc:116:execute$187] true)
+assume (= [$past$pe_smoke.sv:14$55$0] false)
+assume (= [_witness_.anyinit_procdff_143] false)
+assume (= [_witness_.anyinit_procdff_144] false)
+assume (= [_witness_.anyinit_procdff_145] #b1000000000000000)
+assume (= [_witness_.anyinit_procdff_146] false)
+assume (= [_witness_.anyinit_procdff_147] false)
+assume (= [_witness_.anyinit_procdff_148] #b0000)
+assume (= [_witness_.anyinit_procdff_149] #b1000000000000000)
+assume (= [_witness_.anyinit_procdff_150] false)
+assume (= [_witness_.anyinit_procdff_151] false)
+assume (= [_witness_.anyinit_procdff_152] #b0000)
+assume (= [_witness_.anyinit_procdff_153] #b1000000000000000)
+assume (= [dut.dut.r] #b0000000000000000)
+assume (= [past_valid] false)
+
+state 0
+assume (= [clk] false)
+
+state 1
+assume (= [clk] false)
+
+state 2
+assume (= [clk] false)

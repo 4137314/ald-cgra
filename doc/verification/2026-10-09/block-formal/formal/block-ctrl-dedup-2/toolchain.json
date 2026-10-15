@@ -1,0 +1,10 @@
+{
+  "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+  "ghdl": "6.0.0",
+  "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+  "yosys": "0.67",
+  "sby": "0.61",
+  "yices": "2.7.0",
+  "z3": "4.16.0",
+  "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+}

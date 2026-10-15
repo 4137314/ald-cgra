@@ -1,0 +1,5 @@
+tb_blocks.vhd:158:9:@2620130ns:(assertion failure): block reply length at event 527 expected 0 got 17
+ghdl:error: assertion failed
+  instance: /tb_blocks/stimulus
+  from: process work.tb_blocks(sim).stimulus at tb_blocks.vhd:158
+ghdl:error: simulation failed

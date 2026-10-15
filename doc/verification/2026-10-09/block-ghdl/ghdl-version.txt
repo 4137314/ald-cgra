@@ -1,0 +1,8 @@
+GHDL 6.0.0 (tarball) [Dunoon edition]
+ Compiled with GNAT Version: 15.2.0
+ static elaboration, mcode JIT code generator
+Written by Tristan Gingold.
+
+Copyright (C) 2003 - 2026 Tristan Gingold.
+GHDL is free software, covered by the GNU General Public License.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.

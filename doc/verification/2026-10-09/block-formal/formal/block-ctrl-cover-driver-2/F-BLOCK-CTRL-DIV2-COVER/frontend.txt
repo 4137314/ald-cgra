@@ -1,0 +1,60 @@
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)
+
+-- Running command `ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_ctrl_witness.vhd block_pkg.vhd block_rx.vhd block_dot.vhd block_ctrl.vhd block_rx_contract.psl block_dot_contract.psl block_ctrl_contract.psl -e block_ctrl_witness; write_rtlil dut.il; write_json frontend.json' --
+
+1. Executing GHDL.
+block_ctrl_witness.vhd:26:21:warning: declaration of "cycle" hides signal "cycle" [-Whide]
+  function stimulus(cycle, choice : natural) return byte_t is
+                    ^
+block_ctrl_witness.vhd:26:28:warning: declaration of "choice" hides signal "choice" [-Whide]
+  function stimulus(cycle, choice : natural) return byte_t is
+                           ^
+block_ctrl_witness.vhd:21:12:note: found ROM "n103", width: 8 bits, depth: 14
+  constant f_hello : bytes_t(0 to 13) := (x"7E", x"01", x"00", x"44", x"33", x"22", x"11", x"00", x"00", x"00", x"00", x"8D", x"E6", x"7E");
+           ^
+block_ctrl_witness.vhd:22:12:note: found ROM "n119", width: 8 bits, depth: 20
+  constant f_case_0 : bytes_t(0 to 19) := (x"7E", x"01", x"01", x"44", x"33", x"22", x"11", x"01", x"00", x"06", x"00", x"00", x"00", x"00", x"01", x"07", x"00", x"A6", x"EA", x"7E");
+           ^
+block_ctrl_witness.vhd:23:12:note: found ROM "n144", width: 8 bits, depth: 16
+  constant f_case_1 : bytes_t(0 to 15) := (x"7E", x"01", x"02", x"44", x"33", x"22", x"11", x"01", x"00", x"02", x"00", x"00", x"00", x"4A", x"F2", x"7E");
+           ^
+block_ctrl_witness.vhd:24:12:note: found ROM "n169", width: 8 bits, depth: 14
+  constant f_case_2 : bytes_t(0 to 13) := (x"7E", x"01", x"00", x"44", x"33", x"22", x"11", x"00", x"00", x"00", x"00", x"8D", x"E6", x"7E");
+           ^
+block_ctrl_witness.vhd:25:12:note: found ROM "n194", width: 8 bits, depth: 14
+  constant f_case_3 : bytes_t(0 to 13) := (x"7E", x"01", x"04", x"44", x"33", x"22", x"11", x"00", x"00", x"00", x"00", x"62", x"7A", x"7E");
+           ^
+block_dot.vhd:29:13:warning: unhandled attribute "dont_touch" [-Wunhandled-attribute]
+  attribute DONT_TOUCH of owned, operand_a, operand_b : signal is "TRUE";
+            ^
+block_dot.vhd:29:13:warning: unhandled attribute "dont_touch" [-Wunhandled-attribute]
+  attribute DONT_TOUCH of owned, operand_a, operand_b : signal is "TRUE";
+            ^
+block_dot.vhd:29:13:warning: unhandled attribute "dont_touch" [-Wunhandled-attribute]
+  attribute DONT_TOUCH of owned, operand_a, operand_b : signal is "TRUE";
+            ^
+block_dot.vhd:22:10:note: found RAM "bank_a", width: 16 bits, depth: 1024
+  signal bank_a, bank_b : ram_t;
+         ^
+block_dot.vhd:22:18:note: found RAM "bank_b", width: 16 bits, depth: 1024
+  signal bank_a, bank_b : ram_t;
+                 ^
+Importing module block_ctrl_witness.
+Importing module block_ctrl_Brtl_3_2.
+Importing module block_rx_Brtl_3.
+Importing module block_dot_Brtl_2.
+
+2. Executing RTLIL backend.
+Output filename: dut.il
+
+3. Executing JSON backend.
+
+End of script. Logfile hash: 3f617f35a3, time: 0.17s, user: 0.14s, system: 0.04s, MEM: 55.60 MB peak
+Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)
+Time spent: 46% 1x ghdl (0 sec), 41% 2x write_json (0 sec), ...

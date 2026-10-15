@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "run_id": "20261008T154411Z-222431",
+  "suite": "cover",
+  "tools": {
+    "ghdl": {
+      "path": "/nix/store/4gcl6ba0jcmvq2py06cz57fimap9xjvm-ghdl-mcode-6.0.0/bin/ghdl",
+      "reported_version": "GHDL 6.0.0 (tarball) [Dunoon edition]\n Compiled with GNAT Version: 15.2.0\n static elaboration, mcode JIT code generator\nWritten by Tristan Gingold.\n\nCopyright (C) 2003 - 2026 Tristan Gingold.\nGHDL is free software, covered by the GNU General Public License.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+    },
+    "yosys": {
+      "path": "/nix/store/vz9dbd00gg6hhwiq8g7hr88r1dv1y6gl-yosys-0.67/bin/yosys",
+      "reported_version": "Yosys 0.67+post (git sha1 v0.67, Release, GNU /nix/store/vdaz6sk455r8sbpi7wzaf9vlz5i9yyvx-gcc-wrapper-15.2.0/bin/g++ 15.2.0)"
+    },
+    "sby": {
+      "path": "/nix/store/lg6cbdi9sqnrabv6q5km512d49hsl3la-sby-0.61/bin/sby",
+      "reported_version": "unknown SBY version"
+    },
+    "yices-smt2": {
+      "path": "/nix/store/ly9shwfxflcdswib5cdzyj04y3ydgv33-yices-2.7.0/bin/yices-smt2",
+      "reported_version": "Yices 2.7.0\nCopyright SRI International.\nLinked with GMP 6.3.0\nCopyright Free Software Foundation, Inc.\nBuild date: 2026-07-01\nPlatform: x86_64-pc-linux-gnu (release)\nRevision: unknown"
+    },
+    "pinned_packages": {
+      "nixpkgs_revision": "61b7c44c4073f0b827768aff0049561b5110ea5a",
+      "ghdl": "6.0.0",
+      "ghdl_yosys_plugin_revision": "1b97dc71377cea7e861be6625be4353c377a5fb5",
+      "yosys": "0.67",
+      "sby": "0.61",
+      "yices": "2.7.0",
+      "z3": "4.16.0",
+      "note": "flake.lock is authoritative; SBY's packaged executable reports unknown version"
+    }
+  },
+  "commit": "0f8a54bce20506c141f18f90ac98aec04fc04191",
+  "dirty": true,
+  "runner_sha256": "051901e59ce8fce1287215f4cc9a0f8bf075adcf8d2b164f79c04c886ca8dff6",
+  "tasks": [
+    {
+      "id": "F-BLOCK-CTRL-DIV2-COVER",
+      "top": "block_ctrl",
+      "kind": "block_ctrl",
+      "mode": "cover",
+      "depth": 200,
+      "parameters": {
+        "G_STEP_DIV": 2,
+        "G_TIMEOUT_CYCLES": 3
+      },
+      "assertions": 71,
+      "assumptions": 5,
+      "covers": 5,
+      "block_witness": true,
+      "result": "ERROR",
+      "acceptance_passed": false,
+      "engine": "smtbmc yices",
+      "commands": [
+        [
+          "yosys",
+          "-p",
+          "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_dot.vhd block_ctrl.vhd block_rx_contract.psl block_dot_contract.psl block_ctrl_contract.psl -e block_ctrl; write_rtlil dut.il; write_json frontend.json"
+        ]
+      ],
+      "logs": [
+        "frontend.txt"
+      ],
+      "clock": "rising_edge(clk)",
+      "initial_state": "production RTL initial values",
+      "environment": "all inputs unconstrained; no transmitter fairness assumed",
+      "source_sha256": {
+        "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+        "hw/formal/block_ctrl_cover.psl": "2cdbeb2a2bf23ee48f5381500ac34d3cfe0866a6260c877103f551a727ab17b8",
+        "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+        "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+        "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+        "hw/rtl/block_ctrl.vhd": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+        "hw/formal/block_rx_contract.psl": "1a794dbc191089c07429a99bd612857ed432de882fb4c8e72850e90143926302",
+        "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+        "hw/formal/block_ctrl_contract.psl": "5ae0c177d66e1b43df116ea3f232799b3edb51911fe4bc85114b8e41c6ea29cf"
+      },
+      "parameter_check_sha256": "c50defb554ab3389bca23f1e2f4e14d886844658d8419c751b53deba22c10c2c",
+      "effective_properties_sha256": "0a44c30d7973d851242a43c505367cfe2f333a9c18850fb52466d67f72c18f59",
+      "effective_child_properties_sha256": {
+        "block_dot_contract.psl": "ab01081a8f48eb08ccb29fbbcabddbb9846354344119035c23033f676fdb0194",
+        "block_rx_contract.psl": "84b45a5ec4c9bb8c5c76ead3c0dbaf9e4693c4e1d0030580919843a9f6cc330c"
+      },
+      "discharged_obligation": "block_dot.count <= 1024 asserted as F_BCTRL_COUNT on its actual connected input",
+      "error": "VHDL frontend failed",
+      "duration_seconds": 0.125
+    }
+  ],
+  "complete_suite": false,
+  "selected_task_ids": [
+    "F-BLOCK-CTRL-DIV2-COVER"
+  ]
+}

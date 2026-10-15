@@ -1,0 +1,19 @@
+[options]
+mode cover
+depth 40
+timeout 90
+[engines]
+smtbmc yices
+[script]
+read_rtlil dut.il
+read_verilog -formal  pe_contract.sv pe_spec.sv
+prep -top pe_contract -flatten
+wreduce
+opt -full
+techmap
+opt -full
+write_json properties.json
+[files]
+dut.il
+pe_contract.sv
+pe_spec.sv

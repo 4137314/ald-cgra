@@ -1,0 +1,76 @@
+{
+  "id": "F-BLOCK-CTRL-DIV2",
+  "top": "block_ctrl",
+  "kind": "block_ctrl",
+  "mode": "prove",
+  "depth": 12,
+  "parameters": {
+    "G_STEP_DIV": 2,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 43,
+  "assumptions": 1,
+  "covers": 7,
+  "result": "UNKNOWN",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_dot.vhd block_ctrl.vhd block_rx_contract.psl block_ctrl_contract.psl -e block_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "initial synchronous reset; later reset/RX/TX busy/PE result unrestricted",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+    "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+    "hw/rtl/block_ctrl.vhd": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+    "hw/formal/block_rx_contract.psl": "1a794dbc191089c07429a99bd612857ed432de882fb4c8e72850e90143926302",
+    "hw/formal/block_ctrl_contract.psl": "260ad28fcf3e1995631289e240543bd31cf207e87580e2c8c027effebcae7de1"
+  },
+  "parameter_check_sha256": "c50defb554ab3389bca23f1e2f4e14d886844658d8419c751b53deba22c10c2c",
+  "effective_properties_sha256": "c8d4fc8c483aa73889c61f729de296ff535068937a6907806fe7ca209372e02c",
+  "checked_port_widths": {
+    "a": 16,
+    "b": 16,
+    "pe_result": 16,
+    "rx_data": 8,
+    "tx_data": 8
+  },
+  "scope": "integrated parser/length/index safety, commit bounds, ownership and TX handshake",
+  "exit_code": 4,
+  "solver_status": "UNKNOWN",
+  "property_cells": {
+    "assume": 1,
+    "cover": 7,
+    "assert": 43
+  },
+  "smt2_cells": {
+    "assert": 43,
+    "assume": 2,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "decd5b252cc9d39894eafad6a0a5580c98392016f1ada8d798355b7b3402c09c",
+    "task/src/properties.json": "bfcdd4fbb1b3b354a5ac6e1c5631f09e14c1a91c915baf6850a0d781e6891dee",
+    "task/model/design_smt2.smt2": "aafeadceee332db517b355e0336cc19478f97bc5aa73a6b3b46b3ba2058a2a72"
+  },
+  "traces": [
+    "task/engine_0/trace_induct.yw"
+  ],
+  "duration_seconds": 12.96
+}

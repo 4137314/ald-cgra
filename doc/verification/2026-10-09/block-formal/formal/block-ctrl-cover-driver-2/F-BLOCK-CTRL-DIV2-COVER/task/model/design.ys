@@ -1,0 +1,11 @@
+# running in task/src/
+read_rtlil dut.il
+delete -output block_ctrl_witness/w:*
+prep -top block_ctrl_witness -flatten
+memory_map
+opt -full
+write_json properties.json
+hierarchy -smtcheck
+rename -witness
+write_jny -no-connections ../model/design.json
+write_rtlil ../model/design.il

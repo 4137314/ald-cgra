@@ -1,0 +1,41 @@
+initial
+assume (= [$auto$ghdl.cc:825:import_module$284] #b0001)
+assume (= [$auto$ghdl.cc:825:import_module$331] #b001)
+assume (= [bit_idx] #b000)
+assume (= [clk_cnt] #b00)
+assume (= [data_r] #b00000000)
+assume (= [state] #b00)
+assume (= [tx_busy] false)
+assume (= [tx_serial] false)
+assume (= [uart_tx_contract.f_seen] false)
+assume (= [uart_tx_contract.f_word] #b00000000)
+
+state 0
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [tx_data] #b10000000)
+assume (= [tx_start] true)
+
+state 1
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [tx_data] #b00000000)
+assume (= [tx_start] true)
+
+state 2
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [tx_data] #b00000000)
+assume (= [tx_start] false)
+
+state 3
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [tx_data] #b00000000)
+assume (= [tx_start] false)
+
+state 4
+assume (= [clk] false)
+assume (= [rst] false)
+assume (= [tx_data] #b00000000)
+assume (= [tx_start] false)

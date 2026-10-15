@@ -1,0 +1,68 @@
+{
+  "id": "F-BLOCK-RX-T3",
+  "top": "block_rx",
+  "kind": "block_rx",
+  "mode": "prove",
+  "depth": 8,
+  "parameters": {
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 20,
+  "assumptions": 0,
+  "covers": 4,
+  "result": "PROVED",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_rx_contract.psl -e block_rx; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "all inputs unconstrained; no transmitter fairness assumed",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+    "hw/formal/block_rx_contract.psl": "1a794dbc191089c07429a99bd612857ed432de882fb4c8e72850e90143926302"
+  },
+  "parameter_check_sha256": "b05c13ee642229c1619e2c5c8ce256070ce517d9b7899c8de51080f2f674000e",
+  "effective_properties_sha256": "bd57970c587347c3e1b758767780d41da9fd5db99f3de3e57112b97054facaf5",
+  "checked_port_widths": {
+    "raw": 1152,
+    "rx_data": 8,
+    "length": 8,
+    "valid_o": 1
+  },
+  "scope": "bounded storage, ordered append, CRC recurrence/publication, reset and watchdog safety",
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "cover": 4,
+    "assert": 20
+  },
+  "smt2_cells": {
+    "assert": 20,
+    "assume": 1,
+    "cover": 0
+  },
+  "smt2_user_assumptions": 0,
+  "model_sha256": {
+    "dut.il": "6fe9dd31c762a97868c201b34fee74fd8c39bc0b605515cab71b78072938dda0",
+    "task/src/properties.json": "ab6d5133e590a7c49003f19172ffa50975a90278e1e1a1a12bad0d551e8ffd5e",
+    "task/model/design_smt2.smt2": "8da6e09a8b2b0609c0e28602f0ae38572b733ca4545ec9761f10461257ac4163"
+  },
+  "traces": [],
+  "duration_seconds": 8.404
+}

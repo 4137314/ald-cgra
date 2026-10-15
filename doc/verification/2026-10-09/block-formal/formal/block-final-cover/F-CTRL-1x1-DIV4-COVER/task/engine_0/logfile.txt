@@ -1,0 +1,82 @@
+##   0:00:00  Solver: yices
+##   0:00:00  Checking cover reachability in step 0..
+##   0:00:00  Reached cover statement in step 0 at cgra_ctrl: ctrl_contract.c_ctrl_step
+##   0:00:00  Writing trace to VCD file: engine_0/trace0.vcd
+##   0:00:00  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+##   0:00:00  Writing trace to constraints file: engine_0/trace0.smtc
+##   0:00:00  Writing trace to Yosys witness file: engine_0/trace0.yw
+##   0:00:00  Checking cover reachability in step 0..
+##   0:00:00  Checking cover reachability in step 1..
+##   0:00:00  Reached cover statement in step 1 at cgra_ctrl: ctrl_contract.c_ctrl_255
+##   0:00:00  Writing trace to VCD file: engine_0/trace1.vcd
+##   0:00:00  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+##   0:00:00  Writing trace to constraints file: engine_0/trace1.smtc
+##   0:00:00  Writing trace to Yosys witness file: engine_0/trace1.yw
+##   0:00:00  Checking cover reachability in step 1..
+##   0:00:00  Checking cover reachability in step 2..
+##   0:00:00  Reached cover statement in step 2 at cgra_ctrl: ctrl_contract.c_ctrl_nack
+##   0:00:00  Writing trace to VCD file: engine_0/trace2.vcd
+##   0:00:00  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+##   0:00:00  Writing trace to constraints file: engine_0/trace2.smtc
+##   0:00:00  Writing trace to Yosys witness file: engine_0/trace2.yw
+##   0:00:00  Checking cover reachability in step 2..
+##   0:00:00  Checking cover reachability in step 3..
+##   0:00:00  Checking cover reachability in step 4..
+##   0:00:00  Checking cover reachability in step 5..
+##   0:00:00  Reached cover statement in step 5 at cgra_ctrl: ctrl_contract.c_ctrl_timeout
+##   0:00:00  Writing trace to VCD file: engine_0/trace3.vcd
+##   0:00:00  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+##   0:00:00  Writing trace to constraints file: engine_0/trace3.smtc
+##   0:00:00  Writing trace to Yosys witness file: engine_0/trace3.yw
+##   0:00:00  Checking cover reachability in step 5..
+##   0:00:00  Checking cover reachability in step 6..
+##   0:00:00  Reached cover statement in step 6 at cgra_ctrl: ctrl_contract.c_ctrl_zero
+##   0:00:00  Writing trace to VCD file: engine_0/trace4.vcd
+##   0:00:00  Writing trace to Verilog testbench: engine_0/trace4_tb.v
+##   0:00:00  Writing trace to constraints file: engine_0/trace4.smtc
+##   0:00:00  Writing trace to Yosys witness file: engine_0/trace4.yw
+##   0:00:00  Checking cover reachability in step 6..
+##   0:00:00  Checking cover reachability in step 7..
+##   0:00:00  Checking cover reachability in step 8..
+##   0:00:00  Checking cover reachability in step 9..
+##   0:00:00  Checking cover reachability in step 10..
+##   0:00:01  Checking cover reachability in step 11..
+##   0:00:01  Checking cover reachability in step 12..
+##   0:00:02  Checking cover reachability in step 13..
+##   0:00:03  Checking cover reachability in step 14..
+##   0:00:05  Checking cover reachability in step 15..
+##   0:00:09  Checking cover reachability in step 16..
+##   0:00:13  Checking cover reachability in step 17..
+##   0:00:19  Checking cover reachability in step 18..
+##   0:00:21  Reached cover statement in step 18 at cgra_ctrl: ctrl_contract.c_ctrl_data_capture
+##   0:00:21  Writing trace to VCD file: engine_0/trace5.vcd
+##   0:00:21  Writing trace to Verilog testbench: engine_0/trace5_tb.v
+##   0:00:21  Writing trace to constraints file: engine_0/trace5.smtc
+##   0:00:21  Writing trace to Yosys witness file: engine_0/trace5.yw
+##   0:00:21  Checking cover reachability in step 18..
+##   0:00:22  Reached cover statement in step 18 at cgra_ctrl: ctrl_contract.c_exec_empty
+##   0:00:22  Reached cover statement in step 18 at cgra_ctrl: ctrl_contract.c_exec_nack_complete
+##   0:00:22  Writing trace to VCD file: engine_0/trace6.vcd
+##   0:00:22  Writing trace to Verilog testbench: engine_0/trace6_tb.v
+##   0:00:22  Writing trace to constraints file: engine_0/trace6.smtc
+##   0:00:22  Writing trace to Yosys witness file: engine_0/trace6.yw
+##   0:00:22  Checking cover reachability in step 18..
+##   0:00:23  Checking cover reachability in step 19..
+##   0:00:24  Checking cover reachability in step 20..
+##   0:00:25  Checking cover reachability in step 21..
+##   0:00:26  Checking cover reachability in step 22..
+##   0:00:27  Checking cover reachability in step 23..
+##   0:00:28  Checking cover reachability in step 24..
+##   0:00:29  Checking cover reachability in step 25..
+##   0:00:32  Checking cover reachability in step 26..
+##   0:00:34  Checking cover reachability in step 27..
+##   0:00:36  Checking cover reachability in step 28..
+##   0:00:38  Checking cover reachability in step 29..
+##   0:00:41  Checking cover reachability in step 30..
+##   0:00:47  Checking cover reachability in step 31..
+##   0:00:52  Reached cover statement in step 31 at cgra_ctrl: ctrl_contract.c_exec_full
+##   0:00:52  Writing trace to VCD file: engine_0/trace7.vcd
+##   0:00:53  Writing trace to Verilog testbench: engine_0/trace7_tb.v
+##   0:00:53  Writing trace to constraints file: engine_0/trace7.smtc
+##   0:00:53  Writing trace to Yosys witness file: engine_0/trace7.yw
+##   0:00:53  Status: passed

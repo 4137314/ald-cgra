@@ -1,0 +1,85 @@
+{
+  "id": "F-BLOCK-CTRL-DIV2-COVER",
+  "top": "block_ctrl",
+  "kind": "block_ctrl",
+  "mode": "cover",
+  "depth": 200,
+  "parameters": {
+    "G_STEP_DIV": 2,
+    "G_TIMEOUT_CYCLES": 3
+  },
+  "assertions": 71,
+  "assumptions": 5,
+  "covers": 5,
+  "block_witness": true,
+  "result": "TIMEOUT",
+  "acceptance_passed": false,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 -gG_TIMEOUT_CYCLES=3 cgra_pkg.vhd block_pkg.vhd block_rx.vhd block_dot.vhd block_ctrl.vhd block_rx_contract.psl block_dot_contract.psl block_ctrl_contract.psl -e block_ctrl; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "reachability-only schedule: initial reset, prompt TX, preflight/HELLO then one of four fixed valid frames",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/formal/block_ctrl_cover.psl": "216951f58c67f9e402af53b2df2ec1bb49b17bfff469dbbfd589436b7eb07071",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_rx.vhd": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+    "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+    "hw/rtl/block_ctrl.vhd": "85e2cb9fed647ce4e71af7933b6ee93dccde193d5f531a9436acb361edb13916",
+    "hw/formal/block_rx_contract.psl": "1a794dbc191089c07429a99bd612857ed432de882fb4c8e72850e90143926302",
+    "hw/formal/block_dot_contract.psl": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+    "hw/formal/block_ctrl_contract.psl": "5ae0c177d66e1b43df116ea3f232799b3edb51911fe4bc85114b8e41c6ea29cf"
+  },
+  "parameter_check_sha256": "c50defb554ab3389bca23f1e2f4e14d886844658d8419c751b53deba22c10c2c",
+  "effective_properties_sha256": "4fee30771b65054c90eca5b9563d244b4447a3b6ba9c53b1b2fd6aab12df5458",
+  "effective_child_properties_sha256": {
+    "block_dot_contract.psl": "ab01081a8f48eb08ccb29fbbcabddbb9846354344119035c23033f676fdb0194",
+    "block_rx_contract.psl": "84b45a5ec4c9bb8c5c76ead3c0dbaf9e4693c4e1d0030580919843a9f6cc330c"
+  },
+  "discharged_obligation": "block_dot.count <= 1024 asserted as F_BCTRL_COUNT on its actual connected input",
+  "checked_port_widths": {
+    "a": 16,
+    "b": 16,
+    "pe_result": 16,
+    "rx_data": 8,
+    "tx_data": 8
+  },
+  "scope": "dispatcher covers only; witness assumptions are absent from universal proofs",
+  "exit_code": 8,
+  "solver_status": "TIMEOUT",
+  "property_cells": {
+    "assume": 5,
+    "cover": 5,
+    "assert": 71
+  },
+  "smt2_cells": {
+    "assert": 0,
+    "assume": 6,
+    "cover": 5
+  },
+  "smt2_user_assumptions": 5,
+  "model_sha256": {
+    "dut.il": "d036b5e76a4cd3f0399523cfb4d10811b185e6bcacd9e09581549381c85f3e93",
+    "task/src/properties.json": "bcf31108e52c6ca57052e5d5f0e8b1b5c7e418581e0fa6a0a35adcd5953637bf",
+    "task/model/design_smt2.smt2": "724b27882d33e49c331f9ff099642e78dffa1b882e057d15c3f4d328585f77de"
+  },
+  "traces": [
+    "task/engine_0/trace0.yw"
+  ],
+  "meaning": "bounded reachability only; no universal guarantee",
+  "duration_seconds": 93.098
+}

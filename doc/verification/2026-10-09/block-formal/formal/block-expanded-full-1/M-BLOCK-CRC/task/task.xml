@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-08T18:04:26" hostname="4137314" package="task" id="0" name="default" tests="26" errors="0" failures="2" time="13" skipped="25">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="FAIL"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+<failure type="FAIL" message="Task returned status FAIL." />
+</testcase>
+<testcase classname="default" name="Property COVER block_rx_contract.c_frame_escape in block_rx" time="0" type="COVER" location="" id="block_rx_contract.c_frame_escape">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER block_rx_contract.c_frame_ok in block_rx" time="0" type="COVER" location="" id="block_rx_contract.c_frame_ok">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER block_rx_contract.c_frame_reject in block_rx" time="0" type="COVER" location="" id="block_rx_contract.c_frame_reject">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER block_rx_contract.c_frame_timeout in block_rx" time="0" type="COVER" location="" id="block_rx_contract.c_frame_timeout">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_accept in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_accept">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_append in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_append">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_bad_escape in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_bad_escape">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_bad_sticky in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_bad_sticky">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_crc_publish in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_crc_publish" tracefile="engine_0/trace.vcd">
+<failure type="ASSERT" message="Property ASSERT block_rx_contract.f_frame_crc_publish in block_rx failed. Trace file: engine_0/trace.vcd" />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_crc_recurrence in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_crc_recurrence">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_data_hold in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_data_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_escape_prefix in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_escape_prefix">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_no_overwrite in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_no_overwrite">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_overflow in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_overflow">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_publish in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_publish">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_pulse in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_pulse">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_ready_hold in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_ready_hold">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_reset in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_reset">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_start in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_start">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_timeout in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_timeout">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_timer in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_timer">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_timer_clear in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_timer_clear">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_timer_tick in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_timer_tick">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_used in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_used">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_frame_valid_flag in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_frame_valid_flag">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT block_rx_contract.f_selected in block_rx" time="0" type="ASSERT" location="" id="block_rx_contract.f_selected">
+<skipped />
+</testcase>
+<system-out>SBY 18:04:06 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-BLOCK-CRC/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-expanded-full-1/M-BLOCK-CRC/task/src/dut.il'.
+SBY 18:04:06 [task] engine_0: smtbmc yices
+SBY 18:04:06 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 18:04:10 [task] base: finished (returncode=0)
+SBY 18:04:10 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 18:04:11 [task] prep: finished (returncode=0)
+SBY 18:04:11 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 18:04:12 [task] smt2: finished (returncode=0)
+SBY 18:04:12 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll --noprogress -t 20  --append 0 --dump-vcd engine_0/trace.vcd --dump-yw engine_0/trace.yw --dump-vlogtb engine_0/trace_tb.v --dump-smtc engine_0/trace.smtc model/design_smt2.smt2&quot;
+SBY 18:04:12 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 18:04:12 [task] engine_0: ##   0:00:00  Checking assumptions in step 0..
+SBY 18:04:12 [task] engine_0: ##   0:00:00  Checking assertions in step 0..
+SBY 18:04:12 [task] engine_0: ##   0:00:00  Checking assumptions in step 1..
+SBY 18:04:12 [task] engine_0: ##   0:00:00  Checking assertions in step 1..
+SBY 18:04:12 [task] engine_0: ##   0:00:00  Checking assumptions in step 2..
+SBY 18:04:12 [task] engine_0: ##   0:00:00  Checking assertions in step 2..
+SBY 18:04:13 [task] engine_0: ##   0:00:01  Checking assumptions in step 3..
+SBY 18:04:13 [task] engine_0: ##   0:00:01  Checking assertions in step 3..
+SBY 18:04:13 [task] engine_0: ##   0:00:01  Checking assumptions in step 4..
+SBY 18:04:13 [task] engine_0: ##   0:00:01  Checking assertions in step 4..
+SBY 18:04:14 [task] engine_0: ##   0:00:01  Checking assumptions in step 5..
+SBY 18:04:14 [task] engine_0: ##   0:00:01  Checking assertions in step 5..
+SBY 18:04:14 [task] engine_0: ##   0:00:01  Checking assumptions in step 6..
+SBY 18:04:14 [task] engine_0: ##   0:00:02  Checking assertions in step 6..
+SBY 18:04:14 [task] engine_0: ##   0:00:02  Checking assumptions in step 7..
+SBY 18:04:14 [task] engine_0: ##   0:00:02  Checking assertions in step 7..
+SBY 18:04:15 [task] engine_0: ##   0:00:02  Checking assumptions in step 8..
+SBY 18:04:15 [task] engine_0: ##   0:00:02  Checking assertions in step 8..
+SBY 18:04:17 [task] engine_0: ##   0:00:03  Checking assumptions in step 9..
+SBY 18:04:17 [task] engine_0: ##   0:00:03  Checking assertions in step 9..
+SBY 18:04:17 [task] engine_0: ##   0:00:03  Checking assumptions in step 10..
+SBY 18:04:17 [task] engine_0: ##   0:00:03  Checking assertions in step 10..
+SBY 18:04:17 [task] engine_0: ##   0:00:04  Checking assumptions in step 11..
+SBY 18:04:17 [task] engine_0: ##   0:00:04  Checking assertions in step 11..
+SBY 18:04:18 [task] engine_0: ##   0:00:05  Checking assumptions in step 12..
+SBY 18:04:18 [task] engine_0: ##   0:00:05  Checking assertions in step 12..
+SBY 18:04:19 [task] engine_0: ##   0:00:07  Checking assumptions in step 13..
+SBY 18:04:19 [task] engine_0: ##   0:00:07  Checking assertions in step 13..
+SBY 18:04:21 [task] engine_0: ##   0:00:09  Checking assumptions in step 14..
+SBY 18:04:21 [task] engine_0: ##   0:00:09  Checking assertions in step 14..
+SBY 18:04:22 [task] engine_0: ##   0:00:10  BMC failed!
+SBY 18:04:22 [task] engine_0: ##   0:00:10  Assert failed in block_rx: block_rx_contract.f_frame_crc_publish
+SBY 18:04:22 [task] engine_0: ##   0:00:10  Writing trace to VCD file: engine_0/trace.vcd
+SBY 18:04:23 [task] engine_0: ##   0:00:10  Writing trace to Verilog testbench: engine_0/trace_tb.v
+SBY 18:04:23 [task] engine_0: ##   0:00:10  Writing trace to constraints file: engine_0/trace.smtc
+SBY 18:04:23 [task] engine_0: ##   0:00:10  Writing trace to Yosys witness file: engine_0/trace.yw
+SBY 18:04:23 [task] engine_0: ##   0:00:10  Status: failed
+SBY 18:04:26 [task] engine_0: finished (returncode=1)
+SBY 18:04:26 [task] engine_0: Status returned by engine: FAIL
+SBY 18:04:26 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:20 (20)
+SBY 18:04:26 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:13 (13)
+SBY 18:04:26 [task] summary: engine_0 (smtbmc yices) returned FAIL
+SBY 18:04:26 [task] summary: counterexample trace: task/engine_0/trace.vcd
+SBY 18:04:26 [task] summary:   failed assertion block_rx.\block_rx_contract.f_frame_crc_publish at  step 14
+SBY 18:04:26 [task] DONE (FAIL, rc=2)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

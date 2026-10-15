@@ -1,0 +1,56 @@
+{
+  "source": "/home/main/dev/git/ald-cgra/hw/build/formal/block-rx-probe-1",
+  "files": {
+    "F-BLOCK-RX-T3/block_pkg.vhd": {
+      "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+      "archived": true,
+      "bytes": 1129
+    },
+    "F-BLOCK-RX-T3/block_rx.vhd": {
+      "sha256": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+      "archived": true,
+      "bytes": 2992
+    },
+    "F-BLOCK-RX-T3/block_rx_contract.psl": {
+      "sha256": "5d0652294ef1be1421fee9e413460bddc53e53e50b883f26ad751f6ac4a4c2aa",
+      "archived": true,
+      "bytes": 4221
+    },
+    "F-BLOCK-RX-T3/block_rx_contract.source.psl": {
+      "sha256": "cb4cb77a2efa3bfbee083dbb5449ee7dcc0fe0f6f7a91bb2426fb679aa55ec61",
+      "archived": true,
+      "bytes": 4168
+    },
+    "F-BLOCK-RX-T3/cgra_pkg.vhd": {
+      "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+      "archived": true,
+      "bytes": 7159
+    },
+    "F-BLOCK-RX-T3/frontend.txt": {
+      "sha256": "6cfc6b557b051c2964075662cf00c24aadacbb63bf0bf95136c86397cabe1f24",
+      "archived": true,
+      "bytes": 1086
+    },
+    "F-BLOCK-RX-T3/result.json": {
+      "sha256": "5bcd519290f8a5468965af2f4441cdf36b8bee1f216231165996f4797a53c8db",
+      "archived": true,
+      "bytes": 1404
+    },
+    "manifest.json": {
+      "sha256": "26bf2c403101976ab00aeccc9526a29e11717f80266d83385db3c7408815f329",
+      "archived": true,
+      "bytes": 3533
+    },
+    "run.py": {
+      "sha256": "3326421792fdea9d6cdc9a32b0ffa784327c8bb9e714a755ee74833c7059509d",
+      "archived": true,
+      "bytes": 29131
+    },
+    "toolchain.json": {
+      "sha256": "3674a5f8cde5b40cfc3b3839777a111ea47ca1f12b7d8b5894f167d42bc619de",
+      "archived": true,
+      "bytes": 330
+    }
+  },
+  "note": "Original manifest unchanged. Large generated RTLIL/SMT2 and physical checkpoints/bitstreams omitted; hashes retained. Reproduce using saved source copies and commands. This is not a programming artifact."
+}

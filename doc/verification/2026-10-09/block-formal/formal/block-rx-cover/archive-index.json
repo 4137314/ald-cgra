@@ -1,0 +1,257 @@
+{
+  "source": "/home/main/dev/git/ald-cgra/hw/build/formal/block-rx-cover",
+  "files": {
+    "F-BLOCK-RX-T3-COVER/block_pkg.vhd": {
+      "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+      "archived": true,
+      "bytes": 1129
+    },
+    "F-BLOCK-RX-T3-COVER/block_rx.vhd": {
+      "sha256": "cabd18d2e22886bb3dda7e3d2b5d643822e13b3389a2242736ba3e8d1d5d06ce",
+      "archived": true,
+      "bytes": 2992
+    },
+    "F-BLOCK-RX-T3-COVER/block_rx_contract.psl": {
+      "sha256": "bd57970c587347c3e1b758767780d41da9fd5db99f3de3e57112b97054facaf5",
+      "archived": true,
+      "bytes": 5432
+    },
+    "F-BLOCK-RX-T3-COVER/block_rx_contract.source.psl": {
+      "sha256": "1a794dbc191089c07429a99bd612857ed432de882fb4c8e72850e90143926302",
+      "archived": true,
+      "bytes": 5379
+    },
+    "F-BLOCK-RX-T3-COVER/cgra_pkg.vhd": {
+      "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+      "archived": true,
+      "bytes": 7159
+    },
+    "F-BLOCK-RX-T3-COVER/dut.il": {
+      "sha256": "6fe9dd31c762a97868c201b34fee74fd8c39bc0b605515cab71b78072938dda0",
+      "archived": false,
+      "bytes": 970671
+    },
+    "F-BLOCK-RX-T3-COVER/frontend.json": {
+      "sha256": "391440801171e49128595082e3ce1306ab21bbf24d730a8d25892e7afc1f6e70",
+      "archived": false,
+      "bytes": 2649779
+    },
+    "F-BLOCK-RX-T3-COVER/frontend.txt": {
+      "sha256": "aabddca7c306b76f966a82a808d2c6de3585c9cf9f4780b282a055d4630d4554",
+      "archived": true,
+      "bytes": 1144
+    },
+    "F-BLOCK-RX-T3-COVER/result.json": {
+      "sha256": "35f12aaa69b12cc47a008f541d1300ce5555469b143340036023c0f2cf0bad77",
+      "archived": true,
+      "bytes": 2369
+    },
+    "F-BLOCK-RX-T3-COVER/solver.txt": {
+      "sha256": "fdf47790df4fff1e6f9a1774d13f2c6f3a8d2e12b1f0e885ed91fd11d60ca0a5",
+      "archived": true,
+      "bytes": 5242
+    },
+    "F-BLOCK-RX-T3-COVER/task/PASS": {
+      "sha256": "b815e1cdcc8d20eb61586dbeedc0c77e2a9e07917e9431f15d5660b0de95dbd2",
+      "archived": true,
+      "bytes": 708
+    },
+    "F-BLOCK-RX-T3-COVER/task/config.sby": {
+      "sha256": "d4d43b55a8ab196f764a044e5f49c1b1f734b9f3488c6bd60589d74b70a24d9b",
+      "archived": true,
+      "bytes": 161
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/logfile.txt": {
+      "sha256": "731dd8611e0748cf15341fa9111b71a0c06f0ff88a3efa72ac37e5cc62871360",
+      "archived": true,
+      "bytes": 2004
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace0.smtc": {
+      "sha256": "8497c34e9d684ccf29ebc3ac051199fef47095e23debfe4856da64b58b95a62e",
+      "archived": true,
+      "bytes": 1713
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace0.vcd": {
+      "sha256": "e4150aa692b9fbefc4055bd1c01f04461e4e99d58a5d3094ade95f88f6fe4378",
+      "archived": true,
+      "bytes": 5133
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace0.yw": {
+      "sha256": "ed6cbc2194d01ca25231013c3c89898196249700e76507ce52a279a9f8ede5f4",
+      "archived": true,
+      "bytes": 2759
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace0_tb.v": {
+      "sha256": "ffd5f57a91a21d946a75edb178a1f0f392db98b67a346d4d39551b109462e1cb",
+      "archived": true,
+      "bytes": 2543
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace1.smtc": {
+      "sha256": "c5725f0a1adca256cfb49eff735848e28f04e68c9a1f986c8dd2c97ee5b99f43",
+      "archived": true,
+      "bytes": 2269
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace1.vcd": {
+      "sha256": "3ffaa84142083e7d09610f59893904dfe1b963e69e3966a3be002c9d7348c072",
+      "archived": true,
+      "bytes": 22325
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace1.yw": {
+      "sha256": "b6fdf4eec461251fd635d90fae869f803295494e73d40ca24f1a91ba5b728759",
+      "archived": true,
+      "bytes": 10047
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace1_tb.v": {
+      "sha256": "63d77f45403c3f42cd5ab8c487836605f43e48359788414ca77d7c1966b6989a",
+      "archived": true,
+      "bytes": 3167
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace2.smtc": {
+      "sha256": "e55313773510bf53835e1c9c53c67fe337e6b233cc009b2b97aaf82537de58bd",
+      "archived": true,
+      "bytes": 2270
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace2.vcd": {
+      "sha256": "47307be3e6a288fffc9fbb3ed8a61d0f50619198bd62098abc248801653e78df",
+      "archived": true,
+      "bytes": 22325
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace2.yw": {
+      "sha256": "344e7f7586b9bc0eef604e1f003ecd7d66571641ee246900832ed399d12271be",
+      "archived": true,
+      "bytes": 10047
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace2_tb.v": {
+      "sha256": "51db12a57dcdaa0f359068a25f3f45b9c5b9df267bdfda447df665a1db4e42cd",
+      "archived": true,
+      "bytes": 3167
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace3.smtc": {
+      "sha256": "7df02e0c62f8c4c4c82209da881b98c493a89f337f11714be8f974774a3a051a",
+      "archived": true,
+      "bytes": 2407
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace3.vcd": {
+      "sha256": "8e0a9b5d50142a36b29390e6492f7a4647848d5f9be30aa0200ef3a8ab560372",
+      "archived": true,
+      "bytes": 26623
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace3.yw": {
+      "sha256": "77c59a51bc97bbfe8d501dd37be6c5fc954c154689b99a6c0aee04aeaaca3ca9",
+      "archived": true,
+      "bytes": 11869
+    },
+    "F-BLOCK-RX-T3-COVER/task/engine_0/trace3_tb.v": {
+      "sha256": "21c0c52cc247fed5963d9d0512dd5fe66e3e71c0093544bb8d5f4870652bc014",
+      "archived": true,
+      "bytes": 3323
+    },
+    "F-BLOCK-RX-T3-COVER/task/logfile.txt": {
+      "sha256": "fdf47790df4fff1e6f9a1774d13f2c6f3a8d2e12b1f0e885ed91fd11d60ca0a5",
+      "archived": true,
+      "bytes": 5242
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design.il": {
+      "sha256": "8086d1ffdd99cff1b5ec93e65cb2fdf5bf60e93b8e190a4fbfc6026196f09222",
+      "archived": false,
+      "bytes": 669375
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design.json": {
+      "sha256": "8851dcb001a94ad5d06f468931fd32b917dc851b3de12d3a55ce909507d53dbe",
+      "archived": true,
+      "bytes": 908435,
+      "archive_path": "F-BLOCK-RX-T3-COVER/task/model/design.json.gz",
+      "compression": "gzip",
+      "archive_sha256": "08c3f73f8b53e50760fb92c20054a1294d50f71ec3404c858003fe9037a48e10"
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design.log": {
+      "sha256": "1fc524d8aab7d2957104929543c6a66b38b9f63bea7c895293e39934cc6b3ec2",
+      "archived": true,
+      "bytes": 81044
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design.ys": {
+      "sha256": "dc1717a0359271794005fd6388a93538138c1ac72fc25d449f7dbfcf0a8d65de",
+      "archived": true,
+      "bytes": 210
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design_prep.il": {
+      "sha256": "4f24352f601027b23ea10fa71a60a3790b04ecad6c3927801ed344a37f97c6ec",
+      "archived": false,
+      "bytes": 260079
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design_prep.log": {
+      "sha256": "ae0085dbb06d631ac18a44882c2b4378107403b20a1b5196a5850c9ec35c9e38",
+      "archived": true,
+      "bytes": 3421
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design_prep.ys": {
+      "sha256": "e0dc9d70d0ce3a5e30a303304b9faf3c42915e47d891df209b06e2cdec2590f8",
+      "archived": true,
+      "bytes": 345
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design_smt2.log": {
+      "sha256": "1931ceba240c8d33801303a500c8b68147d6b3e8ab07b107bd754f45166654a6",
+      "archived": true,
+      "bytes": 2139
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design_smt2.smt2": {
+      "sha256": "fa9a2335bdd801d0103ed72f5c1c0d5b3b213a17e3b6cbe18700f0376b789846",
+      "archived": false,
+      "bytes": 275527
+    },
+    "F-BLOCK-RX-T3-COVER/task/model/design_smt2.ys": {
+      "sha256": "6875d9b50e8c316a2d602e2b2d6b2e9ab0ce1549463a5dd4fb96af2d2eb73f31",
+      "archived": true,
+      "bytes": 155
+    },
+    "F-BLOCK-RX-T3-COVER/task/src/dut.il": {
+      "sha256": "6fe9dd31c762a97868c201b34fee74fd8c39bc0b605515cab71b78072938dda0",
+      "archived": false,
+      "bytes": 970671
+    },
+    "F-BLOCK-RX-T3-COVER/task/src/properties.json": {
+      "sha256": "ab6d5133e590a7c49003f19172ffa50975a90278e1e1a1a12bad0d551e8ffd5e",
+      "archived": true,
+      "bytes": 1794385,
+      "archive_path": "F-BLOCK-RX-T3-COVER/task/src/properties.json.gz",
+      "compression": "gzip",
+      "archive_sha256": "81f5840c4aa2b2d14bc672c9ed8833423537d8a9df71c4706b53e98a8865fce1"
+    },
+    "F-BLOCK-RX-T3-COVER/task/status": {
+      "sha256": "b298a94f014b41c5fa58c0b45d4f815ade79215f4fcec0dffaa5b9cc1acfa2c1",
+      "archived": true,
+      "bytes": 9
+    },
+    "F-BLOCK-RX-T3-COVER/task/status.sqlite": {
+      "sha256": "e4a72d290638470e43f425c628878399c3a878e291142ac30ebf7f22d0a5b1d9",
+      "archived": true,
+      "bytes": 24576
+    },
+    "F-BLOCK-RX-T3-COVER/task/task.xml": {
+      "sha256": "2f1ba756b458837afeb4fc85b934a1a8d7a2fed1e838144886d803a1e93aae54",
+      "archived": true,
+      "bytes": 10655
+    },
+    "F-BLOCK-RX-T3-COVER/task.sby": {
+      "sha256": "d4d43b55a8ab196f764a044e5f49c1b1f734b9f3488c6bd60589d74b70a24d9b",
+      "archived": true,
+      "bytes": 161
+    },
+    "manifest.json": {
+      "sha256": "b93f94afe55e34f6f830dc5ad8dfa94965f8de63ade763a9ed1f165a97506767",
+      "archived": true,
+      "bytes": 4645
+    },
+    "run.py": {
+      "sha256": "7ddbd8673a81d96ac516164e71dc303b8fa2b94a3e6517e35e85414ba5f06dd3",
+      "archived": true,
+      "bytes": 30846
+    },
+    "toolchain.json": {
+      "sha256": "3674a5f8cde5b40cfc3b3839777a111ea47ca1f12b7d8b5894f167d42bc619de",
+      "archived": true,
+      "bytes": 330
+    }
+  },
+  "note": "Original manifest unchanged. Large generated RTLIL/SMT2 and physical checkpoints/bitstreams omitted; hashes retained. Reproduce using saved source copies and commands. This is not a programming artifact."
+}

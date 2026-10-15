@@ -1,0 +1,18 @@
+{
+  "command": [
+    "nix",
+    "build",
+    "--no-link",
+    "--print-out-paths",
+    ".#checks.x86_64-linux.formal-fast"
+  ],
+  "exit_code": 0,
+  "status": "PASS",
+  "derivation": "/nix/store/l989ip7prb104rcn00ql5pl59ix17i9r-cgra-formal-fast.drv",
+  "output": "/nix/store/rrr7mzs3vz7m5l75vkkl393w7ar528mj-cgra-formal-fast",
+  "counts": {
+    "PROVED": 17,
+    "FAIL": 1
+  },
+  "manifest_sha256": "d6a8c522616686e9edd46c1aa6dfd6c6ea913221b109ea97f238aca7e5115603"
+}

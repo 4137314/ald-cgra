@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+<testsuite timestamp="2026-10-09T15:59:25" hostname="4137314" package="task" id="0" name="default" tests="11" errors="0" failures="0" time="12" skipped="6">
+<properties>
+<property name="os" value="Linux"/>
+<property name="expect" value="PASS"/>
+<property name="status" value="PASS"/>
+</properties>
+<testcase classname="default" name="build execution" time="0">
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_186">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_194">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_202">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_210">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_218">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property ASSERT in array_contract at array_contract.sv:47.13-47.64" time="0" type="ASSERT" location="array_contract.sv:47.13-47.64" id="_witness_.check_assert_array_contract_sv_47_226">
+<skipped />
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:29.9-29.52" time="0" type="COVER" location="array_contract.sv:29.9-29.52" id="_witness_.check_cover_array_contract_sv_29_176" tracefile="engine_0/trace4.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_231" tracefile="engine_0/trace0.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_240" tracefile="engine_0/trace3.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_249" tracefile="engine_0/trace1.vcd">
+</testcase>
+<testcase classname="default" name="Property COVER in array_contract at array_contract.sv:53.13-53.92" time="0" type="COVER" location="array_contract.sv:53.13-53.92" id="_witness_.check_cover_array_contract_sv_53_258" tracefile="engine_0/trace2.vcd">
+</testcase>
+<system-out>SBY 15:59:14 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/dut.il' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/task/src/dut.il'.
+SBY 15:59:14 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/pe_spec.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/task/src/pe_spec.sv'.
+SBY 15:59:14 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/array_contract.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/task/src/array_contract.sv'.
+SBY 15:59:14 [task] Copy '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/pe_assume.sv' to '/home/main/dev/git/ald-cgra/hw/build/formal/block-final-cover/F-ARRAY-2x3-COVER/task/src/pe_assume.sv'.
+SBY 15:59:14 [task] engine_0: smtbmc yices
+SBY 15:59:14 [task] base: starting process &quot;cd task/src; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql ../model/design.log ../model/design.ys&quot;
+SBY 15:59:17 [task] base: finished (returncode=0)
+SBY 15:59:17 [task] prep: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_prep.log design_prep.ys&quot;
+SBY 15:59:19 [task] prep: finished (returncode=0)
+SBY 15:59:19 [task] smt2: starting process &quot;cd task/model; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys -ql design_smt2.log design_smt2.ys&quot;
+SBY 15:59:19 [task] smt2: finished (returncode=0)
+SBY 15:59:19 [task] engine_0: starting process &quot;cd task; /nix/store/8xp00x56zj0nxqk3h334176g2d25jmvd-yosys-0.67/bin/yosys-smtbmc -s yices --presat --unroll -c --noprogress -t 40  --append 0 --dump-vcd engine_0/trace%.vcd --dump-yw engine_0/trace%.yw --dump-vlogtb engine_0/trace%_tb.v --dump-smtc engine_0/trace%.smtc model/design_smt2.smt2&quot;
+SBY 15:59:19 [task] engine_0: ##   0:00:00  Solver: yices
+SBY 15:59:20 [task] engine_0: ##   0:00:00  Checking cover reachability in step 0..
+SBY 15:59:20 [task] engine_0: ##   0:00:00  Checking cover reachability in step 1..
+SBY 15:59:20 [task] engine_0: ##   0:00:01  Checking cover reachability in step 2..
+SBY 15:59:21 [task] engine_0: ##   0:00:01  Reached cover statement in step 2 at array_contract: array_contract.sv:53.13-53.92 (_witness_.check_cover_array_contract_sv_53_231)
+SBY 15:59:21 [task] engine_0: ##   0:00:01  Writing trace to VCD file: engine_0/trace0.vcd
+SBY 15:59:21 [task] engine_0: ##   0:00:02  Writing trace to Verilog testbench: engine_0/trace0_tb.v
+SBY 15:59:21 [task] engine_0: ##   0:00:02  Writing trace to constraints file: engine_0/trace0.smtc
+SBY 15:59:21 [task] engine_0: ##   0:00:02  Writing trace to Yosys witness file: engine_0/trace0.yw
+SBY 15:59:21 [task] engine_0: ##   0:00:02  Checking cover reachability in step 2..
+SBY 15:59:21 [task] engine_0: ##   0:00:02  Reached cover statement in step 2 at array_contract: array_contract.sv:53.13-53.92 (_witness_.check_cover_array_contract_sv_53_249)
+SBY 15:59:21 [task] engine_0: ##   0:00:02  Writing trace to VCD file: engine_0/trace1.vcd
+SBY 15:59:22 [task] engine_0: ##   0:00:02  Writing trace to Verilog testbench: engine_0/trace1_tb.v
+SBY 15:59:22 [task] engine_0: ##   0:00:02  Writing trace to constraints file: engine_0/trace1.smtc
+SBY 15:59:22 [task] engine_0: ##   0:00:02  Writing trace to Yosys witness file: engine_0/trace1.yw
+SBY 15:59:22 [task] engine_0: ##   0:00:02  Checking cover reachability in step 2..
+SBY 15:59:22 [task] engine_0: ##   0:00:02  Reached cover statement in step 2 at array_contract: array_contract.sv:53.13-53.92 (_witness_.check_cover_array_contract_sv_53_258)
+SBY 15:59:22 [task] engine_0: ##   0:00:02  Writing trace to VCD file: engine_0/trace2.vcd
+SBY 15:59:22 [task] engine_0: ##   0:00:03  Writing trace to Verilog testbench: engine_0/trace2_tb.v
+SBY 15:59:22 [task] engine_0: ##   0:00:03  Writing trace to constraints file: engine_0/trace2.smtc
+SBY 15:59:22 [task] engine_0: ##   0:00:03  Writing trace to Yosys witness file: engine_0/trace2.yw
+SBY 15:59:22 [task] engine_0: ##   0:00:03  Checking cover reachability in step 2..
+SBY 15:59:23 [task] engine_0: ##   0:00:03  Reached cover statement in step 2 at array_contract: array_contract.sv:53.13-53.92 (_witness_.check_cover_array_contract_sv_53_240)
+SBY 15:59:23 [task] engine_0: ##   0:00:03  Writing trace to VCD file: engine_0/trace3.vcd
+SBY 15:59:23 [task] engine_0: ##   0:00:04  Writing trace to Verilog testbench: engine_0/trace3_tb.v
+SBY 15:59:23 [task] engine_0: ##   0:00:04  Writing trace to constraints file: engine_0/trace3.smtc
+SBY 15:59:23 [task] engine_0: ##   0:00:04  Writing trace to Yosys witness file: engine_0/trace3.yw
+SBY 15:59:23 [task] engine_0: ##   0:00:04  Checking cover reachability in step 2..
+SBY 15:59:24 [task] engine_0: ##   0:00:04  Checking cover reachability in step 3..
+SBY 15:59:24 [task] engine_0: ##   0:00:04  Reached cover statement in step 3 at array_contract: array_contract.sv:29.9-29.52 (_witness_.check_cover_array_contract_sv_29_176)
+SBY 15:59:24 [task] engine_0: ##   0:00:04  Writing trace to VCD file: engine_0/trace4.vcd
+SBY 15:59:25 [task] engine_0: ##   0:00:05  Writing trace to Verilog testbench: engine_0/trace4_tb.v
+SBY 15:59:25 [task] engine_0: ##   0:00:05  Writing trace to constraints file: engine_0/trace4.smtc
+SBY 15:59:25 [task] engine_0: ##   0:00:05  Writing trace to Yosys witness file: engine_0/trace4.yw
+SBY 15:59:25 [task] engine_0: ##   0:00:05  Status: passed
+SBY 15:59:25 [task] engine_0: finished (returncode=0)
+SBY 15:59:25 [task] engine_0: Status returned by engine: pass
+SBY 15:59:25 [task] summary: Elapsed clock time [H:MM:SS (secs)]: 0:00:11 (11)
+SBY 15:59:25 [task] summary: Elapsed process time [H:MM:SS (secs)]: 0:00:12 (12)
+SBY 15:59:25 [task] summary: engine_0 (smtbmc yices) returned pass
+SBY 15:59:25 [task] summary: cover trace: task/engine_0/trace0.vcd
+SBY 15:59:25 [task] summary:   reached cover statement array_contract._witness_.check_cover_array_contract_sv_53_231 at array_contract.sv:53.13-53.92 step 2
+SBY 15:59:25 [task] summary: cover trace: task/engine_0/trace1.vcd
+SBY 15:59:25 [task] summary:   reached cover statement array_contract._witness_.check_cover_array_contract_sv_53_249 at array_contract.sv:53.13-53.92 step 2
+SBY 15:59:25 [task] summary: cover trace: task/engine_0/trace2.vcd
+SBY 15:59:25 [task] summary:   reached cover statement array_contract._witness_.check_cover_array_contract_sv_53_258 at array_contract.sv:53.13-53.92 step 2
+SBY 15:59:25 [task] summary: cover trace: task/engine_0/trace3.vcd
+SBY 15:59:25 [task] summary:   reached cover statement array_contract._witness_.check_cover_array_contract_sv_53_240 at array_contract.sv:53.13-53.92 step 2
+SBY 15:59:25 [task] summary: cover trace: task/engine_0/trace4.vcd
+SBY 15:59:25 [task] summary:   reached cover statement array_contract._witness_.check_cover_array_contract_sv_29_176 at array_contract.sv:29.9-29.52 step 3
+SBY 15:59:25 [task] DONE (PASS, rc=0)
+</system-out>
+<system-err>
+</system-err>
+</testsuite>
+</testsuites>

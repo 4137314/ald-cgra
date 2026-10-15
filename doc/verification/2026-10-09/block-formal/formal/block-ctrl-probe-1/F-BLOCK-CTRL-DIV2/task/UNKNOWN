@@ -1,0 +1,7 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:12 (12)
+Elapsed process time [H:MM:SS (secs)]: 0:00:22 (22)
+engine_0 (smtbmc yices) returned pass for basecase
+engine_0 (smtbmc yices) returned FAIL for induction
+counterexample trace [induction]: engine_0/trace_induct.vcd
+counterexample trace [induction]: engine_0/trace_induct.yw
+  failed assertion block_ctrl.\block_ctrl_contract.f_bctrl_dot_context at 

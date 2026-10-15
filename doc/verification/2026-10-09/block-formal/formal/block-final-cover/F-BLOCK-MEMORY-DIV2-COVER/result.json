@@ -1,0 +1,95 @@
+{
+  "id": "F-BLOCK-MEMORY-DIV2-COVER",
+  "top": "block_dot",
+  "kind": "block_dot",
+  "mode": "cover",
+  "depth": 40,
+  "parameters": {
+    "G_STEP_DIV": 2
+  },
+  "memory": true,
+  "assertions": 31,
+  "assumptions": 1,
+  "covers": 6,
+  "solver_budget_seconds": 90,
+  "result": "BOUNDED_PASS",
+  "acceptance_passed": true,
+  "engine": "smtbmc yices",
+  "commands": [
+    [
+      "yosys",
+      "-p",
+      "ghdl --std=08 --no-assert-cover -gG_STEP_DIV=2 cgra_pkg.vhd block_pkg.vhd block_dot.vhd block_dot_contract.psl -e block_dot; write_rtlil dut.il; write_json frontend.json"
+    ],
+    [
+      "sby",
+      "task.sby"
+    ]
+  ],
+  "logs": [
+    "frontend.txt",
+    "solver.txt"
+  ],
+  "clock": "rising_edge(clk)",
+  "initial_state": "production RTL initial values",
+  "environment": "count <= 1024 (production port subtype); all other inputs unconstrained",
+  "source_sha256": {
+    "hw/rtl/cgra_pkg.vhd": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+    "hw/rtl/block_pkg.vhd": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+    "hw/rtl/block_dot.vhd": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+    "hw/formal/block_dot_contract.psl": "af9d08d499415a8e7609fbf26810869967fbb475dbe8b4e0d327195b27a1389a",
+    "hw/formal/block_memory.psl": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854"
+  },
+  "parameter_check_sha256": "b45254d318d87bdddd39236bfcac056dd1dbaee0e532ff610f7d6f7e98efb0f3",
+  "effective_properties_sha256": "38749842e8271293932a1a7f2aff7f7c7a485ccfdf862e5d9749c938983e00ef",
+  "checked_port_widths": {
+    "pe_result": 16,
+    "wr_data": 16,
+    "a": 16,
+    "b": 16,
+    "result": 16
+  },
+  "scope": "sequencer control plus full-size RAM retention/read/capture at any constant address; unwritten words unconstrained; not caller length validation or CRC",
+  "exit_code": 0,
+  "solver_status": "PASS",
+  "property_cells": {
+    "assume": 1,
+    "cover": 6,
+    "assert": 31
+  },
+  "symbolic_address_bits": 10,
+  "checked_memories": {
+    "bank_a": {
+      "SIZE": 1024,
+      "WIDTH": 16,
+      "ABITS": 10
+    },
+    "bank_b": {
+      "SIZE": 1024,
+      "WIDTH": 16,
+      "ABITS": 10
+    }
+  },
+  "smt2_cells": {
+    "assert": 0,
+    "assume": 2,
+    "cover": 6
+  },
+  "smt2_symbolic_address_bits": 10,
+  "smt2_user_assumptions": 1,
+  "model_sha256": {
+    "dut.il": "ca31a9876119cb28c857873974cdb0b721957b5b1617be8980fa9f8bee38040e",
+    "task/src/properties.json": "f69faae299c78ad7746a5c3c8d822d187ac9775c884164392a87c8c27d0859ca",
+    "task/model/design_smt2.smt2": "6160a82461ff952fdbc353a550d72607dd40d8fb6707184218e42792da70f46e"
+  },
+  "traces": [
+    "task/engine_0/trace0.yw",
+    "task/engine_0/trace1.yw",
+    "task/engine_0/trace2.yw",
+    "task/engine_0/trace3.yw",
+    "task/engine_0/trace4.yw",
+    "task/engine_0/trace5.yw"
+  ],
+  "meaning": "bounded reachability only; no universal guarantee",
+  "duration_seconds": 1.737
+}

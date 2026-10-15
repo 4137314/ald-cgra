@@ -1,0 +1,21 @@
+Elapsed clock time [H:MM:SS (secs)]: 0:00:00 (0)
+Elapsed process time [H:MM:SS (secs)]: 0:00:00 (0)
+engine_0 (smtbmc yices) returned pass
+cover trace: engine_0/trace0.vcd
+cover trace: engine_0/trace0.yw
+  reached cover statement block_dot.\block_dot_contract.c_block_empty at  step 2
+cover trace: engine_0/trace1.vcd
+cover trace: engine_0/trace1.yw
+  reached cover statement block_dot.\block_dot_contract.c_block_capture at  step 6
+cover trace: engine_0/trace2.vcd
+cover trace: engine_0/trace2.yw
+  reached cover statement block_dot.\block_dot_contract.c_mem_data at  step 7
+cover trace: engine_0/trace3.vcd
+cover trace: engine_0/trace3.yw
+  reached cover statement block_dot.\block_dot_contract.c_mem_reset_rewrite at  step 9
+cover trace: engine_0/trace4.vcd
+cover trace: engine_0/trace4.yw
+  reached cover statement block_dot.\block_dot_contract.c_mem_order at  step 12
+cover trace: engine_0/trace5.vcd
+cover trace: engine_0/trace5.yw
+  reached cover statement block_dot.\block_dot_contract.c_block_done at  step 13

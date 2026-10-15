@@ -1,0 +1,296 @@
+{
+  "source": "/home/main/dev/git/ald-cgra/hw/build/formal/block-memory-cover",
+  "files": {
+    "F-BLOCK-MEMORY-DIV2-COVER/block_dot.vhd": {
+      "sha256": "7f150f542ce4c2019b9c63c00c587152bc737a0936728e86e6e025015d5b43fc",
+      "archived": true,
+      "bytes": 3436
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/block_dot_contract.psl": {
+      "sha256": "880be222b39e540593ed1500a92f08dc74faeba222d24b67ece918fb11f107bd",
+      "archived": true,
+      "bytes": 6541
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/block_dot_contract.source.psl": {
+      "sha256": "4ddd3c9797ad3044e2a0b28c15969e934e95f56fc22de004a767adc32e6b1996",
+      "archived": true,
+      "bytes": 3911
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/block_memory.psl": {
+      "sha256": "45b78992c36cc8d87aa8b8d2869bec3e38c22910b30b5a750a705a0534814854",
+      "archived": true,
+      "bytes": 2582
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/block_pkg.vhd": {
+      "sha256": "113b698e6390f3cc70ecf776b630f632989e05aba42ecaa684f6d559fbac2257",
+      "archived": true,
+      "bytes": 1129
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/cgra_pkg.vhd": {
+      "sha256": "609fbed17a210ffa17f17b01749920ca688bcfc4a3ad95c6aaa340ae34447205",
+      "archived": true,
+      "bytes": 7159
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/dut.il": {
+      "sha256": "718497ab08304169edf7187f1f59695ce3ea9ee2bc092631fd9ab430c0c0a6b4",
+      "archived": false,
+      "bytes": 132232
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/frontend.json": {
+      "sha256": "cf95dfa466ed34db541924912cf0771c0ecb8f2799d7004359c89d4ffb395a98",
+      "archived": false,
+      "bytes": 817607
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/frontend.txt": {
+      "sha256": "45e0ccab100ed1ae25010f62350ebcfbe0f2c4e98feceb039833c5fea1162c4f",
+      "archived": true,
+      "bytes": 1908
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/result.json": {
+      "sha256": "c0f3b32aeaa087144839d1dbc218d3ff78bf57dc6583f2a7cd5ca168837c57ba",
+      "archived": true,
+      "bytes": 2917
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/solver.txt": {
+      "sha256": "453550d1c5a41655039c3215be056055758f8422d92bdd4ab276d55790d83047",
+      "archived": true,
+      "bytes": 7462
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/PASS": {
+      "sha256": "5a05bab3d3767e1c0e591304a985dcec3d7cbc96e8bc6fc7ebc9e3f69bd3c41d",
+      "archived": true,
+      "bytes": 1018
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/config.sby": {
+      "sha256": "c9e94d8bc3915a1fc3bda88e71841afbbabb9147338f7be16f64f8cdd13ca20e",
+      "archived": true,
+      "bytes": 162
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/logfile.txt": {
+      "sha256": "d4f8a5048813684b51c52906690e8c059424e369a225e7b4a800c168406e659c",
+      "archived": true,
+      "bytes": 3294
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace0.smtc": {
+      "sha256": "3238bcf3c2d31c18be2d8127c5661acef9f8613fd34fd3d6bbc3543a684920ae",
+      "archived": true,
+      "bytes": 1654
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace0.vcd": {
+      "sha256": "05405702f24e47baf22a6aeb1a99cc4d9ef18114d7d57a627fa638c5201dd4d3",
+      "archived": true,
+      "bytes": 3835
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace0.yw": {
+      "sha256": "5f99cbd6b1051bc77e8aa69aab27171a593970c81b1930162e0d2cd73be96d4e",
+      "archived": true,
+      "bytes": 3213
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace0_tb.v": {
+      "sha256": "600175d409ddaa4587c0be460def653268ca26ecdc7a4a1b2535a5eff12949d8",
+      "archived": true,
+      "bytes": 2674
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace1.smtc": {
+      "sha256": "bae566e36630da0c052a8f7e271e704a714f53e2108b04a1b1e88c8eb3157dcd",
+      "archived": true,
+      "bytes": 2650
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace1.vcd": {
+      "sha256": "b8aa06e03aa4c010a36323114d352927abdd03ea2dfe2928852f2098cba89990",
+      "archived": true,
+      "bytes": 6463
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace1.yw": {
+      "sha256": "9f6829a935bc06786680dd38d988e116c368727bc4e81c5ee136d48ec7d669dc",
+      "archived": true,
+      "bytes": 3821
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace1_tb.v": {
+      "sha256": "9f36e1ec764a3b4f923dc6b356a27aa2ab01b1de2ecfe004756d32d8a10dbfcb",
+      "archived": true,
+      "bytes": 3776
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace2.smtc": {
+      "sha256": "8ecfc322326f6758a3d37103bd9afc50033b468710824daf35e90cfe4059076d",
+      "archived": true,
+      "bytes": 2930
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace2.vcd": {
+      "sha256": "c1923d30fa475807e4efd2301fc7091f0f9c15abbfd705cfbe7297000cd52a6a",
+      "archived": true,
+      "bytes": 7120
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace2.yw": {
+      "sha256": "1c8b4d581dbbe9dd37667e7a0e880c843d0e15c1dab9b15b53ee4b92947c65bd",
+      "archived": true,
+      "bytes": 3973
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace2_tb.v": {
+      "sha256": "94db8976051f261efce7c686f8db13d6704955a2a06dab7fc843529b87c5e998",
+      "archived": true,
+      "bytes": 4079
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace3.smtc": {
+      "sha256": "6189e3ca5d7ea0bba041348b48cdf7e3dce3b7a6d179fcdecd49c1c9c5603a35",
+      "archived": true,
+      "bytes": 3487
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace3.vcd": {
+      "sha256": "84dbe843b9cb35908f92bc47238618efad5d11a6787e09ee33698f81fc94f33b",
+      "archived": true,
+      "bytes": 8435
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace3.yw": {
+      "sha256": "c39a3c9149c89cbc69c66c3ffbda3c6936dc5af0694090e2cffc299e49360edb",
+      "archived": true,
+      "bytes": 4277
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace3_tb.v": {
+      "sha256": "e014ab028f67cde038a7e01b60bac9da7696aa997040432ed7f2337f3780fd15",
+      "archived": true,
+      "bytes": 4685
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace4.smtc": {
+      "sha256": "fe1f754dd846082a6f0824990bd3b1db40a5b984cc69fd9b742e8a3e6d8f13ca",
+      "archived": true,
+      "bytes": 4454
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace4.vcd": {
+      "sha256": "7e587db4afa0f007c5c7016ce473bd19f53d89886ad7b8ec708c29626f9916b4",
+      "archived": true,
+      "bytes": 10412
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace4.yw": {
+      "sha256": "81dae1202dcdb49db10b0e61915b1cd52070f7972f2d4bac33d59034dd57b47e",
+      "archived": true,
+      "bytes": 4729
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace4_tb.v": {
+      "sha256": "7859451083618a26529e9a8106194562b73a380bfb47a1cde089e5a9356f0ec9",
+      "archived": true,
+      "bytes": 5710
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace5.smtc": {
+      "sha256": "82092819945a93aba47dcdc703168803b6ea1974a7e5afb82d7991a3dfc6d07f",
+      "archived": true,
+      "bytes": 4737
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace5.vcd": {
+      "sha256": "395a68db2fcf79d07701d6552eab054e866d65c2fe8bfaa364260460b788b302",
+      "archived": true,
+      "bytes": 11071
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace5.yw": {
+      "sha256": "f0836102182c7b12c1fa2557b4ab23fbf9f22ce36ec62407a8d2f40ca9123b99",
+      "archived": true,
+      "bytes": 4881
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/engine_0/trace5_tb.v": {
+      "sha256": "e7a703a2a70026a5c9052c4b06e85cb1093437f4402a7e899d9169484763c8f3",
+      "archived": true,
+      "bytes": 6015
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/logfile.txt": {
+      "sha256": "453550d1c5a41655039c3215be056055758f8422d92bdd4ab276d55790d83047",
+      "archived": true,
+      "bytes": 7462
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design.il": {
+      "sha256": "ace98d47f7ac65a854e860070c2bc8c4532774feae3f77b4eca74f2bb80eeac4",
+      "archived": false,
+      "bytes": 94617
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design.json": {
+      "sha256": "7dda09809ce8a89f953ab0548f1c74d43ce5b4e15aec5dda21a7f8bb8045dfed",
+      "archived": true,
+      "bytes": 178465
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design.log": {
+      "sha256": "38a3ea437eabe3af47cc4aec53a84e874468fb763e5e10b5ebc99fa5bb027032",
+      "archived": true,
+      "bytes": 18977
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design.ys": {
+      "sha256": "bfc1e419fe9101d7a49860d24906463556e785aba1ecfe5958c5a187450c5cda",
+      "archived": true,
+      "bytes": 211
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design_prep.il": {
+      "sha256": "019b4ce4d49fea6826e4a19020c7f760a1acbc3d34c10f7b73f45543292b5da7",
+      "archived": false,
+      "bytes": 37525
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design_prep.log": {
+      "sha256": "50d1f235cfd1e5c18775101c74333ad2b4ca7f1cc5ea35860ca75734688210dc",
+      "archived": true,
+      "bytes": 2708
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design_prep.ys": {
+      "sha256": "e0dc9d70d0ce3a5e30a303304b9faf3c42915e47d891df209b06e2cdec2590f8",
+      "archived": true,
+      "bytes": 345
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design_smt2.log": {
+      "sha256": "b9285f84e2ce91d57f877b2f03c24dd606df3c9be75312529b8957e804c15bf0",
+      "archived": true,
+      "bytes": 2169
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design_smt2.smt2": {
+      "sha256": "450e56b5e00c057e4db2ad616da4c7bcb9094566e7d30ad68cc606e67bb032cb",
+      "archived": false,
+      "bytes": 42186
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/model/design_smt2.ys": {
+      "sha256": "6875d9b50e8c316a2d602e2b2d6b2e9ab0ce1549463a5dd4fb96af2d2eb73f31",
+      "archived": true,
+      "bytes": 155
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/src/dut.il": {
+      "sha256": "718497ab08304169edf7187f1f59695ce3ea9ee2bc092631fd9ab430c0c0a6b4",
+      "archived": false,
+      "bytes": 132232
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/src/properties.json": {
+      "sha256": "ab2f602981e69f1cba15577e0c88f02634c1841618a5e095a4c8b635665ed3a7",
+      "archived": true,
+      "bytes": 289435
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/status": {
+      "sha256": "4d489b9bfaac73d73a64a4023bf4d947ca1d4216d9f72864c97bfb6a2bc07d56",
+      "archived": true,
+      "bytes": 9
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/status.sqlite": {
+      "sha256": "ca7a038e461d218a78271513f07f2f1fc46f9df83281951b816797b649a5d49c",
+      "archived": true,
+      "bytes": 40960
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task/task.xml": {
+      "sha256": "9c73234f066beba4a709d8897d3411f8bd88feb24fafe112921da982a6d6d3f0",
+      "archived": true,
+      "bytes": 15297
+    },
+    "F-BLOCK-MEMORY-DIV2-COVER/task.sby": {
+      "sha256": "c9e94d8bc3915a1fc3bda88e71841afbbabb9147338f7be16f64f8cdd13ca20e",
+      "archived": true,
+      "bytes": 162
+    },
+    "manifest.json": {
+      "sha256": "474e67952c82d869969b53fb6d12049945f6bb0c6217c38ddff435db8a6152b3",
+      "archived": true,
+      "bytes": 5279
+    },
+    "run.py": {
+      "sha256": "9a757ffeb0195707bc3e3722fa75e9464950f72e84d616deca57983a54daa80a",
+      "archived": true,
+      "bytes": 28190
+    },
+    "toolchain.json": {
+      "sha256": "3674a5f8cde5b40cfc3b3839777a111ea47ca1f12b7d8b5894f167d42bc619de",
+      "archived": true,
+      "bytes": 330
+    }
+  },
+  "note": "Original manifest unchanged. Large generated RTLIL/SMT2 and physical checkpoints/bitstreams omitted; hashes retained. Reproduce using saved source copies and commands. This is not a programming artifact."
+}
